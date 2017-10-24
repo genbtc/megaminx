@@ -11,41 +11,13 @@ const double SIDE_ANGLE = 2 * atan(FI);
 const double INS_SPHERE_RAD = 100 * sqrt(10 + 22 / sqrt(5)) / 4;
 const double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
 
-Face::Face(): center(nullptr), turnDir(0), thisNum(0)
+Face::Face()
 {
-    _rotate = false;
-    angle = 0;
-    axis[0] = 0;
-    axis[1] = 0;
-    axis[2] = -1;
-}
-
-void Face::rotate(int _turnDir)
-{
-    _rotate = true;
-    turnDir = _turnDir;
-}
-
-void Face::swapCorners(int n, int k)
-{
-    double buf;
-    for (int i = 0; i < 9; ++i)
-    {
-        buf = corner[n]->color()[i];
-        corner[n]->color()[i] = corner[k]->color()[i];
-        corner[k]->color()[i] = buf;
-    }
-}
-
-void Face::swapEdges(int n, int k)
-{
-    double buf;
-    for (int i = 0; i < 6; ++i)
-    {
-        buf = edge[n]->color()[i];
-        edge[n]->color()[i] = edge[k]->color()[i];
-        edge[k]->color()[i] = buf;
-    }
+	_rotate = false;
+	angle = 0;
+	axis[0] = 0;
+	axis[1] = 0.001;
+	axis[2] = -1;
 }
 
 void Face::initEdge(Edge *a, Edge *b, Edge *c, Edge *d, Edge *e)
@@ -645,4 +617,32 @@ bool Face::render()
 		}
 	}
 	return false;
+}
+
+void Face::rotate(int _turnDir)
+{
+	_rotate = true;
+	turnDir = _turnDir;
+}
+
+void Face::swapCorners(int n, int k)
+{
+	double buf;
+	for (int i = 0; i < 9; ++i)
+	{
+		buf = corner[n]->color()[i];
+		corner[n]->color()[i] = corner[k]->color()[i];
+		corner[k]->color()[i] = buf;
+	}
+}
+
+void Face::swapEdges(int n , int k)
+{
+	double buf;
+	for (int i = 0; i < 6; ++i)
+	{
+		buf = edge[n]->color()[i];
+		edge[n]->color()[i] = edge[k]->color()[i];
+		edge[k]->color()[i] = buf;
+	}
 }
