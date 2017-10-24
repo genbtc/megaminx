@@ -11,13 +11,13 @@ const double SIDE_ANGLE = 2 * atan(FI);
 const double INS_SPHERE_RAD = 100 * sqrt(10 + 22 / sqrt(5)) / 4;
 const double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
 
-Face::Face()
+Face::Face(): center(nullptr), turnDir(0), thisNum(0)
 {
-	_rotate = false;
-	angle = 0;
-	axis[0] = 0;
-	axis[1] = 0.001;
-	axis[2] = -1;
+    _rotate = false;
+    angle = 0;
+    axis[0] = 0;
+    axis[1] = 0;
+    axis[2] = -1;
 }
 
 void Face::initEdge(Edge *a, Edge *b, Edge *c, Edge *d, Edge *e)

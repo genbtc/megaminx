@@ -11,13 +11,13 @@ const double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
 
 Edge::Edge()
 {
-	_color[0][0] = 0.5;
-	_color[0][1] = 0.5;
-	_color[0][2] = 0.5;
-
-	_color[1][0] = 0.5;
-	_color[1][1] = 0.5;
-	_color[1][2] = 0.5;
+    for (int i = 0; i < 2; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            _color[i][j] = 0.5;
+        }
+    }
 
 	for (int i = 0; i < 6; ++i)
 	{

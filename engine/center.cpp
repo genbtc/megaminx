@@ -15,25 +15,13 @@ Center::Center()
 	_color[1] = 1;
 	_color[2] = 1;
 
-	_vertex[0][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * 0 + 3 * PI / 10) / 5 * 2;
-	_vertex[0][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * 0 + 3 * PI / 10) / 5 * 2;
+    for (int i = 0; i < 5; ++i)
+    {
+        _vertex[i][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * i + 3 * PI / 10) / 5 * 2;
+        _vertex[i][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * i + 3 * PI / 10) / 5 * 2;
+        _vertex[i][2] = -INS_SPHERE_RAD;
+    }
 
-	_vertex[1][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * 1 + 3 * PI / 10) / 5 * 2;
-	_vertex[1][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * 1 + 3 * PI / 10) / 5 * 2;
-
-	_vertex[2][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * 2 + 3 * PI / 10) / 5 * 2;
-	_vertex[2][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * 2 + 3 * PI / 10) / 5 * 2;
-
-	_vertex[3][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * 3 + 3 * PI / 10) / 5 * 2;
-	_vertex[3][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * 3 + 3 * PI / 10) / 5 * 2;
-
-	_vertex[4][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * 4 + 3 * PI / 10) / 5 * 2;
-	_vertex[4][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * 4 + 3 * PI / 10) / 5 * 2;
-
-	for (int i = 0; i < 5; ++i)
-	{
-		_vertex[i][2] = -INS_SPHERE_RAD;
-	}
 }
 
 void Center::init(int n)
