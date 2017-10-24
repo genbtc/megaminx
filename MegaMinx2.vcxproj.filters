@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{ceeee982-8866-4978-84a5-82b0800d9550}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{67c1ed03-dd2c-4c2e-8c86-ee28234b926f}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{aa10d85a-9d5e-44b7-b907-3ba4ac672262}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Make files">
+      <UniqueIdentifier>{21b9abf3-058f-4a70-b54e-686ff5027009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VisualGDB settings">
+      <UniqueIdentifier>{8a309144-3110-47b2-8252-cd49d3c047fa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="debug.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="release.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="MegaMinx2-Debug.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="MegaMinx2-Release.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="engine\center.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\corner.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\edge.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\face.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\megaminx.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\utils.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="engine\center.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\corner.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\edge.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\face.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\megaminx.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\utils.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
