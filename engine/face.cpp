@@ -20,6 +20,34 @@ Face::Face(): center(nullptr), turnDir(0), thisNum(0)
     axis[2] = -1;
 }
 
+void Face::rotate(int _turnDir)
+{
+    _rotate = true;
+    turnDir = _turnDir;
+}
+
+void Face::swapCorners(int n, int k)
+{
+    double buf;
+    for (int i = 0; i < 9; ++i)
+    {
+        buf = corner[n]->color()[i];
+        corner[n]->color()[i] = corner[k]->color()[i];
+        corner[k]->color()[i] = buf;
+    }
+}
+
+void Face::swapEdges(int n, int k)
+{
+    double buf;
+    for (int i = 0; i < 6; ++i)
+    {
+        buf = edge[n]->color()[i];
+        edge[n]->color()[i] = edge[k]->color()[i];
+        edge[k]->color()[i] = buf;
+    }
+}
+
 void Face::initEdge(Edge *a, Edge *b, Edge *c, Edge *d, Edge *e)
 {
 	edge[0] = a;
@@ -617,32 +645,4 @@ bool Face::render()
 		}
 	}
 	return false;
-}
-
-void Face::rotate(int _turnDir)
-{
-	_rotate = true;
-	turnDir = _turnDir;
-}
-
-void Face::swapCorners(int n, int k)
-{
-	double buf;
-	for (int i = 0; i < 9; ++i)
-	{
-		buf = corner[n]->color()[i];
-		corner[n]->color()[i] = corner[k]->color()[i];
-		corner[k]->color()[i] = buf;
-	}
-}
-
-void Face::swapEdges(int n , int k)
-{
-	double buf;
-	for (int i = 0; i < 6; ++i)
-	{
-		buf = edge[n]->color()[i];
-		edge[n]->color()[i] = edge[k]->color()[i];
-		edge[k]->color()[i] = buf;
-	}
 }

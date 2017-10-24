@@ -6,7 +6,8 @@ class Corner
 public:
 	Corner();
 	void init(int);
-	void initColor(int, int, int);
+    void setColor(int i, double r, double g, double b);
+    void initColor(int, int, int);
 	~Corner();
 
 	void render();

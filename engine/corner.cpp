@@ -174,6 +174,13 @@ void Corner::init(int n)
 	inited = true;
 }
 
+void Corner::setColor(int i, double r, double g, double b)
+{
+    _color[i][0] = r;
+    _color[i][1] = g;
+    _color[i][2] = b;
+}
+
 void Corner::initColor(int a, int b, int c)
 {
 	for (int i = 0; i < 3; ++i)
@@ -184,67 +191,44 @@ void Corner::initColor(int a, int b, int c)
 		else if (i == 2) k = c;
         else             k = 0;
 
+        //Which colors are these ?
 		switch (k)
 		{
 		case 1:
-			_color[i][0] = 1.0;
-			_color[i][1] = 1.0;
-			_color[i][2] = 1.0;
+            setColor(i, 1.0, 1.0, 1.0);
 			break;
 		case 2:
-			_color[i][0] = 0.0;
-			_color[i][1] = 0.0;
-			_color[i][2] = 1.0;
+            setColor(i, 0.0, 0.0, 1.0);
 			break;
 		case 3:
-			_color[i][0] = 1.0;
-			_color[i][1] = 0.0;
-			_color[i][2] = 0.0;
+            setColor(i, 1.0, 0.0, 0.0);
 			break;
 		case 4:
-			_color[i][0] = 0.0;
-			_color[i][1] = 0.5;
-			_color[i][2] = 0.0;
+            setColor(i, 0.0, 0.5, 0.0);
 			break;
 		case 5:
-			_color[i][0] = 0.5;
-			_color[i][1] = 0.0;
-			_color[i][2] = 1.0;
+            setColor(i, 0.5, 0.0, 1.0);
 			break;
 		case 6:
-			_color[i][0] = 1.0;
-			_color[i][1] = 1.0;
-			_color[i][2] = 0.0;
+            setColor(i, 1.0, 1.0, 0.0);
 			break;
 		case 7:
-			_color[i][0] = 0.5;
-			_color[i][1] = 0.5;
-			_color[i][2] = 0.5;
+            setColor(i, 0.5, 0.5, 0.5);
 			break;
 		case 8:
-			_color[i][0] = 0.2;
-			_color[i][1] = 0.5;
-			_color[i][2] = 1.0;
+            setColor(i, 0.2, 0.5, 1.0);
 			break;
 		case 9:
-			_color[i][0] = 1.0;
-			_color[i][1] = 0.4;
-			_color[i][2] = 0.1;
+            setColor(i, 1.0, 0.4, 0.1);
 			break;
 		case 10:
-			_color[i][0] = 0.3;
-			_color[i][1] = 1.0;
-			_color[i][2] = 0.3;
+            setColor(i, 0.3, 1.0, 0.3);
 			break;
 		case 11:
-			_color[i][0] = 0.9;
-			_color[i][1] = 0.4;
-			_color[i][2] = 1.0;
+            setColor(i, 0.9, 0.4, 1.0);
 			break;
 		case 12:
-			_color[i][0] = 1.0;
-			_color[i][1] = 1.0;
-			_color[i][2] = 0.3;
+            setColor(i, 1.0, 1.0, 0.3);
 			break;
         case 0:
         default:
@@ -303,10 +287,6 @@ void Corner::render()
 	}
 	glEnd();
 	glBegin(GL_LINE_LOOP);
-	// glVertex3dv(_vertex[2]);
-	// glVertex3dv(_vertex[5]);
-	// glVertex3dv(_vertex[6]);
-	// glVertex3dv(_vertex[1]);
 	glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
 	glVertex3d(_vertex[5][0] * 1.005, _vertex[5][1] * 1.005, _vertex[5][2] * 1.005);
 	glVertex3d(_vertex[6][0] * 1.005, _vertex[6][1] * 1.005, _vertex[6][2] * 1.005);
@@ -314,11 +294,19 @@ void Corner::render()
 	glEnd();
 }
 
+/**
+ * \brief 
+ * \return get the color for [0][0]
+ */
 double* Corner::color()
 {
 	return &_color[0][0];
 }
 
+
+/**
+ * \brief public
+ */
 void Corner::flip()
 {
 	double buf[3];
@@ -330,6 +318,10 @@ void Corner::flip()
 	for (int i = 0; i < 3; ++i) _color[2][i] = buf[i];
 }
 
+
+/**
+ * \brief Does two flips
+ */
 void Corner::flipBack()
 {
 	flip();
