@@ -5,8 +5,9 @@ class Center
 {
 public:
 	Center();
-	void init(int);
-	void initColor(int);
+	void init(int n);
+    void setColor(double r, double g, double b);
+    void initColor(int k);
 	~Center();
 
 	void render();

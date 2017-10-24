@@ -101,71 +101,54 @@ void Center::init(int n)
 	}
 }
 
-
-void Center::initColor(int a)
+void Center::setColor(double r, double g, double b)
 {
-	switch (a)
-	{
-	case 1:
-		_color[0] = 1.0;
-		_color[1] = 1.0;
-		_color[2] = 1.0;
-		break;
-	case 2:
-		_color[0] = 0.0;
-		_color[1] = 0.0;
-		_color[2] = 1.0;
-		break;
-	case 3:
-		_color[0] = 1.0;
-		_color[1] = 0.0;
-		_color[2] = 0.0;
-		break;
-	case 4:
-		_color[0] = 0.0;
-		_color[1] = 0.5;
-		_color[2] = 0.0;
-		break;
-	case 5:
-		_color[0] = 0.5;
-		_color[1] = 0.0;
-		_color[2] = 1.0;
-		break;
-	case 6:
-		_color[0] = 1.0;
-		_color[1] = 1.0;
-		_color[2] = 0.0;
-		break;
-	case 7:
-		_color[0] = 0.5;
-		_color[1] = 0.5;
-		_color[2] = 0.5;
-		break;
-	case 8:
-		_color[0] = 0.2;
-		_color[1] = 0.5;
-		_color[2] = 1.0;
-		break;
-	case 9:
-		_color[0] = 1.0;
-		_color[1] = 0.4;
-		_color[2] = 0.1;
-		break;
-	case 10:
-		_color[0] = 0.3;
-		_color[1] = 1.0;
-		_color[2] = 0.3;
-		break;
-	case 11:
-		_color[0] = 0.9;
-		_color[1] = 0.4;
-		_color[2] = 1.0;
-		break;
-	case 12:
-		_color[0] = 1.0;
-		_color[1] = 1.0;
-		_color[2] = 0.3;
-		break;
+    _color[0] = r;
+    _color[1] = g;
+    _color[2] = b;
+}
+
+void Center::initColor(int k)
+{
+    switch (k)
+    {
+    case 1:
+        setColor(1.0, 1.0, 1.0);
+        break;
+    case 2:
+        setColor(0.0, 0.0, 1.0);
+        break;
+    case 3:
+        setColor(1.0, 0.0, 0.0);
+        break;
+    case 4:
+        setColor(0.0, 0.5, 0.0);
+        break;
+    case 5:
+        setColor(0.5, 0.0, 1.0);
+        break;
+    case 6:
+        setColor(1.0, 1.0, 0.0);
+        break;
+    case 7:
+        setColor(0.5, 0.5, 0.5);
+        break;
+    case 8:
+        setColor(0.2, 0.5, 1.0);
+        break;
+    case 9:
+        setColor(1.0, 0.4, 0.1);
+        break;
+    case 10:
+        setColor(0.3, 1.0, 0.3);
+        break;
+    case 11:
+        setColor(0.9, 0.4, 1.0);
+        break;
+    case 12:
+        setColor(1.0, 1.0, 0.3);
+        break;
+    case 0:
     default:
         break;
 	}

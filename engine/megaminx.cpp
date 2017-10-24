@@ -1,6 +1,6 @@
 #include "megaminx.h"
-#include <iostream>
 #include <stdlib.h>
+#include <random>
 
 Megaminx::Megaminx(): n(0), k(0), _rotate(false), rSide(0)
 {
@@ -90,15 +90,14 @@ void Megaminx::render()
 	}
 	else
 	{
-		int k = 0;
-		for (int i = 0; i < 12; ++i)
+		for (int i = 0, k = 0; i < 12; ++i)
 		{
 			if (&center[i] != face[rSide].center)
 			{
 				center[i].render();
 			}
 		}
-		for (int i = 0; i < 30; ++i)
+		for (int i = 0, k = 0; i < 30; ++i)
 		{
 			if (&edge[i] == face[rSide].edge[k])
 			{
@@ -109,8 +108,7 @@ void Megaminx::render()
 				edge[i].render();
 			}
 		}
-		k = 0;
-		for (int i = 0; i < 20; ++i)
+		for (int i = 0, k = 0; i < 20; ++i)
 		{
 			if (&corner[i] == face[rSide].corner[k])
 			{

@@ -6,7 +6,8 @@ class Edge
 public:
 	Edge();
 	void init(int);
-	void initColor(int, int);
+    void setColor(int i, double r, double g, double b);
+    void initColor(int, int);
 	~Edge();
 
 	void render();

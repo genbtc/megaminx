@@ -231,72 +231,57 @@ void Edge::init(int n)
 	}
 }
 
+void Edge::setColor(int i, double r, double g, double b)
+{
+    _color[i][0] = r;
+    _color[i][1] = g;
+    _color[i][2] = b;
+}
+
 void Edge::initColor(int a, int b)
 {
 	for (int i = 0; i < 2; ++i)
 	{
 		switch (i == 0 ? a : b)
 		{
-		case 1:
-			_color[i][0] = 1.0;
-			_color[i][1] = 1.0;
-			_color[i][2] = 1.0;
-			break;
-		case 2:
-			_color[i][0] = 0.0;
-			_color[i][1] = 0.0;
-			_color[i][2] = 1.0;
-			break;
-		case 3:
-			_color[i][0] = 1.0;
-			_color[i][1] = 0.0;
-			_color[i][2] = 0.0;
-			break;
-		case 4:
-			_color[i][0] = 0.0;
-			_color[i][1] = 0.5;
-			_color[i][2] = 0.0;
-			break;
-		case 5:
-			_color[i][0] = 0.5;
-			_color[i][1] = 0.0;
-			_color[i][2] = 1.0;
-			break;
-		case 6:
-			_color[i][0] = 1.0;
-			_color[i][1] = 1.0;
-			_color[i][2] = 0.0;
-			break;
-		case 7:
-			_color[i][0] = 0.5;
-			_color[i][1] = 0.5;
-			_color[i][2] = 0.5;
-			break;
-		case 8:
-			_color[i][0] = 0.2;
-			_color[i][1] = 0.5;
-			_color[i][2] = 1.0;
-			break;
-		case 9:
-			_color[i][0] = 1.0;
-			_color[i][1] = 0.4;
-			_color[i][2] = 0.1;
-			break;
-		case 10:
-			_color[i][0] = 0.3;
-			_color[i][1] = 1.0;
-			_color[i][2] = 0.3;
-			break;
-		case 11:
-			_color[i][0] = 0.9;
-			_color[i][1] = 0.4;
-			_color[i][2] = 1.0;
-			break;
-		case 12:
-			_color[i][0] = 1.0;
-			_color[i][1] = 1.0;
-			_color[i][2] = 0.3;
-			break;
+        //Which colors are these ?
+        case 1:
+            setColor(i, 1.0, 1.0, 1.0);
+            break;
+        case 2:
+            setColor(i, 0.0, 0.0, 1.0);
+            break;
+        case 3:
+            setColor(i, 1.0, 0.0, 0.0);
+            break;
+        case 4:
+            setColor(i, 0.0, 0.5, 0.0);
+            break;
+        case 5:
+            setColor(i, 0.5, 0.0, 1.0);
+            break;
+        case 6:
+            setColor(i, 1.0, 1.0, 0.0);
+            break;
+        case 7:
+            setColor(i, 0.5, 0.5, 0.5);
+            break;
+        case 8:
+            setColor(i, 0.2, 0.5, 1.0);
+            break;
+        case 9:
+            setColor(i, 1.0, 0.4, 0.1);
+            break;
+        case 10:
+            setColor(i, 0.3, 1.0, 0.3);
+            break;
+        case 11:
+            setColor(i, 0.9, 0.4, 1.0);
+            break;
+        case 12:
+            setColor(i, 1.0, 1.0, 0.3);
+            break;
+        case 0:
         default:
             break;
 		}
