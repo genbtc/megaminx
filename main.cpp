@@ -11,7 +11,6 @@
 #include <cmath>
 #include "engine/megaminx.h"
 
-Megaminx megaminx;
 
 double view_distance_view_angle = 30;
 int activeWindow = 0;
@@ -42,10 +41,40 @@ const long double SIDE_ANGLE = 2 * atan(FI);
 const long double INS_SPHERE_RAD = 90 * sqrt(10 + 22 / sqrt(5.)) / 4 - 1;
 const long double INS_CIRCLE_RAD = 70 / sqrt((5. - sqrt(5.)) / 2);
 const char *title = "Megaminx v1.1 - genBTC mod";
+Megaminx* megaminx;
+
+static int window;
+static int menu_id;
+static int submenu_id;
+
+void createMegaMinx()
+{
+    megaminx = new Megaminx;
+
+}
+void menu(int num) {
+    if (num == 5)
+    {
+        delete megaminx;
+        createMegaMinx();
+    }
+}
+void createMenu(void) {
+    submenu_id = glutCreateMenu(menu);
+    glutAddMenuEntry("Set Face Color", 2);
+    glutAddMenuEntry("Rotate Corner Piece", 3);
+    glutAddMenuEntry("Swap Edge Piece", 4);
+    glutAddMenuEntry("Solve All", 5);     menu_id = glutCreateMenu(menu);
+    glutAddMenuEntry("Clear", 1);
+    glutAddSubMenu("ReDraw", submenu_id);
+    glutAddMenuEntry("Quit", 0);     glutAttachMenu(GLUT_MIDDLE_BUTTON);
+}
+
 
 int main(int argc, char *argv[])
 {
 	srand(time(NULL));
+    createMegaMinx();
 	glutInit(&argc, argv);
 	// int w = glutGet(GLUT_SCREEN_WIDTH) - 500;
 	// int h = glutGet(GLUT_SCREEN_HEIGHT) - 200;
@@ -53,14 +82,15 @@ int main(int argc, char *argv[])
 	const int h = 700;
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
 	glutInitWindowSize(w, h);    
-    glutCreateWindow(title);
+    window = glutCreateWindow(title);
+
 	glClearColor(0.2, 0.2, 0.2, 1.0);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);
 	gluPerspective(view_distance_view_angle, w / (double)h, 1.0, 10000.0);
 	glMatrixMode(GL_MODELVIEW);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glutDisplayFunc(display);
+    glutDisplayFunc(display);
 	glutTimerFunc(0, timer, 0);
 	glutMouseFunc(mousePressed);
 	glutPassiveMotionFunc(mouseMove);   //not implemented
@@ -69,6 +99,8 @@ int main(int argc, char *argv[])
 	glutSpecialFunc(specialKeyboard);
 	// glutFullScreen();
     // glutSetWindow(1);
+    // put all the menu functions in one nice procedure
+    createMenu();
 
 	glTranslated(0, 0, -800);
 	glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
@@ -97,9 +129,10 @@ void display()
 	glPointSize(5);
 		
 	glPushMatrix();
-	glRotated(megaminx.n, -1, 0, 0);
-	glRotated(megaminx.k, 0, 0, 1);
-	megaminx.render();
+	glRotated(megaminx->n, -1, 0, 0);
+	glRotated(megaminx->k, 0, 0, 1);
+
+	megaminx->render();
 	//glTranslated(0, 0, -100 + depth);
 	glPopMatrix();
 	glDisable(GL_BLEND);
@@ -132,8 +165,8 @@ void mousePressed(int button, int state, int x, int y)
     {
         defMX = x;
         defMY = y;
-        defN = megaminx.n;
-        defK = megaminx.k;
+        defN = megaminx->n;
+        defK = megaminx->k;
     }
 
     static unsigned int prev_left_click;
@@ -176,8 +209,8 @@ void mousePressedMove(int x, int y)
 {
 	if (pressedButton == GLUT_RIGHT_BUTTON)
 	{
-		megaminx.n = defN + (defMY - y) / 3;
-		megaminx.k = defK + (x - defMX) / 3;
+		megaminx->n = defN + (defMY - y) / 3;
+		megaminx->k = defK + (x - defMX) / 3;
 	}
 }
 
@@ -196,7 +229,7 @@ void keyboard(unsigned char key, int x, int y)
 		break;
         //backspace
 	case 8:
-		megaminx.scramble();
+		megaminx->scramble();
 		break;
     default:
         break;
@@ -214,16 +247,16 @@ void specialKeyboard(int key, int x, int y)
 	switch (key)
 	{
     case GLUT_KEY_LEFT:
-        megaminx.k -= 2;
+        megaminx->k -= 2;
         break;
 	case GLUT_KEY_UP:
-		megaminx.n += 2;
+		megaminx->n += 2;
 		break;
     case GLUT_KEY_RIGHT:
-        megaminx.k += 2;
+        megaminx->k += 2;
         break;
 	case GLUT_KEY_DOWN:
-		megaminx.n -= 2;
+		megaminx->n -= 2;
 		break;
     case GLUT_KEY_PAGE_UP:
     case GLUT_KEY_PAGE_DOWN:
@@ -243,7 +276,7 @@ void specialKeyboard(int key, int x, int y)
 	case GLUT_KEY_F10:
 	case GLUT_KEY_F11:
 	case GLUT_KEY_F12:
-		megaminx.rotate(key - GLUT_KEY_F1, dir);
+		megaminx->rotate(key - GLUT_KEY_F1, dir);
 		break;
     default:
         break;

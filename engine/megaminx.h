@@ -7,6 +7,7 @@
 class Megaminx
 {
 public:
+    void solve();
 	Megaminx();
 	~Megaminx();
 

@@ -1,8 +1,13 @@
 #include "megaminx.h"
 #include <stdlib.h>
 
-Megaminx::Megaminx(): n(0), k(0), _rotate(false), rSide(0)
+void Megaminx::solve()
 {
+    n = 0; 
+    k = 0;
+    _rotate = false;
+    rSide = 0;
+
     for (int i = 0; i < 12; ++i)
     {
         face[i].initNum(i);
@@ -64,6 +69,12 @@ Megaminx::Megaminx(): n(0), k(0), _rotate(false), rSide(0)
         face[i].initAxis(i);
     }
 }
+
+Megaminx::Megaminx()
+{
+    solve();
+}
+
 
 Megaminx::~Megaminx()
 {
