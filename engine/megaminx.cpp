@@ -1,6 +1,5 @@
 #include "megaminx.h"
 #include <stdlib.h>
-#include <random>
 
 Megaminx::Megaminx(): n(0), k(0), _rotate(false), rSide(0)
 {

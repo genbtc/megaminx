@@ -296,7 +296,7 @@ void Corner::render()
 
 /**
  * \brief 
- * \return get the color for [0][0]
+ * \return starting color of the corner.
  */
 double* Corner::color()
 {

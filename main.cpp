@@ -2,20 +2,18 @@
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <GL/glext.h>
-#include <math.h>
 #include <iostream>
-#include "engine/megaminx.h"
+#include <math.h>
 #include <time.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <cstdlib>
 #include <cmath>
-#include <random>
+#include "engine/megaminx.h"
 
 Megaminx megaminx;
 
-double viewAngle = 30;
-double a = -250;
+double view_distance_view_angle = 30;
 int activeWindow = 0;
 
 bool paused = false;
@@ -32,17 +30,18 @@ void timer(int);
 void mousePressed(int button, int state, int x, int y);
 void mouseMove(int x, int y);
 void mousePressedMove(int x, int y);
+void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void specialKeyboard(int key, int x, int y);
 
 using namespace std;
 
-const double FI = (1 + sqrt(5)) / 2;
-const double PI = acos(-1);
-const double SIDE_ANGLE = 2 * atan(FI);
-const double INS_SPHERE_RAD = 90 * sqrt(10 + 22 / sqrt(5)) / 4 - 1;
-const double INS_CIRCLE_RAD = 70 / sqrt((5 - sqrt(5)) / 2);
-const char *title = "Megaminx v 1.0";
+const long double FI = (1 + sqrt(5)) / 2;
+const long double PI = acos(-1);
+const long double SIDE_ANGLE = 2 * atan(FI);
+const long double INS_SPHERE_RAD = 90 * sqrt(10 + 22 / sqrt(5.)) / 4 - 1;
+const long double INS_CIRCLE_RAD = 70 / sqrt((5. - sqrt(5.)) / 2);
+const char *title = "Megaminx v1.1 - genBTC mod";
 
 int main(int argc, char *argv[])
 {
@@ -50,15 +49,15 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	// int w = glutGet(GLUT_SCREEN_WIDTH) - 500;
 	// int h = glutGet(GLUT_SCREEN_HEIGHT) - 200;
-	int w = 700;
-	int h = 700;
+	const int w = 700;
+	const int h = 700;
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
 	glutInitWindowSize(w, h);    
     glutCreateWindow(title);
 	glClearColor(0.2, 0.2, 0.2, 1.0);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);
-	gluPerspective(viewAngle, (double)((double)w / (double)h), 1.0, 10000.0);
+	gluPerspective(view_distance_view_angle, w / (double)h, 1.0, 10000.0);
 	glMatrixMode(GL_MODELVIEW);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glutDisplayFunc(display);
@@ -72,7 +71,7 @@ int main(int argc, char *argv[])
     // glutSetWindow(1);
 
 	glTranslated(0, 0, -800);
-	// glRotated(-90, 1, 0, 0);
+	glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
 	glLineWidth(4);
 
 	glutMainLoop();
@@ -81,8 +80,8 @@ int main(int argc, char *argv[])
 
 void reshape()
 {
-	int w = glutGet(GLUT_WINDOW_WIDTH);
-	int h = glutGet(GLUT_WINDOW_HEIGHT);
+    const auto w = glutGet(GLUT_WINDOW_WIDTH);
+    const auto h = glutGet(GLUT_WINDOW_HEIGHT);
 	glutReshapeWindow(w, h);
 	glLoadIdentity();
 }
@@ -117,24 +116,55 @@ void timer(int)
 	
 }
 
+void double_click(int x, int y)
+{
+    //not implemented
+}
+
+#define DOUBLE_CLICK_INTERVAL	400
+static int bnstate[16];
+
+static int prev_x = -1, prev_y;
 void mousePressed(int button, int state, int x, int y)
 {
-	pressedButton = button;
-	if (state == GLUT_DOWN)
-	{
-		defMX = x;
-		defMY = y;
-		defN = megaminx.n;
-		defK = megaminx.k;
-	}
-	if (button == 4)
-	{
-		depth++;
-	}
-	if (button == 5)
-	{
-		depth--;
-	}
+    pressedButton = button;
+    if (state == GLUT_DOWN)
+    {
+        defMX = x;
+        defMY = y;
+        defN = megaminx.n;
+        defK = megaminx.k;
+    }
+
+    static unsigned int prev_left_click;
+    static int prev_left_x, prev_left_y;
+
+    bnstate[button] = state == GLUT_DOWN ? 1 : 0;
+    if (state == GLUT_DOWN) {
+        if (button == GLUT_LEFT_BUTTON) {
+            const unsigned int msec = glutGet(GLUT_ELAPSED_TIME);
+            const int dx = abs(x - prev_left_x);
+            const int dy = abs(y - prev_left_y);
+
+            if (msec - prev_left_click < DOUBLE_CLICK_INTERVAL && dx < 3 && dy < 3) {
+                double_click(x, y);
+                prev_left_click = 0;
+            }
+            else {
+                prev_left_click = msec;
+                prev_left_x = x;
+                prev_left_y = y;
+            }
+        }
+    }
+    if (button == 4)
+    {
+        depth++;
+    }
+    else if (button == 5)
+    {
+        depth--;
+    }
 }
 
 void mouseMove(int x, int y)
@@ -147,8 +177,6 @@ void mousePressedMove(int x, int y)
 	if (pressedButton == GLUT_RIGHT_BUTTON)
 	{
 		megaminx.n = defN + (defMY - y) / 3;
-		// if (megaminx.n > 180) megaminx.n = 180;
-		// if (megaminx.n < -180) megaminx.n = -180;
 		megaminx.k = defK + (x - defMX) / 3;
 	}
 }
@@ -177,67 +205,48 @@ void keyboard(unsigned char key, int x, int y)
 
 void specialKeyboard(int key, int x, int y)
 {
-	int modif = glutGetModifiers();
-	int dir;
-	if (modif == 1)
-	{
-		dir = 1;
-	}
-	else
-	{
-		dir = -1;
-	}
+    const int modif = glutGetModifiers();
+    if ((modif == GLUT_ACTIVE_CTRL) &&
+        ((key == 'c') || (key == 'C'))) {
+        exit(0);
+    }
+    const int dir = (modif == 1) ? 1 : -1;
 	switch (key)
 	{
+    case GLUT_KEY_LEFT:
+        megaminx.k -= 2;
+        break;
 	case GLUT_KEY_UP:
 		megaminx.n += 2;
 		break;
+    case GLUT_KEY_RIGHT:
+        megaminx.k += 2;
+        break;
 	case GLUT_KEY_DOWN:
 		megaminx.n -= 2;
 		break;
-	case GLUT_KEY_LEFT:
-		megaminx.k -= 2;
-		break;
-	case GLUT_KEY_RIGHT:
-		megaminx.k += 2;
-		break;
+    case GLUT_KEY_PAGE_UP:
+    case GLUT_KEY_PAGE_DOWN:
+    case GLUT_KEY_HOME:
+    case GLUT_KEY_END:
+    case GLUT_KEY_INSERT:
+        break;
 	case GLUT_KEY_F1:
-		megaminx.rotate(0, dir);
-		break;
 	case GLUT_KEY_F2:
-		megaminx.rotate(1, dir);
-		break;
 	case GLUT_KEY_F3:
-		megaminx.rotate(2, dir);
-		break;
 	case GLUT_KEY_F4:
-		megaminx.rotate(3, dir);
-		break;
 	case GLUT_KEY_F5:
-		megaminx.rotate(4, dir);
-		break;
 	case GLUT_KEY_F6:
-		megaminx.rotate(5, dir);
-		break;
 	case GLUT_KEY_F7:
-		megaminx.rotate(6, dir);
-		break;
 	case GLUT_KEY_F8:
-		megaminx.rotate(7, dir);
-		break;
 	case GLUT_KEY_F9:
-		megaminx.rotate(8, dir);
-		break;
 	case GLUT_KEY_F10:
-		megaminx.rotate(9, dir);
-		break;
 	case GLUT_KEY_F11:
-		megaminx.rotate(10, dir);
-		break;
 	case GLUT_KEY_F12:
-		megaminx.rotate(11, dir);
+		megaminx.rotate(key - GLUT_KEY_F1, dir);
 		break;
     default:
         break;
 	}
+
 }
