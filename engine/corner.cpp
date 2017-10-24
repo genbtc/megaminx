@@ -168,6 +168,8 @@ void Corner::init(int n)
 			rotateVertex(_vertex[i], 'x', PI);
 			initColor(9, 8, 5);
 			break;
+        default:
+            break;
 		}
 	}
 	inited = true;
@@ -244,6 +246,8 @@ void Corner::initColor(int a, int b, int c)
 			_color[i][1] = 1.0;
 			_color[i][2] = 0.3;
 			break;
+        default:
+            break;
 		}
 	}
 }

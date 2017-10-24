@@ -114,6 +114,8 @@ void Face::initAxis(int n)
 		rotateVertex(axis, 'x', PI - SIDE_ANGLE);
 		rotateVertex(axis, 'z', 8 * PI / 5);
 		break;
+    default:
+        break;
 	}
 	for (int i = 0; i < 5; ++i)
 	{
@@ -171,6 +173,8 @@ void Face::initAxis(int n)
 			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			break;
+        default:
+            break;
 		}
 	}
 }
@@ -368,6 +372,8 @@ void Face::placeParts(int dir)
 			corner[3]->flip();
 			corner[4]->flipBack();
 			break;
+        default:
+            break;
 		}
 	}
 	else
@@ -556,6 +562,8 @@ void Face::placeParts(int dir)
 			corner[2]->flip();
 			corner[4]->flipBack();
 			break;
+        default:
+            break;
 		}
 	}
 }

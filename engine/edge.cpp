@@ -225,6 +225,8 @@ void Edge::init(int n)
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			initColor(7, 12);
 			break;
+        default:
+		    break;
 		}
 	}
 }
@@ -295,6 +297,8 @@ void Edge::initColor(int a, int b)
 			_color[i][1] = 1.0;
 			_color[i][2] = 0.3;
 			break;
+        default:
+            break;
 		}
 	}
 }

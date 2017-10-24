@@ -107,6 +107,8 @@ void Center::init(int n)
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			initColor(12);
 			break;
+        default:
+            break;
 		}
 	}
 }
@@ -176,6 +178,8 @@ void Center::initColor(int a)
 		_color[1] = 1.0;
 		_color[2] = 0.3;
 		break;
+    default:
+        break;
 	}
 }
 

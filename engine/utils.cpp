@@ -24,5 +24,7 @@ void rotateVertex(double *vertex, char axis, double angle)
 	case 'z':
 		rotateVertex(vertex[0], vertex[1], angle);
 		break;
+    default:
+        break;
 	}
 }
