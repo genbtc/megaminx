@@ -14,7 +14,8 @@ public:
 	void initEdge(Edge*, Edge*, Edge*, Edge*, Edge*);
 	void initCorner(Corner*, Corner*, Corner*, Corner*, Corner*);
 	void initCenter(Center*);
-	void initAxis(int n);
+    void createAxisbyStruct(int n, double* axis);
+    void initAxis(int n);
 	void initNum(int);
 	~Face();
     void edge03flip();

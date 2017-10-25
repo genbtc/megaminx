@@ -62,48 +62,48 @@ void Face::initCenter(Center *a)
 	}
 }
 
-void Face::initAxis(int n)
+void Face::createAxisbyStruct(int n, double* targetAxis)
 {
     char axis1 = 0, axis2 = 0;
     int multi = 0;
-	switch (n + 1)
-	{
-	case 2:
-        axis1 = 'z';            axis2 = 'x';
-        break;
-    case 3:
-        axis1 = 'z';            axis2 = 'x';            multi = 2;
-        break;
-    case 4:
-        axis1 = 'z';            axis2 = 'x';            multi = 4;
-        break;
-    case 5:
-        axis1 = 'z';            axis2 = 'x';            multi = 6;
-        break;
-    case 6:
-        axis1 = 'z';            axis2 = 'x';            multi = 8;		
-		break;
-    case 7:
-        axis1 = 'x';
-        break;
-    case 8:
-        axis1 = 'y';            axis2 = 'x';
-        break;
-    case 9:
-        axis1 = 'y';            axis2 = 'x';            multi = 2;
-        break;
-    case 10:
-        axis1 = 'y';            axis2 = 'x';            multi = 4;
-        break;
-    case 11:
-        axis1 = 'y';            axis2 = 'x';            multi = 6;
-        break;
-    case 12:
-        axis1 = 'y';            axis2 = 'x';            multi = 8;
-        break;
+    switch (n + 1)
+    {                               
+    case 2:                         
+        axis1 = 'z';  axis2 = 'x';  
+        break;                      
+    case 3:                         
+        axis1 = 'z';  axis2 = 'x';  multi = 2;
+        break;                      
+    case 4:                         
+        axis1 = 'z';  axis2 = 'x';  multi = 4;
+        break;                      
+    case 5:                         
+        axis1 = 'z';  axis2 = 'x';  multi = 6;
+        break;                      
+    case 6:                         
+        axis1 = 'z';  axis2 = 'x';  multi = 8;		
+        break;                      
+    case 7:                         
+        axis1 = 'x';                
+        break;                      
+    case 8:                         
+        axis1 = 'y';  axis2 = 'x';  
+        break;                      
+    case 9:                         
+        axis1 = 'y';  axis2 = 'x';  multi = 2;
+        break;                      
+    case 10:                        
+        axis1 = 'y';  axis2 = 'x';  multi = 4;
+        break;                      
+    case 11:                        
+        axis1 = 'y';  axis2 = 'x';  multi = 6;
+        break;                      
+    case 12:                        
+        axis1 = 'y';  axis2 = 'x';  multi = 8;
+        break;                      
     default:
         break;
-	}
+    }
     switch (n + 1)
     {
     case 2:
@@ -111,90 +111,30 @@ void Face::initAxis(int n)
     case 4:
     case 5:
     case 6:
-        rotateVertex(axis, axis1, 2 * PI / 10);
-        rotateVertex(axis, axis2, PI - SIDE_ANGLE);
+        rotateVertex(targetAxis, axis1, 2 * PI / 10);
+        rotateVertex(targetAxis, axis2, PI - SIDE_ANGLE);
     case 7:
-        rotateVertex(axis, axis1, PI);
+        rotateVertex(targetAxis, axis1, PI);
         break;
     case 8:
     case 9:
     case 10:
     case 11:
     case 12:
-        rotateVertex(axis, axis1, PI);
-        rotateVertex(axis, axis2, PI - SIDE_ANGLE);
+        rotateVertex(targetAxis, axis1, PI);
+        rotateVertex(targetAxis, axis2, PI - SIDE_ANGLE);
     default:
-        rotateVertex(axis, 'z', multi * PI / 5);
+        rotateVertex(targetAxis, 'z', multi * PI / 5);
         break;
     }
-	for (int i = 0; i < 5; ++i)
+}
+
+void Face::initAxis(int n)
+{
+    createAxisbyStruct(n,axis);
+    for (int i = 0; i < 5; ++i)
 	{
-        char axis1 = 0,axis2 = 0;
-        int multi = 0;
-		switch (n + 1)
-		{
-		case 2:
-            axis1 = 'z';            axis2 = 'x';
-			break;
-		case 3:
-            axis1 = 'z';            axis2 = 'x';            multi = 2;			
-			break;
-		case 4:
-            axis1 = 'z';            axis2 = 'x';            multi = 4;
-			break;
-		case 5:
-            axis1 = 'z';            axis2 = 'x';            multi = 6;
-			break;
-		case 6:
-            axis1 = 'z';            axis2 = 'x';            multi = 8;
-			break;
-		case 7:
-            axis1 = 'x';
-			break;
-		case 8:
-            axis1 = 'y';            axis2 = 'x';
-			break;
-		case 9:
-            axis1 = 'y';            axis2 = 'x';            multi = 2;
-			break;
-		case 10:
-            axis1 = 'y';            axis2 = 'x';            multi = 4;
-			break;
-		case 11:
-            axis1 = 'y';            axis2 = 'x';            multi = 6;
-			break;
-		case 12:
-            axis1 = 'y';            axis2 = 'x';            multi = 8;
-			break;
-        default:
-            break;
-		}
-        switch (n + 1)
-        {
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-            rotateVertex(_vertex[i], axis1, 2 * PI / 10);
-            rotateVertex(_vertex[i], axis2, PI - SIDE_ANGLE);
-            rotateVertex(_vertex[i], 'z', multi * PI / 5);
-            break;
-        case 7:
-            rotateVertex(_vertex[i], axis1, PI);
-            break;
-        case 8:
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-            rotateVertex(_vertex[i], axis1, PI);
-            rotateVertex(_vertex[i], axis2, PI - SIDE_ANGLE);
-            rotateVertex(_vertex[i], 'z', multi * PI / 5);
-            break;
-        default:
-            break;
-        }
+        createAxisbyStruct(n,_vertex[i]);
 	}
 }
 
