@@ -52,7 +52,7 @@ static int window;
 static int menu_id;
 static int submenu_id;
 
-bool doSpin = true;
+bool doSpin = false;
 
 void createMegaMinx()
 {
@@ -280,6 +280,22 @@ void keyboard(unsigned char key, int x, int y)
 	case 8:
 		megaminx->scramble();
 		break;
+    case 'l':
+        megaminx->rotate(GLUT_KEY_F12 -GLUT_KEY_F1, -1);
+    case 'L':
+        megaminx->rotate(GLUT_KEY_F12- GLUT_KEY_F1, 1);
+    case 'r':
+        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, -1);
+    case 'R':
+        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, 1);
+    case 'u':
+        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, -1);
+    case 'U':
+        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, 1);
+    case 'f':
+        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, -1);
+    case 'F':
+        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, 1);
     default:
         break;
 	}
