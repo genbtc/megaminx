@@ -149,6 +149,19 @@ void Megaminx::rotate(int num, int dir)
 void Megaminx::scramble()
 {
     for (int i = 0; i < 12; i++) {
-        this->face[i].placeParts(rand() % 2 * 2 - 1);
+        int r = rand() % 2 * 2 - 1;
+        this->face[i].placeParts(true);
     }
+}
+
+void Megaminx::swapOneCorner(int i, int x)
+{
+
+}
+
+void Megaminx::swapOneEdge(int i,int x)
+{
+    //this is equivalent to rotate one edge
+    //this->face[i].initNum(i);
+    //this->face[i].placeParts(true);
 }

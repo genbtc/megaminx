@@ -26,17 +26,17 @@ typedef enum {
 
 static const wchar_t* g_colornames[COLOR_STATES] = {
     L"WHITE",
-    L"YELLOW",          /* other colors have more precedence */
     L"BLUE",                /* has lowest precedence */
     L"RED",
     L"GREEN",
-    L"PURPLE",
-    L"LIGHT_GREEN",
     L"PINK",
-    L"BONE",
-    L"LIGHT_BLUE",
+    L"YELLOW",
     L"ORANGE",
+    L"PURPLE",
     L"GRAY"
+    L"LIGHT_GREEN",    
+    L"LIGHT_BLUE",    
+    L"BONE",
 };
 
 struct color
@@ -49,18 +49,18 @@ struct color
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
 static color g_colorRGBs[COLOR_STATES] =
 {
-    {1.0, 1.0, 1.0},
-    {0.0, 0.0, 1.0},
-    {1.0, 0.0, 0.0},
-    {0.0, 0.5, 0.0},
+    {1.0, 1.0, 1.0},    //white
+    {0.0, 0.0, 1.0},    //blue
+    {1.0, 0.0, 0.0},    //red
+    {0.0, 0.5, 0.0},    //green
     {0.5, 0.0, 1.0},
     {1.0, 1.0, 0.0},
-    {0.5, 0.5, 0.5},
+    {0.5, 0.5, 0.5},    //gray
     {0.2, 0.5, 1.0},
     {1.0, 0.4, 0.1},
     {0.3, 1.0, 0.3},
     {0.9, 0.4, 1.0},
-    {1.0, 1.0, 0.3}
+    {1.0, 1.0, 0.8}     //BONE
 };
 
 class Piece

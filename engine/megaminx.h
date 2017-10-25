@@ -14,6 +14,8 @@ public:
 	void render();
 	void rotate(int, int);
 	void scramble();
+    void swapOneCorner(int i, int x);
+    void swapOneEdge(int i, int x);
     /* y axis */
 	double n;
     /* x axis */

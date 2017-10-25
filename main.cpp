@@ -11,7 +11,6 @@
 #include <cmath>
 #include "engine/megaminx.h"
 
-
 double view_distance_view_angle = 20;
 int activeWindow = 0;
 
@@ -44,56 +43,104 @@ int HEIGHT = 700;
 
 Megaminx* megaminx;
 
-static int window,menu_id,submenu_id,submenu2_id;
-
-bool doSpin = false;
+static int window,menu_id, submenu0_id, submenu1_id,submenu2_id, submenu3_id, submenu4_id;
 
 void createMegaMinx()
 {
     megaminx = new Megaminx;
-
 }
+
+int currentFace;
+
 void menu(int num) {
-    if (num == 1)
+    if (num == 9)
     {
         delete megaminx;
         createMegaMinx();
     }
+    if (num == 1)
+        paused = !paused;
     if (num == 2)
-    {
-        rotateDispatch('f');
-    }
+        //TODO: Get current position from mouse 
+        //or infer angle and get the current face 
+        //and then set it to a global variable
+        currentFace = num;
     if (num == 3)
-        doSpin = !doSpin;
+        rotateDispatch('f');
+    if (num == 23)  //rotate corner piece
+        megaminx->swapOneCorner(8, 1);
+    if (num == 24)  //rotate edge piece
+        megaminx->swapOneEdge(8, 1);
+    if (num == 100)
+        megaminx->scramble();
+    if (num == 102)
+    {
+        glutDestroyWindow(1);
+        exit(0);
+    }
+    //if (num == 33)
+    //    megaminx->swapOneCorner(6, 2);
+    //if (num == 34)
+    //    megaminx->swapOneEdge(7, 3);
+    //if (num == 35)
+    //    megaminx->swapOneEdge(8, 7);
 }
+
 void createMenu(void) {
-    //SubLevel 2 menu
-    submenu2_id = glutCreateMenu(menu);
+    //SubLevel 0 menu - last layer
+    submenu0_id = glutCreateMenu(menu);
+    glutAddMenuEntry("Scramble", 100);
+    glutAddMenuEntry("Redraw", 101);
+    glutAddMenuEntry("Quit", 102);
+    
+    //SubLevel 1 menu - last layer
+    submenu1_id = glutCreateMenu(menu);
     glutAddMenuEntry("Make Grey Star", 31);
     glutAddMenuEntry("Make Grey Corners", 32);
-    glutAddMenuEntry("One Edge Swap", 31);
-    glutAddMenuEntry("One Corner Swap", 32);
-    glutAddMenuEntry("Scramble", 33);
-
-    //SubLevel Menu
-    submenu_id = glutCreateMenu(menu);
+    //glutAddMenuEntry("One Edge Swap", 33);
+    //glutAddMenuEntry("One Corner Swap", 34);
+    //glutAddMenuEntry("Two Corner Swaps", 35);
+    
+    //SubLevel2 Menu - rotations
+    submenu2_id = glutCreateMenu(menu);
+    glutAddMenuEntry("Rotate Front Face", 3);
     glutAddMenuEntry("Set Face Color", 22);
     glutAddMenuEntry("Rotate Corner Piece", 23);
     glutAddMenuEntry("Swap Edge Piece", 24);
-    glutAddSubMenu("Last Layer -->", submenu2_id);
- 
-    glutAddMenuEntry("", 22);
+     
+    //SubLevel3 Menu - steps
+    submenu3_id = glutCreateMenu(menu);
+    glutAddMenuEntry("White Star", 41);
+    glutAddMenuEntry("White Face", 42);
+    glutAddMenuEntry("2nd Layer Edges", 43);
+    glutAddMenuEntry("Low Y's", 44);
+    glutAddMenuEntry("4th Layer Edges", 45);
+    glutAddMenuEntry("High Y's", 46);
+    glutAddMenuEntry("6th Layer Edges", 47);
     
+    //SubLevel4 Menu - algos
+    submenu4_id = glutCreateMenu(menu);
+    glutAddMenuEntry("r u R' U'", 51);
+    glutAddMenuEntry("l u L' U'", 52);
+    glutAddMenuEntry("U' L' u l u r U' R'", 53);
+    glutAddMenuEntry("r u R' u r 2U' R'", 54);
+    glutAddMenuEntry("u l U' R' u L' U' r", 55);
+    glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
+    glutAddMenuEntry("R' D' R D", 57);
+    
+        
     //Top Level Menu
     menu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("Solve All/(reset)", 1);
-    glutAddMenuEntry("Rotate Front Face", 2);
-    glutAddMenuEntry("Mark as Front Face", 4);
-    glutAddMenuEntry("Toggle Spinning", 3);
-    glutAddSubMenu("Algorithms --->", submenu_id);
-    //glutAddSubMenu("Redraw", submenu2_id);
-    //glutAddMenuEntry("Quit", 0);     
-    glutAttachMenu(GLUT_LEFT_BUTTON);
+    glutAddMenuEntry("Toggle Spinning", 1);    
+    glutAddMenuEntry("Mark as Front Face", 2);
+    glutAddSubMenu("Hidden/Admin.", submenu0_id);
+    glutAddSubMenu("Last Layer ->", submenu1_id);
+    glutAddSubMenu("Rotations -->", submenu2_id);
+    glutAddSubMenu("Steps------->", submenu3_id);
+    glutAddSubMenu("Algos ------>", submenu4_id);    
+    glutAddMenuEntry("Solve All/(reset)", 9);
+    glutAddMenuEntry("Exit Menu....", 9999);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 
@@ -109,10 +156,10 @@ int main(int argc, char *argv[])
 	glutInitWindowSize(WIDTH, HEIGHT);
     window = glutCreateWindow(title);
 
-	glClearColor(0.2, 0.2, 0.2, 1.0);
+	glClearColor(0.22, 0.2, 0.2, 1.0);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
-    gluPerspective(view_distance_view_angle, WIDTH / (double)HEIGHT, 1.0, 10000.0);
+    gluPerspective(view_distance_view_angle, 1.0 , 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glutReshapeFunc(reshape);
@@ -128,9 +175,8 @@ int main(int argc, char *argv[])
 
     createMenu();	
 
-	glTranslated(0, 0, -800);
+	glTranslated(0, 0, -900);
 	glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
-	glLineWidth(4);
 
 	glutMainLoop();
     
@@ -159,6 +205,7 @@ void display()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA);
+    glLineWidth(4);
 	glPointSize(5);
 		
 	glPushMatrix();
@@ -171,12 +218,11 @@ void display()
     //K = X axis
 	glRotated(megaminx->k + angle/2, 0, 0, 1);
     //spinning can be disabled(toggled)
-    if (doSpin)
+    if (paused)
         angle++;
 
 	megaminx->render();
 
-	//glTranslated(0, 0, -100 + depth);
 	glPopMatrix();
 
 	glDisable(GL_BLEND);
@@ -245,19 +291,17 @@ void mousePressed(int button, int state, int x, int y)
             }
         }
     }
-    if (button == 4)
-    {
-        //depth++;
-        const int dira = (y - megaminx->n) < -180 ? 1 : -1;
-        const int dirb = (x - megaminx->k) / 180;
-        if (pressedButton == GLUT_LEFT_BUTTON)
-        {
-            megaminx->rotate(GLUT_KEY_F1 + dirb, dira);
-        }
+    if (state == GLUT_UP) return; // Disregard redundant GLUT_UP events
+    //Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)
+    if (button == 3) {        
+        //Mouse wheel up
+        glTranslated(0, 0, +5);
     }
-    else if (button == 5)
-    {
+    if (button == 4) {
+        //Mouse wheel down
+        glTranslated(0, 0, -5);
     }
+
 }
 
 void processMousePassiveMotion(int x, int y) {
@@ -267,7 +311,7 @@ void processMousePassiveMotion(int x, int y) {
 
 void mousePressedMove(int x, int y)
 {
-	if (pressedButton == GLUT_RIGHT_BUTTON)
+	if (pressedButton == GLUT_LEFT_BUTTON)
 	{
 		megaminx->n = defN + (defMY - y) / 3;
 		megaminx->k = defK + (x - defMX) / 3;
@@ -278,22 +322,50 @@ void rotateDispatch(unsigned char key)
 {
     switch (key)
     {
-    case 'l':
-        megaminx->rotate(GLUT_KEY_F12 - GLUT_KEY_F1, -1);
+    case 'l':   //Left
+        megaminx->rotate(GLUT_KEY_F12 - 1, -1); break;
     case 'L':
-        megaminx->rotate(GLUT_KEY_F12 - GLUT_KEY_F1, 1);
-    case 'r':
-        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, -1);
+        megaminx->rotate(GLUT_KEY_F12 - 1, 1); break;
+    case 'r':   //Right
+        megaminx->rotate(GLUT_KEY_F9 - 1, -1); break;
     case 'R':
-        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, 1);
-    case 'u':
-        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, -1);
+        megaminx->rotate(GLUT_KEY_F9 - 1, 1); break;
+    case 'u':   //Upper(Top)
+        megaminx->rotate(GLUT_KEY_F7 - 1, -1); break;
     case 'U':
-        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, 1);
-    case 'f':
-        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, -1);
+        megaminx->rotate(GLUT_KEY_F7 - 1, 1); break;
+    case 'f':   //Front
+        megaminx->rotate(GLUT_KEY_F8 - 1, -1); break;
     case 'F':
-        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, 1);
+        megaminx->rotate(GLUT_KEY_F8 - 1, 1); break;
+    case 'b':   //Bottom(White)
+        megaminx->rotate(GLUT_KEY_F1 - 1, -1); break;
+    case 'B':
+        megaminx->rotate(GLUT_KEY_F1 - 1, 1); break;
+    case 'd':
+    case 'c':   //Diagonal/Corner
+        megaminx->rotate(GLUT_KEY_F5 - 1, -1); break;
+    case 'D':
+    case 'C':   //alias because its close to the keyboard.
+        megaminx->rotate(GLUT_KEY_F5 - 1, 1); break;
+    case 'z':   //Back Reverze Diag
+        megaminx->rotate(GLUT_KEY_F3 - 1, -1); break;
+    case 'Z':
+        megaminx->rotate(GLUT_KEY_F3 - 1, 1); break;
+    case 'x':   //Semantically near on QWERTY
+        megaminx->rotate(GLUT_KEY_F4 - 1, -1); break;
+    case 'X':
+        megaminx->rotate(GLUT_KEY_F4 - 1, 1); break;
+    case 'q':
+        megaminx->swapOneEdge(8, 1); break;   //left by 1
+    case 'w':
+        megaminx->swapOneEdge(8, 2); break;    //right by 1
+    case 'e':
+        megaminx->swapOneEdge(8, 3); break;   //right by 1
+    case 't':
+        megaminx->swapOneEdge(8, 4); break;    // "
+    case 'y': 
+        megaminx->swapOneEdge(8, 0); break;   // "
     default:
         break;
     }
@@ -303,12 +375,6 @@ void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-        //escape
-	case 27:
-		glutDestroyWindow(1);
-		exit(0);
-		break;
-        //spacebar
 	case ' ':
 		paused = !paused;
 		break;
