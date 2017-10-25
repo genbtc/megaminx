@@ -73,6 +73,7 @@ public:
         _color[i][1] = c.g;
         _color[i][2] = c.b;
     }
+
     void initColorIndex(int idx,int k)
     {
         const auto color = g_colorRGBs[k-1];
@@ -81,31 +82,19 @@ public:
     
     void initColor(int a)
     {
-        int i = 0;
-        initColorIndex(i,a);
+        initColorIndex(0,a);
     }
 
     void initColor(int a, int b)
     {
-        for (int i = 0; i < 2; ++i)
-        {
-            int k;
-            if (i == 0)      k = a;
-            else if (i == 1) k = b;
-            else             k = 0;
-            initColorIndex(i,k);
-        }
+        initColorIndex(0, a);
+        initColorIndex(1, b);
     }
-    void initColor(int a, int b, int c) {
-        for (int i = 0; i < 3; ++i)
-        {
-            int k;
-            if (i == 0)      k = a;
-            else if (i == 1) k = b;
-            else if (i == 2) k = c;
-            else             k = 0;
-            initColorIndex(i,k);
-        }
+    void initColor(int a, int b, int c)
+    {
+        initColorIndex(0, a);
+        initColorIndex(1, b);
+        initColorIndex(2, c);
     }
 };
 
