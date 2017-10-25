@@ -36,7 +36,7 @@ error:
 	$(error Invalid configuration, please check your inputs)
 endif
 
-SOURCEFILES := engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp
+SOURCEFILES := engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Piece.cpp
 EXTERNAL_LIBS := 
 EXTERNAL_LIBS_COPIED := $(foreach lib, $(EXTERNAL_LIBS),$(BINARYDIR)/$(notdir $(lib)))
 

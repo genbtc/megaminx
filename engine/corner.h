@@ -1,16 +1,15 @@
 #ifndef __CORNER_H__
 #define __CORNER_H__
+#include "piece.h"
 
-class Corner
+class Corner : Piece
 {
 public:
-	Corner();
-	void init(int);
-    void setColor(int i, double r, double g, double b);
-    void initColor(int, int, int);
-	~Corner();
+    Corner();
+    ~Corner(){}
 
-	void render();
+    void init(int n);    
+    void render();
 
 	double* color();
 	void flip();

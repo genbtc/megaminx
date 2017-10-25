@@ -1,25 +1,18 @@
 #ifndef __EDGE_H__
 #define __EDGE_H__
+#include "piece.h"
 
-class Edge
+class Edge : Piece
 {
 public:
-	Edge();
-	void init(int);
-    void setColor(int i, double r, double g, double b);
-    void initColor(int, int);
-	~Edge();
+    Edge();
+    ~Edge() {}
 
-	void render();
-
+    void init(int n);
+    void render();
 	double* color();
 
 	void flip();
-
-private:
-
-	double _color[2][3];
-	double _vertex[6][3];
 };
 
 #endif 	

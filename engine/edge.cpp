@@ -94,7 +94,7 @@ void Edge::init(int n)
 		case 9:
 			rotateVertex(_vertex[i], 'z', 6 * PI / 10);
 			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
+			rotateVertex(_vertex[i], 'z', 6 * PI / 5);  //<-------Next
 			initColor(5, 6);
 			break;
 		case 10:
@@ -103,6 +103,7 @@ void Edge::init(int n)
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			initColor(6, 2);
 			break;
+        //
 		case 11:
 			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
 			rotateVertex(_vertex[i], 'z', 6 * PI / 10);
@@ -134,9 +135,10 @@ void Edge::init(int n)
 			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
 			rotateVertex(_vertex[i], 'z', 6 * PI / 10);
 			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
+			rotateVertex(_vertex[i], 'z', 8 * PI / 5);  //<--Next
 			initColor(6, 9);
 			break;
+        //
 		case 16:
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			rotateVertex(_vertex[i], 'z', 6 * PI / 10);
@@ -147,7 +149,7 @@ void Edge::init(int n)
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			rotateVertex(_vertex[i], 'z', 6 * PI / 10);
 			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+			rotateVertex(_vertex[i], 'z', 2 * PI / 5);  //<-Next
 			initColor(3, 12);
 			break;
 		case 18:
@@ -171,6 +173,7 @@ void Edge::init(int n)
 			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
 			initColor(6, 10);
 			break;
+        //
 		case 21:
 			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
 			rotateVertex(_vertex[i], 'x', SIDE_ANGLE);
@@ -201,13 +204,14 @@ void Edge::init(int n)
 			rotateVertex(_vertex[i], 'z', 9 * PI / 5);
 			initColor(10, 11);
 			break;
+        //
 		case 26:
 			rotateVertex(_vertex[i], 'x', PI);
 			initColor(7, 8);
 			break;
 		case 27:
 			rotateVertex(_vertex[i], 'x', PI);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+			rotateVertex(_vertex[i], 'z', 2 * PI / 5);//<---Next
 			initColor(7, 9);
 			break;
 		case 28:
@@ -231,67 +235,6 @@ void Edge::init(int n)
 	}
 }
 
-void Edge::setColor(int i, double r, double g, double b)
-{
-    _color[i][0] = r;
-    _color[i][1] = g;
-    _color[i][2] = b;
-}
-
-void Edge::initColor(int a, int b)
-{
-	for (int i = 0; i < 2; ++i)
-	{
-		switch (i == 0 ? a : b)
-		{
-        //Which colors are these ?
-        case 1:
-            setColor(i, 1.0, 1.0, 1.0);
-            break;
-        case 2:
-            setColor(i, 0.0, 0.0, 1.0);
-            break;
-        case 3:
-            setColor(i, 1.0, 0.0, 0.0);
-            break;
-        case 4:
-            setColor(i, 0.0, 0.5, 0.0);
-            break;
-        case 5:
-            setColor(i, 0.5, 0.0, 1.0);
-            break;
-        case 6:
-            setColor(i, 1.0, 1.0, 0.0);
-            break;
-        case 7:
-            setColor(i, 0.5, 0.5, 0.5);
-            break;
-        case 8:
-            setColor(i, 0.2, 0.5, 1.0);
-            break;
-        case 9:
-            setColor(i, 1.0, 0.4, 0.1);
-            break;
-        case 10:
-            setColor(i, 0.3, 1.0, 0.3);
-            break;
-        case 11:
-            setColor(i, 0.9, 0.4, 1.0);
-            break;
-        case 12:
-            setColor(i, 1.0, 1.0, 0.3);
-            break;
-        case 0:
-        default:
-            break;
-		}
-	}
-}
-
-Edge::~Edge()
-{
-
-}
 
 void Edge::render()
 {

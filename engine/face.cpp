@@ -13,10 +13,13 @@ const double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
 
 Face::Face()
 {
+    center = nullptr;
+    turnDir = 0;
+    thisNum = 0;
 	_rotate = false;
 	angle = 0;
 	axis[0] = 0;
-	axis[1] = 0.001;
+	axis[1] = 0;
 	axis[2] = -1;
 }
 

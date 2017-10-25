@@ -1,21 +1,15 @@
 #ifndef __CENTER_H__
 #define __CENTER_H__
+#include "piece.h"
 
-class Center
+class Center : Piece
 {
 public:
-	Center();
-	void init(int n);
-    void setColor(double r, double g, double b);
-    void initColor(int k);
-	~Center();
+    Center();
+    virtual ~Center() = default;
 
+    void init(int n);
 	void render();
-
-private:
-
-	double _color[3];
-	double _vertex[5][3];
 };
 
 #endif

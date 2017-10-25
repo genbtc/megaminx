@@ -148,8 +148,7 @@ void Megaminx::rotate(int num, int dir)
 
 void Megaminx::scramble()
 {
-	for (int i = 0; i < 50; ++i)
-	{
-		this->face[rand() % 12].placeParts(rand() % 2 * 2 - 1);
-	}
+    for (int i = 0; i < 12; i++) {
+        this->face[i].placeParts(rand() % 2 * 2 - 1);
+    }
 }

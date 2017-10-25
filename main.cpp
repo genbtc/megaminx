@@ -53,20 +53,23 @@ void createMegaMinx()
 
 }
 void menu(int num) {
-    if (num == 5)
+    if (num == 1)
     {
         delete megaminx;
         createMegaMinx();
     }
 }
 void createMenu(void) {
+    //Sub Menu
     submenu_id = glutCreateMenu(menu);
     glutAddMenuEntry("Set Face Color", 2);
     glutAddMenuEntry("Rotate Corner Piece", 3);
     glutAddMenuEntry("Swap Edge Piece", 4);
-    glutAddMenuEntry("Solve All", 5);     menu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("Clear", 1);
-    glutAddSubMenu("ReDraw", submenu_id);
+    //Top Level Menu
+    menu_id = glutCreateMenu(menu);
+    glutAddMenuEntry("Solve All/(reset)", 1);
+    glutAddSubMenu("Algorithms", submenu_id);
+    //glutAddSubMenu("Redraw", submenu2_id);
     glutAddMenuEntry("Quit", 0);     glutAttachMenu(GLUT_MIDDLE_BUTTON);
 }
 
@@ -263,7 +266,7 @@ void specialKeyboard(int key, int x, int y)
     case GLUT_KEY_HOME:
     case GLUT_KEY_END:
     case GLUT_KEY_INSERT:
-        break;
+            break;
 	case GLUT_KEY_F1:
 	case GLUT_KEY_F2:
 	case GLUT_KEY_F3:

@@ -59,6 +59,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\center.h">
@@ -77,6 +80,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="engine\utils.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\piece.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

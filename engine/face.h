@@ -1,6 +1,7 @@
 #ifndef __FACE_H__
 #define __FACE_H__
 
+#include "piece.h"
 #include "center.h"
 #include "edge.h"
 #include "corner.h"
@@ -32,7 +33,7 @@ private:
 	void swapEdges(int, int);
 
 	int turnDir;
-	double _vertex[5][3];
+    double _vertex[5][3];
 
 	bool _rotate;
 	double angle;
