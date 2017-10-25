@@ -16,9 +16,6 @@ public:
 	void flipBack();
 
 private:
-
-	double _color[3][3];
-	double _vertex[7][3];
 	bool inited;
 	bool turn;
 	double angle;

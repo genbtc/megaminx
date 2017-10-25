@@ -14,11 +14,7 @@ public:
     double _color[3][3];
     double _vertex[7][3];
 
-    void setColor(double r, double g, double b)
-    {
-        setColor3(0, r, g, b);
-    }
-    void setColor3(int i, double r, double g, double b)
+    void setColor(int i, double r, double g, double b)
     {
         _color[i][0] = r;
         _color[i][1] = g;
@@ -27,43 +23,44 @@ public:
     
     void initColor(int k)
     {
+        int i = 0;
         switch (k)
         {
         case 1:
-            setColor(1.0, 1.0, 1.0);
+            setColor(i, 1.0, 1.0, 1.0);
             break;
         case 2:
-            setColor(0.0, 0.0, 1.0);
+            setColor(i, 0.0, 0.0, 1.0);
             break;
         case 3:
-            setColor(1.0, 0.0, 0.0);
+            setColor(i, 1.0, 0.0, 0.0);
             break;
         case 4:
-            setColor(0.0, 0.5, 0.0);
+            setColor(i, 0.0, 0.5, 0.0);
             break;
         case 5:
-            setColor(0.5, 0.0, 1.0);
+            setColor(i, 0.5, 0.0, 1.0);
             break;
         case 6:
-            setColor(1.0, 1.0, 0.0);
+            setColor(i, 1.0, 1.0, 0.0);
             break;
         case 7:
-            setColor(0.5, 0.5, 0.5);
+            setColor(i, 0.5, 0.5, 0.5);
             break;
         case 8:
-            setColor(0.2, 0.5, 1.0);
+            setColor(i, 0.2, 0.5, 1.0);
             break;
         case 9:
-            setColor(1.0, 0.4, 0.1);
+            setColor(i, 1.0, 0.4, 0.1);
             break;
         case 10:
-            setColor(0.3, 1.0, 0.3);
+            setColor(i, 0.3, 1.0, 0.3);
             break;
         case 11:
-            setColor(0.9, 0.4, 1.0);
+            setColor(i, 0.9, 0.4, 1.0);
             break;
         case 12:
-            setColor(1.0, 1.0, 0.3);
+            setColor(i, 1.0, 1.0, 0.3);
             break;
         case 0:
         default:
@@ -78,40 +75,40 @@ public:
             {
                 //Which colors are these ?
             case 1:
-                setColor3(i, 1.0, 1.0, 1.0);
+                setColor(i, 1.0, 1.0, 1.0);
                 break;
             case 2:
-                setColor3(i, 0.0, 0.0, 1.0);
+                setColor(i, 0.0, 0.0, 1.0);
                 break;
             case 3:
-                setColor3(i, 1.0, 0.0, 0.0);
+                setColor(i, 1.0, 0.0, 0.0);
                 break;
             case 4:
-                setColor3(i, 0.0, 0.5, 0.0);
+                setColor(i, 0.0, 0.5, 0.0);
                 break;
             case 5:
-                setColor3(i, 0.5, 0.0, 1.0);
+                setColor(i, 0.5, 0.0, 1.0);
                 break;
             case 6:
-                setColor3(i, 1.0, 1.0, 0.0);
+                setColor(i, 1.0, 1.0, 0.0);
                 break;
             case 7:
-                setColor3(i, 0.5, 0.5, 0.5);
+                setColor(i, 0.5, 0.5, 0.5);
                 break;
             case 8:
-                setColor3(i, 0.2, 0.5, 1.0);
+                setColor(i, 0.2, 0.5, 1.0);
                 break;
             case 9:
-                setColor3(i, 1.0, 0.4, 0.1);
+                setColor(i, 1.0, 0.4, 0.1);
                 break;
             case 10:
-                setColor3(i, 0.3, 1.0, 0.3);
+                setColor(i, 0.3, 1.0, 0.3);
                 break;
             case 11:
-                setColor3(i, 0.9, 0.4, 1.0);
+                setColor(i, 0.9, 0.4, 1.0);
                 break;
             case 12:
-                setColor3(i, 1.0, 1.0, 0.3);
+                setColor(i, 1.0, 1.0, 0.3);
                 break;
             case 0:
             default:
@@ -132,40 +129,40 @@ public:
             switch (k)
             {
             case 1:
-                setColor3(i, 1.0, 1.0, 1.0);
+                setColor(i, 1.0, 1.0, 1.0);
                 break;
             case 2:
-                setColor3(i, 0.0, 0.0, 1.0);
+                setColor(i, 0.0, 0.0, 1.0);
                 break;
             case 3:
-                setColor3(i, 1.0, 0.0, 0.0);
+                setColor(i, 1.0, 0.0, 0.0);
                 break;
             case 4:
-                setColor3(i, 0.0, 0.5, 0.0);
+                setColor(i, 0.0, 0.5, 0.0);
                 break;
             case 5:
-                setColor3(i, 0.5, 0.0, 1.0);
+                setColor(i, 0.5, 0.0, 1.0);
                 break;
             case 6:
-                setColor3(i, 1.0, 1.0, 0.0);
+                setColor(i, 1.0, 1.0, 0.0);
                 break;
             case 7:
-                setColor3(i, 0.5, 0.5, 0.5);
+                setColor(i, 0.5, 0.5, 0.5);
                 break;
             case 8:
-                setColor3(i, 0.2, 0.5, 1.0);
+                setColor(i, 0.2, 0.5, 1.0);
                 break;
             case 9:
-                setColor3(i, 1.0, 0.4, 0.1);
+                setColor(i, 1.0, 0.4, 0.1);
                 break;
             case 10:
-                setColor3(i, 0.3, 1.0, 0.3);
+                setColor(i, 0.3, 1.0, 0.3);
                 break;
             case 11:
-                setColor3(i, 0.9, 0.4, 1.0);
+                setColor(i, 0.9, 0.4, 1.0);
                 break;
             case 12:
-                setColor3(i, 1.0, 1.0, 0.3);
+                setColor(i, 1.0, 1.0, 0.3);
                 break;
             case 0:
             default:
