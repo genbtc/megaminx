@@ -122,63 +122,90 @@ void Face::initAxis(int n)
 	}
 	for (int i = 0; i < 5; ++i)
 	{
-
+        char axis1 = 0,axis2 = 0;
+        int multiplier = 0;
 		switch (n + 1)
 		{
 		case 2:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
+            axis1 = 'z';
+            axis2 = 'x';
 			break;
 		case 3:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+            axis1 = 'z';
+            axis2 = 'x';
+            multiplier = 2;			
 			break;
 		case 4:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
+            axis1 = 'z';
+            axis2 = 'x';
+            multiplier = 4;
 			break;
 		case 5:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
+            axis1 = 'z';
+            axis2 = 'x';
+            multiplier = 6;
 			break;
 		case 6:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
+            axis1 = 'z';
+            axis2 = 'x';
+            multiplier = 8;
 			break;
 		case 7:
-			rotateVertex(_vertex[i], 'x', PI);
+            axis1 = 'x';
 			break;
 		case 8:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
+            axis1 = 'y';
+            axis2 = 'x';
 			break;
 		case 9:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+            axis1 = 'y';
+            axis2 = 'x';
+            multiplier = 2;
 			break;
 		case 10:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
+            axis1 = 'y';
+            axis2 = 'x';
+            multiplier = 4;
 			break;
 		case 11:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
+            axis1 = 'y';
+            axis2 = 'x';
+            multiplier = 6;
 			break;
 		case 12:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
+            axis1 = 'y';
+            axis2 = 'x';
+            multiplier = 8;
 			break;
         default:
             break;
 		}
+        switch (n + 1)
+        {
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            rotateVertex(_vertex[i], axis1, 2 * PI / 10);
+            rotateVertex(_vertex[i], axis2, PI - SIDE_ANGLE);
+            rotateVertex(_vertex[i], 'z', multiplier * PI / 5);
+            break;
+        case 7:
+            rotateVertex(_vertex[i], axis1, PI);
+            break;
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            rotateVertex(_vertex[i], axis1, PI);
+            rotateVertex(_vertex[i], axis2, PI - SIDE_ANGLE);
+            rotateVertex(_vertex[i], 'z', multiplier * PI / 5);
+            break;
+        default:
+            break;
+        }
 	}
 }
 
