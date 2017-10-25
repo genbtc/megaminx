@@ -52,6 +52,8 @@ static int window;
 static int menu_id;
 static int submenu_id;
 
+bool doSpin = true;
+
 void createMegaMinx()
 {
     megaminx = new Megaminx;
@@ -63,19 +65,29 @@ void menu(int num) {
         delete megaminx;
         createMegaMinx();
     }
+    if (num == 2)
+    {
+        megaminx->rotate(5, 1);
+    }
+    if (num == 3)
+        doSpin = !doSpin;
 }
 void createMenu(void) {
-    //Sub Menu
+    //SubLevel Menu
     submenu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("Set Face Color", 2);
-    glutAddMenuEntry("Rotate Corner Piece", 3);
-    glutAddMenuEntry("Swap Edge Piece", 4);
+    glutAddMenuEntry("Set Face Color", 22);
+    glutAddMenuEntry("Rotate Corner Piece", 23);
+    glutAddMenuEntry("Swap Edge Piece", 24);
+    
     //Top Level Menu
     menu_id = glutCreateMenu(menu);
     glutAddMenuEntry("Solve All/(reset)", 1);
-    glutAddSubMenu("Algorithms", submenu_id);
+    glutAddMenuEntry("Mark as Front Face", 2);
+    glutAddMenuEntry("Toggle Spinning", 3);
+    glutAddSubMenu("Algorithms --->", submenu_id);
     //glutAddSubMenu("Redraw", submenu2_id);
-    glutAddMenuEntry("Quit", 0);     glutAttachMenu(GLUT_MIDDLE_BUTTON);
+    //glutAddMenuEntry("Quit", 0);     
+    glutAttachMenu(GLUT_LEFT_BUTTON);
 }
 
 
@@ -127,7 +139,8 @@ void reshape()
 
 int depth = 0;
 float angleX = 0.0;
-float angle = 0.0;
+float angle = 0.0;
+
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -146,13 +159,16 @@ void display()
     //angle makes it spin to the right. /2 is slower
     //K = X axis
 	glRotated(megaminx->k + angle/2, 0, 0, 1);
-    angle++;
+    //spinning can be disabled(toggled)
+    if (doSpin)
+        angle++;
 
 	megaminx->render();
 
 	//glTranslated(0, 0, -100 + depth);
 	glPopMatrix();
-	glDisable(GL_BLEND);
+
+	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHT1);
     glDisable(GL_MULTISAMPLE_ARB);
@@ -235,7 +251,8 @@ void mousePressed(int button, int state, int x, int y)
 
 void processMousePassiveMotion(int x, int y) {
     //
-}
+}
+
 
 void mousePressedMove(int x, int y)
 {
