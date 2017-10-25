@@ -14,13 +14,9 @@ public:
 	void render();
 	void rotate(int, int);
 	void scramble();
-    /**
-	 * \brief y axis
-	 */
+    /* y axis */
 	double n;
-    /**
-	 * \brief x axis
-	 */
+    /* x axis */
 	double k;
 	bool _rotate;
 private:

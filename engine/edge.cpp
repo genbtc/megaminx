@@ -3,12 +3,6 @@
 #include "edge.h"
 #include "utils.h"
 
-const double FI = (1 + sqrt(5)) / 2;
-const double PI = acos(-1);
-const double SIDE_ANGLE = 2 * atan(FI);
-const double INS_SPHERE_RAD = 100 * sqrt(10 + 22 / sqrt(5)) / 4;
-const double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
-
 Edge::Edge()
 {
     for (int i = 0; i < 2; ++i)

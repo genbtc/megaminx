@@ -5,12 +5,6 @@
 
 #include <iostream>
 
-const double FI = (1 + sqrt(5)) / 2;
-const double PI = acos(-1);
-const double SIDE_ANGLE = 2 * atan(FI);
-const double INS_SPHERE_RAD = 100 * sqrt(10 + 22 / sqrt(5)) / 4;
-const double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
-
 Face::Face()
 {
     center = nullptr;
@@ -19,7 +13,7 @@ Face::Face()
 	_rotate = false;
 	angle = 0;
 	axis[0] = 0;
-	axis[1] = 0.001;
+	axis[1] = 0.0001;
 	axis[2] = -1;
 }
 
@@ -143,12 +137,13 @@ Face::~Face()
 
 }
 
+//shortcuts for commonly used internal moves
 void Face::edge03flip()
 {
     edge[0]->flip();
     edge[3]->flip();
 }
-
+//shortcuts for commonly used internal moves
 void Face::corner0124flip()
 {
     corner[0]->flipBack();
@@ -225,10 +220,8 @@ void Face::placeParts(int dir)
 			swapEdges(1, 2);
 			swapEdges(1, 3);
 			swapEdges(3, 4);
-
 			edge[1]->flip();
 			edge[2]->flip();
-
 			swapCorners(0, 1);
 			swapCorners(0, 3);
 			swapCorners(0, 4);
