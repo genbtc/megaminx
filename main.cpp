@@ -12,7 +12,7 @@
 #include "engine/megaminx.h"
 
 
-double view_distance_view_angle = 30;
+double view_distance_view_angle = 20;
 int activeWindow = 0;
 
 bool paused = false;
@@ -25,7 +25,7 @@ int pressedButton;
 int specialKey;
 
 void display();
-void reshape();
+void reshape(int x, int y);
 void timer(int);
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
@@ -33,18 +33,14 @@ void mousePressedMove(int x, int y);
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void specialKeyboard(int key, int x, int y);
+void rotateDispatch(unsigned char key);
 
 using namespace std;
 
-const long double FI = (1 + sqrt(5)) / 2;
-const long double PI = acos(-1);
-const long double SIDE_ANGLE = 2 * atan(FI);
-const long double INS_SPHERE_RAD = 90 * sqrt(10 + 22 / sqrt(5.)) / 4 - 1;
-const long double INS_CIRCLE_RAD = 70 / sqrt((5. - sqrt(5.)) / 2);
-
 const char *title = "Megaminx v1.1 - genBTC mod";
-const int w = 700;
-const int h = 700;
+// initial window screen size
+int WIDTH = 700;
+int HEIGHT = 700;
 
 Megaminx* megaminx;
 
@@ -65,7 +61,7 @@ void menu(int num) {
     }
     if (num == 2)
     {
-        megaminx->rotate(8-1, 1);
+        rotateDispatch('f');
     }
     if (num == 3)
         doSpin = !doSpin;
@@ -91,7 +87,8 @@ void createMenu(void) {
     //Top Level Menu
     menu_id = glutCreateMenu(menu);
     glutAddMenuEntry("Solve All/(reset)", 1);
-    glutAddMenuEntry("Mark as Front Face", 2);
+    glutAddMenuEntry("Rotate Front Face", 2);
+    glutAddMenuEntry("Mark as Front Face", 4);
     glutAddMenuEntry("Toggle Spinning", 3);
     glutAddSubMenu("Algorithms --->", submenu_id);
     //glutAddSubMenu("Redraw", submenu2_id);
@@ -102,22 +99,23 @@ void createMenu(void) {
 
 int main(int argc, char *argv[])
 {
-	srand(time(NULL));
+	srand(time(nullptr));
     createMegaMinx();
 	glutInit(&argc, argv);
 	// int w = glutGet(GLUT_SCREEN_WIDTH) - 500;
 	// int h = glutGet(GLUT_SCREEN_HEIGHT) - 200;
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
-	glutInitWindowSize(w, h);    
+	glutInitWindowSize(WIDTH, HEIGHT);
     window = glutCreateWindow(title);
 
 	glClearColor(0.2, 0.2, 0.2, 1.0);
-	glLoadIdentity();
-	glMatrixMode(GL_PROJECTION);
-	gluPerspective(view_distance_view_angle, w / (double)h, 1.0, 10000.0);
-	glMatrixMode(GL_MODELVIEW);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glLoadIdentity();
+    glMatrixMode(GL_PROJECTION);
+    gluPerspective(view_distance_view_angle, WIDTH / (double)HEIGHT, 1.0, 10000.0);
+    glMatrixMode(GL_MODELVIEW);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glutReshapeFunc(reshape);
     glutDisplayFunc(display);
 	glutTimerFunc(0, timer, 0);
 	glutMouseFunc(mousePressed);
@@ -127,23 +125,27 @@ int main(int argc, char *argv[])
 	glutSpecialFunc(specialKeyboard);
 	// glutFullScreen();
     // glutSetWindow(1);
-    // put all the menu functions in one nice procedure
-    createMenu();
+
+    createMenu();	
 
 	glTranslated(0, 0, -800);
 	glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
 	glLineWidth(4);
 
 	glutMainLoop();
+    
 	return 0;
 }
 
-void reshape()
+void reshape(int x, int y)
 {
+    if (x == WIDTH && y == HEIGHT)
+        return;
     const auto w = glutGet(GLUT_WINDOW_WIDTH);
     const auto h = glutGet(GLUT_WINDOW_HEIGHT);
-	glutReshapeWindow(w, h);
-	glLoadIdentity();
+    const auto minx = min(w, h);
+	glutReshapeWindow(minx, minx);
+    glViewport(0, 0, minx, minx);
 }
 
 int depth = 0;
@@ -217,10 +219,10 @@ void mousePressed(int button, int state, int x, int y)
         // position inside the window
         if (x < 0)
             angleX = 0.0;
-        else if (x > w)
+        else if (x > WIDTH)
             angleX = 180.0;
         else
-            angleX = 180.0 * ((float)x) / h;
+            angleX = 180.0 * x / HEIGHT;
     }
     static unsigned int prev_left_click;
     static int prev_left_x, prev_left_y;
@@ -272,6 +274,31 @@ void mousePressedMove(int x, int y)
 	}
 }
 
+void rotateDispatch(unsigned char key)
+{
+    switch (key)
+    {
+    case 'l':
+        megaminx->rotate(GLUT_KEY_F12 - GLUT_KEY_F1, -1);
+    case 'L':
+        megaminx->rotate(GLUT_KEY_F12 - GLUT_KEY_F1, 1);
+    case 'r':
+        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, -1);
+    case 'R':
+        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, 1);
+    case 'u':
+        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, -1);
+    case 'U':
+        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, 1);
+    case 'f':
+        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, -1);
+    case 'F':
+        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, 1);
+    default:
+        break;
+    }
+}
+
 void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
@@ -289,25 +316,10 @@ void keyboard(unsigned char key, int x, int y)
 	case 8:
 		megaminx->scramble();
 		break;
-    case 'l':
-        megaminx->rotate(GLUT_KEY_F12 -GLUT_KEY_F1, -1);
-    case 'L':
-        megaminx->rotate(GLUT_KEY_F12- GLUT_KEY_F1, 1);
-    case 'r':
-        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, -1);
-    case 'R':
-        megaminx->rotate(GLUT_KEY_F9 - GLUT_KEY_F1, 1);
-    case 'u':
-        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, -1);
-    case 'U':
-        megaminx->rotate(GLUT_KEY_F7 - GLUT_KEY_F1, 1);
-    case 'f':
-        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, -1);
-    case 'F':
-        megaminx->rotate(GLUT_KEY_F8 - GLUT_KEY_F1, 1);
     default:
         break;
 	}
+    rotateDispatch(key);
 }
 
 void specialKeyboard(int key, int x, int y)
