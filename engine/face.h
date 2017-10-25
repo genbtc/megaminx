@@ -17,8 +17,10 @@ public:
 	void initAxis(int n);
 	void initNum(int);
 	~Face();
+    void edge03flip();
+    void corner0124flip();
 
-	bool render();
+    bool render();
 	void rotate(int);
 	void placeParts(int dir);
 

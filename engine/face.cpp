@@ -187,6 +187,20 @@ Face::~Face()
 
 }
 
+void Face::edge03flip()
+{
+    edge[0]->flip();
+    edge[3]->flip();
+}
+
+void Face::corner0124flip()
+{
+    corner[0]->flipBack();
+    corner[1]->flip();
+    corner[2]->flip();
+    corner[4]->flipBack();
+}
+
 void Face::placeParts(int dir)
 {
 	if (dir == 1)
@@ -220,8 +234,7 @@ void Face::placeParts(int dir)
 			edge[2]->flip();
 			break;
 		case 2:
-			edge[0]->flip();
-			edge[3]->flip();
+            edge03flip();
 			swapEdges(1, 0);
 			swapEdges(1, 2);
 			swapEdges(1, 3);
@@ -406,8 +419,7 @@ void Face::placeParts(int dir)
 			swapEdges(0, 1);
 			swapEdges(1, 3);
 			swapEdges(4, 1);
-			edge[0]->flip();
-			edge[3]->flip();
+            edge03flip();
 			break;
 		case 2:
 			edge[1]->flip();
@@ -430,8 +442,7 @@ void Face::placeParts(int dir)
 			swapEdges(0, 1);
 			swapEdges(4, 3);
 			swapEdges(3, 2);
-			edge[0]->flip();
-			edge[3]->flip();
+            edge03flip();
 			swapCorners(0, 1);
 			swapCorners(1, 2);
 			swapCorners(1, 3);
@@ -446,10 +457,7 @@ void Face::placeParts(int dir)
 			swapEdges(1, 3);
 			swapEdges(1, 2);
 			swapEdges(0, 1);
-
-			edge[0]->flip();
-			edge[3]->flip();
-
+            edge03flip();
 			swapCorners(0, 2);
 			swapCorners(0, 4);
 			swapCorners(0, 3);
@@ -464,8 +472,7 @@ void Face::placeParts(int dir)
 			swapEdges(0, 2);
 			swapEdges(2, 3);
 			swapEdges(2, 4);
-			edge[3]->flip();
-			edge[0]->flip();
+            edge03flip();
 			swapCorners(0, 1);
 			swapCorners(1, 2);
 			swapCorners(1, 4);
@@ -485,13 +492,12 @@ void Face::placeParts(int dir)
 			swapEdges(2, 3);
 			swapEdges(3, 4);
 			break;
-		case 7:
+		case 7: //front clockwise;
 			swapEdges(0, 1);
 			swapEdges(0, 2);
 			swapEdges(0, 4);
 			swapEdges(0, 3);
-			edge[0]->flip();
-			edge[3]->flip();
+            edge03flip();
 			swapCorners(0, 3);
 			swapCorners(0, 1);
 			swapCorners(0, 2);
@@ -506,32 +512,24 @@ void Face::placeParts(int dir)
 			swapEdges(2, 4);
 			swapEdges(1, 2);
 			swapEdges(0, 1);
-			edge[0]->flip();
-			edge[3]->flip();
+            edge03flip();
 			swapCorners(2, 3);
 			swapCorners(1, 2);
 			swapCorners(1, 4);
 			swapCorners(0, 4);
-			corner[0]->flipBack();
-			corner[1]->flip();
-			corner[2]->flip();
-			corner[4]->flipBack();
+            corner0124flip();
 			break;
 		case 9:
 			swapEdges(3, 4);
 			swapEdges(2, 4);
 			swapEdges(1, 2);
 			swapEdges(0, 1);
-			edge[0]->flip();
-			edge[3]->flip();
+			edge03flip();
 			swapCorners(2, 3);
 			swapCorners(1, 2);
 			swapCorners(1, 4);
 			swapCorners(0, 4);
-			corner[0]->flipBack();
-			corner[1]->flip();
-			corner[2]->flip();
-			corner[4]->flipBack();
+            corner0124flip();
 			break;
 		case 10:
 			swapEdges(2, 4);
@@ -544,26 +542,19 @@ void Face::placeParts(int dir)
 			swapCorners(1, 2);
 			swapCorners(1, 4);
 			swapCorners(0, 4);
-			corner[0]->flipBack();
-			corner[1]->flip();
-			corner[2]->flip();
-			corner[4]->flipBack();
+            corner0124flip();
 			break;
 		case 11:
 			swapEdges(0, 1);
 			swapEdges(0, 2);
 			swapEdges(0, 4);
 			swapEdges(0, 3);
-			edge[0]->flip();
-			edge[3]->flip();
+            edge03flip();
 			swapCorners(0, 4);
 			swapCorners(0, 2);
 			swapCorners(0, 1);
 			swapCorners(0, 3);
-			corner[0]->flipBack();
-			corner[1]->flip();
-			corner[2]->flip();
-			corner[4]->flipBack();
+			corner0124flip();
 			break;
         default:
             break;
