@@ -229,15 +229,6 @@ void Corner::render()
 	glEnd();
 }
 
-/**
- * \brief 
- * \return starting color of the corner.
- */
-double* Corner::color()
-{
-	return &_color[0][0];
-}
-
 
 /**
  * \brief public

@@ -2,7 +2,7 @@
 #define __EDGE_H__
 #include "piece.h"
 
-class Edge : Piece
+class Edge : public Piece
 {
 public:
     Edge();
@@ -10,9 +10,9 @@ public:
 
     void init(int n);
     void render();
-	double* color();
 
 	void flip();
+    void swapEdges(int n, int k);
 };
 
 #endif 	

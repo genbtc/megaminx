@@ -2,7 +2,7 @@
 #define __CORNER_H__
 #include "piece.h"
 
-class Corner : Piece
+class Corner : public Piece
 {
 public:
     Corner();
@@ -11,7 +11,6 @@ public:
     void init(int n);    
     void render();
 
-	double* color();
 	void flip();
 	void flipBack();
 

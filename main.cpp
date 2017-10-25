@@ -22,12 +22,13 @@ double defK = 0;
 
 double defMX, defMY;
 int pressedButton;
+int specialKey;
 
 void display();
 void reshape();
 void timer(int);
 void mousePressed(int button, int state, int x, int y);
-void mouseMove(int x, int y);
+void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
@@ -40,7 +41,11 @@ const long double PI = acos(-1);
 const long double SIDE_ANGLE = 2 * atan(FI);
 const long double INS_SPHERE_RAD = 90 * sqrt(10 + 22 / sqrt(5.)) / 4 - 1;
 const long double INS_CIRCLE_RAD = 70 / sqrt((5. - sqrt(5.)) / 2);
+
 const char *title = "Megaminx v1.1 - genBTC mod";
+const int w = 700;
+const int h = 700;
+
 Megaminx* megaminx;
 
 static int window;
@@ -81,8 +86,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	// int w = glutGet(GLUT_SCREEN_WIDTH) - 500;
 	// int h = glutGet(GLUT_SCREEN_HEIGHT) - 200;
-	const int w = 700;
-	const int h = 700;
+
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
 	glutInitWindowSize(w, h);    
     window = glutCreateWindow(title);
@@ -96,7 +100,7 @@ int main(int argc, char *argv[])
     glutDisplayFunc(display);
 	glutTimerFunc(0, timer, 0);
 	glutMouseFunc(mousePressed);
-	glutPassiveMotionFunc(mouseMove);   //not implemented
+	glutPassiveMotionFunc(processMousePassiveMotion);
 	glutMotionFunc(mousePressedMove);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialKeyboard);
@@ -122,6 +126,8 @@ void reshape()
 }
 
 int depth = 0;
+float angleX = 0.0;
+float angle = 0.0;
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -132,13 +138,21 @@ void display()
 	glPointSize(5);
 		
 	glPushMatrix();
+    //orient the cube the way we want. N = Y axis
 	glRotated(megaminx->n, -1, 0, 0);
-	glRotated(megaminx->k, 0, 0, 1);
+    glRotated(-30, -1, 0, 0);
+    //rotated it down by 30 degrees off the Y 
+    // so we can see more faces - steeper angles
+    //angle makes it spin to the right. /2 is slower
+    //K = X axis
+	glRotated(megaminx->k + angle/2, 0, 0, 1);
+    angle++;
 
 	megaminx->render();
+
 	//glTranslated(0, 0, -100 + depth);
 	glPopMatrix();
-	glDisable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHT1);
     glDisable(GL_MULTISAMPLE_ARB);
@@ -148,8 +162,7 @@ void display()
 void timer(int)
 {
 	glutPostRedisplay();
-	glutTimerFunc(2, timer, 0);
-	
+	glutTimerFunc(2, timer, 0);	
 }
 
 void double_click(int x, int y)
@@ -163,6 +176,7 @@ static int bnstate[16];
 static int prev_x = -1, prev_y;
 void mousePressed(int button, int state, int x, int y)
 {
+    specialKey = glutGetModifiers();
     pressedButton = button;
     if (state == GLUT_DOWN)
     {
@@ -171,7 +185,18 @@ void mousePressed(int button, int state, int x, int y)
         defN = megaminx->n;
         defK = megaminx->k;
     }
-
+    // User must press the SHIFT key to change the
+    // rotation in the X axis
+    if (pressedButton == GLUT_ACTIVE_SHIFT) {
+        // setting the angle to be relative to the mouse
+        // position inside the window
+        if (x < 0)
+            angleX = 0.0;
+        else if (x > w)
+            angleX = 180.0;
+        else
+            angleX = 180.0 * ((float)x) / h;
+    }
     static unsigned int prev_left_click;
     static int prev_left_x, prev_left_y;
 
@@ -195,18 +220,22 @@ void mousePressed(int button, int state, int x, int y)
     }
     if (button == 4)
     {
-        depth++;
+        //depth++;
+        const int dira = (y - megaminx->n) < -180 ? 1 : -1;
+        const int dirb = (x - megaminx->k) / 180;
+        if (pressedButton == GLUT_LEFT_BUTTON)
+        {
+            megaminx->rotate(GLUT_KEY_F1 + dirb, dira);
+        }
     }
     else if (button == 5)
     {
-        depth--;
     }
 }
 
-void mouseMove(int x, int y)
-{
-    //not implemented
-}
+void processMousePassiveMotion(int x, int y) {
+    //
+}
 
 void mousePressedMove(int x, int y)
 {
@@ -241,12 +270,12 @@ void keyboard(unsigned char key, int x, int y)
 
 void specialKeyboard(int key, int x, int y)
 {
-    const int modif = glutGetModifiers();
-    if ((modif == GLUT_ACTIVE_CTRL) &&
+    specialKey = glutGetModifiers();
+    if ((specialKey == GLUT_ACTIVE_CTRL) &&
         ((key == 'c') || (key == 'C'))) {
         exit(0);
     }
-    const int dir = (modif == 1) ? 1 : -1;
+    const int dir = (specialKey == 1) ? 1 : -1;
 	switch (key)
 	{
     case GLUT_KEY_LEFT:

@@ -2,7 +2,7 @@
 #define __CENTER_H__
 #include "piece.h"
 
-class Center : Piece
+class Center : public Piece
 {
 public:
     Center();

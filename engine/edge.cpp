@@ -270,14 +270,6 @@ void Edge::render()
 	glEnd();
 }
 
-/**
- * \brief 
- * \return starting color of the corner.
- */
-double *Edge::color()
-{
-	return &_color[0][0];
-}
 
 void Edge::flip()
 {

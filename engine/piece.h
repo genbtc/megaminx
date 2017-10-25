@@ -63,11 +63,21 @@ public:
     }
 
     ~Piece() = default;
-public:
+
     double _color[3][3];
     double _vertex[7][3];
 
-    void setColor(int i, color c)
+    /**
+     * \brief 
+     * \return get the color.
+     */
+    double* getcolor()
+    {
+        return &_color[0][0];
+    }
+
+
+    void setColor(int i, ::color c)
     {
         _color[i][0] = c.r;
         _color[i][1] = c.g;

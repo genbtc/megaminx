@@ -19,7 +19,7 @@ Face::Face()
 	_rotate = false;
 	angle = 0;
 	axis[0] = 0;
-	axis[1] = 0;
+	axis[1] = 0.001;
 	axis[2] = -1;
 }
 
@@ -633,19 +633,19 @@ void Face::swapCorners(int n, int k)
 	double buf;
 	for (int i = 0; i < 9; ++i)
 	{
-		buf = corner[n]->color()[i];
-		corner[n]->color()[i] = corner[k]->color()[i];
-		corner[k]->color()[i] = buf;
+		buf = corner[n]->getcolor()[i];
+		corner[n]->getcolor()[i] = corner[k]->getcolor()[i];
+		corner[k]->getcolor()[i] = buf;
 	}
 }
 
 void Face::swapEdges(int n , int k)
 {
-	double buf;
-	for (int i = 0; i < 6; ++i)
-	{
-		buf = edge[n]->color()[i];
-		edge[n]->color()[i] = edge[k]->color()[i];
-		edge[k]->color()[i] = buf;
-	}
+    double buf;
+    for (int i = 0; i < 6; ++i)
+    {
+        buf = edge[n]->getcolor()[i];
+        edge[n]->getcolor()[i] = edge[k]->getcolor()[i];
+        edge[k]->getcolor()[i] = buf;
+    }
 }
