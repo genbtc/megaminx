@@ -1,7 +1,6 @@
 #ifndef __FACE_H__
 #define __FACE_H__
 
-#include "piece.h"
 #include "center.h"
 #include "edge.h"
 #include "corner.h"

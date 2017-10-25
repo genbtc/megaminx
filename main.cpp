@@ -48,9 +48,7 @@ const int h = 700;
 
 Megaminx* megaminx;
 
-static int window;
-static int menu_id;
-static int submenu_id;
+static int window,menu_id,submenu_id,submenu2_id;
 
 bool doSpin = false;
 
@@ -67,17 +65,28 @@ void menu(int num) {
     }
     if (num == 2)
     {
-        megaminx->rotate(5, 1);
+        megaminx->rotate(8-1, 1);
     }
     if (num == 3)
         doSpin = !doSpin;
 }
 void createMenu(void) {
+    //SubLevel 2 menu
+    submenu2_id = glutCreateMenu(menu);
+    glutAddMenuEntry("Make Grey Star", 31);
+    glutAddMenuEntry("Make Grey Corners", 32);
+    glutAddMenuEntry("One Edge Swap", 31);
+    glutAddMenuEntry("One Corner Swap", 32);
+    glutAddMenuEntry("Scramble", 33);
+
     //SubLevel Menu
     submenu_id = glutCreateMenu(menu);
     glutAddMenuEntry("Set Face Color", 22);
     glutAddMenuEntry("Rotate Corner Piece", 23);
     glutAddMenuEntry("Swap Edge Piece", 24);
+    glutAddSubMenu("Last Layer -->", submenu2_id);
+ 
+    glutAddMenuEntry("", 22);
     
     //Top Level Menu
     menu_id = glutCreateMenu(menu);
