@@ -85,5 +85,8 @@
     <ClInclude Include="engine\piece.h">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="engine\vector3d.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

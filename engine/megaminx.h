@@ -2,7 +2,6 @@
 #define __MEGAMINX_H__
 
 #include "face.h"
-#include "center.h"
 
 class Megaminx
 {

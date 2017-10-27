@@ -1,9 +1,8 @@
 #include <math.h>
 #include "utils.h"
-
-void rotateVertex(double &vx, double &vy, double angle)
+static double PI = acos(-1);
+void rotate_vertex(double &vx, double &vy, double angle)
 {
-	static double PI = acos(-1);
 	double r = sqrt(vx * vx + vy * vy);
 	double a = vy > 0 ? acos(vx / r) : 2 * PI - acos(vx / r);
 	a += angle;
@@ -13,16 +12,17 @@ void rotateVertex(double &vx, double &vy, double angle)
 
 void rotateVertex(double *vertex, char axis, double angle)
 {
+    //Vector3d v3d = { vertex[0],vertex[1],vertex[2] };
 	switch (axis)
 	{
 	case 'x':
-		rotateVertex(vertex[1], vertex[2], angle);
+		rotate_vertex(vertex[1], vertex[2], angle);
 		break;
 	case 'y':
-		rotateVertex(vertex[0], vertex[2], angle);
+		rotate_vertex(vertex[0], vertex[2], angle);
 		break;
 	case 'z':
-		rotateVertex(vertex[0], vertex[1], angle);
+		rotate_vertex(vertex[0], vertex[1], angle);
 		break;
     default:
         break;

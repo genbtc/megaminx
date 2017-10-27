@@ -6,9 +6,10 @@ class Corner : public Piece
 {
 public:
     Corner();
-    ~Corner(){}
+    void createAxis(int n, double* target);
+    ~Corner() {}
 
-    void init(int n);    
+    void init(int n);
     void render();
 
 	void flip();
@@ -17,8 +18,6 @@ public:
 private:
 	bool inited;
 	bool turn;
-	double angle;
-	double axis[3];
 };
 
 #endif

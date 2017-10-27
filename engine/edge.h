@@ -8,11 +8,12 @@ public:
     Edge();
     ~Edge() {}
 
+    void createAxis(int n, double* target);
+
     void init(int n);
     void render();
 
 	void flip();
-    void swapEdges(int n, int k);
 };
 
 #endif 	

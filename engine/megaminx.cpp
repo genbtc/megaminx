@@ -156,12 +156,10 @@ void Megaminx::scramble()
 
 void Megaminx::swapOneCorner(int i, int x)
 {
-
+    this->face[7].swapCorners(i, x);
 }
-
+//Front Face is 7 (Blue)
 void Megaminx::swapOneEdge(int i,int x)
-{
-    //this is equivalent to rotate one edge
-    //this->face[i].initNum(i);
-    //this->face[i].placeParts(true);
+{    
+    this->face[7].swapEdges(i, x);
 }

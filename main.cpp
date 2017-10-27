@@ -16,10 +16,10 @@ int activeWindow = 0;
 
 bool paused = false;
 
-double defN = 0;
 double defK = 0;
-
+double defN = 0;
 double defMX, defMY;
+
 int pressedButton;
 int specialKey;
 
@@ -40,6 +40,7 @@ const char *title = "Megaminx v1.1 - genBTC mod";
 // initial window screen size
 int WIDTH = 700;
 int HEIGHT = 700;
+int ZDIST = -900;
 
 Megaminx* megaminx;
 
@@ -175,7 +176,7 @@ int main(int argc, char *argv[])
 
     createMenu();	
 
-	glTranslated(0, 0, -900);
+	glTranslated(0, 0, ZDIST);
 	glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
 
 	glutMainLoop();
@@ -313,8 +314,8 @@ void mousePressedMove(int x, int y)
 {
 	if (pressedButton == GLUT_LEFT_BUTTON)
 	{
-		megaminx->n = defN + (defMY - y) / 3;
-		megaminx->k = defK + (x - defMX) / 3;
+        megaminx->k = defK + (x - defMX) / 3;
+	    megaminx->n = defN + (defMY - y) / 3;		
 	}
 }
 

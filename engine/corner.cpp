@@ -7,14 +7,6 @@ Corner::Corner()
 {
     inited = false;
     turn = false;
-    angle = 0; 
-    for (int i = 0; i < 3; ++i)
-    {
-        for (int j = 0; j < 3; ++j)
-        {
-            _color[i][j] = 0.5;
-        }
-    }
     for (int i = 0; i < 7; ++i)
     {
         _vertex[i][2] = -INS_SPHERE_RAD;
@@ -51,133 +43,141 @@ Corner::Corner()
     rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
 }
 
+void Corner::createAxis(int n, double* target)
+{
+    piecepack pack{ 0,0,0 };
+    switch (n + 1)
+    {
+    case 1:
+        pack = { 'z',0, 0 };
+        initColor(1, 3, 2);
+        break;
+    case 2:
+        pack = { 'z',0, 2 };
+        initColor(1, 4, 3);
+        break;
+    case 3:
+        pack = { 'z',0, 4 };
+        initColor(1, 5, 4);
+        break;
+    case 4:
+        pack = { 'z',0, 6 };
+        initColor(1, 6, 5);
+        break;
+    case 5:
+        pack = { 'z',0, 8 };
+        initColor(1, 2, 6);
+        break;
+    case 6:
+        pack = { 'z','x', 0 };
+        initColor(2, 3, 11);
+        break;
+    case 7:
+        pack = { 'z','x', 2 };
+        initColor(3, 4, 12);
+        break;
+    case 8:
+        pack = { 'z','x', 4 };
+        initColor(4, 5, 8);
+        break;
+    case 9:
+        pack = { 'z','x', 6 };
+        initColor(5, 6, 9);
+        break;
+    case 10:
+        pack = { 'z','x', 8 };
+        initColor(6, 2, 10);
+        break;
+    case 11:
+        pack = { 'x','z', 0 };
+        initColor(7, 12, 8);
+        break;
+    case 12:
+        pack = { 'x','z', 2 };
+        initColor(7, 8, 9);
+        break;
+    case 13:
+        pack = { 'x','z', 4 };
+        initColor(7, 9, 10);
+        break;
+    case 14:
+        pack = { 'x','z', 6 };
+        initColor(7, 10, 11);
+        break;
+    case 15:
+        pack = { 'x','z', 8 };
+        initColor(7, 11, 12);
+        break;
+    case 16:
+        pack = { 'z','x', 0 };
+        initColor(8, 12, 4);
+        break;
+    case 17:
+        pack = { 'z','x', 2 };
+        initColor(12, 11, 3);
+        break;
+    case 18:
+        pack = { 'z','x', 4 };
+        initColor(11, 10, 2);
+        break;
+    case 19:
+        pack = { 'z','x', 6 };
+        initColor(10, 9, 6);
+        break;
+    case 20:
+        pack = { 'z','x', 8 };
+        initColor(9, 8, 5);
+        break;
+    default:
+        break;
+    }
+    switch (n + 1)
+    {
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        axis1multi(target, pack);
+        break;
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        CenterSide1(target, pack);
+        break;
+    case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+        CornerGrp3(target, pack);
+        break;
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+    case 20:
+        CornerGrp4(target, pack);
+        break;
+    default:
+        break;
+    }
+}
 
 void Corner::init(int n)
 {
 	for (int i = 0; i < 7; ++i)
 	{
-		switch (n + 1)
-		{
-		case 1:
-			initColor(1, 3, 2);
-			break;
-		case 2:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-			initColor(1, 4, 3);
-			break;
-		case 3:
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
-			initColor(1, 5, 4);
-			break;
-		case 4:
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
-			initColor(1, 6, 5);
-			break;
-		case 5:
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
-			initColor(1, 2, 6);
-			break;
-		case 6:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			initColor(2, 3, 11);
-			break;
-		case 7:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-			initColor(3, 4, 12);
-			break;
-		case 8:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
-			initColor(4, 5, 8);
-			break;
-		case 9:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
-			initColor(5, 6, 9);
-			break;
-		case 10:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
-			initColor(6, 2, 10);
-			break;
-		case 11:
-			rotateVertex(_vertex[i], 'x', PI);
-			initColor(7, 12, 8);
-			break;
-		case 12:
-			rotateVertex(_vertex[i], 'x', PI);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-			initColor(7, 8, 9);
-			break;
-		case 13:
-			rotateVertex(_vertex[i], 'x', PI);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
-			initColor(7, 9, 10);
-			break;
-		case 14:
-			rotateVertex(_vertex[i], 'x', PI);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
-			initColor(7, 10, 11);
-			break;
-		case 15:
-			rotateVertex(_vertex[i], 'x', PI);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
-			initColor(7, 11, 12);
-			break;
-		case 16:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'x', PI);
-			initColor(8, 12, 4);
-			break;
-		case 17:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI);
-			initColor(12, 11, 3);
-			break;
-		case 18:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI);
-			initColor(11, 10, 2);
-			break;
-		case 19:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI);
-			initColor(10, 9, 6);
-			break;
-		case 20:
-			rotateVertex(_vertex[i], 'z', 1 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
-			rotateVertex(_vertex[i], 'x', PI);
-			initColor(9, 8, 5);
-			break;
-        default:
-            break;
-		}
+        createAxis(n, _vertex[i]);
 	}
 	inited = true;
 }
 
+
+
 void Corner::render()
 {
-	if (turn)
-	{
-		glPushMatrix();
-		glRotated(angle, axis[0], axis[1], axis[2]);
-	}
 	glColor3dv(_color[0]);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 4; ++i)

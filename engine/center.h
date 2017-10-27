@@ -6,6 +6,7 @@ class Center : public Piece
 {
 public:
     Center();
+    static void createAxis(int n, double* target);
     virtual ~Center() = default;
 
     void init(int n);

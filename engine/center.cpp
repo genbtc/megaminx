@@ -1,90 +1,91 @@
 #include <GL/glut.h>
 #include <math.h>
 #include "center.h"
-#include "utils.h"
 
 Center::Center()
 {
-	_color[0][0] = 1;
-	_color[0][1] = 1;
-	_color[0][2] = 1;
-
     for (int i = 0; i < 5; ++i)
     {
-        _vertex[i][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 * i + 3 * PI / 10) / 5 * 2;
-        _vertex[i][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 * i + 3 * PI / 10) / 5 * 2;
+        _vertex[i][0] = (INS_CIRCLE_RAD * cos(PI * 2 / 5 * i + 3 * PI / 10) / 5) * 2;
+        _vertex[i][1] = (INS_CIRCLE_RAD * sin(PI * 2 / 5 * i + 3 * PI / 10) / 5) * 2;
         _vertex[i][2] = -INS_SPHERE_RAD;
     }
+}
 
+
+void Center::createAxis(int n, double* target)
+{
+    piecepack pack{ 0,0,0 };
+    switch (n + 1)
+    {
+    case 2:
+        pack = { 'z','x', 0 };
+        break;
+    case 3:
+        pack = { 'z','x', 2 };
+        break;
+    case 4:
+        pack = { 'z','x', 4 };
+        break;
+    case 5:
+        pack = { 'z','x', 6 };
+        break;
+    case 6:
+        pack = { 'z','x', 8 };
+        break;
+    case 7:
+        pack = { 'x',0, 0 };
+        break;
+    case 8:
+        pack = { 'y','x', 0 };
+        break;
+    case 9:
+        pack = { 'y','x', 2 };
+        break;
+    case 10:
+        pack = { 'y','x', 4 };
+        break;
+    case 11:
+        pack = { 'y','x', 6 };
+        break;
+    case 12:
+        pack = { 'y','x', 8 };
+        break;
+    default:
+        break;
+    }
+    switch (n + 1)
+    {
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+        CenterSide1(target, pack);
+        break;
+    case 7:
+        CenterCenter(target,pack);
+        break;
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+        CenterSide2(target, pack);
+        break;
+    default:
+        break;
+    }
 }
 
 void Center::init(int n)
 {
-	for (int i = 0; i < 5; ++i)
-	{
-		switch (n + 1)
-		{
-		case 1:
-			break;
-		case 2:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			break;
-		case 3:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-			break;
-		case 4:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
-			break;
-		case 5:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
-			break;
-		case 6:
-			rotateVertex(_vertex[i], 'z', 2 * PI / 10);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);
-			break;
-		case 7:
-			rotateVertex(_vertex[i], 'x', PI);
-			break;
-		case 8:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			break;
-		case 9:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-			break;
-		case 10:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 4 * PI / 5);
-			break;
-		case 11:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 6 * PI / 5);
-			break;
-		case 12:
-			rotateVertex(_vertex[i], 'y', PI);
-			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-			rotateVertex(_vertex[i], 'z', 8 * PI / 5);			
-			break;
-        default:
-            break;
-		}
-        initColor(n+1);
-	}
+    for (int i = 0; i < 5; ++i)
+    {
+        createAxis(n, _vertex[i]);
+        initColor(n + 1);
+    }
 }
-
-
 
 void Center::render()
 {

@@ -2,7 +2,6 @@
 #include <math.h>
 #include "face.h"
 #include "utils.h"
-#include <tuple>
 #include <iostream>
 
 Face::Face()
@@ -51,159 +50,92 @@ void Face::initCenter(Center *a)
         rotateVertex(_vertex[i], 'z', 2 * PI / 5);
         rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
         rotateVertex(_vertex[i], 'z', 2 * i * PI / 5);
-        _vertex[i][0] *= 1.02;
-        _vertex[i][1] *= 1.02;
     }
 }
 
-void Face::createAxis(int n,double *target)
-{
-    char axis1 = 0, axis2 = 0;
-    int multi = 0;
-    switch (n + 1)
-    {
-    case 2:
-        axis1 = 'z';  axis2 = 'x';
-        break;
-    case 3:
-        axis1 = 'z';  axis2 = 'x';  multi = 2;
-        break;
-    case 4:
-        axis1 = 'z';  axis2 = 'x';  multi = 4;
-        break;
-    case 5:
-        axis1 = 'z';  axis2 = 'x';  multi = 6;
-        break;
-    case 6:
-        axis1 = 'z';  axis2 = 'x';  multi = 8;
-        break;
-    case 7:
-        axis1 = 'x';
-        break;
-    case 8:
-        axis1 = 'y';  axis2 = 'x';
-        break;
-    case 9:
-        axis1 = 'y';  axis2 = 'x';  multi = 2;
-        break;
-    case 10:
-        axis1 = 'y';  axis2 = 'x';  multi = 4;
-        break;
-    case 11:
-        axis1 = 'y';  axis2 = 'x';  multi = 6;
-        break;
-    case 12:
-        axis1 = 'y';  axis2 = 'x';  multi = 8;
-        break;
-    default:
-        break;
-    }
-    switch (n + 1)
-    {
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-        rotateVertex(target, axis1, 2 * PI / 10);
-        rotateVertex(target, axis2, PI - SIDE_ANGLE);
-        rotateVertex(target, 'z', multi * PI / 5);
-        break;
-    case 7:
-        rotateVertex(target, axis1, PI);
-        break;
-    case 8:
-    case 9:
-    case 10:
-    case 11:
-    case 12:
-        rotateVertex(target, axis1, PI);
-        rotateVertex(target, axis2, PI - SIDE_ANGLE);
-        rotateVertex(target, 'z', multi * PI / 5);
-        break;
-    default:
-        break;
-    }
-}
+/**
+ * \brief create our Face
+ * \param n We can re-use the Center axis creation
+ */
 void Face::initAxis(int n)
 {
-    createAxis(n,axis);
+    center->createAxis(n,axis);
     for (int i = 0; i < 5; ++i)
     {
-        createAxis(n,_vertex[i]);
+        center->createAxis(n,_vertex[i]);
     }
 }
 
-Face::~Face()
+/**
+ * \brief Simple-Flips (inverts) one Edge-piece and then the other.(individually)
+ *  Colors end up as follows. etc:
+ * \param x //edgeflip(0, 1);//purple green
+            //edgeflip(0, 2);//purple bone 
+            //edgeflip(0, 3);//purple orange
+            //edgeflip(0, 4);//purple gray 
+            //edgeflip(1, 2);//green bone
+            //edgeflip(2, 3);//bone orange
+            //edgeflip(4, 3);//gray orange 
+ * \param y 
+ */
+void Face::twoEdgeFlips(int a,int b)
 {
-
+    edge[a]->flip();
+    edge[b]->flip();
 }
 
-void Face::edgeflip(int x,int y)
+void Face::genericFlip(int a, int b, int c, int d, fourPack pack)
 {
-    edge[x]->flip();
-    edge[y]->flip();
+    pack.four[0] ? corner[a]->flip() : corner[a]->flipBack();
+    pack.four[1] ? corner[b]->flip() : corner[b]->flipBack();
+    pack.four[2] ? corner[c]->flip() : corner[c]->flipBack();
+    pack.four[3] ? corner[d]->flip() : corner[d]->flipBack();
+}
+void Face::inwardsFlip(int a, int b, int c, int d)
+{
+    genericFlip(a, b, c, d, {0, 1, 1, 0});
+}
+void Face::outwardsFlip(int a, int b, int c, int d)
+{
+    genericFlip(a, b, c, d, {1, 0, 0, 1});
+}
+void Face::backwardsFlip(int a, int b, int c, int d)
+{
+    genericFlip(a, b, c, d, {0, 0, 1, 1});
+}
+void Face::forwardsFlip(int a, int b, int c, int d)
+{
+    genericFlip(a, b, c, d, {1, 1, 0, 0});
+}
+void Face::alternatingBackwardsFlip(int a, int b, int c, int d)
+{
+    genericFlip(a, b, c, d, {0, 1, 0, 1});
+}
+void Face::alternatingForwardsFlip(int a, int b, int c, int d)
+{
+    genericFlip(a, b, c, d, {1, 0, 1, 0});
 }
 
-void Face::cornerInsideOutFlip(int a, int b, int c, int d)
+void Face::QuadSwapCorners(eightPack pack)
 {
-    corner[a]->flipBack();
-    corner[b]->flip();
-    corner[c]->flip();
-    corner[d]->flipBack();
-}
-void Face::cornerBackwardsFlip(int a, int b, int c, int d)
-{
-    corner[a]->flipBack();
-    corner[b]->flipBack();
-    corner[c]->flip();
-    corner[d]->flip();
-}
-void Face::cornerForwardsFlip(int a, int b, int c, int d)
-{
-    corner[a]->flip();
-    corner[b]->flip();
-    corner[c]->flipBack();
-    corner[d]->flipBack();
-}
-void Face::alternatingReverseFlip(int a, int b, int c, int d)
-{
-    corner[a]->flipBack();
-    corner[b]->flip();
-    corner[c]->flipBack();
-    corner[d]->flip();
-}
-void Face::alternatingForwardFlip(int a, int b, int c, int d)
-{
-    corner[a]->flip();
-    corner[b]->flipBack();
-    corner[c]->flip();
-    corner[d]->flipBack();
-}
-void Face::InwardsFlip(int a, int b, int c, int d)
-{
-    corner[a]->flip();
-    corner[b]->flipBack();
-    corner[c]->flipBack();
-    corner[d]->flip();
+    swapCorners(pack.eight[0], pack.eight[1]);
+    swapCorners(pack.eight[2], pack.eight[3]);
+    swapCorners(pack.eight[4], pack.eight[5]);
+    swapCorners(pack.eight[6], pack.eight[7]);
 }
 
-void Face::QuadSwapCorners(std::tuple<int, int, int, int, int, int, int, int> pack)
+void Face::QuadSwapEdges(eightPack pack)
 {
-    swapCorners(std::get<0>(pack), std::get<1>(pack));
-    swapCorners(std::get<2>(pack), std::get<3>(pack));
-    swapCorners(std::get<4>(pack), std::get<5>(pack));
-    swapCorners(std::get<6>(pack), std::get<7>(pack));
+    swapEdges(pack.eight[0], pack.eight[1]);
+    swapEdges(pack.eight[2], pack.eight[3]);
+    swapEdges(pack.eight[4], pack.eight[5]);
+    swapEdges(pack.eight[6], pack.eight[7]);
 }
-
-void Face::QuadSwapEdges(std::tuple<int, int, int, int, int, int, int, int> pack)
-{
-    swapEdges(std::get<0>(pack), std::get<1>(pack));
-    swapEdges(std::get<2>(pack), std::get<3>(pack));
-    swapEdges(std::get<4>(pack), std::get<5>(pack));
-    swapEdges(std::get<6>(pack), std::get<7>(pack));
-}
-
+/**
+ * \brief 
+ * \param right Each case is for each of the 12 faces, 
+ * / in order to get it to switch colors after it rotates.
+ */
 void Face::placeParts(bool right)
 {
     if (right == true)
@@ -211,148 +143,148 @@ void Face::placeParts(bool right)
         switch (thisNum)
         {
         case 0:
-            QuadSwapCorners(std::make_tuple(0, 1, 1, 2, 2, 3, 3, 4));
-            QuadSwapEdges(std::make_tuple(0, 1, 1, 2, 2, 3, 3, 4));
+            QuadSwapCorners({ 0, 1, 1, 2, 2, 3, 3, 4 });
+            QuadSwapEdges({ 0, 1, 1, 2, 2, 3, 3, 4 });
             break;
         case 1:
-            cornerBackwardsFlip(0, 1, 2, 4);
-            QuadSwapCorners(std::make_tuple(4, 0, 4, 2, 0, 3, 0, 1));
-            QuadSwapEdges(std::make_tuple(4, 1, 1, 3, 0, 1, 0, 2));
-            edgeflip(1, 2);
+            backwardsFlip(0, 1, 2, 4);            
+            QuadSwapCorners({ 4, 0, 4, 2, 0, 3, 0, 1 });
+            QuadSwapEdges({ 4, 1, 1, 3, 0, 1, 0, 2 });
+            twoEdgeFlips(1, 2);
             break;
         case 2:
-            edgeflip(0, 3);
-            QuadSwapEdges(std::make_tuple(1, 0, 1, 2, 1, 3, 3, 4));
-            cornerBackwardsFlip(0, 1, 3, 4);
-            QuadSwapCorners(std::make_tuple(0, 1, 0, 2, 2, 3, 2, 4));
+            twoEdgeFlips(0, 3);
+            QuadSwapEdges({ 1, 0, 1, 2, 1, 3, 3, 4 });
+            backwardsFlip(0, 1, 3, 4);
+            QuadSwapCorners({ 0, 1, 0, 2, 2, 3, 2, 4 });
             break;
         case 3:
-            QuadSwapEdges(std::make_tuple(3, 2, 4, 3, 0, 1, 1, 2));
-            edgeflip(1, 2);
-            QuadSwapCorners(std::make_tuple(3, 4, 1, 3, 1, 2, 0, 1));
-            alternatingReverseFlip(1, 2, 3, 4);
+            QuadSwapEdges({ 3, 2, 4, 3, 0, 1, 1, 2 });
+            twoEdgeFlips(1, 2);
+            QuadSwapCorners({ 3, 4, 1, 3, 1, 2, 0, 1 });
+            alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 4:
-            QuadSwapEdges(std::make_tuple(0, 1, 1, 2, 1, 3, 3, 4));
-            edgeflip(1, 2);
-            QuadSwapCorners(std::make_tuple(0, 1, 0, 3, 0, 4, 0, 2));
-            alternatingReverseFlip(1, 2, 3, 4);
+            QuadSwapEdges({ 0, 1, 1, 2, 1, 3, 3, 4 });
+            twoEdgeFlips(1, 2);
+            QuadSwapCorners({ 0, 1, 0, 3, 0, 4, 0, 2 });
+            alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 5:
-            QuadSwapEdges(std::make_tuple(2, 4, 2, 3, 0, 2, 0, 1));
-            edgeflip(1, 2);
-            QuadSwapCorners(std::make_tuple(1, 3, 1, 4, 1, 2, 0, 1));
-            alternatingReverseFlip(1, 2, 3, 4);
+            QuadSwapEdges({ 2, 4, 2, 3, 0, 2, 0, 1 });
+            twoEdgeFlips(1, 2);
+            QuadSwapCorners({ 1, 3, 1, 4, 1, 2, 0, 1 });
+            alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 6:
-            QuadSwapCorners(std::make_tuple(0, 1, 4, 0, 3, 4, 2, 3));
-            QuadSwapEdges(std::make_tuple(0, 1, 4, 0, 3, 4, 2, 3));
+            QuadSwapCorners({ 0, 1, 4, 0, 3, 4, 2, 3 });
+            QuadSwapEdges({ 0, 1, 4, 0, 3, 4, 2, 3 });
             break;
         case 7:
-            QuadSwapEdges(std::make_tuple(0, 3, 0, 4, 0, 2, 0, 1));
-            edgeflip(3, 4);
-            QuadSwapCorners(std::make_tuple(0, 4, 0, 2, 0, 1, 0, 3));
-            InwardsFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
+            twoEdgeFlips(3, 4);
+            QuadSwapCorners({ 0, 4, 0, 2, 0, 1, 0, 3 });
+            outwardsFlip(0, 1, 3, 4);
             break;
         case 8:
-            QuadSwapEdges(std::make_tuple(0, 1, 1, 2, 2, 4, 3, 4));
-            edgeflip(3, 4);
-            QuadSwapCorners(std::make_tuple(0, 4, 1, 4, 1, 2, 2, 3));
-            alternatingForwardFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 0, 1, 1, 2, 2, 4, 3, 4 });
+            twoEdgeFlips(3, 4);
+            QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
+            alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 9:
-            QuadSwapEdges(std::make_tuple(0, 1, 1, 2, 2, 4, 3, 4));
-            edgeflip(3, 4);
-            QuadSwapCorners(std::make_tuple(0, 4, 1, 4, 1, 2, 2, 3));
-            alternatingForwardFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 0, 1, 1, 2, 2, 4, 3, 4 });
+            twoEdgeFlips(3, 4);
+            QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
+            alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 10:
-            QuadSwapEdges(std::make_tuple(0, 1, 1, 3, 3, 4, 2, 4));
-            edgeflip(2, 4);
-            QuadSwapCorners(std::make_tuple(0, 4, 1, 4, 1, 2, 2, 3));
-            alternatingForwardFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 0, 1, 1, 3, 3, 4, 2, 4 });
+            twoEdgeFlips(2, 4);
+            QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
+            alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 11:
-            QuadSwapEdges(std::make_tuple(0, 3, 0, 4, 0, 2, 0, 1));
-            edgeflip(2, 4);
-            QuadSwapCorners(std::make_tuple(0, 3, 0, 1, 0, 2, 0, 4));
-            alternatingForwardFlip(0, 2, 3, 4);
+            QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
+            twoEdgeFlips(2, 4);
+            QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
+            alternatingForwardsFlip(0, 2, 3, 4);
             break;
         default:
             break;
         }
     }
     else
-    {
+    {           //CLOCKWISE.
         switch (thisNum)
         {
         case 0:
-            QuadSwapCorners(std::make_tuple(0, 1, 4, 0, 3, 4, 2, 3));
-            QuadSwapEdges(std::make_tuple(0, 1, 4, 0, 3, 4, 2, 3));
+            QuadSwapCorners({ 0, 1, 4, 0, 3, 4, 2, 3 });
+            QuadSwapEdges({ 0, 1, 4, 0, 3, 4, 2, 3 });
             break;
         case 1:
-            cornerForwardsFlip(0, 2, 3, 4);
-            QuadSwapCorners(std::make_tuple(0, 1, 0, 3, 4, 2, 4, 0));
-            QuadSwapEdges(std::make_tuple(0, 2, 0, 1, 1, 3, 4, 1));
-            edgeflip(0, 3);
+            forwardsFlip(0, 2, 3, 4);
+            QuadSwapCorners({ 0, 1, 0, 3, 4, 2, 4, 0 });
+            QuadSwapEdges({ 0, 2, 0, 1, 1, 3, 4, 1 });
+            twoEdgeFlips(0, 3);
             break;
         case 2:
-            edgeflip(1, 2);
-            QuadSwapEdges(std::make_tuple(3, 4, 1, 3, 1, 2, 1, 0));
-            alternatingForwardFlip(1, 2, 3, 4);
-            QuadSwapCorners(std::make_tuple(2, 4, 2, 3, 0, 2, 0, 1));
+            twoEdgeFlips(1, 2);
+            QuadSwapEdges({ 3, 4, 1, 3, 1, 2, 1, 0 });
+            alternatingForwardsFlip(1, 2, 3, 4);
+            QuadSwapCorners({ 2, 4, 2, 3, 0, 2, 0, 1 });
             break;
         case 3:
-            QuadSwapEdges(std::make_tuple(1, 2, 0, 1, 4, 3, 3, 2));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(0, 1, 1, 2, 1, 3, 3, 4));
-            cornerForwardsFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 1, 2, 0, 1, 4, 3, 3, 2 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 0, 1, 1, 2, 1, 3, 3, 4 });
+            forwardsFlip(0, 1, 3, 4);
             break;
         case 4:
-            QuadSwapEdges(std::make_tuple(3, 4, 1, 3, 1, 2, 0, 1));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(0, 2, 0, 4, 0, 3, 0, 1));
-            cornerForwardsFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 3, 4, 1, 3, 1, 2, 0, 1 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 0, 2, 0, 4, 0, 3, 0, 1 });
+            forwardsFlip(0, 1, 3, 4);
             break;
         case 5:
-            QuadSwapEdges(std::make_tuple(0, 1, 0, 2, 2, 3, 2, 4));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(0, 1, 1, 2, 1, 4, 1, 3));
-            cornerForwardsFlip(0, 1, 3, 4);
+            QuadSwapEdges({ 0, 1, 0, 2, 2, 3, 2, 4 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 0, 1, 1, 2, 1, 4, 1, 3 });
+            forwardsFlip(0, 1, 3, 4);
             break;
         case 6:
-            QuadSwapCorners(std::make_tuple(0, 1, 1, 2, 2, 3, 3, 4));
-            QuadSwapEdges(std::make_tuple(0, 1, 1, 2, 2, 3, 3, 4));
+            QuadSwapCorners({ 0, 1, 1, 2, 2, 3, 3, 4 });
+            QuadSwapEdges({ 0, 1, 1, 2, 2, 3, 3, 4 });
             break;
         case 7: //front clockwise;
-            QuadSwapEdges(std::make_tuple(0, 1, 0, 2, 0, 4, 0, 3));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(0, 3, 0, 1, 0, 2, 0, 4));
-            cornerInsideOutFlip(0, 1, 2, 3);
+            QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
+            inwardsFlip(0, 1, 2, 3);
             break;
         case 8:
-            QuadSwapEdges(std::make_tuple(3, 4, 2, 4, 1, 2, 0, 1));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(2, 3, 1, 2, 1, 4, 0, 4));
-            cornerInsideOutFlip(0, 1, 2, 4);
+            QuadSwapEdges({ 3, 4, 2, 4, 1, 2, 0, 1 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
+            inwardsFlip(0, 1, 2, 4);
             break;
         case 9:
-            QuadSwapEdges(std::make_tuple(3, 4, 2, 4, 1, 2, 0, 1));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(2, 3, 1, 2, 1, 4, 0, 4));
-            cornerInsideOutFlip(0, 1, 2, 4);
+            QuadSwapEdges({ 3, 4, 2, 4, 1, 2, 0, 1 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
+            inwardsFlip(0, 1, 2, 4);
             break;
         case 10:
-            QuadSwapEdges(std::make_tuple(2, 4, 3, 4, 1, 3, 0, 1));
-            edgeflip(0, 2);
-            QuadSwapCorners(std::make_tuple(2, 3, 1, 2, 1, 4, 0, 4));
-            cornerInsideOutFlip(0, 1, 2, 4);
+            QuadSwapEdges({ 2, 4, 3, 4, 1, 3, 0, 1 });
+            twoEdgeFlips(0, 2);
+            QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
+            inwardsFlip(0, 1, 2, 4);
             break;
         case 11:
-            QuadSwapEdges(std::make_tuple(0, 1, 0, 2, 0, 4, 0, 3));
-            edgeflip(0, 3);
-            QuadSwapCorners(std::make_tuple(0, 4, 0, 2, 0, 1, 0, 3));
-            cornerInsideOutFlip(0, 1, 2, 4);
+            QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
+            twoEdgeFlips(0, 3);
+            QuadSwapCorners({ 0, 4, 0, 2, 0, 1, 0, 3 });
+            inwardsFlip(0, 1, 2, 4);
             break;
         default:
             break;

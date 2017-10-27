@@ -4,10 +4,16 @@
 #include "center.h"
 #include "edge.h"
 #include "corner.h"
-#include <bits/alloc_traits.h>
 
 enum FaceTurnDir { Clockwise, CounterClockwise };
-
+struct eightPack
+{
+    int eight[8];
+};
+struct fourPack
+{
+    int four[4];
+};
 class Face
 {
 public:
@@ -15,12 +21,8 @@ public:
 	void initEdge(Edge*, Edge*, Edge*, Edge*, Edge*);
 	void initCorner(Corner*, Corner*, Corner*, Corner*, Corner*);
 	void initCenter(Center*);
-    void createAxis(int n, double* target);
-    //static void createAxisbyStruct(int n, double* axis);
     void initAxis(int n);
 	void initNum(int);
-	~Face();
-
 
     bool render();
 	void rotate(int);
@@ -35,15 +37,16 @@ public:
 	Center *center;
 
 private:
-    void edgeflip(int,int);
-    void cornerInsideOutFlip(int,int,int,int);
-    void cornerBackwardsFlip(int a, int b, int c, int d);
-    void cornerForwardsFlip(int a, int b, int c, int d);
-    void alternatingReverseFlip(int a, int b, int c, int d);
-    void alternatingForwardFlip(int a, int b, int c, int d);
-    void InwardsFlip(int a, int b, int c, int d);
-    void QuadSwapCorners(std::tuple<int, int, int, int, int, int, int, int> pack);
-    void QuadSwapEdges(std::tuple<int, int, int, int, int, int, int, int> pack);
+    void twoEdgeFlips(int a,int b);
+    void genericFlip(int a, int b, int c, int d, fourPack pack);
+    void inwardsFlip(int a, int b,int c, int d);
+    void backwardsFlip(int a, int b, int c, int d);
+    void forwardsFlip(int a, int b, int c, int d);
+    void alternatingBackwardsFlip(int a, int b, int c, int d);
+    void alternatingForwardsFlip(int a, int b, int c, int d);
+    void outwardsFlip(int a, int b, int c, int d);
+    void QuadSwapCorners(eightPack pack);
+    void QuadSwapEdges(eightPack pack);
 
     int turnDir;
     double _vertex[5][3];
