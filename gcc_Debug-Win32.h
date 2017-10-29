@@ -17,6 +17,9 @@
 #ifndef __cpp_attributes
 #define __cpp_attributes 200809
 #endif
+#ifndef __pentiumpro__
+#define __pentiumpro__ 1
+#endif
 #ifndef __UINT_LEAST16_MAX__
 #define __UINT_LEAST16_MAX__ 0xffff
 #endif
@@ -39,7 +42,7 @@
 #define __UINT_LEAST8_TYPE__ unsigned char
 #endif
 #ifndef __SIZEOF_FLOAT80__
-#define __SIZEOF_FLOAT80__ 16
+#define __SIZEOF_FLOAT80__ 12
 #endif
 #ifndef _WIN32
 #define _WIN32 1
@@ -49,9 +52,6 @@
 #endif
 #ifndef __UINT8_MAX__
 #define __UINT8_MAX__ 0xff
-#endif
-#ifndef _WIN64
-#define _WIN64 1
 #endif
 #ifndef __WINT_MAX__
 #define __WINT_MAX__ 0xffff
@@ -66,7 +66,7 @@
 #define __ORDER_LITTLE_ENDIAN__ 1234
 #endif
 #ifndef __SIZE_MAX__
-#define __SIZE_MAX__ 0xffffffffffffffffULL
+#define __SIZE_MAX__ 0xffffffffU
 #endif
 #ifndef __WCHAR_MAX__
 #define __WCHAR_MAX__ 0xffff
@@ -96,7 +96,7 @@
 #define __FLT32X_DECIMAL_DIG__ 17
 #endif
 #ifndef __FLT_EVAL_METHOD__
-#define __FLT_EVAL_METHOD__ 0
+#define __FLT_EVAL_METHOD__ 2
 #endif
 #ifndef __cpp_binary_literals
 #define __cpp_binary_literals 201304
@@ -106,9 +106,6 @@
 #endif
 #ifndef __GCC_ATOMIC_CHAR32_T_LOCK_FREE
 #define __GCC_ATOMIC_CHAR32_T_LOCK_FREE 2
-#endif
-#ifndef __x86_64
-#define __x86_64 1
 #endif
 #ifndef __cpp_variadic_templates
 #define __cpp_variadic_templates 200704
@@ -174,7 +171,7 @@
 #define __DEC32_EPSILON__ 1E-6DF
 #endif
 #ifndef __FLT_EVAL_METHOD_TS_18661_3__
-#define __FLT_EVAL_METHOD_TS_18661_3__ 0
+#define __FLT_EVAL_METHOD_TS_18661_3__ 2
 #endif
 #ifndef __UINT32_MAX__
 #define __UINT32_MAX__ 0xffffffffU
@@ -219,13 +216,13 @@
 #define __SIZEOF_INT__ 4
 #endif
 #ifndef __SIZEOF_POINTER__
-#define __SIZEOF_POINTER__ 8
+#define __SIZEOF_POINTER__ 4
 #endif
 #ifndef __GCC_ATOMIC_CHAR16_T_LOCK_FREE
 #define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2
 #endif
 #ifndef __USER_LABEL_PREFIX__
-#define __USER_LABEL_PREFIX__ 
+#define __USER_LABEL_PREFIX__ _
 #endif
 #ifndef __FLT64X_EPSILON__
 #define __FLT64X_EPSILON__ 1.08420217248550443400745280086994171e-19F64x
@@ -238,9 +235,6 @@
 #endif
 #ifndef __LDBL_HAS_INFINITY__
 #define __LDBL_HAS_INFINITY__ 1
-#endif
-#ifndef __WIN64
-#define __WIN64 1
 #endif
 #ifndef __FLT32_DIG__
 #define __FLT32_DIG__ 6
@@ -279,7 +273,7 @@
 #define __SIZEOF_LONG__ 4
 #endif
 #ifndef __PTRDIFF_WIDTH__
-#define __PTRDIFF_WIDTH__ 64
+#define __PTRDIFF_WIDTH__ 32
 #endif
 #ifndef __DECIMAL_DIG__
 #define __DECIMAL_DIG__ 21
@@ -314,9 +308,6 @@
 #ifndef __GXX_RTTI
 #define __GXX_RTTI 1
 #endif
-#ifndef __MMX__
-#define __MMX__ 1
-#endif
 #ifndef __cpp_delegating_constructors
 #define __cpp_delegating_constructors 200604
 #endif
@@ -324,7 +315,7 @@
 #define __FLT_HAS_DENORM__ 1
 #endif
 #ifndef __SIZEOF_LONG_DOUBLE__
-#define __SIZEOF_LONG_DOUBLE__ 16
+#define __SIZEOF_LONG_DOUBLE__ 12
 #endif
 #ifndef __BIGGEST_ALIGNMENT__
 #define __BIGGEST_ALIGNMENT__ 16
@@ -334,6 +325,9 @@
 #endif
 #ifndef __FLT64_MAX_10_EXP__
 #define __FLT64_MAX_10_EXP__ 308
+#endif
+#ifndef __i686
+#define __i686 1
 #endif
 #ifndef __FLT32_HAS_INFINITY__
 #define __FLT32_HAS_INFINITY__ 1
@@ -366,7 +360,7 @@
 #define __DEC32_MIN_EXP__ (-94)
 #endif
 #ifndef __INTPTR_WIDTH__
-#define __INTPTR_WIDTH__ 64
+#define __INTPTR_WIDTH__ 32
 #endif
 #ifndef __FLT32X_HAS_DENORM__
 #define __FLT32X_HAS_DENORM__ 1
@@ -415,9 +409,6 @@
 #ifndef __DEC128_EPSILON__
 #define __DEC128_EPSILON__ 1E-33DL
 #endif
-#ifndef __SSE2_MATH__
-#define __SSE2_MATH__ 1
-#endif
 #ifndef __ATOMIC_HLE_RELEASE
 #define __ATOMIC_HLE_RELEASE 131072
 #endif
@@ -425,10 +416,7 @@
 #define __WIN32__ 1
 #endif
 #ifndef __PTRDIFF_MAX__
-#define __PTRDIFF_MAX__ 0x7fffffffffffffffLL
-#endif
-#ifndef __amd64
-#define __amd64 1
+#define __PTRDIFF_MAX__ 0x7fffffff
 #endif
 #ifndef __ATOMIC_HLE_ACQUIRE
 #define __ATOMIC_HLE_ACQUIRE 65536
@@ -443,7 +431,7 @@
 #define __LONG_LONG_MAX__ 0x7fffffffffffffffLL
 #endif
 #ifndef __SIZEOF_SIZE_T__
-#define __SIZEOF_SIZE_T__ 8
+#define __SIZEOF_SIZE_T__ 4
 #endif
 #ifndef __cpp_rvalue_reference
 #define __cpp_rvalue_reference 200610
@@ -480,6 +468,9 @@
 #endif
 #ifndef __FLT_MIN_EXP__
 #define __FLT_MIN_EXP__ (-125)
+#endif
+#ifndef __i686__
+#define __i686__ 1
 #endif
 #ifndef __cpp_lambdas
 #define __cpp_lambdas 200907
@@ -535,6 +526,9 @@
 #ifndef __NO_INLINE__
 #define __NO_INLINE__ 1
 #endif
+#ifndef __i386
+#define __i386 1
+#endif
 #ifndef __FLT_MANT_DIG__
 #define __FLT_MANT_DIG__ 24
 #endif
@@ -559,6 +553,9 @@
 #ifndef __FLT32_MANT_DIG__
 #define __FLT32_MANT_DIG__ 24
 #endif
+#ifndef _X86_
+#define _X86_ 1
+#endif
 #ifndef __FLOAT_WORD_ORDER__
 #define __FLOAT_WORD_ORDER__ __ORDER_LITTLE_ENDIAN__
 #endif
@@ -580,6 +577,9 @@
 #ifndef __DEC128_MIN_EXP__
 #define __DEC128_MIN_EXP__ (-6142)
 #endif
+#ifndef __code_model_32__
+#define __code_model_32__ 1
+#endif
 #ifndef __FLT32_MAX_10_EXP__
 #define __FLT32_MAX_10_EXP__ 38
 #endif
@@ -595,14 +595,20 @@
 #ifndef __INT16_MAX__
 #define __INT16_MAX__ 0x7fff
 #endif
+#ifndef __i386__
+#define __i386__ 1
+#endif
 #ifndef __cpp_rtti
 #define __cpp_rtti 199711
 #endif
 #ifndef __SIZE_TYPE__
-#define __SIZE_TYPE__ long long unsigned int
+#define __SIZE_TYPE__ unsigned int
 #endif
 #ifndef __UINT64_MAX__
 #define __UINT64_MAX__ 0xffffffffffffffffULL
+#endif
+#ifndef DEBUG
+#define DEBUG 1
 #endif
 #ifndef __FLT64X_DIG__
 #define __FLT64X_DIG__ 18
@@ -625,15 +631,6 @@
 #ifndef __LDBL_EPSILON__
 #define __LDBL_EPSILON__ 1.08420217248550443400745280086994171e-19L
 #endif
-#ifndef __GLIBCXX_BITSIZE_INT_N_0
-#define __GLIBCXX_BITSIZE_INT_N_0 128
-#endif
-#ifndef __k8
-#define __k8 1
-#endif
-#ifndef __SEH__
-#define __SEH__ 1
-#endif
 #ifndef __SIG_ATOMIC_MAX__
 #define __SIG_ATOMIC_MAX__ 0x7fffffff
 #endif
@@ -644,19 +641,19 @@
 #define __cpp_sized_deallocation 201309
 #endif
 #ifndef __SIZEOF_PTRDIFF_T__
-#define __SIZEOF_PTRDIFF_T__ 8
+#define __SIZEOF_PTRDIFF_T__ 4
 #endif
 #ifndef __FLT32X_MANT_DIG__
 #define __FLT32X_MANT_DIG__ 53
-#endif
-#ifndef __x86_64__
-#define __x86_64__ 1
 #endif
 #ifndef __FLT32X_MIN_EXP__
 #define __FLT32X_MIN_EXP__ (-1021)
 #endif
 #ifndef __DEC32_SUBNORMAL_MIN__
 #define __DEC32_SUBNORMAL_MIN__ 0.000001E-95DF
+#endif
+#ifndef __pentiumpro
+#define __pentiumpro 1
 #endif
 #ifndef __MSVCRT__
 #define __MSVCRT__ 1
@@ -710,7 +707,7 @@
 #define __PRAGMA_REDEFINE_EXTNAME 1
 #endif
 #ifndef __SIZE_WIDTH__
-#define __SIZE_WIDTH__ 64
+#define __SIZE_WIDTH__ 32
 #endif
 #ifndef __SEG_FS
 #define __SEG_FS 1
@@ -755,7 +752,7 @@
 #define __FLT128_MAX__ 1.18973149535723176508575932662800702e+4932F128
 #endif
 #ifndef __INTPTR_MAX__
-#define __INTPTR_MAX__ 0x7fffffffffffffffLL
+#define __INTPTR_MAX__ 0x7fffffff
 #endif
 #ifndef __GXX_MERGED_TYPEINFO_NAMES
 #define __GXX_MERGED_TYPEINFO_NAMES 0
@@ -771,9 +768,6 @@
 #endif
 #ifndef __FLT32_MIN_10_EXP__
 #define __FLT32_MIN_10_EXP__ (-37)
-#endif
-#ifndef __SSE2__
-#define __SSE2__ 1
 #endif
 #ifndef __EXCEPTIONS
 #define __EXCEPTIONS 1
@@ -796,11 +790,8 @@
 #ifndef __cpp_return_type_deduction
 #define __cpp_return_type_deduction 201304
 #endif
-#ifndef __k8__
-#define __k8__ 1
-#endif
 #ifndef __INTPTR_TYPE__
-#define __INTPTR_TYPE__ long long int
+#define __INTPTR_TYPE__ int
 #endif
 #ifndef __UINT16_TYPE__
 #define __UINT16_TYPE__ short unsigned int
@@ -811,11 +802,8 @@
 #ifndef __SIZEOF_FLOAT__
 #define __SIZEOF_FLOAT__ 4
 #endif
-#ifndef __pic__
-#define __pic__ 1
-#endif
 #ifndef __UINTPTR_MAX__
-#define __UINTPTR_MAX__ 0xffffffffffffffffULL
+#define __UINTPTR_MAX__ 0xffffffffU
 #endif
 #ifndef __INT_FAST64_WIDTH__
 #define __INT_FAST64_WIDTH__ 64
@@ -847,26 +835,14 @@
 #ifndef __INT_MAX__
 #define __INT_MAX__ 0x7fffffff
 #endif
-#ifndef __amd64__
-#define __amd64__ 1
-#endif
 #ifndef WIN32
 #define WIN32 1
-#endif
-#ifndef __code_model_medium__
-#define __code_model_medium__ 1
 #endif
 #ifndef __INT64_TYPE__
 #define __INT64_TYPE__ long long int
 #endif
 #ifndef __FLT_MAX_EXP__
 #define __FLT_MAX_EXP__ 128
-#endif
-#ifndef WIN64
-#define WIN64 1
-#endif
-#ifndef __ORDER_BIG_ENDIAN__
-#define __ORDER_BIG_ENDIAN__ 4321
 #endif
 #ifndef __DBL_MANT_DIG__
 #define __DBL_MANT_DIG__ 53
@@ -892,9 +868,6 @@
 #ifndef __SIZEOF_SHORT__
 #define __SIZEOF_SHORT__ 2
 #endif
-#ifndef __SSE__
-#define __SSE__ 1
-#endif
 #ifndef __LDBL_MIN_EXP__
 #define __LDBL_MIN_EXP__ (-16381)
 #endif
@@ -909,9 +882,6 @@
 #endif
 #ifndef __FLT32X_MAX_10_EXP__
 #define __FLT32X_MAX_10_EXP__ 308
-#endif
-#ifndef __SIZEOF_INT128__
-#define __SIZEOF_INT128__ 16
 #endif
 #ifndef __WCHAR_UNSIGNED__
 #define __WCHAR_UNSIGNED__ 1
@@ -970,17 +940,14 @@
 #ifndef __INT_FAST8_WIDTH__
 #define __INT_FAST8_WIDTH__ 8
 #endif
-#ifndef __FXSR__
-#define __FXSR__ 1
-#endif
 #ifndef __DEC_EVAL_METHOD__
 #define __DEC_EVAL_METHOD__ 2
 #endif
 #ifndef __FLT32X_MAX__
 #define __FLT32X_MAX__ 1.79769313486231570814527423731704357e+308F32x
 #endif
-#ifndef __MINGW64__
-#define __MINGW64__ 1
+#ifndef __ORDER_BIG_ENDIAN__
+#define __ORDER_BIG_ENDIAN__ 4321
 #endif
 #ifndef __cpp_runtime_arrays
 #define __cpp_runtime_arrays 198712
@@ -1008,9 +975,6 @@
 #endif
 #ifndef __LONG_WIDTH__
 #define __LONG_WIDTH__ 32
-#endif
-#ifndef __PIC__
-#define __PIC__ 1
 #endif
 #ifndef __UINT_FAST32_TYPE__
 #define __UINT_FAST32_TYPE__ unsigned int
@@ -1045,6 +1009,9 @@
 #ifndef __INTMAX_TYPE__
 #define __INTMAX_TYPE__ long long int
 #endif
+#ifndef i386
+#define i386 1
+#endif
 #ifndef _INTEGRAL_MAX_BITS
 #define _INTEGRAL_MAX_BITS 64
 #endif
@@ -1059,9 +1026,6 @@
 #endif
 #ifndef __GNUC_MINOR__
 #define __GNUC_MINOR__ 2
-#endif
-#ifndef __GLIBCXX_TYPE_INT_N_0
-#define __GLIBCXX_TYPE_INT_N_0 __int128
 #endif
 #ifndef __INT_FAST16_WIDTH__
 #define __INT_FAST16_WIDTH__ 16
@@ -1091,7 +1055,7 @@
 #define __FLT32X_DIG__ 15
 #endif
 #ifndef __PTRDIFF_TYPE__
-#define __PTRDIFF_TYPE__ long long int
+#define __PTRDIFF_TYPE__ int
 #endif
 #ifndef __ATOMIC_SEQ_CST
 #define __ATOMIC_SEQ_CST 5
@@ -1103,7 +1067,7 @@
 #define __FLT32X_MIN_10_EXP__ (-307)
 #endif
 #ifndef __UINTPTR_TYPE__
-#define __UINTPTR_TYPE__ long long unsigned int
+#define __UINTPTR_TYPE__ unsigned int
 #endif
 #ifndef __DEC64_SUBNORMAL_MIN__
 #define __DEC64_SUBNORMAL_MIN__ 0.000000000000001E-383DD
@@ -1116,9 +1080,6 @@
 #endif
 #ifndef __FLT128_EPSILON__
 #define __FLT128_EPSILON__ 1.92592994438723585305597794258492732e-34F128
-#endif
-#ifndef __SSE_MATH__
-#define __SSE_MATH__ 1
 #endif
 #ifndef __SIZEOF_LONG_LONG__
 #define __SIZEOF_LONG_LONG__ 8
@@ -1153,9 +1114,6 @@
 #ifndef __UINT_FAST8_TYPE__
 #define __UINT_FAST8_TYPE__ unsigned char
 #endif
-#ifndef __WIN64__
-#define __WIN64__ 1
-#endif
 #ifndef __cpp_init_captures
 #define __cpp_init_captures 201304
 #endif
@@ -1165,32 +1123,26 @@
 #ifndef __ATOMIC_RELEASE
 #define __ATOMIC_RELEASE 3
 #endif
-#ifndef NDEBUG
-#define NDEBUG 1
-#endif
-#ifndef RELEASE
-#define RELEASE 1
-#endif
 #endif
 
 // --- Include directories begin --- //
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../include/c++/7.2.0
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../include/c++/7.2.0/x86_64-w64-mingw32
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../include/c++/7.2.0/backward
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../include
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../x86_64-w64-mingw32/include
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../include/c++/7.2.0
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../include/c++/7.2.0/i686-w64-mingw32
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../include/c++/7.2.0/backward
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/include
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../include
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/include-fixed
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../i686-w64-mingw32/include
 // --- Include directories end --- //
 
 
 // --- Library directories begin --- //
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/
-//C:/Software/msys64/mingw64/bin/../lib/gcc/
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../x86_64-w64-mingw32/lib/../lib/
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../lib/
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../x86_64-w64-mingw32/lib/
-//C:/Software/msys64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/7.2.0/../../../
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/
+//C:/Software/msys32/mingw32/bin/../lib/gcc/
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../i686-w64-mingw32/lib/../lib/
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../lib/
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../../i686-w64-mingw32/lib/
+//C:/Software/msys32/mingw32/bin/../lib/gcc/i686-w64-mingw32/7.2.0/../../../
 // --- Library directories begin --- //
 
 #pragma clang diagnostic pop

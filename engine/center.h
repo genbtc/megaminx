@@ -11,6 +11,7 @@ public:
 
     void init(int n);
 	void render();
+    double* origin();
 };
 
 #endif

@@ -15,11 +15,13 @@ public:
 	void scramble();
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
+	void setCurrentFace(int i);
     /* y axis */
 	double n;
     /* x axis */
 	double k;
 	bool _rotate;
+    Face* g_currentFace;
 private:
 
 	int rSide;

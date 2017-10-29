@@ -10,11 +10,33 @@
 #include <cstdlib>
 #include <cmath>
 #include "engine/megaminx.h"
+#include "common_physics/utils.h"
+//#include "common_physics/utils_shaders.h"
+//#include "common_physics/utils_math.h"
+#include "common_physics/input.h"
+#include "common_physics/material_point.h"
+//#include "common_physics/points_with_collision.h"
+// globals
+Camera g_camera;
 
+// shaders:
+GLuint g_shaderLight;
+
+// geometry to render
+GLint g_meshDisplayList;
+
+// data for mouse selection
+MouseRayTestData g_rayTest;
+unsigned int g_lastHitPointID;
+unsigned int g_draggedPointID;
+bool g_areWeDraggingPoint;
+
+// time:
+double g_appTime = 0.0; 	// global app time in seconds
 double view_distance_view_angle = 20;
 int activeWindow = 0;
 
-bool paused = false;
+bool paused = true;
 
 double defK = 0;
 double defN = 0;
@@ -22,8 +44,10 @@ double defMX, defMY;
 
 int pressedButton;
 int specialKey;
+int currentFace;
 
 void display();
+void ChangeSize(int w, int h);
 void reshape(int x, int y);
 void timer(int);
 void mousePressed(int button, int state, int x, int y);
@@ -31,27 +55,49 @@ void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
-void specialKeyboard(int key, int x, int y);
+void PressSpecialKey(int key, int x, int y);
+void ReleaseSpecialKey(int key, int x, int y);
 void rotateDispatch(unsigned char key);
-
-using namespace std;
-
+static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 const char *title = "Megaminx v1.1 - genBTC mod";
 // initial window screen size
 int WIDTH = 700;
 int HEIGHT = 700;
-int ZDIST = -900;
+int ZDIST = (WIDTH/HEIGHT) * 1.25 * HEIGHT;
 
+using namespace std;
 Megaminx* megaminx;
-
-static int window,menu_id, submenu0_id, submenu1_id,submenu2_id, submenu3_id, submenu4_id;
-
 void createMegaMinx()
 {
+	g_camera = Camera();
     megaminx = new Megaminx;
 }
 
-int currentFace;
+void utDrawText2D(float x, float y, void *font, char *string)
+{
+	char *c;
+	// set position to start drawing fonts
+	glRasterPos2f(x, y);
+	// loop all the characters in the string
+	for(c = string ; *c != '\0' ; c++) {
+		glutBitmapCharacter(font, *c);
+	}
+}
+
+void utCalculateAndPrintFps(float x, float y)
+{
+	static char fpsStr[16];
+	static unsigned int frame = 0;
+	static int timeBase = 0;	
+	frame++;
+    const int t = glutGet(GLUT_ELAPSED_TIME);
+	if (t - timeBase > 1000) {
+		sprintf(fpsStr, "FPS: %4.2f", frame*1000.0/(t - timeBase));
+		timeBase = t;		
+		frame = 0;
+	}
+	utDrawText2D(x, y, fpsStr);
+}
 
 void menu(int num) {
     if (num == 9)
@@ -61,17 +107,14 @@ void menu(int num) {
     }
     if (num == 1)
         paused = !paused;
-    if (num == 2)
-        //TODO: Get current position from mouse 
-        //or infer angle and get the current face 
-        //and then set it to a global variable
-        currentFace = num;
     if (num == 3)
         rotateDispatch('f');
     if (num == 23)  //rotate corner piece
         megaminx->swapOneCorner(8, 1);
     if (num == 24)  //rotate edge piece
         megaminx->swapOneEdge(8, 1);
+    if (num >=61 && num <= 72)
+	    megaminx->setCurrentFace(num - 60);
     if (num == 100)
         megaminx->scramble();
     if (num == 102)
@@ -79,20 +122,16 @@ void menu(int num) {
         glutDestroyWindow(1);
         exit(0);
     }
-    //if (num == 33)
-    //    megaminx->swapOneCorner(6, 2);
-    //if (num == 34)
-    //    megaminx->swapOneEdge(7, 3);
-    //if (num == 35)
-    //    megaminx->swapOneEdge(8, 7);
 }
 
 void createMenu(void) {
     //SubLevel 0 menu - last layer
     submenu0_id = glutCreateMenu(menu);
+	glutAddMenuEntry("Solve All/(reset)", 9);
     glutAddMenuEntry("Scramble", 100);
     glutAddMenuEntry("Redraw", 101);
     glutAddMenuEntry("Quit", 102);
+	
     
     //SubLevel 1 menu - last layer
     submenu1_id = glutCreateMenu(menu);
@@ -128,19 +167,33 @@ void createMenu(void) {
     glutAddMenuEntry("u l U' R' u L' U' r", 55);
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     glutAddMenuEntry("R' D' R D", 57);
+
+    //SubLevel6 Menu - Faces
+    submenu6_id = glutCreateMenu(menu);
+    glutAddMenuEntry("1  WHITE", 61);
+    glutAddMenuEntry("[2] BLUE", 62);
+    glutAddMenuEntry("3  RED", 63);
+    glutAddMenuEntry("4  GREEN", 64);
+    glutAddMenuEntry("5  PURPLE", 65);
+    glutAddMenuEntry("6  YELLOW", 66);
+    glutAddMenuEntry("7  GRAY", 67);
+    glutAddMenuEntry("8  LIGHT_BLUE", 68);
+    glutAddMenuEntry("9  ORANGE", 69);
+    glutAddMenuEntry("10 LIGHT_GREEN", 70);
+    glutAddMenuEntry("11 PINK", 71);
+    glutAddMenuEntry("12 BONE", 72);
     
         
     //Top Level Menu
     menu_id = glutCreateMenu(menu);
-    glutAddMenuEntry("Toggle Spinning", 1);    
-    glutAddMenuEntry("Mark as Front Face", 2);
-    glutAddSubMenu("Hidden/Admin.", submenu0_id);
+    glutAddMenuEntry("Toggle Spinning", 1);
+    glutAddSubMenu("Function  -->", submenu0_id);
     glutAddSubMenu("Last Layer ->", submenu1_id);
     glutAddSubMenu("Rotations -->", submenu2_id);
     glutAddSubMenu("Steps------->", submenu3_id);
-    glutAddSubMenu("Algos ------>", submenu4_id);    
-    glutAddMenuEntry("Solve All/(reset)", 9);
-    glutAddMenuEntry("Exit Menu....", 9999);
+    glutAddSubMenu("Algos ------>", submenu4_id);
+    glutAddSubMenu("Front is: -->", submenu6_id);
+    glutAddMenuEntry("Exit Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -150,9 +203,6 @@ int main(int argc, char *argv[])
 	srand(time(nullptr));
     createMegaMinx();
 	glutInit(&argc, argv);
-	// int w = glutGet(GLUT_SCREEN_WIDTH) - 500;
-	// int h = glutGet(GLUT_SCREEN_HEIGHT) - 200;
-
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
 	glutInitWindowSize(WIDTH, HEIGHT);
     window = glutCreateWindow(title);
@@ -160,45 +210,70 @@ int main(int argc, char *argv[])
 	glClearColor(0.22, 0.2, 0.2, 1.0);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
-    gluPerspective(view_distance_view_angle, 1.0 , 1.0, 10000.0);
+    gluPerspective(view_distance_view_angle, 1.0 , 1.0, 1000);
+    //gluLookAt(1, 1, 1, 1, 1, 1, 1, 1, 1);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glutReshapeFunc(reshape);
-    glutDisplayFunc(display);
+	glutReshapeFunc(ChangeSize);
 	glutTimerFunc(0, timer, 0);
 	glutMouseFunc(mousePressed);
-	glutPassiveMotionFunc(processMousePassiveMotion);
 	glutMotionFunc(mousePressedMove);
+    glutPassiveMotionFunc(processMousePassiveMotion);
 	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(specialKeyboard);
+	glutSpecialFunc(PressSpecialKey);
+	glutSpecialUpFunc(ReleaseSpecialKey);
 	// glutFullScreen();
     // glutSetWindow(1);
-
+	glutDisplayFunc(display);
+	
     createMenu();	
 
-	glTranslated(0, 0, ZDIST);
-	glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
+    //glTranslated(0, 0, ZDIST);
+	//glRotated(-90, 1, 0, 0);    //puts the F1 key on the bottom.
 
+	g_camera.m_zoom = ZDIST;
+	//g_camera.m_angleX = -90.0f;
+	g_camera.m_angleY = -60.0f;
+	g_areWeDraggingPoint = false;
+	//gluLookAt(0, 0, 0, 20, 20, 20, 900, 900, 900);
 	glutMainLoop();
     
 	return 0;
 }
-
-void reshape(int x, int y)
+void ChangeSize(int w, int h)
 {
-    if (x == WIDTH && y == HEIGHT)
-        return;
-    const auto w = glutGet(GLUT_WINDOW_WIDTH);
-    const auto h = glutGet(GLUT_WINDOW_HEIGHT);
-    const auto minx = min(w, h);
-	glutReshapeWindow(minx, minx);
-    glViewport(0, 0, minx, minx);
+	g_camera.ChangeViewportSize(w, h);
 }
 
-int depth = 0;
-float angleX = 0.0;
-float angle = 0.0;
+void utSetOrthographicProjection(int scrW, int scrH) {
 
+	// switch to projection mode
+	glMatrixMode(GL_PROJECTION);
+	// save previous matrix which contains the 
+	//settings for the perspective projection
+	glPushMatrix();
+	// reset matrix
+	glLoadIdentity();
+	// set a 2D orthographic projection
+	gluOrtho2D(0, scrW, 0, scrH);
+	// invert the y axis, down is positive
+	glScalef(1, -1, 1);
+	// mover the origin from the bottom left corner
+	// to the upper left corner
+	glTranslatef(0, -(float)scrH, 0);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+}
+void utResetPerspectiveProjection() {
+	// set the current matrix to GL_PROJECTION
+	glMatrixMode(GL_PROJECTION);
+	// restore previous settings
+	glPopMatrix();
+	// get back to GL_MODELVIEW matrix
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -208,29 +283,42 @@ void display()
 	glEnable(GL_ALPHA);
     glLineWidth(4);
 	glPointSize(5);
-		
+
 	glPushMatrix();
-    //orient the cube the way we want. N = Y axis
-	glRotated(megaminx->n, -1, 0, 0);
-    glRotated(-30, -1, 0, 0);
-    //rotated it down by 30 degrees off the Y 
-    // so we can see more faces - steeper angles
-    //angle makes it spin to the right. /2 is slower
-    //K = X axis
-	glRotated(megaminx->k + angle/2, 0, 0, 1);
-    //spinning can be disabled(toggled)
-    if (paused)
-        angle++;
 
+    const int t = glutGet(GLUT_ELAPSED_TIME);
+    const double newTime = (double)t * 0.001;
+	double deltaTime = newTime - g_appTime;
+	static const double REFRESH_TIME = 1.0 / 60.0; 	// monitor with 60 Hz
+	static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
+	if (deltaTime > REFRESH_TIME) deltaTime = REFRESH_TIME;
+	// average:
+	deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
+	g_appTime = g_appTime + deltaTime;
+	g_camera.Update(deltaTime);
+
+	//spinning can be disabled(toggled)
+	if(!paused)
+	    g_camera.m_angleX++;
+
+	g_camera.SetSimpleView();
 	megaminx->render();
-
 	glPopMatrix();
+
+	glColor3f(0, 1, 0);
+	utSetOrthographicProjection(WIDTH, HEIGHT);
+		utCalculateAndPrintFps(10, 20);
+	utResetPerspectiveProjection();
 
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHT1);
     glDisable(GL_MULTISAMPLE_ARB);
 	glutSwapBuffers();
+		// save time deltas:
+	lastDeltas[0] = lastDeltas[1];
+	lastDeltas[1] = lastDeltas[2];
+	lastDeltas[2] = deltaTime;
 }
 
 void timer(int)
@@ -238,85 +326,48 @@ void timer(int)
 	glutPostRedisplay();
 	glutTimerFunc(2, timer, 0);	
 }
-
+void HitTest();
 void double_click(int x, int y)
 {
+	HitTest();
     //not implemented
+	//#define DOUBLE_CLICK_INTERVAL	400
 }
 
-#define DOUBLE_CLICK_INTERVAL	400
-static int bnstate[16];
-
-static int prev_x = -1, prev_y;
 void mousePressed(int button, int state, int x, int y)
 {
-    specialKey = glutGetModifiers();
-    pressedButton = button;
-    if (state == GLUT_DOWN)
-    {
-        defMX = x;
-        defMY = y;
-        defN = megaminx->n;
-        defK = megaminx->k;
-    }
-    // User must press the SHIFT key to change the
-    // rotation in the X axis
-    if (pressedButton == GLUT_ACTIVE_SHIFT) {
-        // setting the angle to be relative to the mouse
-        // position inside the window
-        if (x < 0)
-            angleX = 0.0;
-        else if (x > WIDTH)
-            angleX = 180.0;
-        else
-            angleX = 180.0 * x / HEIGHT;
-    }
-    static unsigned int prev_left_click;
-    static int prev_left_x, prev_left_y;
+	g_camera.ProcessMouse(button, state, x, y);
 
-    bnstate[button] = state == GLUT_DOWN ? 1 : 0;
-    if (state == GLUT_DOWN) {
-        if (button == GLUT_LEFT_BUTTON) {
-            const unsigned int msec = glutGet(GLUT_ELAPSED_TIME);
-            const int dx = abs(x - prev_left_x);
-            const int dy = abs(y - prev_left_y);
+	// can we move any ball?
+	if(g_camera.m_isLeftPressed && g_rayTest.m_hit)
+	{
+		g_draggedPointID = g_lastHitPointID;
+		g_areWeDraggingPoint = true;
+	}
+	else
+		g_areWeDraggingPoint = false;
 
-            if (msec - prev_left_click < DOUBLE_CLICK_INTERVAL && dx < 3 && dy < 3) {
-                double_click(x, y);
-                prev_left_click = 0;
-            }
-            else {
-                prev_left_click = msec;
-                prev_left_x = x;
-                prev_left_y = y;
-            }
-        }
-    }
-    if (state == GLUT_UP) return; // Disregard redundant GLUT_UP events
-    //Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)
-    if (button == 3) {        
-        //Mouse wheel up
-        glTranslated(0, 0, +5);
-    }
-    if (button == 4) {
-        //Mouse wheel down
-        glTranslated(0, 0, -5);
-    }
-
+	if (state == GLUT_UP)		return; // Disregard redundant GLUT_UP events	//
+	//	Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)	//
+	if(button == 3) {
+		//Mouse wheel up
+		g_camera.m_zoom += 2;
+	}
+	if (button == 4) {
+		//Mouse wheel down
+		g_camera.m_zoom -= 2;
+	}
 }
 
 void processMousePassiveMotion(int x, int y) {
-    //
+	// called when no mouse btn are pressed and mouse moves
+	g_camera.ProcessPassiveMouseMotion(x, y);
 }
-
 
 void mousePressedMove(int x, int y)
 {
-	if (pressedButton == GLUT_LEFT_BUTTON)
-	{
-        megaminx->k = defK + (x - defMX) / 3;
-	    megaminx->n = defN + (defMY - y) / 3;		
-	}
+	// if we are dragging any ball we cannot use mouse for scene rotation
+	g_camera.ProcessMouseMotion(x, y, !g_areWeDraggingPoint);
 }
 
 void rotateDispatch(unsigned char key)
@@ -377,19 +428,27 @@ void keyboard(unsigned char key, int x, int y)
 	switch (key)
 	{
 	case ' ':
+		//spacebar
 		paused = !paused;
 		break;
-        //backspace
 	case 8:
+		//backspace
+		g_camera.m_angleX = 0.0f;
+		g_camera.m_angleY = 30.0f;
+		g_camera.m_zoom = 20.0f;
+		break;
+	case 127:
+		//delete
 		megaminx->scramble();
 		break;
     default:
         break;
 	}
+	//call the megaminx specific key functions (above)
     rotateDispatch(key);
 }
 
-void specialKeyboard(int key, int x, int y)
+void PressSpecialKey(int key, int x, int y)
 {
     specialKey = glutGetModifiers();
     if ((specialKey == GLUT_ACTIVE_CTRL) &&
@@ -399,20 +458,10 @@ void specialKeyboard(int key, int x, int y)
     const int dir = (specialKey == 1) ? 1 : -1;
 	switch (key)
 	{
-    case GLUT_KEY_LEFT:
-        megaminx->k -= 2;
-        break;
-	case GLUT_KEY_UP:
-		megaminx->n += 2;
-		break;
-    case GLUT_KEY_RIGHT:
-        megaminx->k += 2;
-        break;
-	case GLUT_KEY_DOWN:
-		megaminx->n -= 2;
-		break;
     case GLUT_KEY_PAGE_UP:
+		break;
     case GLUT_KEY_PAGE_DOWN:
+		break;
     case GLUT_KEY_HOME:
     case GLUT_KEY_END:
     case GLUT_KEY_INSERT:
@@ -434,5 +483,29 @@ void specialKeyboard(int key, int x, int y)
     default:
         break;
 	}
+	g_camera.PressSpecialKey(key, x, y);
+}
+void ReleaseSpecialKey(int key, int x, int y) 
+{
+	g_camera.ReleaseSpecialKey(key, x, y);
+}
 
+///////////////////////////////////////////////////////////////////////////////
+void HitTest()
+{
+	// calculate ray for mouse:
+	g_rayTest.CalculateRay(g_camera);
+
+	if (g_areWeDraggingPoint == false)
+	{		
+		// perform hit test with all point in the scene
+		// not optimal - one can use some scene tree system to optimise it... 
+		g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, megaminx->g_currentFace, &g_rayTest.m_lastT);
+
+		// now in:
+		// m_hit - did we hit something?
+		// m_lastT - param that can be used to calculate next ball position
+		// note that can point to 2D position, so we can only move a point in TWO directions on a plane
+		// that is parallel to camera's near plane
+	}
 }

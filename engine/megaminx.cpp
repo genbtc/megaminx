@@ -150,16 +150,23 @@ void Megaminx::scramble()
 {
     for (int i = 0; i < 12; i++) {
         int r = rand() % 2 * 2 - 1;
-        this->face[i].placeParts(true);
+        this->face[i].placeParts(1);
     }
 }
 
+//works good.
 void Megaminx::swapOneCorner(int i, int x)
 {
-    this->face[7].swapCorners(i, x);
+    this->face[7].corner[3]->flip();
 }
 //Front Face is 7 (Blue)
+//works good.
 void Megaminx::swapOneEdge(int i,int x)
 {    
-    this->face[7].swapEdges(i, x);
+    this->face[7].edge[3]->flip();
+}
+
+void Megaminx::setCurrentFace(int i)
+{
+	g_currentFace = &this->face[i];
 }

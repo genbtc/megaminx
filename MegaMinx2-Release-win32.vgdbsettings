@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <VisualGDBProjectSettings2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConfigurationName>Debug</ConfigurationName>
+  <ConfigurationName>Release-win32</ConfigurationName>
   <Project xsi:type="com.visualgdb.project.windows">
     <CustomSourceDirectories>
       <Directories />
@@ -10,7 +10,7 @@
   </Project>
   <Build xsi:type="com.visualgdb.build.make">
     <ToolchainID>
-      <ID>com.sysprogs.imported.mingw</ID>
+      <ID>com.sysprogs.imported.mingw1</ID>
       <Version>
         <GCC>7.2.0</GCC>
         <GDB>8.0.1</GDB>
@@ -18,8 +18,8 @@
       </Version>
     </ToolchainID>
     <MakeFilePathRelativeToSourceDir>Makefile</MakeFilePathRelativeToSourceDir>
-    <MakeConfigurationName>Debug</MakeConfigurationName>
-    <AdditionalMakeArguments />
+    <MakeConfigurationName>Release-win32</MakeConfigurationName>
+    <AdditionalMakeArguments>-j 6</AdditionalMakeArguments>
     <MakeCommandTemplate>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <RemoteHost>
@@ -55,8 +55,8 @@
       <IgnoreModuleEventsWhileStepping>true</IgnoreModuleEventsWhileStepping>
       <UseRelativePathsOnly>false</UseRelativePathsOnly>
       <ExitAction>None</ExitAction>
-      <DisableDisassembly>true</DisableDisassembly>
-      <ExamineMemoryWithXCommand>true</ExamineMemoryWithXCommand>
+      <DisableDisassembly>false</DisableDisassembly>
+      <ExamineMemoryWithXCommand>false</ExamineMemoryWithXCommand>
       <StepIntoNewInstanceEntry>main</StepIntoNewInstanceEntry>
       <ExamineRegistersInRawFormat>true</ExamineRegistersInRawFormat>
       <DisableSignals>false</DisableSignals>

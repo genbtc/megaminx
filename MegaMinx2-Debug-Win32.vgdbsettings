@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
 <VisualGDBProjectSettings2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConfigurationName>Release</ConfigurationName>
+  <ConfigurationName>Debug-Win32</ConfigurationName>
   <Project xsi:type="com.visualgdb.project.windows">
     <CustomSourceDirectories>
-      <Directories />
-      <PathStyle>Unknown</PathStyle>
+      <Directories>
+        <SourceDirMappingEntry>
+          <RemoteDir>/mingw</RemoteDir>
+          <LocalDir>C:\Software\msys32\mingw32</LocalDir>
+        </SourceDirMappingEntry>
+      </Directories>
+      <PathStyle>MinGWUnixSlash</PathStyle>
     </CustomSourceDirectories>
     <MainSourceDirectory>$(ProjectDir)</MainSourceDirectory>
   </Project>
   <Build xsi:type="com.visualgdb.build.make">
     <ToolchainID>
-      <ID>com.sysprogs.imported.mingw</ID>
+      <ID>com.sysprogs.imported.mingw1</ID>
       <Version>
         <GCC>7.2.0</GCC>
         <GDB>8.0.1</GDB>
@@ -18,7 +23,8 @@
       </Version>
     </ToolchainID>
     <MakeFilePathRelativeToSourceDir>Makefile</MakeFilePathRelativeToSourceDir>
-    <MakeConfigurationName>Release</MakeConfigurationName>
+    <MakeConfigurationName>Debug-Win32</MakeConfigurationName>
+    <AdditionalMakeArguments>-j 6</AdditionalMakeArguments>
     <MakeCommandTemplate>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <RemoteHost>
@@ -54,8 +60,8 @@
       <IgnoreModuleEventsWhileStepping>true</IgnoreModuleEventsWhileStepping>
       <UseRelativePathsOnly>false</UseRelativePathsOnly>
       <ExitAction>None</ExitAction>
-      <DisableDisassembly>true</DisableDisassembly>
-      <ExamineMemoryWithXCommand>true</ExamineMemoryWithXCommand>
+      <DisableDisassembly>false</DisableDisassembly>
+      <ExamineMemoryWithXCommand>false</ExamineMemoryWithXCommand>
       <StepIntoNewInstanceEntry>main</StepIntoNewInstanceEntry>
       <ExamineRegistersInRawFormat>true</ExamineRegistersInRawFormat>
       <DisableSignals>false</DisableSignals>
@@ -87,6 +93,7 @@
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
+  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
     <ExtraSettings>

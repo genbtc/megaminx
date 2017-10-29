@@ -12,7 +12,7 @@ Face::Face()
     _rotate = false;
     angle = 0;
     axis[0] = 0;
-    axis[1] = 0.001;
+    axis[1] = 0.0001;
     axis[2] = -1;
 }
 
@@ -136,9 +136,9 @@ void Face::QuadSwapEdges(eightPack pack)
  * \param right Each case is for each of the 12 faces, 
  * / in order to get it to switch colors after it rotates.
  */
-void Face::placeParts(bool right)
+bool Face::placeParts(int right)
 {
-    if (right == true)
+    if (right == 1)
     {
         switch (thisNum)
         {
@@ -147,7 +147,7 @@ void Face::placeParts(bool right)
             QuadSwapEdges({ 0, 1, 1, 2, 2, 3, 3, 4 });
             break;
         case 1:
-            backwardsFlip(0, 1, 2, 4);            
+            backwardsFlip(0, 1, 2, 4);
             QuadSwapCorners({ 4, 0, 4, 2, 0, 3, 0, 1 });
             QuadSwapEdges({ 4, 1, 1, 3, 0, 1, 0, 2 });
             twoEdgeFlips(1, 2);
@@ -206,7 +206,7 @@ void Face::placeParts(bool right)
             break;
         case 11:
             QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
-            twoEdgeFlips(2, 4);
+            twoEdgeFlips(3, 4);
             QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
             alternatingForwardsFlip(0, 2, 3, 4);
             break;
@@ -290,12 +290,14 @@ void Face::placeParts(bool right)
             break;
         }
     }
+    return true;
 }
 
 
 bool Face::render()
 {
-    if (_rotate) angle += turnDir * 5;
+    //7 is the current speed.
+    if (_rotate) angle += turnDir * 7;
     glPushMatrix();
     glRotated(angle, axis[0], axis[1], axis[2]);
 
@@ -303,43 +305,25 @@ bool Face::render()
     {
         corner[i]->render();
         edge[i]->render();
-    }
-    center->render();
-    glBegin(GL_POLYGON);
-    for (int i = 0; i < 5; ++i)
-    {
         glVertex3dv(_vertex[i]);
     }
-    glEnd();
-
+    center->render();
+    glLineWidth(4);
+    glColor3d(0, 0, 0);
     glPopMatrix();
 
     glBegin(GL_POLYGON);
     for (int i = 0; i < 5; ++i)
     {
-        glVertex3dv(_vertex[i]);
+        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
     }
     glEnd();
-
-    if (turnDir == 1)
+    
+    if (angle >= 70 || angle <= -70)
     {
-        if (angle >= 69)
-        {
-            angle = 0;
-            _rotate = false;
-            placeParts(true);
-            return true;
-        }
-    }
-    else
-    {
-        if (angle <= -69)
-        {
-            angle = 0;
-            _rotate = false;
-            placeParts(false);
-            return true;
-        }
+        angle = 0;
+        _rotate = false;
+        return placeParts(turnDir);
     }
     return false;
 }

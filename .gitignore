@@ -23,3 +23,8 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 .vs/
+/articles-master.zip
+/CodeDB/MegaMinx2-Debug-Win32.*
+/CodeDB/MegaMinx2-Debug-Win32/GlobalFileTable*
+/main.cpp*.TMP
+/CodeDB/*

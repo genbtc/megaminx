@@ -5,7 +5,7 @@
 
 #VisualGDB: AutoSourceFiles		#<--- remove this line to disable auto-updating of SOURCEFILES and EXTERNAL_LIBS
 
-TARGETNAME := MegaMinx2.exe
+TARGETNAME := MegaMinx2
 #TARGETTYPE can be APP, STATIC or SHARED
 TARGETTYPE := APP
 
@@ -36,7 +36,7 @@ error:
 	$(error Invalid configuration, please check your inputs)
 endif
 
-SOURCEFILES := engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Piece.cpp
+SOURCEFILES := common_physics/input.cpp engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Piece.cpp raytri.cpp
 EXTERNAL_LIBS := 
 EXTERNAL_LIBS_COPIED := $(foreach lib, $(EXTERNAL_LIBS),$(BINARYDIR)/$(notdir $(lib)))
 
@@ -180,6 +180,10 @@ $(BINARYDIR)/%.o : %.cxx $(all_make_files) |$(BINARYDIR)
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
 
 #VisualGDB: GeneratedRules				#<--- All lines below are auto-generated. Remove this line to suppress auto-generation of file rules.
+
+
+$(BINARYDIR)/input.o : common_physics/input.cpp $(all_make_files) |$(BINARYDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
 
 
 $(BINARYDIR)/center.o : engine/center.cpp $(all_make_files) |$(BINARYDIR)

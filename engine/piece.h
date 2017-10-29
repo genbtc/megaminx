@@ -108,6 +108,11 @@ public:
         initColorIndex(1, b);
         initColorIndex(2, c);
     }
+    /**
+     * \brief 
+     * \param target used in almost every other algo
+     * \param pack 
+     */
     static void axis1multi(double* target, piecepack &pack)
     {
         rotateVertex(target, pack.axis1, pim(pack.multi));
@@ -166,6 +171,36 @@ public:
     {
         rotateVertex(target, 'x', PI);
         axis1multi(target, pack);
+    }
+    static void OpSwitcher(double* target, piecepack &pack, int opnum)
+    {
+        if (opnum < 1) return;
+        switch (opnum) {
+        case 1:
+            axis1multi(target, pack);
+        case 2:
+            CenterSide1(target, pack);
+        case 3:
+            CenterCenter(target, pack);
+        case 4:
+            CenterSide2(target, pack);
+        case 5:
+            CornerGrp3(target, pack);
+        case 6:
+            CornerGrp4(target, pack);
+        case 7:
+            EdgeGrp2(target, pack);
+        case 8:
+            EdgeGrp3(target, pack);
+        case 9:
+            EdgeGrp4(target, pack);
+        case 10:
+            EdgeGrp5(target, pack);
+        case 11:
+            EdgeGrp6(target, pack);
+        default:
+            break;
+        }
     }
 };
 

@@ -4,6 +4,7 @@
 #include "center.h"
 #include "edge.h"
 #include "corner.h"
+#include "../common_physics/input.h"
 
 enum FaceTurnDir { Clockwise, CounterClockwise };
 struct eightPack
@@ -26,12 +27,19 @@ public:
 
     bool render();
 	void rotate(int);
-	void placeParts(bool right);
+    bool placeParts(int right);
 
     void swapCorners(int, int);
     void swapEdges(int, int);
 
-
+	/** test ray collision against points, returns true when found collision and
+	 * in "id" there is id of the point (point wth rad represents little sphere) that collides with the ray.
+	 * if more than one collision is found then "id" points to the closest to "start" point */
+	double m_pos, m_radius;
+    bool RayTest(const Vec3d &start, const Vec3d &end, const Face *pt, double *t, double epsilon=0) const
+    {
+	    pt = this;return true;
+	}
 	Corner *corner[5];
 	Edge *edge[5];
 	Center *center;

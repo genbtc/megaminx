@@ -21,17 +21,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="debug.mak">
-      <Filter>Make files</Filter>
-    </None>
-    <None Include="release.mak">
-      <Filter>Make files</Filter>
-    </None>
     <None Include="MegaMinx2-Debug.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
     </None>
     <None Include="MegaMinx2-Release.vgdbsettings">
       <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="release-win32.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="release-win64.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="debug-win64.mak">
+      <Filter>Make files</Filter>
+    </None>
+    <None Include="debug-win32.mak">
+      <Filter>Make files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +68,12 @@
     <ClCompile Include="Piece.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="raytri.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="common_physics\input.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\center.h">
@@ -86,6 +98,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="engine\vector3d.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\geometry.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
