@@ -31,6 +31,7 @@ typedef enum {
 
 struct color
 {
+	int i;
     double r;
     double g;
     double b;
@@ -40,18 +41,18 @@ struct color
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
 static color g_colorRGBs[COLOR_STATES] =
 {                    
-    { 1.0, 1.0, 1.0, L"WHITE" },
-    { 0.0, 0.0, 1.0, L"BLUE" },
-    { 1.0, 0.0, 0.0, L"RED" },
-    { 0.0, 0.5, 0.0, L"GREEN" },
-    { 0.5, 0.0, 1.0, L"PURPLE" },
-    { 1.0, 1.0, 0.0, L"YELLOW" },
-    { 0.5, 0.5, 0.5, L"GRAY" },
-    { 0.2, 0.5, 1.0, L"LIGHT_BLUE"},
-    { 1.0, 0.4, 0.1, L"ORANGE" },
-    { 0.3, 1.0, 0.3, L"LIGHT_GREEN" },
-    { 0.9, 0.4, 1.0, L"PINK" },
-    { 1.0, 1.0, 0.8, L"BONE" }
+    {  1, 1.0, 1.0, 1.0, L"WHITE" },
+    {  2, 0.0, 0.0, 1.0, L"BLUE" },
+    {  3, 1.0, 0.0, 0.0, L"RED" },
+    {  4, 0.0, 0.5, 0.0, L"GREEN" },
+    {  5, 0.5, 0.0, 1.0, L"PURPLE" },
+    {  6, 1.0, 1.0, 0.0, L"YELLOW" },
+    {  7, 0.5, 0.5, 0.5, L"GRAY" },
+    {  8, 0.2, 0.5, 1.0, L"LIGHT_BLUE"},
+    {  9, 1.0, 0.4, 0.1, L"ORANGE" },
+    { 10, 0.3, 1.0, 0.3, L"LIGHT_GREEN" },
+    { 11, 0.9, 0.4, 1.0, L"PINK" },
+    { 12, 1.0, 1.0, 0.8, L"BONE" }
 };
 struct piecepack
 {
@@ -71,6 +72,7 @@ public:
     double _vertex[7][3];
     Vector3d v3d[7];
     const wchar_t* _colorName;
+	int _colorNum;
     //getter
     double* getcolor()
     {
@@ -83,6 +85,7 @@ public:
         _color[i][1] = c.g;
         _color[i][2] = c.b;
         _colorName = c.name;
+	    _colorNum = c.i;
     }
     //common
     void initColorIndex(int idx,int k)
