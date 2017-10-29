@@ -296,8 +296,12 @@ bool Face::placeParts(int right)
 
 bool Face::render()
 {
-    //7 is the current speed.
-    if (_rotate) angle += turnDir * 7;
+    //8 is the current speed.
+    if (_rotate) angle += turnDir * 8;
+	if (angle >= 56 || angle <= -56)
+	{
+		if (_rotate) angle -= turnDir * 2;
+	}
     glPushMatrix();
     glRotated(angle, axis[0], axis[1], axis[2]);
 
@@ -319,7 +323,7 @@ bool Face::render()
     }
     glEnd();
     
-    if (angle >= 70 || angle <= -70)
+    if (angle >= 72 || angle <= -72)
     {
         angle = 0;
         _rotate = false;

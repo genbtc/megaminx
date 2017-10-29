@@ -15,55 +15,20 @@ Center::Center()
 
 void Center::createAxis(int n, double* target)
 {
-    piecepack pack{ 0,0,0 };
+	piecepack pack;
     switch (n + 1)
     {
-    case 2:
-        pack = { 'z','x', 0 };
-        break;
-    case 3:
-        pack = { 'z','x', 2 };
-        break;
-    case 4:
-        pack = { 'z','x', 4 };
-        break;
-    case 5:
-        pack = { 'z','x', 6 };
-        break;
-    case 6:
-        pack = { 'z','x', 8 };
-        break;
-    case 7:
-        pack = { 'x',0, 0 };
-        break;
-    case 8:
-        pack = { 'y','x', 0 };
-        break;
-    case 9:
-        pack = { 'y','x', 2 };
-        break;
-    case 10:
-        pack = { 'y','x', 4 };
-        break;
-    case 11:
-        pack = { 'y','x', 6 };
-        break;
-    case 12:
-        pack = { 'y','x', 8 };
-        break;
-    default:
-        break;
-    }
-    switch (n + 1)
-    {
+	//no case1.
     case 2:
     case 3:
     case 4:
     case 5:
     case 6:
+	    pack = { 'z', 'x', ((n-1) * 2 % 10) };
         CenterSide1(target, pack);
         break;
     case 7:
+	    pack = { 'x', 0, 0 };
         CenterCenter(target,pack);
         break;
     case 8:
@@ -71,6 +36,7 @@ void Center::createAxis(int n, double* target)
     case 10:
     case 11:
     case 12:
+	    pack = { 'y', 'x', ((n-2) * 2 % 10) };
         CenterSide2(target, pack);
         break;
     default:
@@ -83,8 +49,8 @@ void Center::init(int n)
     for (int i = 0; i < 5; ++i)
     {
         createAxis(n, _vertex[i]);
-        initColor(n + 1);
     }
+	initColor(n + 1);
 }
 
 void Center::render()

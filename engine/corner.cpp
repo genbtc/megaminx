@@ -63,6 +63,7 @@ void Corner::createAxis(int n, double* target)
     case 5:
 	    initColor(1, 2, 6);
 	    break;
+		//
     case 6:
 	    initColor(2, 3, 11);
 	    break;
@@ -78,6 +79,7 @@ void Corner::createAxis(int n, double* target)
     case 10:
 	    initColor(6, 2, 10);
 	    break;
+		//
     case 11:
 	    initColor(7, 12, 8);
 	    break;
@@ -93,6 +95,7 @@ void Corner::createAxis(int n, double* target)
     case 15:
 	    initColor(7, 11, 12);
 	    break;
+		//
     case 16:
 	    initColor(8, 12, 4);
 	    break;
