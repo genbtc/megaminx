@@ -1,5 +1,5 @@
 #include "megaminx.h"
-#include <stdlib.h>
+#include <cstdlib>
 
 void Megaminx::solve()
 {
@@ -65,62 +65,40 @@ Megaminx::Megaminx()
     solve();
 }
 
-
 Megaminx::~Megaminx()
 {
-
 }
 
 void Megaminx::render()
 {
 	if (!_rotate)
 	{
-		for (int i = 0; i < 12; ++i)
-		{
+		for (int i=0; i < 12; ++i)
 			center[i].render();
-		}
-		for (int i = 0; i < 30; ++i)
-		{
+		for (int i=0; i < 30; ++i)
 			edge[i].render();
-		}
-		for (int i = 0; i < 20; ++i)
-		{
+		for (int i=0; i < 20; ++i)
 			corner[i].render();
-		}
 	}
 	else
 	{
-		for (int i = 0, k = 0; i < 12; ++i)
-		{
+		for (int i=0, k=0; i < 12; ++i) {			
 			if (&center[i] != face[rSide].center)
-			{
 				center[i].render();
-			}
 		}
-		for (int i = 0, k = 0; i < 30; ++i)
-		{
+		for (int i=0, k=0; i < 30; ++i) {
 			if (&edge[i] == face[rSide].edge[k])
-			{
 				k++;
-			}
 			else
-			{
 				edge[i].render();
-			}
 		}
-		for (int i = 0, k = 0; i < 20; ++i)
-		{
+		for (int i=0, k=0; i < 20; ++i) {
 			if (&corner[i] == face[rSide].corner[k])
-			{
 				k++;
-			}
 			else
-			{
 				corner[i].render();
-			}
 		}
-		if (face[rSide].render())
-		{
+		if (face[rSide].render()) {
 			_rotate = false;
 		}
 	}
@@ -128,8 +106,7 @@ void Megaminx::render()
 
 void Megaminx::rotate(int num, int dir)
 {
-	if (!_rotate)
-	{
+	if (!_rotate) {
 		_rotate = true;
 		rSide = num;
 		face[num].rotate(dir);
@@ -147,13 +124,13 @@ void Megaminx::scramble()
 //works good.
 void Megaminx::swapOneCorner(int i, int x)
 {
-    this->face[7].corner[3]->flip();
+    this->face[i].corner[x]->flip();
 }
 //Front Face is 7 (Blue)
 //works good.
 void Megaminx::swapOneEdge(int i,int x)
 {    
-    this->face[7].edge[3]->flip();
+    this->face[i].edge[x]->flip();
 }
 
 void Megaminx::setCurrentFace(int i)
