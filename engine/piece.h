@@ -140,7 +140,7 @@ public:
     }
     static void CornerGrp3(double* target, piecepack &pack)
     {
-        rotateVertex(target, pack.axis1, PI);
+	    CenterCenter(target, pack);
         rotateVertex(target, pack.axis2, pim(pack.multi));
     }
     static void CornerGrp4(double* target, piecepack &pack)
@@ -150,29 +150,29 @@ public:
     }
     static void EdgeGrp2(double* target, piecepack &pack)
     {
-        rotateVertex(target, 'z', pim(3));
-        rotateVertex(target, 'x', PI - SIDE_ANGLE);
+	    rotateVertex(target, pack.axis1, pim(3));
+	    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
         axis1multi(target, pack);
     }
     static void EdgeGrp3(double* target, piecepack &pack)
     {
-        rotateVertex(target, 'z', pim(6));
+	    rotateVertex(target, pack.axis1, pim(6));
         EdgeGrp2(target, pack);
     }
     static void EdgeGrp4(double* target, piecepack &pack)
     {
-        rotateVertex(target, 'z', pim(8));
+	    rotateVertex(target, pack.axis1, pim(8));
         EdgeGrp2(target, pack);
     }
     static void EdgeGrp5(double* target, piecepack &pack)
     {
-        rotateVertex(target, 'z', pim(2));
-        rotateVertex(target, 'x', SIDE_ANGLE);
+	    rotateVertex(target, pack.axis1, pim(2));
+	    rotateVertex(target, pack.axis2, SIDE_ANGLE);
         axis1multi(target, pack);
     }
     static void EdgeGrp6(double* target, piecepack &pack)
     {
-        rotateVertex(target, 'x', PI);
+        rotateVertex(target, pack.axis2, PI);
         axis1multi(target, pack);
     }
     static void OpSwitcher(double* target, piecepack &pack, int opnum)
