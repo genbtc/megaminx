@@ -8,14 +8,13 @@ void Megaminx::solve()
     _rotate = false;
     rSide = 0;
 
-    for (int i = 0; i < 12; ++i)
-    {
-        face[i].initNum(i);
-    }
-    for (int i = 0; i < 12; ++i)
-    {
-        center[i].init(i);
-    }
+	for (int i = 0; i < 12; ++i)
+	{
+		center[i].init(i);
+		face[i].initNum(i);		
+		face[i].initCenter(center + i);
+		face[i].initAxis(i);
+	}
     for (int i = 0; i < 30; ++i)
     {
         edge[i].init(i);
@@ -23,10 +22,6 @@ void Megaminx::solve()
     for (int i = 0; i < 20; ++i)
     {
         corner[i].init(i);
-    }
-    for (int i = 0; i < 12; ++i)
-    {
-        face[i].initCenter(center + i);
     }
     face[0].initEdge(edge, edge + 1, edge + 2, edge + 3, edge + 4);
     face[0].initCorner(corner, corner + 1, corner + 2, corner + 3, corner + 4);
@@ -63,11 +58,6 @@ void Megaminx::solve()
 
     face[11].initEdge(edge + 12, edge + 16, edge + 20, edge + 21, edge + 29);
     face[11].initCorner(corner + 6, corner + 10, corner + 14, corner + 15, corner + 16);
-
-    for (int i = 0; i < 12; ++i)
-    {
-        face[i].initAxis(i);
-    }
 }
 
 Megaminx::Megaminx()
