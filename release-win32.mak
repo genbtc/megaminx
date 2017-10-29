@@ -23,7 +23,7 @@ LINUX_PACKAGES :=
 CFLAGS := -ggdb -ffunction-sections -O3
 CXXFLAGS := -ggdb -ffunction-sections -O3
 ASFLAGS := 
-LDFLAGS := -Wl,-gc-sections
+LDFLAGS := -Wl,-gc-sections,--subsystem,windows
 COMMONFLAGS := 
 LINKER_SCRIPT := 
 
@@ -33,5 +33,3 @@ END_GROUP := -Wl,--end-group
 #Additional options detected from testing the toolchain
 USE_DEL_TO_CLEAN := 1
 CP_NOT_AVAILABLE := 1
-TARGETTYPE :=APP
-TARGETNAME :=MegaMinx2

@@ -36,136 +36,106 @@ Edge::Edge()
 
 void Edge::createAxis(int n, double* target)
 {
-    piecepack pack{0,0,0};
+	piecepack pack = { 'z', 'x', (n * 2 % 10) };
     switch (n + 1)
     {
     case 1:
-        pack = {'z', 'x', 0};
-        initColor(1, 2); //white-blue
-        break;
+	    initColor(1, 2);  //white-blue
+	    break;
     case 2:
-        pack = {'z', 'x', 2};
-        initColor(1, 3); //white-red
-        break;
+	    initColor(1, 3);  //white-red
+	    break;
     case 3:
-        pack = {'z', 'x', 4};
-        initColor(1, 4); //white-green
-        break;
+	    initColor(1, 4);  //white-green
+	    break;
     case 4:
-        pack = {'z', 'x', 6};
-        initColor(1, 5); //white-purple
-        break;
+	    initColor(1, 5);  //white-purple
+	    break;
     case 5:
-        pack = {'z', 'x', 8};
-        initColor(1, 6); //white-yellow
-        break;
-        //
-    case 6:
-        pack = {'z', 'x', 0};
-        initColor(2, 3);
-        break;
+	    initColor(1, 6);  //white-yellow
+	    break;
+	    //
+	case 6:
+	    initColor(2, 3);
+	    break;
     case 7:
-        pack = {'z', 'x', 2};
-        initColor(3, 4);
-        break;
+	    initColor(3, 4);
+	    break;
     case 8:
-        pack = {'z', 'x', 4};
-        initColor(4, 5);
-        break;
+	    initColor(4, 5);
+	    break;
     case 9:
-        pack = {'z', 'x', 6};
-        initColor(5, 6);
-        break;
+	    initColor(5, 6);
+	    break;
     case 10:
-        pack = {'z', 'x', 8};
-        initColor(6, 2);
-        break;
-        //
-    case 11:
-        pack = {'z', 'x', 0};
-        initColor(2, 10);
-        break;
+	    initColor(6, 2);
+	    break;
+	    //
+	case 11:
+	    initColor(2, 10);
+	    break;
     case 12:
-        pack = {'z', 'x', 2};
-        initColor(3, 11);
-        break;
+	    initColor(3, 11);
+	    break;
     case 13:
-        pack = {'z', 'x', 4};
-        initColor(4, 12);
-        break;
+	    initColor(4, 12);
+	    break;
     case 14:
-        pack = {'z', 'x', 6};
-        initColor(5, 8);
-        break;
+	    initColor(5, 8);
+	    break;
     case 15:
-        pack = {'z', 'x', 8};
-        initColor(6, 9);
-        break;
-        //
-    case 16:
-        pack = {'z', 'x', 0};
-        initColor(2, 11);
-        break;
+	    initColor(6, 9);
+	    break;
+	    //
+	case 16:
+	    initColor(2, 11);
+	    break;
     case 17:
-        pack = {'z', 'x', 2};
-        initColor(3, 12);
-        break;
+	    initColor(3, 12);
+	    break;
     case 18:
-        pack = {'z', 'x', 4};
-        initColor(4, 8);
-        break;
+	    initColor(4, 8);
+	    break;
     case 19:
-        pack = {'z', 'x', 6};
-        initColor(5, 9);
-        break;
+	    initColor(5, 9);
+	    break;
     case 20:
-        pack = {'z', 'x', 8};
-        initColor(6, 10);
-        break;
-        //
-    case 21:
-        pack = {'z', 'x', 1};
-        initColor(11, 12);
-        break;
+	    initColor(6, 10);
+	    break;
+	    //
+	case 21:
+	    initColor(11, 12);
+	    break;
     case 22:
-        pack = {'z', 'x', 3};
-        initColor(12, 8);
-        break;
+	    initColor(12, 8);
+	    break;
     case 23:
-        pack = {'z', 'x', 5};
-        initColor(8, 9);
-        break;
+	    initColor(8, 9);
+	    break;
     case 24:
-        pack = {'z', 'x', 7};
-        initColor(9, 10);
-        break;
+	    initColor(9, 10);
+	    break;
     case 25:
-        pack = {'z', 'x', 9};
-        initColor(10, 11);
-        break;
-        //
-    case 26:
-        pack = {'z', 'x', 0};
-        initColor(7, 8); //gray-blue
-        break;
+	    initColor(10, 11);
+	    break;
+	    //
+	case 26:
+	    initColor(7, 8);  //gray-blue
+	    break;
     case 27:
-        pack = {'z', 'x', 2};
-        initColor(7, 9); //gray-orange
-        break;
+	    initColor(7, 9);  //gray-orange
+	    break;
     case 28:
-        pack = {'z','x', 4};
-        initColor(7, 10); //gray-green
-        break;
+	    initColor(7, 10);  //gray-green
+	    break;
     case 29:
-        pack = {'z', 'x', 6};
-        initColor(7, 11); //gray-pink
-        break;
+	    initColor(7, 11);  //gray-pink
+	    break;
     case 30:
-        pack = {'z', 'x', 8};
-        initColor(7, 12); //gray-bone
-        break;
+	    initColor(7, 12);  //gray-bone
+	    break;
     default:
-        break;
+	    break;
     }
     switch (n + 1)
     {
@@ -202,6 +172,7 @@ void Edge::createAxis(int n, double* target)
     case 23:
     case 24:
     case 25:
+	    pack.multi += 1;
         EdgeGrp5(target, pack);
         break;
     case 26:

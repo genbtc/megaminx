@@ -356,6 +356,7 @@ void keyboard(unsigned char key, int x, int y)
 		paused = !paused;
 		break;
 	case 'h':
+	case 'H':
 		help = !help;
 		break;
 	case 8:
