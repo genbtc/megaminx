@@ -45,89 +45,69 @@ Corner::Corner()
 
 void Corner::createAxis(int n, double* target)
 {
-    piecepack pack{ 0,0,0 };
+	piecepack pack = { 'z', 'x', (n * 2 % 10) };
     switch (n + 1)
     {
     case 1:
-        pack = { 'z',0, 0 };
-        initColor(1, 3, 2);
-        break;
+	    initColor(1, 3, 2);
+	    break;
     case 2:
-        pack = { 'z',0, 2 };
-        initColor(1, 4, 3);
-        break;
+	    initColor(1, 4, 3);
+	    break;
     case 3:
-        pack = { 'z',0, 4 };
-        initColor(1, 5, 4);
-        break;
+	    initColor(1, 5, 4);
+	    break;
     case 4:
-        pack = { 'z',0, 6 };
-        initColor(1, 6, 5);
-        break;
+	    initColor(1, 6, 5);
+	    break;
     case 5:
-        pack = { 'z',0, 8 };
-        initColor(1, 2, 6);
-        break;
+	    initColor(1, 2, 6);
+	    break;
     case 6:
-        pack = { 'z','x', 0 };
-        initColor(2, 3, 11);
-        break;
+	    initColor(2, 3, 11);
+	    break;
     case 7:
-        pack = { 'z','x', 2 };
-        initColor(3, 4, 12);
-        break;
+	    initColor(3, 4, 12);
+	    break;
     case 8:
-        pack = { 'z','x', 4 };
-        initColor(4, 5, 8);
-        break;
+	    initColor(4, 5, 8);
+	    break;
     case 9:
-        pack = { 'z','x', 6 };
-        initColor(5, 6, 9);
-        break;
+	    initColor(5, 6, 9);
+	    break;
     case 10:
-        pack = { 'z','x', 8 };
-        initColor(6, 2, 10);
-        break;
+	    initColor(6, 2, 10);
+	    break;
     case 11:
-        pack = { 'x','z', 0 };
-        initColor(7, 12, 8);
-        break;
+	    initColor(7, 12, 8);
+	    break;
     case 12:
-        pack = { 'x','z', 2 };
-        initColor(7, 8, 9);
-        break;
+	    initColor(7, 8, 9);
+	    break;
     case 13:
-        pack = { 'x','z', 4 };
-        initColor(7, 9, 10);
-        break;
+	    initColor(7, 9, 10);
+	    break;
     case 14:
-        pack = { 'x','z', 6 };
-        initColor(7, 10, 11);
-        break;
+	    initColor(7, 10, 11);
+	    break;
     case 15:
-        pack = { 'x','z', 8 };
-        initColor(7, 11, 12);
-        break;
+	    initColor(7, 11, 12);
+	    break;
     case 16:
-        pack = { 'z','x', 0 };
-        initColor(8, 12, 4);
-        break;
+	    initColor(8, 12, 4);
+	    break;
     case 17:
-        pack = { 'z','x', 2 };
-        initColor(12, 11, 3);
-        break;
+	    initColor(12, 11, 3);
+	    break;
     case 18:
-        pack = { 'z','x', 4 };
-        initColor(11, 10, 2);
-        break;
+	    initColor(11, 10, 2);
+	    break;
     case 19:
-        pack = { 'z','x', 6 };
-        initColor(10, 9, 6);
-        break;
+	    initColor(10, 9, 6);
+	    break;
     case 20:
-        pack = { 'z','x', 8 };
-        initColor(9, 8, 5);
-        break;
+	    initColor(9, 8, 5);
+	    break;
     default:
         break;
     }
@@ -151,6 +131,7 @@ void Corner::createAxis(int n, double* target)
     case 13:
     case 14:
     case 15:
+	    pack.axis1 = 'x'; pack.axis2 = 'z';
         CornerGrp3(target, pack);
         break;
     case 16:
