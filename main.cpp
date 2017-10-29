@@ -37,6 +37,7 @@ double view_distance_view_angle = 20;
 int activeWindow = 0;
 
 bool paused = true;
+bool help = true;
 
 double defK = 0;
 double defN = 0;
@@ -70,6 +71,8 @@ Megaminx* megaminx;
 void createMegaMinx()
 {
 	g_camera = Camera();
+	g_camera.m_zoom = ZDIST;
+	g_camera.m_angleY = -60.0f;
     megaminx = new Megaminx;
 }
 
@@ -274,6 +277,7 @@ void utResetPerspectiveProjection() {
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
+void printHelpMenu();
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -309,6 +313,8 @@ void display()
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
 	utResetPerspectiveProjection();
+	if (!help)
+		printHelpMenu();
 
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
@@ -320,7 +326,30 @@ void display()
 	lastDeltas[1] = lastDeltas[2];
 	lastDeltas[2] = deltaTime;
 }
-
+void printHelpMenu()
+{
+	glColor3f(1, 1, 1);
+	utSetOrthographicProjection(WIDTH, HEIGHT);
+	static char helpStr[240];
+    const int startwidth = WIDTH - 240;
+	const int startheight = 510;
+	int w = startwidth;
+	int h = startheight;
+	sprintf(helpStr,"Help Menu:");  			utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "Front Face is Blue");				utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[R/r] = Rotate Right Face <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[L/l] = Rotate Left Face <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[F/f] = Rotate Front Face <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[U/u] = Rotate Upper Face <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[B/b] = Rotate Bottom Face <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Zz,Dd,Xx,Cc] = Rotate Diag <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[F1]-[F12]/+Shift = Face # <>");	utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Space] = Toggle Auto-Spin");		utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[BackSpace] = Reset Camera");		utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Delete] = Scramble Puzzle");		utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Right Click] = Menu");			utDrawText2D(w, h, helpStr); h += 15;
+	utResetPerspectiveProjection();
+}
 void timer(int)
 {
 	glutPostRedisplay();
@@ -430,6 +459,9 @@ void keyboard(unsigned char key, int x, int y)
 	case ' ':
 		//spacebar
 		paused = !paused;
+		break;
+	case 'h':
+		help = !help;
 		break;
 	case 8:
 		//backspace
