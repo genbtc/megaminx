@@ -75,6 +75,7 @@ void PressSpecialKey(int key, int x, int y);
 void ReleaseSpecialKey(int key, int x, int y);
 void rotateDispatch(unsigned char key);
 void createMenu();
+void menu(int num);
 void HitTest();
 void printHelpMenu();
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id, submenu6_id;
@@ -322,7 +323,30 @@ void rotateDispatch(unsigned char key)
         break;
     }
 }
-
+void printHelpMenu()
+{
+	glColor3f(1, 1, 1);
+	utSetOrthographicProjection(WIDTH, HEIGHT);
+	static char helpStr[240];
+	const int startwidth = WIDTH - 240;
+	const int startheight = 510;
+	int w = startwidth;
+	int h = startheight;
+	sprintf(helpStr, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[R/r] = Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[L/l] = Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[F/f] = Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[U/u] = Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[B/b] = Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Zz,Dd,Xx,Cc] = Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[F1]-[F12]/+Shift = Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Space] = Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[BackSpace] = Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Delete] = Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Right Click] = Menu"); utDrawText2D(w, h, helpStr); h += 15;
+	utResetPerspectiveProjection();
+}
 void keyboard(unsigned char key, int x, int y)
 {
 	switch (key)
@@ -336,9 +360,7 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 	case 8:
 		//backspace
-		g_camera.m_angleX = 0.0f;
-		g_camera.m_angleY = 30.0f;
-		g_camera.m_zoom = 20.0f;
+		resetCameraView();
 		break;
 	case 127:
 		//delete
@@ -391,31 +413,6 @@ void PressSpecialKey(int key, int x, int y)
 void ReleaseSpecialKey(int key, int x, int y) 
 {
 	g_camera.ReleaseSpecialKey(key, x, y);
-}
-
-void menu(int num) {
-	if (num == 9)
-	{
-		delete megaminx;
-		createMegaMinx();
-	}
-	if (num == 1)
-		paused = !paused;
-	if (num == 3)
-		rotateDispatch('f');
-	if (num == 23)  //rotate corner piece
-	    megaminx->swapOneCorner(8, 1);
-	if (num == 24)  //rotate edge piece
-	    megaminx->swapOneEdge(8, 1);
-	if (num >= 61 && num <= 72)
-		megaminx->setCurrentFace(num - 60);
-	if (num == 100)
-		megaminx->scramble();
-	if (num == 102)
-	{
-		glutDestroyWindow(1);
-		exit(0);
-	}
 }
 
 void createMenu(void) {
@@ -475,8 +472,7 @@ void createMenu(void) {
 	glutAddMenuEntry("9  ORANGE", 69);
 	glutAddMenuEntry("10 LIGHT_GREEN", 70);
 	glutAddMenuEntry("11 PINK", 71);
-	glutAddMenuEntry("12 BONE", 72);
-    
+	glutAddMenuEntry("12 BONE", 72);    
         
 	//Top Level Menu
 	menu_id = glutCreateMenu(menu);
@@ -490,29 +486,29 @@ void createMenu(void) {
 	glutAddMenuEntry("Exit Menu...", 9999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
-void printHelpMenu()
-{
-	glColor3f(1, 1, 1);
-	utSetOrthographicProjection(WIDTH, HEIGHT);
-	static char helpStr[240];
-	const int startwidth = WIDTH - 240;
-	const int startheight = 510;
-	int w = startwidth;
-	int h = startheight;
-	sprintf(helpStr, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[R/r] = Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[L/l] = Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[F/f] = Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[U/u] = Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[B/b] = Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Zz,Dd,Xx,Cc] = Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[F1]-[F12]/+Shift = Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Space] = Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[BackSpace] = Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Delete] = Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Right Click] = Menu"); utDrawText2D(w, h, helpStr); h += 15;
-	utResetPerspectiveProjection();
+void menu(int num) {
+	if (num == 9)
+	{
+		delete megaminx;
+		createMegaMinx();
+	}
+	if (num == 1)
+		paused = !paused;
+	if (num == 3)
+		rotateDispatch('f');
+	if (num == 23)  //rotate corner piece
+	    megaminx->swapOneCorner(8, 1);
+	if (num == 24)  //rotate edge piece
+	    megaminx->swapOneEdge(8, 1);
+	if (num >= 61 && num <= 72)
+		megaminx->setCurrentFace(num - 60);
+	if (num == 100)
+		megaminx->scramble();
+	if (num == 102)
+	{
+		glutDestroyWindow(1);
+		exit(0);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
