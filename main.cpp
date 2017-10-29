@@ -248,8 +248,8 @@ void mousePressed(int button, int state, int x, int y)
 	else
 		g_areWeDraggingPoint = false;
 
-	if (state == GLUT_UP)		return; // Disregard redundant GLUT_UP events	//
-	//	Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)	//
+	if (state == GLUT_UP)		return; // Disregard redundant GLUT_UP events	//
+	//	Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)	//
 	if(button == 3) {
 		//Mouse wheel up
 		g_camera.m_zoom += 2;
