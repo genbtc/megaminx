@@ -11,7 +11,7 @@ void Megaminx::solve()
 	for (int i = 0; i < 12; ++i)
 	{
 		center[i].init(i);
-		face[i].initNum(i);		
+		face[i].initNum(i);
 		face[i].initCenter(center + i);
 		face[i].initAxis(i);
 	}
@@ -23,41 +23,67 @@ void Megaminx::solve()
     {
         corner[i].init(i);
     }
-    face[0].initEdge(edge, edge + 1, edge + 2, edge + 3, edge + 4);
-    face[0].initCorner(corner, corner + 1, corner + 2, corner + 3, corner + 4);
+	for (int i = 0; i < 12; ++i)
+	{
+		initFacePieces(i);
+	}	
+}
 
-    face[1].initEdge(edge + 0, edge + 5, edge + 9, edge + 10, edge + 15);
-    face[1].initCorner(corner, corner + 4, corner + 5, corner + 9, corner + 17);
-
-    face[2].initEdge(edge + 1, edge + 5, edge + 6, edge + 11, edge + 16);
-    face[2].initCorner(corner, corner + 1, corner + 5, corner + 6, corner + 16);
-
-    face[3].initEdge(edge + 2, edge + 6, edge + 7, edge + 12, edge + 17);
-    face[3].initCorner(corner + 1, corner + 2, corner + 6, corner + 7, corner + 15);
-
-    face[4].initEdge(edge + 3, edge + 7, edge + 8, edge + 13, edge + 18);
-    face[4].initCorner(corner + 2, corner + 3, corner + 7, corner + 8, corner + 19);
-
-    face[5].initEdge(edge + 4, edge + 8, edge + 9, edge + 14, edge + 19);
-    face[5].initCorner(corner + 3, corner + 4, corner + 8, corner + 9, corner + 18);
-
-    face[6].initEdge(edge + 25, edge + 26, edge + 27, edge + 28, edge + 29);
-    face[6].initCorner(corner + 10, corner + 11, corner + 12, corner + 13, corner + 14);
-
-    face[7].initEdge(edge + 13, edge + 17, edge + 21, edge + 22, edge + 25);
-    face[7].initCorner(corner + 7, corner + 10, corner + 11, corner + 15, corner + 19);
-
-    face[8].initEdge(edge + 14, edge + 18, edge + 22, edge + 23, edge + 26);
-    face[8].initCorner(corner + 8, corner + 11, corner + 12, corner + 18, corner + 19);
-
-    face[9].initEdge(edge + 10, edge + 19, edge + 23, edge + 24, edge + 27);
-    face[9].initCorner(corner + 9, corner + 12, corner + 13, corner + 17, corner + 18);
-
-    face[10].initEdge(edge + 11, edge + 15, edge + 20, edge + 24, edge + 28);
-    face[10].initCorner(corner + 5, corner + 13, corner + 14, corner + 16, corner + 17);
-
-    face[11].initEdge(edge + 12, edge + 16, edge + 20, edge + 21, edge + 29);
-    face[11].initCorner(corner + 6, corner + 10, corner + 14, corner + 15, corner + 16);
+void Megaminx::initFacePieces(int i)
+{
+	switch (i+1)
+	{
+	case 1:
+		face[i].initEdge(edge, edge + 1, edge + 2, edge + 3, edge + 4);
+		face[i].initCorner(corner, corner + 1, corner + 2, corner + 3, corner + 4);
+		break;
+	case 2:
+		face[i].initEdge(edge + 0, edge + 5, edge + 9, edge + 10, edge + 15);
+		face[i].initCorner(corner, corner + 4, corner + 5, corner + 9, corner + 17);
+		break;
+	case 3:
+		face[i].initEdge(edge + 1, edge + 5, edge + 6, edge + 11, edge + 16);
+		face[i].initCorner(corner, corner + 1, corner + 5, corner + 6, corner + 16);
+		break;
+	case 4:
+		face[i].initEdge(edge + 2, edge + 6, edge + 7, edge + 12, edge + 17);
+		face[i].initCorner(corner + 1, corner + 2, corner + 6, corner + 7, corner + 15);
+		break;
+	case 5:
+		face[i].initEdge(edge + 3, edge + 7, edge + 8, edge + 13, edge + 18);
+		face[i].initCorner(corner + 2, corner + 3, corner + 7, corner + 8, corner + 19);
+		break;
+	case 6:
+		face[i].initEdge(edge + 4, edge + 8, edge + 9, edge + 14, edge + 19);
+		face[i].initCorner(corner + 3, corner + 4, corner + 8, corner + 9, corner + 18);
+		break;
+	case 7:
+		face[i].initEdge(edge + 25, edge + 26, edge + 27, edge + 28, edge + 29);
+		face[i].initCorner(corner + 10, corner + 11, corner + 12, corner + 13, corner + 14);
+		break;
+	case 8:
+		face[i].initEdge(edge + 13, edge + 17, edge + 21, edge + 22, edge + 25);
+		face[i].initCorner(corner + 7, corner + 10, corner + 11, corner + 15, corner + 19);
+		break;
+	case 9:
+		face[i].initEdge(edge + 14, edge + 18, edge + 22, edge + 23, edge + 26);
+		face[i].initCorner(corner + 8, corner + 11, corner + 12, corner + 18, corner + 19);
+		break;
+	case 10:
+		face[i].initEdge(edge + 10, edge + 19, edge + 23, edge + 24, edge + 27);
+		face[i].initCorner(corner + 9, corner + 12, corner + 13, corner + 17, corner + 18);
+		break;
+	case 11:
+		face[i].initEdge(edge + 11, edge + 15, edge + 20, edge + 24, edge + 28);
+		face[i].initCorner(corner + 5, corner + 13, corner + 14, corner + 16, corner + 17);
+		break;
+	case 12:
+		face[i].initEdge(edge + 12, edge + 16, edge + 20, edge + 21, edge + 29);
+		face[i].initCorner(corner + 6, corner + 10, corner + 14, corner + 15, corner + 16);
+		break;
+	default:
+		break;
+	}
 }
 
 Megaminx::Megaminx()
@@ -136,4 +162,18 @@ void Megaminx::swapOneEdge(int i,int x)
 void Megaminx::setCurrentFace(int i)
 {
 	g_currentFace = &this->face[i];
+}
+
+void Megaminx::resetFace(int i)
+{
+	auto corner0 = face[i].corner[0]->_colorNum;
+	auto corner1 = face[i].corner[1]->_colorNum;
+	auto corner2 = face[i].corner[2]->_colorNum;
+	auto corner3 = face[i].corner[3]->_colorNum;
+	auto corner4 = face[i].corner[4]->_colorNum;
+	auto edge0 = face[i].edge[0]->_colorNum;
+	auto edge1 = face[i].edge[1]->_colorNum;
+	auto edge2 = face[i].edge[2]->_colorNum;
+	auto edge3 = face[i].edge[3]->_colorNum;
+	auto edge4 = face[i].edge[4]->_colorNum;
 }

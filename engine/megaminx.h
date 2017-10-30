@@ -7,7 +7,8 @@ class Megaminx
 {
 public:
     void solve();
-	Megaminx();
+    void initFacePieces(int i);
+    Megaminx();
 	~Megaminx();
 
 	void render();
@@ -16,6 +17,7 @@ public:
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
 	void setCurrentFace(int i);
+    void resetFace(int i);
     /* y axis */
 	double n;
     /* x axis */
