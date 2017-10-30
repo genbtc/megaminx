@@ -14,7 +14,8 @@ static const long double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
 #define pim(x) x*PI/5
 
 typedef enum {
-    WHITE = 0,
+	BLACK = 0,
+    WHITE,
     BLUE,
     RED,
     GREEN,
@@ -40,7 +41,8 @@ struct color
 
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
 static color g_colorRGBs[COLOR_STATES] =
-{                    
+{
+	{  0, 0.0, 0.0, 0.0, L"BLACK" },
     {  1, 1.0, 1.0, 1.0, L"WHITE" },
     {  2, 0.0, 0.0, 1.0, L"BLUE" },
     {  3, 1.0, 0.0, 0.0, L"RED" },
@@ -90,7 +92,7 @@ public:
     //common
     void initColorIndex(int idx,int k)
     {
-        const auto color = g_colorRGBs[k-1];
+        const auto color = g_colorRGBs[k];
         setColor(idx, color);
     }
     //store center color

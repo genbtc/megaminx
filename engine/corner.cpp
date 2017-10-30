@@ -49,67 +49,67 @@ void Corner::createAxis(int n, double* target)
     switch (n + 1)
     {
     case 1:
-	    initColor(1, 3, 2);
+	    initColor(WHITE, RED, BLUE);
 	    break;
     case 2:
-	    initColor(1, 4, 3);
+	    initColor(WHITE, GREEN, RED);
 	    break;
     case 3:
-	    initColor(1, 5, 4);
+	    initColor(WHITE, PURPLE, GREEN);
 	    break;
     case 4:
-	    initColor(1, 6, 5);
+	    initColor(WHITE, YELLOW, PURPLE);
 	    break;
     case 5:
-	    initColor(1, 2, 6);
+	    initColor(WHITE, BLUE, YELLOW);
 	    break;
 		//
     case 6:
-	    initColor(2, 3, 11);
+	    initColor(BLUE, RED, PINK);
 	    break;
     case 7:
-	    initColor(3, 4, 12);
+	    initColor(RED, GREEN, BONE);
 	    break;
     case 8:
-	    initColor(4, 5, 8);
+	    initColor(GREEN, PURPLE, LIGHT_BLUE);
 	    break;
     case 9:
-	    initColor(5, 6, 9);
+	    initColor(PURPLE, YELLOW, ORANGE);
 	    break;
     case 10:
-	    initColor(6, 2, 10);
+	    initColor(YELLOW, BLUE, LIGHT_GREEN);
 	    break;
 		//
     case 11:
-	    initColor(7, 12, 8);
+	    initColor(GRAY, BONE, LIGHT_BLUE);
 	    break;
     case 12:
-	    initColor(7, 8, 9);
+	    initColor(GRAY, LIGHT_BLUE, ORANGE);
 	    break;
     case 13:
-	    initColor(7, 9, 10);
+	    initColor(GRAY, ORANGE, LIGHT_GREEN);
 	    break;
     case 14:
-	    initColor(7, 10, 11);
+	    initColor(GRAY, LIGHT_GREEN, PINK);
 	    break;
     case 15:
-	    initColor(7, 11, 12);
+	    initColor(GRAY, PINK, BONE);
 	    break;
 		//
     case 16:
-	    initColor(8, 12, 4);
+	    initColor(LIGHT_BLUE, BONE, GREEN);
 	    break;
     case 17:
-	    initColor(12, 11, 3);
+	    initColor(BONE, PINK, RED);
 	    break;
     case 18:
-	    initColor(11, 10, 2);
+	    initColor(PINK, LIGHT_GREEN, BLUE);
 	    break;
     case 19:
-	    initColor(10, 9, 6);
+	    initColor(LIGHT_GREEN, ORANGE, YELLOW);
 	    break;
     case 20:
-	    initColor(9, 8, 5);
+	    initColor(ORANGE, LIGHT_BLUE, PURPLE);
 	    break;
     default:
         break;

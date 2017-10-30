@@ -40,99 +40,99 @@ void Edge::createAxis(int n, double* target)
     switch (n + 1)
     {
     case 1:
-	    initColor(1, 2);  //white-blue
+	    initColor(WHITE, BLUE);
 	    break;
     case 2:
-	    initColor(1, 3);  //white-red
+	    initColor(WHITE, RED);
 	    break;
     case 3:
-	    initColor(1, 4);  //white-green
+	    initColor(WHITE, GREEN);
 	    break;
     case 4:
-	    initColor(1, 5);  //white-purple
+	    initColor(WHITE, PURPLE);
 	    break;
     case 5:
-	    initColor(1, 6);  //white-yellow
+	    initColor(WHITE, YELLOW);
 	    break;
 	    //
 	case 6:
-	    initColor(2, 3);
+	    initColor(BLUE, RED);
 	    break;
     case 7:
-	    initColor(3, 4);
+	    initColor(RED, GREEN);
 	    break;
     case 8:
-	    initColor(4, 5);
+	    initColor(GREEN, PURPLE);
 	    break;
     case 9:
-	    initColor(5, 6);
+	    initColor(PURPLE, YELLOW);
 	    break;
     case 10:
-	    initColor(6, 2);
+	    initColor(YELLOW, BLUE);
 	    break;
 	    //
 	case 11:
-	    initColor(2, 10);
+	    initColor(BLUE, LIGHT_GREEN);
 	    break;
     case 12:
-	    initColor(3, 11);
+	    initColor(RED, PINK);
 	    break;
     case 13:
-	    initColor(4, 12);
+	    initColor(GREEN, BONE);
 	    break;
     case 14:
-	    initColor(5, 8);
+	    initColor(PURPLE, LIGHT_BLUE);
 	    break;
     case 15:
-	    initColor(6, 9);
+	    initColor(YELLOW, ORANGE);
 	    break;
 	    //
 	case 16:
-	    initColor(2, 11);
+	    initColor(BLUE, PINK);
 	    break;
     case 17:
-	    initColor(3, 12);
+	    initColor(RED, BONE);
 	    break;
     case 18:
-	    initColor(4, 8);
+	    initColor(GREEN, LIGHT_BLUE);
 	    break;
     case 19:
-	    initColor(5, 9);
+	    initColor(PURPLE, ORANGE);
 	    break;
     case 20:
-	    initColor(6, 10);
+	    initColor(YELLOW, LIGHT_GREEN);
 	    break;
 	    //
 	case 21:
-	    initColor(11, 12);
+	    initColor(PINK, BONE);
 	    break;
     case 22:
-	    initColor(12, 8);
+	    initColor(BONE, LIGHT_BLUE);
 	    break;
     case 23:
-	    initColor(8, 9);
+	    initColor(LIGHT_BLUE, ORANGE);
 	    break;
     case 24:
-	    initColor(9, 10);
+	    initColor(ORANGE, LIGHT_GREEN);
 	    break;
     case 25:
-	    initColor(10, 11);
+	    initColor(LIGHT_GREEN, PINK);
 	    break;
 	    //
 	case 26:
-	    initColor(7, 8);  //gray-blue
+	    initColor(GRAY, LIGHT_BLUE);
 	    break;
     case 27:
-	    initColor(7, 9);  //gray-orange
+	    initColor(GRAY, ORANGE);
 	    break;
     case 28:
-	    initColor(7, 10);  //gray-green
+	    initColor(GRAY, LIGHT_GREEN);
 	    break;
     case 29:
-	    initColor(7, 11);  //gray-pink
+	    initColor(GRAY, PINK);
 	    break;
     case 30:
-	    initColor(7, 12);  //gray-bone
+	    initColor(GRAY, BONE);
 	    break;
     default:
 	    break;

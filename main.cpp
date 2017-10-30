@@ -275,30 +275,28 @@ void rotateDispatch(unsigned char key)
 {
     switch (key)
     {
-    case 'l':   //Left
+    case 'a':   //Left
         megaminx->rotate(GLUT_KEY_F12 - 1, -1); break;
-    case 'L':
+    case 'A':
         megaminx->rotate(GLUT_KEY_F12 - 1, 1); break;
-    case 'r':   //Right
+    case 'd':   //Right
         megaminx->rotate(GLUT_KEY_F9 - 1, -1); break;
-    case 'R':
+    case 'D':
         megaminx->rotate(GLUT_KEY_F9 - 1, 1); break;
-    case 'u':   //Upper(Top)
+    case 'w':   //Upper(Top)
         megaminx->rotate(GLUT_KEY_F7 - 1, -1); break;
-    case 'U':
+    case 'W':
         megaminx->rotate(GLUT_KEY_F7 - 1, 1); break;
-    case 'f':   //Front
+    case 's':   //Front
         megaminx->rotate(GLUT_KEY_F8 - 1, -1); break;
-    case 'F':
+    case 'S':
         megaminx->rotate(GLUT_KEY_F8 - 1, 1); break;
     case 'b':   //Bottom(White)
         megaminx->rotate(GLUT_KEY_F1 - 1, -1); break;
     case 'B':
         megaminx->rotate(GLUT_KEY_F1 - 1, 1); break;
-    case 'd':
     case 'c':   //Diagonal/Corner
         megaminx->rotate(GLUT_KEY_F5 - 1, -1); break;
-    case 'D':
     case 'C':   //alias because its close to the keyboard.
         megaminx->rotate(GLUT_KEY_F5 - 1, 1); break;
     case 'z':   //Back Reverze Diag
@@ -309,16 +307,6 @@ void rotateDispatch(unsigned char key)
         megaminx->rotate(GLUT_KEY_F4 - 1, -1); break;
     case 'X':
         megaminx->rotate(GLUT_KEY_F4 - 1, 1); break;
-    case 'q':
-        megaminx->swapOneEdge(8, 1); break;   //left by 1
-    case 'w':
-        megaminx->swapOneEdge(8, 2); break;    //right by 1
-    case 'e':
-        megaminx->swapOneEdge(8, 3); break;   //right by 1
-    case 't':
-        megaminx->swapOneEdge(8, 4); break;    // "
-    case 'y': 
-        megaminx->swapOneEdge(8, 0); break;   // "
     default:
         break;
     }
@@ -334,12 +322,12 @@ void printHelpMenu()
 	int h = startheight;
 	sprintf(helpStr, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
 	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[R/r] = Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[L/l] = Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[F/f] = Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[U/u] = Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[D/d] = Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[A/a] = Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[S/s] = Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[W/w] = Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Zz,Xx,Cc] = Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
 	sprintf(helpStr, "[B/b] = Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Zz,Dd,Xx,Cc] = Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
 	sprintf(helpStr, "[F1]-[F12]/+Shift = Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
 	sprintf(helpStr, "[Space] = Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
 	sprintf(helpStr, "[BackSpace] = Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
@@ -436,7 +424,7 @@ void createMenu(void) {
 	//SubLevel2 Menu - rotations
 	submenu2_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Rotate Front Face", 3);
-	glutAddMenuEntry("Set Face Color", 22);
+	glutAddMenuEntry("Solve/Reset Current Face", 21);
 	glutAddMenuEntry("Rotate Corner Piece", 23);
 	glutAddMenuEntry("Swap Edge Piece", 24);
      
@@ -481,8 +469,8 @@ void createMenu(void) {
 	glutAddSubMenu("Function  -->", submenu0_id);
 	glutAddSubMenu("Last Layer ->", submenu1_id);
 	glutAddSubMenu("Rotations -->", submenu2_id);
-	glutAddSubMenu("Steps------->", submenu3_id);
-	glutAddSubMenu("Algos ------>", submenu4_id);
+	//glutAddSubMenu("Steps------->", submenu3_id);
+	//glutAddSubMenu("Algos ------>", submenu4_id);
 	glutAddSubMenu("Front is: -->", submenu6_id);
 	glutAddMenuEntry("Exit Menu...", 9999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -497,6 +485,8 @@ void menu(int num) {
 		paused = !paused;
 	if (num == 3)
 		rotateDispatch('f');
+	if (num == 21)
+		megaminx->resetFace(7);
 	if (num == 23)  //rotate corner piece
 	    megaminx->swapOneCorner(8, 1);
 	if (num == 24)  //rotate edge piece
