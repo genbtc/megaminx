@@ -55,7 +55,7 @@ void Center::init(int n)
 
 void Center::render()
 {
-	glColor3dv(_color[0]);
+	glColor3dv(data._color[0]);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 5; ++i)
 	{

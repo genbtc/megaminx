@@ -162,21 +162,21 @@ void Corner::init(int n)
 
 void Corner::render()
 {
-	glColor3dv(_color[0]);
+	glColor3dv(data._color[0]);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 4; ++i)
 	{
 		glVertex3dv(_vertex[i]);
 	}
 	glEnd();
-	glColor3dv(_color[1]);
+	glColor3dv(data._color[1]);
 	glBegin(GL_POLYGON);
 	for (int i = 2; i < 6; ++i)
 	{
 		glVertex3dv(_vertex[i]);
 	}
 	glEnd();
-	glColor3dv(_color[2]);
+	glColor3dv(data._color[2]);
 	glBegin(GL_POLYGON);
 	glVertex3dv(_vertex[2]);
 	glVertex3dv(_vertex[5]);
@@ -209,25 +209,10 @@ void Corner::render()
 
 
 /**
- * \brief public
- */
-void Corner::flip()
-{
-	double buf[3];
-	for (int i = 0; i < 3; ++i) buf[i] = _color[0][i];
-	for (int i = 0; i < 3; ++i) _color[0][i] = _color[1][i];
-	for (int i = 0; i < 3; ++i) _color[1][i] = buf[i];
-	for (int i = 0; i < 3; ++i) buf[i] = _color[1][i];
-	for (int i = 0; i < 3; ++i) _color[1][i] = _color[2][i];
-	for (int i = 0; i < 3; ++i) _color[2][i] = buf[i];
-}
-
-
-/**
  * \brief Does two flips
  */
 void Corner::flipBack()
 {
-	flip();
-	flip();
+	flip(true);
+	flip(true);
 }

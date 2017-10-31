@@ -142,21 +142,19 @@ void Megaminx::rotate(int num, int dir)
 void Megaminx::scramble()
 {
     for (int i = 0; i < 12; i++) {
-        int r = rand() % 2 * 2 - 1;
-        this->face[i].placeParts(1);
+        const int r = rand() % 2 * 2 - 1;
+        this->face[i].placeParts(r);
     }
 }
 
-//works good.
 void Megaminx::swapOneCorner(int i, int x)
 {
-    this->face[i].corner[x]->flip();
+	this->face[i].corner[x]->flip(true);
 }
-//Front Face is 7 (Blue)
-//works good.
+
 void Megaminx::swapOneEdge(int i,int x)
 {    
-    this->face[i].edge[x]->flip();
+	this->face[i].edge[x]->flip(false);
 }
 
 void Megaminx::setCurrentFace(int i)
@@ -164,16 +162,8 @@ void Megaminx::setCurrentFace(int i)
 	g_currentFace = &this->face[i];
 }
 
+//sample temp. no good.
 void Megaminx::resetFace(int i)
 {
-	auto corner0 = face[i].corner[0]->_colorNum;
-	auto corner1 = face[i].corner[1]->_colorNum;
-	auto corner2 = face[i].corner[2]->_colorNum;
-	auto corner3 = face[i].corner[3]->_colorNum;
-	auto corner4 = face[i].corner[4]->_colorNum;
-	auto edge0 = face[i].edge[0]->_colorNum;
-	auto edge1 = face[i].edge[1]->_colorNum;
-	auto edge2 = face[i].edge[2]->_colorNum;
-	auto edge3 = face[i].edge[3]->_colorNum;
-	auto edge4 = face[i].edge[4]->_colorNum;
+
 }

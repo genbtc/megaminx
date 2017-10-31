@@ -12,8 +12,6 @@ public:
 
     void init(int n);
     void render();
-
-	void flip();
 };
 
 #endif 	

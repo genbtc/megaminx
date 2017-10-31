@@ -64,30 +64,39 @@ struct piecepack
 class Piece
 {
 public:
-    //no constructor 
-    Piece() { }
-    //no destructor
-    virtual ~Piece() = default;
+    //virtual destructor
+    virtual ~Piece() {};
 
-    //data-members
-    double _color[3][3];
-    double _vertex[7][3];
-    Vector3d v3d[7];
-    const wchar_t* _colorName;
-	int _colorNum;
+	double _vertex[7][3];
+	struct _data
+	{
+		//data-members
+		double _color[3][3];		
+		Vector3d v3d[7];
+		const wchar_t* _colorName[3];
+		int _colorNum[3];		
+	} data;
+
+	//swap
+	void swapdata(_data &k)
+	{
+		const auto buf = data;
+		data = k;
+		k = buf;
+	}
     //getter
     double* getcolor()
     {
-        return &_color[0][0];
+	    return &data._color[0][0];
     }
     //setter
     void setColor(int i, ::color c)
     {
-        _color[i][0] = c.r;
-        _color[i][1] = c.g;
-        _color[i][2] = c.b;
-        _colorName = c.name;
-	    _colorNum = c.i;
+	    data._color[i][0] = c.r;
+	    data._color[i][1] = c.g;
+	    data._color[i][2] = c.b;
+	    data._colorName[i] = c.name;
+	    data._colorNum[i] = c.i;
     }
     //common
     void initColorIndex(int idx,int k)
@@ -207,6 +216,20 @@ public:
             break;
         }
     }
+
+	void flip(bool corner)
+	{
+		double buf[3];
+		for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
+		for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
+		for (int i = 0; i < 3; ++i) data._color[1][i] = buf[i];
+		if (corner)
+		{
+			for (int i = 0; i < 3; ++i) buf[i] = data._color[1][i];
+			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
+			for (int i = 0; i < 3; ++i) data._color[2][i] = buf[i];
+		}
+	}
 };
 
 #endif

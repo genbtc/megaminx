@@ -67,29 +67,21 @@ void Face::initAxis(int n)
 }
 
 /**
- * \brief Simple-Flips (inverts) one Edge-piece and then the other.(individually)
- *  Colors end up as follows. etc:
- * \param x //edgeflip(0, 1);//purple green
-            //edgeflip(0, 2);//purple bone 
-            //edgeflip(0, 3);//purple orange
-            //edgeflip(0, 4);//purple gray 
-            //edgeflip(1, 2);//green bone
-            //edgeflip(2, 3);//bone orange
-            //edgeflip(4, 3);//gray orange 
- * \param y 
+ * \brief Simple-Flips (inverts) one Edge-piece 
+ * and then the other, individually.
  */
 void Face::twoEdgeFlips(int a,int b)
 {
-    edge[a]->flip();
-    edge[b]->flip();
+    edge[a]->flip(false);
+	edge[b]->flip(false);
 }
 
 void Face::genericFlip(int a, int b, int c, int d, fourPack pack)
 {
-    pack.four[0] ? corner[a]->flip() : corner[a]->flipBack();
-    pack.four[1] ? corner[b]->flip() : corner[b]->flipBack();
-    pack.four[2] ? corner[c]->flip() : corner[c]->flipBack();
-    pack.four[3] ? corner[d]->flip() : corner[d]->flipBack();
+    pack.four[0] ? corner[a]->flip(true) : corner[a]->flipBack();
+	pack.four[1] ? corner[b]->flip(true) : corner[b]->flipBack();
+	pack.four[2] ? corner[c]->flip(true) : corner[c]->flipBack();
+	pack.four[3] ? corner[d]->flip(true) : corner[d]->flipBack();
 }
 void Face::inwardsFlip(int a, int b, int c, int d)
 {
@@ -340,22 +332,10 @@ void Face::rotate(int _turnDir)
 
 void Face::swapCorners(int n, int k)
 {
-    double buf;
-    for (int i = 0; i < 9; ++i)
-    {
-        buf = corner[n]->getcolor()[i];
-        corner[n]->getcolor()[i] = corner[k]->getcolor()[i];
-        corner[k]->getcolor()[i] = buf;
-    }
+	corner[n]->swapdata(corner[k]->data);
 }
 
 void Face::swapEdges(int n, int k)
 {
-    double buf;
-    for (int i = 0; i < 6; ++i)
-    {
-        buf = edge[n]->getcolor()[i];
-        edge[n]->getcolor()[i] = edge[k]->getcolor()[i];
-        edge[k]->getcolor()[i] = buf;
-    }
+	edge[n]->swapdata(edge[k]->data);
 }

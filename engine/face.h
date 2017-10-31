@@ -27,6 +27,7 @@ public:
 
     bool render();
 	void rotate(int);
+    void pushCornersRight();
     bool placeParts(int right);
 
     void swapCorners(int, int);

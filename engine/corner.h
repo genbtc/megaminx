@@ -12,7 +12,6 @@ public:
     void init(int n);
     void render();
 
-	void flip();
 	void flipBack();
 
 private:
