@@ -27,7 +27,6 @@ public:
 
     bool render();
 	void rotate(int);
-    void pushCornersRight();
     bool placeParts(int right);
 
     void swapCorners(int, int);
@@ -46,7 +45,7 @@ public:
 	Center *center;
 
 private:
-    void twoEdgeFlips(int a,int b);
+    void twoEdgesFlip(int a,int b);
     void genericFlip(int a, int b, int c, int d, fourPack pack);
     void inwardsFlip(int a, int b,int c, int d);
     void backwardsFlip(int a, int b, int c, int d);

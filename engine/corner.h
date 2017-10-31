@@ -12,9 +12,7 @@ public:
     void init(int n);
     void render();
 
-	void flipBack();
-
-private:
+    private:
 	bool inited;
 	bool turn;
 };

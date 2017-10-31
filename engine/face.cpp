@@ -70,7 +70,7 @@ void Face::initAxis(int n)
  * \brief Simple-Flips (inverts) one Edge-piece 
  * and then the other, individually.
  */
-void Face::twoEdgeFlips(int a,int b)
+void Face::twoEdgesFlip(int a,int b)
 {
     edge[a]->flip(false);
 	edge[b]->flip(false);
@@ -78,10 +78,10 @@ void Face::twoEdgeFlips(int a,int b)
 
 void Face::genericFlip(int a, int b, int c, int d, fourPack pack)
 {
-    pack.four[0] ? corner[a]->flip(true) : corner[a]->flipBack();
-	pack.four[1] ? corner[b]->flip(true) : corner[b]->flipBack();
-	pack.four[2] ? corner[c]->flip(true) : corner[c]->flipBack();
-	pack.four[3] ? corner[d]->flip(true) : corner[d]->flipBack();
+	pack.four[0] ? corner[a]->flip(true) : corner[a]->flipTwice(true);
+	pack.four[1] ? corner[b]->flip(true) : corner[b]->flipTwice(true);
+	pack.four[2] ? corner[c]->flip(true) : corner[c]->flipTwice(true);
+	pack.four[3] ? corner[d]->flip(true) : corner[d]->flipTwice(true);
 }
 void Face::inwardsFlip(int a, int b, int c, int d)
 {
@@ -142,29 +142,29 @@ bool Face::placeParts(int right)
             backwardsFlip(0, 1, 2, 4);
             QuadSwapCorners({ 4, 0, 4, 2, 0, 3, 0, 1 });
             QuadSwapEdges({ 4, 1, 1, 3, 0, 1, 0, 2 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             break;
         case 2:
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapEdges({ 1, 0, 1, 2, 1, 3, 3, 4 });
             backwardsFlip(0, 1, 3, 4);
             QuadSwapCorners({ 0, 1, 0, 2, 2, 3, 2, 4 });
             break;
         case 3:
             QuadSwapEdges({ 3, 2, 4, 3, 0, 1, 1, 2 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapCorners({ 3, 4, 1, 3, 1, 2, 0, 1 });
             alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 4:
             QuadSwapEdges({ 0, 1, 1, 2, 1, 3, 3, 4 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapCorners({ 0, 1, 0, 3, 0, 4, 0, 2 });
             alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 5:
             QuadSwapEdges({ 2, 4, 2, 3, 0, 2, 0, 1 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapCorners({ 1, 3, 1, 4, 1, 2, 0, 1 });
             alternatingBackwardsFlip(1, 2, 3, 4);
             break;
@@ -174,31 +174,31 @@ bool Face::placeParts(int right)
             break;
         case 7:
             QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 4, 0, 2, 0, 1, 0, 3 });
             outwardsFlip(0, 1, 3, 4);
             break;
         case 8:
             QuadSwapEdges({ 0, 1, 1, 2, 2, 4, 3, 4 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
             alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 9:
             QuadSwapEdges({ 0, 1, 1, 2, 2, 4, 3, 4 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
             alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 10:
             QuadSwapEdges({ 0, 1, 1, 3, 3, 4, 2, 4 });
-            twoEdgeFlips(2, 4);
+            twoEdgesFlip(2, 4);
             QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
             alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 11:
             QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
             alternatingForwardsFlip(0, 2, 3, 4);
             break;
@@ -218,29 +218,29 @@ bool Face::placeParts(int right)
             forwardsFlip(0, 2, 3, 4);
             QuadSwapCorners({ 0, 1, 0, 3, 4, 2, 4, 0 });
             QuadSwapEdges({ 0, 2, 0, 1, 1, 3, 4, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             break;
         case 2:
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapEdges({ 3, 4, 1, 3, 1, 2, 1, 0 });
             alternatingForwardsFlip(1, 2, 3, 4);
             QuadSwapCorners({ 2, 4, 2, 3, 0, 2, 0, 1 });
             break;
         case 3:
             QuadSwapEdges({ 1, 2, 0, 1, 4, 3, 3, 2 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 1, 1, 2, 1, 3, 3, 4 });
             forwardsFlip(0, 1, 3, 4);
             break;
         case 4:
             QuadSwapEdges({ 3, 4, 1, 3, 1, 2, 0, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 2, 0, 4, 0, 3, 0, 1 });
             forwardsFlip(0, 1, 3, 4);
             break;
         case 5:
             QuadSwapEdges({ 0, 1, 0, 2, 2, 3, 2, 4 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 1, 1, 2, 1, 4, 1, 3 });
             forwardsFlip(0, 1, 3, 4);
             break;
@@ -250,31 +250,31 @@ bool Face::placeParts(int right)
             break;
         case 7: //front clockwise;
             QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
             inwardsFlip(0, 1, 2, 3);
             break;
         case 8:
             QuadSwapEdges({ 3, 4, 2, 4, 1, 2, 0, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
             inwardsFlip(0, 1, 2, 4);
             break;
         case 9:
             QuadSwapEdges({ 3, 4, 2, 4, 1, 2, 0, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
             inwardsFlip(0, 1, 2, 4);
             break;
         case 10:
             QuadSwapEdges({ 2, 4, 3, 4, 1, 3, 0, 1 });
-            twoEdgeFlips(0, 2);
+            twoEdgesFlip(0, 2);
             QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
             inwardsFlip(0, 1, 2, 4);
             break;
         case 11:
             QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 4, 0, 2, 0, 1, 0, 3 });
             inwardsFlip(0, 1, 2, 4);
             break;

@@ -65,24 +65,24 @@ class Piece
 {
 public:
     //virtual destructor
-    virtual ~Piece() {};
+    virtual ~Piece() {}
 
-	double _vertex[7][3];
+    double _vertex[7][3];
 	struct _data
 	{
 		//data-members
-		double _color[3][3];		
-		Vector3d v3d[7];
+		double _color[3][3];
+		int _colorNum[3];
 		const wchar_t* _colorName[3];
-		int _colorNum[3];		
+		Vector3d v3d[7];
 	} data;
 
 	//swap
-	void swapdata(_data &k)
+	void swapdata(_data &out)
 	{
-		const auto buf = data;
-		data = k;
-		k = buf;
+		const auto temp = data;
+		data = out;
+		out = temp;
 	}
     //getter
     double* getcolor()
@@ -90,7 +90,7 @@ public:
 	    return &data._color[0][0];
     }
     //setter
-    void setColor(int i, ::color c)
+    void setColor(int i, color c)
     {
 	    data._color[i][0] = c.r;
 	    data._color[i][1] = c.g;
@@ -217,6 +217,11 @@ public:
         }
     }
 
+    /**
+	 * \brief flip/rotate/switch-colors for current piece.
+	 * \param corner Boolean true if its a corner piece. False if its Edge.
+	 * TODO: check what type of piece it is based on other fields.
+	 */
 	void flip(bool corner)
 	{
 		double buf[3];
@@ -229,6 +234,14 @@ public:
 			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
 			for (int i = 0; i < 3; ++i) data._color[2][i] = buf[i];
 		}
+	}
+	/**
+	* \brief Does two flips. Thats it.
+	*/
+	void flipTwice(bool corner)
+	{
+		flip(corner);
+		flip(corner);
 	}
 };
 

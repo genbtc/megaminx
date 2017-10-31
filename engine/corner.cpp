@@ -206,13 +206,3 @@ void Corner::render()
 	glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
 	glEnd();
 }
-
-
-/**
- * \brief Does two flips
- */
-void Corner::flipBack()
-{
-	flip(true);
-	flip(true);
-}
