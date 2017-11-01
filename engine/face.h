@@ -20,15 +20,17 @@ struct fivePack
 {
 	int five[5];
 };
-class Face
+class Face : public Piece
 {
 public:
 	Face();
+	~Face() {}
     void initEdge(Edge& n, int num);
     void initCorner(Corner& n, int num);
 
 	std::vector<int> findPiece(Piece& n, int times) const;
     void initCenter(Center*);
+    void initCenter(Center* a, double* centerVertexBase);
     void initAxis(int n);
 
     bool render();
@@ -63,11 +65,11 @@ private:
     void QuadSwapEdges(eightPack pack);
 
     int turnDir;
-    double _vertex[5][3];
 	bool _rotate;
 	double angle;
 	double axis[3];
 	int thisNum;
+public:
 };
 
 #endif

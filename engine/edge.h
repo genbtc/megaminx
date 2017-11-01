@@ -5,7 +5,7 @@
 class Edge : public Piece
 {
 public:
-    Edge();
+    Edge() = default;
     ~Edge() {}
 
     static void createAxis(int n, double* target);

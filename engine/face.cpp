@@ -5,8 +5,10 @@
 #include <iostream>
 #include <vector>
 
-Face::Face(): m_pos(0), m_radius(0)
+Face::Face()
 {
+	m_pos = 0;
+    m_radius = 0;
     center = nullptr;
     turnDir = 0;
     thisNum = 0;
@@ -46,7 +48,7 @@ std::vector<int> Face::findPiece(Piece& n,int times) const
 	int count = 0;
 	for (int i = 0; i < times; ++i)
 	{
-		bool result = pieceRef[i].matchesColor(color);
+	    const bool result = pieceRef[i].matchesColor(color);
 		if (result)
 		{
 			count++;
@@ -59,15 +61,11 @@ std::vector<int> Face::findPiece(Piece& n,int times) const
 void Face::initCenter(Center *a)
 {
     center = a;
-    for (int i = 0; i < 5; ++i)
-    {
-        _vertex[i][0] = -INS_CIRCLE_RAD * cos(3 * PI / 10) + 100 / sin(2 * PI / 5) * 2 / 5;
-        _vertex[i][1] = -INS_CIRCLE_RAD * sin(3 * PI / 10);
-        _vertex[i][2] = -INS_SPHERE_RAD;
-        rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-        rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-        rotateVertex(_vertex[i], 'z', 2 * i * PI / 5);
-    }
+}
+void Face::initCenter(Center *a, double* centerVertexBase)
+{
+	center = a;
+	memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
 }
 
 /**

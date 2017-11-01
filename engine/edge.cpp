@@ -1,11 +1,6 @@
 #include <GL/glut.h>
 #include "edge.h"
 
-Edge::Edge()
-{
-
-}
-
 void Edge::createAxis(int n, double* target)
 {
 	piecepack pack = { 'z', 'x', (n * 2 % 10) };

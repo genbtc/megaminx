@@ -269,14 +269,14 @@ public:
 			_vertex[i][2] = -INS_SPHERE_RAD;
 		}
 
-		_vertex[0][0] = INS_CIRCLE_RAD * cos(pim(2) + pim(1.5)) * 2 / 5;
-		_vertex[0][1] = INS_CIRCLE_RAD * sin(pim(2) + pim(1.5)) * 2 / 5;
+		_vertex[0][0] = INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5;
+		_vertex[0][1] = INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5;
 
-		_vertex[1][0] = INS_CIRCLE_RAD * cos(pim(2) + pim(1.5)) + 100 / sin(pim(2)) * 2 / 5;
-		_vertex[1][1] = INS_CIRCLE_RAD * sin(pim(2) + pim(1.5));
+		_vertex[1][0] = INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5;
+		_vertex[1][1] = INS_CIRCLE_RAD * sin(pim(3.5));
 
-		_vertex[2][0] = INS_CIRCLE_RAD * cos(pim(2) + pim(1.5));
-		_vertex[2][1] = INS_CIRCLE_RAD * sin(pim(2) + pim(1.5));
+		_vertex[2][0] = INS_CIRCLE_RAD * cos(pim(3.5));
+		_vertex[2][1] = INS_CIRCLE_RAD * sin(pim(3.5));
 
 		_vertex[3][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
 		_vertex[3][1] = INS_CIRCLE_RAD * sin(pim(1.5));
@@ -309,8 +309,8 @@ public:
 			_vertex[i][2] = -INS_SPHERE_RAD;
 		}
 
-		_vertex[0][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(2) + pim(1.5)) * 2 / 5);
-		_vertex[0][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(2) + pim(1.5)) * 2 / 5);
+		_vertex[0][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5);
+		_vertex[0][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5);
 
 		_vertex[1][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5);
 		_vertex[1][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5);
@@ -318,8 +318,8 @@ public:
 		_vertex[2][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5);
 		_vertex[2][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(1.5)));
 
-		_vertex[3][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(2) + pim(1.5)) + 100 / sin(pim(2)) * 2 / 5);
-		_vertex[3][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(2) + pim(1.5)));
+		_vertex[3][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5);
+		_vertex[3][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(3.5)));
 
 		_vertex[4][0] = _vertex[1][0];
 		_vertex[4][1] = _vertex[1][1];
@@ -341,6 +341,20 @@ public:
 			_vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * 2 / 5;
 			_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5)) * 2 / 5;
 			_vertex[i][2] = -INS_SPHERE_RAD;
+		}
+		return &_vertex[0][0];
+	}
+	double* faceInit()
+	{
+		numSides = 0;
+		for (int i = 0; i < 5; ++i)
+		{
+			_vertex[i][0] = -INS_CIRCLE_RAD * cos(pim(1.5)) + 100 / sin(pim(2)) * 2 / 5;
+			_vertex[i][1] = -INS_CIRCLE_RAD * sin(pim(1.5));
+			_vertex[i][2] = -INS_SPHERE_RAD;
+			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
+			rotateVertex(_vertex[i], 'z', 2 * i * PI / 5);
 		}
 		return &_vertex[0][0];
 	}

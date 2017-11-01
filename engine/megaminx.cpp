@@ -23,10 +23,11 @@ void Megaminx::solve()
 
 void Megaminx::initFacePieces()
 {
+	double* centerVertexBase = face[0].faceInit();
 	for (int i = 0; i < numFaces; ++i)
 	{
 		center[i].init(i);
-		face[i].initCenter(center + i);
+		face[i].initCenter(center + i, centerVertexBase);
 		face[i].initAxis(i);
 		face[i].initEdge(edge[0], numEdges);
 		face[i].initCorner(corner[0], numCorners);

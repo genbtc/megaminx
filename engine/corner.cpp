@@ -1,9 +1,6 @@
 #include <GL/glut.h>
 #include "corner.h"
 
-Corner::Corner()
-{
-}
 
 void Corner::createAxis(int n, double* target)
 {
