@@ -56,11 +56,6 @@ std::vector<int> Face::findPiece(Piece& n,int times) const
 	return pieceList;
 }
 
-void Face::initNum(int num)
-{
-    thisNum = num;
-}
-
 void Face::initCenter(Center *a)
 {
     center = a;
@@ -81,6 +76,7 @@ void Face::initCenter(Center *a)
  */
 void Face::initAxis(int n)
 {
+	thisNum = n;
     center->createAxis(n,axis);
     for (int i = 0; i < 5; ++i)
     {

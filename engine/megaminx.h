@@ -25,6 +25,9 @@ public:
 	double k;
 	bool _rotate;
     Face* g_currentFace;
+    unsigned numEdges;
+    unsigned numCorners;
+    unsigned numFaces;
 private:
 
 	int rSide;

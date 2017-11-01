@@ -30,7 +30,6 @@ public:
 	std::vector<int> findPiece(Piece& n, int times) const;
     void initCenter(Center*);
     void initAxis(int n);
-	void initNum(int);
 
     bool render();
 	void rotate(int);
@@ -65,7 +64,6 @@ private:
 
     int turnDir;
     double _vertex[5][3];
-
 	bool _rotate;
 	double angle;
 	double axis[3];
