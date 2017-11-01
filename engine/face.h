@@ -5,6 +5,7 @@
 #include "edge.h"
 #include "corner.h"
 #include "../common_physics/input.h"
+#include <vector>
 
 enum FaceTurnDir { Clockwise, CounterClockwise };
 struct eightPack
@@ -19,9 +20,9 @@ class Face
 {
 public:
 	Face();
-    void initEdge(Edge& n);
+    std::vector<int> initEdge(Edge& n);
     void initEdge(Edge* n, int a, int b, int c, int d, int e);
-    void initCorner(Corner& n);
+    std::vector<int> initCorner(Corner& n);
     void initCorner(Corner* n, int a, int b, int c, int d, int e);
     void initCenter(Center*);
     void initAxis(int n);

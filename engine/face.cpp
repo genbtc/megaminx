@@ -3,6 +3,7 @@
 #include "face.h"
 #include "utils.h"
 #include <iostream>
+#include <vector>
 
 Face::Face(): m_pos(0), m_radius(0)
 {
@@ -15,8 +16,10 @@ Face::Face(): m_pos(0), m_radius(0)
     axis[1] = 0.0001;
     axis[2] = -1;
 }
-void Face::initEdge(Edge &n)
+
+std::vector<int> Face::initEdge(Edge& n)
 {
+	std::vector<int> edgelist;
     const auto color = center->data._colorNum;
     const auto edgeref = &n;
 	int count = 0;
@@ -27,8 +30,10 @@ void Face::initEdge(Edge &n)
 		{
 			edge[count] = edgeref + i;
 			count++;
+			edgelist.push_back(i);
 		} 
 	}
+	return edgelist;
 }
 void Face::initEdge(Edge *n, int a, int b, int c, int d, int e)
 {
@@ -38,8 +43,10 @@ void Face::initEdge(Edge *n, int a, int b, int c, int d, int e)
 	edge[3] = n + d;
 	edge[4] = n + e;
 }
-void Face::initCorner(Corner &n)
+
+std::vector<int> Face::initCorner(Corner& n)
 {
+	std::vector<int> cornerlist;
 	const auto color = center->data._colorNum;
 	const auto cornerref = &n;
 	int count = 0;
@@ -51,8 +58,10 @@ void Face::initCorner(Corner &n)
 		{
 			corner[count] = cornerref + i;
 			count++;
+			cornerlist.push_back(i);
 		} 
 	}
+	return cornerlist;
 }
 void Face::initCorner(Corner *n, int a, int b, int c, int d, int e)
 {

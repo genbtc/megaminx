@@ -112,13 +112,7 @@ void Megaminx::setCurrentFace(int i)
 //sample temp. no good.
 int Megaminx::resetFace(int n)
 {
-	std::vector<int> edgelist;
-	for (int i = 0; i < 30; ++i) {
-		if ((edge[i].data._colorNum[0] == n) || 
-			(edge[i].data._colorNum[1] == n))
-			edgelist.push_back(i);
-	}
-	return edgelist.size();
+
 }
 
 void Megaminx::grayStar()
