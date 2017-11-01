@@ -8,7 +8,7 @@ public:
     Edge();
     ~Edge() {}
 
-    void createAxis(int n, double* target);
+    static void createAxis(int n, double* target);
 
     void init(int n);
     void render();

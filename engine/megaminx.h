@@ -17,7 +17,8 @@ public:
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
 	void setCurrentFace(int i);
-    void resetFace(int i);
+    int resetFace(int n);
+    void grayStar();
     /* y axis */
 	double n;
     /* x axis */

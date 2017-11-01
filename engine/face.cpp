@@ -4,7 +4,7 @@
 #include "utils.h"
 #include <iostream>
 
-Face::Face()
+Face::Face(): m_pos(0), m_radius(0)
 {
     center = nullptr;
     turnDir = 0;
@@ -16,22 +16,22 @@ Face::Face()
     axis[2] = -1;
 }
 
-void Face::initEdge(Edge *a, Edge *b, Edge *c, Edge *d, Edge *e)
+void Face::initEdge(Edge *n, int a, int b, int c, int d, int e)
 {
-    edge[0] = a;
-    edge[1] = b;
-    edge[2] = c;
-    edge[3] = d;
-    edge[4] = e;
+	edge[0] = n + a;
+	edge[1] = n + b;
+	edge[2] = n + c;
+	edge[3] = n + d;
+	edge[4] = n + e;
 }
 
-void Face::initCorner(Corner *a, Corner *b, Corner *c, Corner *d, Corner *e)
+void Face::initCorner(Corner *n, int a, int b, int c, int d, int e)
 {
-    corner[0] = a;
-    corner[1] = b;
-    corner[2] = c;
-    corner[3] = d;
-    corner[4] = e;
+	corner[0] = n + a;
+	corner[1] = n + b;
+	corner[2] = n + c;
+	corner[3] = n + d;
+	corner[4] = n + e;
 }
 
 void Face::initNum(int num)

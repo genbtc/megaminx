@@ -484,13 +484,17 @@ void menu(int num) {
 	if (num == 1)
 		paused = !paused;
 	if (num == 3)
-		rotateDispatch('f');
+		rotateDispatch('s');
 	if (num == 21)
-		megaminx->resetFace(7);
+	{
+		int result = megaminx->resetFace(GLUT_KEY_F8);
+	}
 	if (num == 23)  //rotate corner piece
 	    megaminx->swapOneCorner(8, 1);
 	if (num == 24)  //rotate edge piece
 	    megaminx->swapOneEdge(8, 1);
+	if (num == 31)	//gray star
+		megaminx->grayStar();
 	if (num >= 61 && num <= 72)
 		megaminx->setCurrentFace(num - 60);
 	if (num == 100)

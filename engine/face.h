@@ -19,9 +19,9 @@ class Face
 {
 public:
 	Face();
-	void initEdge(Edge*, Edge*, Edge*, Edge*, Edge*);
-	void initCorner(Corner*, Corner*, Corner*, Corner*, Corner*);
-	void initCenter(Center*);
+    void initEdge(Edge* n, int a, int b, int c, int d, int e);
+    void initCorner(Corner* n, int a, int b, int c, int d, int e);
+    void initCenter(Center*);
     void initAxis(int n);
 	void initNum(int);
 

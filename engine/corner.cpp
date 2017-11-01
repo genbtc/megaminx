@@ -5,8 +5,6 @@
 
 Corner::Corner()
 {
-    inited = false;
-    turn = false;
     for (int i = 0; i < 7; ++i)
     {
         _vertex[i][2] = -INS_SPHERE_RAD;
@@ -48,74 +46,6 @@ void Corner::createAxis(int n, double* target)
 	piecepack pack = { 'z', 'x', (n * 2 % 10) };
     switch (n + 1)
     {
-    case 1:
-	    initColor(WHITE, RED, BLUE);
-	    break;
-    case 2:
-	    initColor(WHITE, GREEN, RED);
-	    break;
-    case 3:
-	    initColor(WHITE, PURPLE, GREEN);
-	    break;
-    case 4:
-	    initColor(WHITE, YELLOW, PURPLE);
-	    break;
-    case 5:
-	    initColor(WHITE, BLUE, YELLOW);
-	    break;
-		//
-    case 6:
-	    initColor(BLUE, RED, PINK);
-	    break;
-    case 7:
-	    initColor(RED, GREEN, BONE);
-	    break;
-    case 8:
-	    initColor(GREEN, PURPLE, LIGHT_BLUE);
-	    break;
-    case 9:
-	    initColor(PURPLE, YELLOW, ORANGE);
-	    break;
-    case 10:
-	    initColor(YELLOW, BLUE, LIGHT_GREEN);
-	    break;
-		//
-    case 11:
-	    initColor(GRAY, BONE, LIGHT_BLUE);
-	    break;
-    case 12:
-	    initColor(GRAY, LIGHT_BLUE, ORANGE);
-	    break;
-    case 13:
-	    initColor(GRAY, ORANGE, LIGHT_GREEN);
-	    break;
-    case 14:
-	    initColor(GRAY, LIGHT_GREEN, PINK);
-	    break;
-    case 15:
-	    initColor(GRAY, PINK, BONE);
-	    break;
-		//
-    case 16:
-	    initColor(LIGHT_BLUE, BONE, GREEN);
-	    break;
-    case 17:
-	    initColor(BONE, PINK, RED);
-	    break;
-    case 18:
-	    initColor(PINK, LIGHT_GREEN, BLUE);
-	    break;
-    case 19:
-	    initColor(LIGHT_GREEN, ORANGE, YELLOW);
-	    break;
-    case 20:
-	    initColor(ORANGE, LIGHT_BLUE, PURPLE);
-	    break;
-    default:
-        break;
-    }
-    switch (n + 1)
-    {
     case 2:
     case 3:
     case 4:
@@ -151,14 +81,79 @@ void Corner::createAxis(int n, double* target)
 
 void Corner::init(int n)
 {
+	switch (n + 1)
+	{
+	case 1:
+		initColor(WHITE, RED, BLUE);
+		break;
+	case 2:
+		initColor(WHITE, GREEN, RED);
+		break;
+	case 3:
+		initColor(WHITE, PURPLE, GREEN);
+		break;
+	case 4:
+		initColor(WHITE, YELLOW, PURPLE);
+		break;
+	case 5:
+		initColor(WHITE, BLUE, YELLOW);
+		break;
+		//
+    case 6:
+	    initColor(BLUE, RED, PINK);
+		break;
+	case 7:
+		initColor(RED, GREEN, BONE);
+		break;
+	case 8:
+		initColor(GREEN, PURPLE, LIGHT_BLUE);
+		break;
+	case 9:
+		initColor(PURPLE, YELLOW, ORANGE);
+		break;
+	case 10:
+		initColor(YELLOW, BLUE, LIGHT_GREEN);
+		break;
+		//
+    case 11:
+	    initColor(GRAY, BONE, LIGHT_BLUE);
+		break;
+	case 12:
+		initColor(GRAY, LIGHT_BLUE, ORANGE);
+		break;
+	case 13:
+		initColor(GRAY, ORANGE, LIGHT_GREEN);
+		break;
+	case 14:
+		initColor(GRAY, LIGHT_GREEN, PINK);
+		break;
+	case 15:
+		initColor(GRAY, PINK, BONE);
+		break;
+		//
+    case 16:
+	    initColor(LIGHT_BLUE, BONE, GREEN);
+		break;
+	case 17:
+		initColor(BONE, PINK, RED);
+		break;
+	case 18:
+		initColor(PINK, LIGHT_GREEN, BLUE);
+		break;
+	case 19:
+		initColor(LIGHT_GREEN, ORANGE, YELLOW);
+		break;
+	case 20:
+		initColor(ORANGE, LIGHT_BLUE, PURPLE);
+		break;
+	default:
+		break;
+	}
 	for (int i = 0; i < 7; ++i)
 	{
         createAxis(n, _vertex[i]);
 	}
-	inited = true;
 }
-
-
 
 void Corner::render()
 {

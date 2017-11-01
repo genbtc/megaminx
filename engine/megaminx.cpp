@@ -1,5 +1,6 @@
 #include "megaminx.h"
 #include <cstdlib>
+#include <vector>
 
 void Megaminx::solve()
 {
@@ -31,55 +32,55 @@ void Megaminx::solve()
 
 void Megaminx::initFacePieces(int i)
 {
-	switch (i+1)
+	switch (i + 1)
 	{
-	case 1:
-		face[i].initEdge(edge, edge + 1, edge + 2, edge + 3, edge + 4);
-		face[i].initCorner(corner, corner + 1, corner + 2, corner + 3, corner + 4);
+	case WHITE:
+		face[i].initEdge(edge, 0, 1, 2, 3, 4);
+		face[i].initCorner(corner, 0, 1, 2, 3, 4);
 		break;
-	case 2:
-		face[i].initEdge(edge + 0, edge + 5, edge + 9, edge + 10, edge + 15);
-		face[i].initCorner(corner, corner + 4, corner + 5, corner + 9, corner + 17);
+	case BLUE:
+		face[i].initEdge(edge, 0, 5, 9, 10, 15);
+		face[i].initCorner(corner, 0, 4, 5, 9, 17);
 		break;
-	case 3:
-		face[i].initEdge(edge + 1, edge + 5, edge + 6, edge + 11, edge + 16);
-		face[i].initCorner(corner, corner + 1, corner + 5, corner + 6, corner + 16);
+	case RED:
+		face[i].initEdge(edge, 1, 5, 6, 11, 16);
+		face[i].initCorner(corner, 0, 1, 5, 6, 16);
 		break;
-	case 4:
-		face[i].initEdge(edge + 2, edge + 6, edge + 7, edge + 12, edge + 17);
-		face[i].initCorner(corner + 1, corner + 2, corner + 6, corner + 7, corner + 15);
+	case GREEN:
+		face[i].initEdge(edge, 2, 6, 7, 12, 17);
+		face[i].initCorner(corner, 1, 2, 6, 7, 15);
 		break;
-	case 5:
-		face[i].initEdge(edge + 3, edge + 7, edge + 8, edge + 13, edge + 18);
-		face[i].initCorner(corner + 2, corner + 3, corner + 7, corner + 8, corner + 19);
+	case PURPLE:
+		face[i].initEdge(edge, 3, 7, 8, 13, 18);
+		face[i].initCorner(corner, 2, 3, 7, 8, 19);
 		break;
-	case 6:
-		face[i].initEdge(edge + 4, edge + 8, edge + 9, edge + 14, edge + 19);
-		face[i].initCorner(corner + 3, corner + 4, corner + 8, corner + 9, corner + 18);
+	case YELLOW:
+		face[i].initEdge(edge, 4, 8, 9, 14, 19);
+		face[i].initCorner(corner, 3, 4, 8, 9, 18);
 		break;
-	case 7:
-		face[i].initEdge(edge + 25, edge + 26, edge + 27, edge + 28, edge + 29);
-		face[i].initCorner(corner + 10, corner + 11, corner + 12, corner + 13, corner + 14);
+	case GRAY:
+		face[i].initEdge(edge, 25, 26, 27, 28, 29);
+		face[i].initCorner(corner, 10, 11, 12, 13, 14);
 		break;
-	case 8:
-		face[i].initEdge(edge + 13, edge + 17, edge + 21, edge + 22, edge + 25);
-		face[i].initCorner(corner + 7, corner + 10, corner + 11, corner + 15, corner + 19);
+	case LIGHT_BLUE:
+		face[i].initEdge(edge, 13, 17, 21, 22, 25);
+		face[i].initCorner(corner, 7, 10, 11, 15, 19);
 		break;
-	case 9:
-		face[i].initEdge(edge + 14, edge + 18, edge + 22, edge + 23, edge + 26);
-		face[i].initCorner(corner + 8, corner + 11, corner + 12, corner + 18, corner + 19);
+	case ORANGE:
+		face[i].initEdge(edge, 14, 18, 22, 23, 26);
+		face[i].initCorner(corner, 8, 11, 12, 18, 19);
 		break;
-	case 10:
-		face[i].initEdge(edge + 10, edge + 19, edge + 23, edge + 24, edge + 27);
-		face[i].initCorner(corner + 9, corner + 12, corner + 13, corner + 17, corner + 18);
+	case LIGHT_GREEN:
+		face[i].initEdge(edge, 10, 19, 23, 24, 27);
+		face[i].initCorner(corner, 9, 12, 13, 17, 18);
 		break;
-	case 11:
-		face[i].initEdge(edge + 11, edge + 15, edge + 20, edge + 24, edge + 28);
-		face[i].initCorner(corner + 5, corner + 13, corner + 14, corner + 16, corner + 17);
+	case PINK:
+		face[i].initEdge(edge, 11, 15, 20, 24, 28);
+		face[i].initCorner(corner, 5, 13, 14, 16, 17);
 		break;
-	case 12:
-		face[i].initEdge(edge + 12, edge + 16, edge + 20, edge + 21, edge + 29);
-		face[i].initCorner(corner + 6, corner + 10, corner + 14, corner + 15, corner + 16);
+	case BONE:
+		face[i].initEdge(edge, 12, 16, 20, 21, 29);
+		face[i].initCorner(corner, 6, 10, 14, 15, 16);
 		break;
 	default:
 		break;
@@ -143,27 +144,38 @@ void Megaminx::scramble()
 {
     for (int i = 0; i < 12; i++) {
         const int r = rand() % 2 * 2 - 1;
-        this->face[i].placeParts(r);
+        face[i].placeParts(r);
     }
 }
 
 void Megaminx::swapOneCorner(int i, int x)
 {
-	this->face[i].corner[x]->flip(true);
+	face[i].corner[x]->flip(true);
 }
 
 void Megaminx::swapOneEdge(int i,int x)
 {    
-	this->face[i].edge[x]->flip(false);
+	face[i].edge[x]->flip(false);
 }
 
 void Megaminx::setCurrentFace(int i)
 {
-	g_currentFace = &this->face[i];
+	g_currentFace = &face[i];
 }
 
 //sample temp. no good.
-void Megaminx::resetFace(int i)
+int Megaminx::resetFace(int n)
 {
+	std::vector<int> edgelist;
+	for (int i = 0; i < 30; ++i) {
+		if ((edge[i].data._colorNum[0] == n) || 
+			(edge[i].data._colorNum[1] == n))
+			edgelist.push_back(i);
+	}
+	return edgelist.size();
+}
 
+void Megaminx::grayStar()
+{
+//	face[GRAY-1].edge
 }
