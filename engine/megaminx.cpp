@@ -24,56 +24,16 @@ void Megaminx::solve()
     {
         corner[i].init(i);
     }
-	for (int i = 0; i < 12; ++i)
-	{
-		initFacePieces(i);
-	}	
+	initFacePieces();
 }
 
-void Megaminx::initFacePieces(int i)
+void Megaminx::initFacePieces()
 {
-	face[i].initEdge(edge[0]);
-	switch (i + 1)
+	for (int i = 0; i < 12; ++i)
 	{
-	case WHITE:
-		face[i].initCorner(corner, 0, 1, 2, 3, 4);
-		break;
-	case BLUE:
-		face[i].initCorner(corner, 0, 4, 5, 9, 17);
-		break;
-	case RED:
-		face[i].initCorner(corner, 0, 1, 5, 6, 16);
-		break;
-	case GREEN:
-		face[i].initCorner(corner, 1, 2, 6, 7, 15);
-		break;
-	case PURPLE:
-		face[i].initCorner(corner, 2, 3, 7, 8, 19);
-		break;
-	case YELLOW:
-		face[i].initCorner(corner, 3, 4, 8, 9, 18);
-		break;
-	case GRAY:
-		face[i].initCorner(corner, 10, 11, 12, 13, 14);
-		break;
-	case LIGHT_BLUE:
-		face[i].initCorner(corner, 7, 10, 11, 15, 19);
-		break;
-	case ORANGE:
-		face[i].initCorner(corner, 8, 11, 12, 18, 19);
-		break;
-	case LIGHT_GREEN:
-		face[i].initCorner(corner, 9, 12, 13, 17, 18);
-		break;
-	case PINK:
-		face[i].initCorner(corner, 5, 13, 14, 16, 17);
-		break;
-	case BONE:
-		face[i].initCorner(corner, 6, 10, 14, 15, 16);
-		break;
-	default:
-		break;
-	}
+		face[i].initEdge(edge[0]);
+		face[i].initCorner(corner[0]);
+	}	
 }
 
 Megaminx::Megaminx()

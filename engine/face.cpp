@@ -38,7 +38,22 @@ void Face::initEdge(Edge *n, int a, int b, int c, int d, int e)
 	edge[3] = n + d;
 	edge[4] = n + e;
 }
-
+void Face::initCorner(Corner &n)
+{
+	const auto color = center->data._colorNum;
+	const auto cornerref = &n;
+	int count = 0;
+	for (int i = 0; i < 20; ++i)
+	{
+		if ((cornerref[i].data._colorNum[0] == color[0]) || 
+			(cornerref[i].data._colorNum[1] == color[0]) || 
+			(cornerref[i].data._colorNum[2] == color[0]))
+		{
+			corner[count] = cornerref + i;
+			count++;
+		} 
+	}
+}
 void Face::initCorner(Corner *n, int a, int b, int c, int d, int e)
 {
 	corner[0] = n + a;

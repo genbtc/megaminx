@@ -7,7 +7,7 @@ class Megaminx
 {
 public:
     void solve();
-    void initFacePieces(int i);
+    void initFacePieces();
     Megaminx();
 	~Megaminx();
 
