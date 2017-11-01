@@ -14,7 +14,8 @@ static const long double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5)) / 2);
 #define pim(x) x*PI/5
 
 typedef enum {
-    WHITE = 0,
+	BLACK = 0,
+    WHITE,
     BLUE,
     RED,
     GREEN,
@@ -40,7 +41,8 @@ struct color
 
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
 static color g_colorRGBs[COLOR_STATES] =
-{                    
+{
+	{  0, 0.0, 0.0, 0.0, L"BLACK" },
     {  1, 1.0, 1.0, 1.0, L"WHITE" },
     {  2, 0.0, 0.0, 1.0, L"BLUE" },
     {  3, 1.0, 0.0, 0.0, L"RED" },
@@ -62,35 +64,46 @@ struct piecepack
 class Piece
 {
 public:
-    //no constructor 
-    Piece() { }
-    //no destructor
-    virtual ~Piece() = default;
+    //virtual destructor
+    virtual ~Piece() {}
 
-    //data-members
-    double _color[3][3];
     double _vertex[7][3];
-    Vector3d v3d[7];
-    const wchar_t* _colorName;
-	int _colorNum;
+
+	struct _data
+	{
+		//data-members
+		double _color[3][3];
+		int _colorNum[3];
+		const wchar_t* _colorName[3];
+		Vector3d v3d[7];
+	} data;
+	int numSides;
+
+	//swap
+	void swapdata(_data &out)
+	{
+		const auto temp = data;
+		data = out;
+		out = temp;
+	}
     //getter
     double* getcolor()
     {
-        return &_color[0][0];
+	    return &data._color[0][0];
     }
     //setter
-    void setColor(int i, ::color c)
+    void setColor(int i, color c)
     {
-        _color[i][0] = c.r;
-        _color[i][1] = c.g;
-        _color[i][2] = c.b;
-        _colorName = c.name;
-	    _colorNum = c.i;
+	    data._color[i][0] = c.r;
+	    data._color[i][1] = c.g;
+	    data._color[i][2] = c.b;
+	    data._colorName[i] = c.name;
+	    data._colorNum[i] = c.i;
     }
     //common
     void initColorIndex(int idx,int k)
     {
-        const auto color = g_colorRGBs[k-1];
+        const auto color = g_colorRGBs[k];
         setColor(idx, color);
     }
     //store center color
@@ -103,6 +116,9 @@ public:
     {
         initColorIndex(0, a);
         initColorIndex(1, b);
+	    //set non-existant 3rd side of edge to
+	    // 0==black aka not undefined so we can re-use corner.
+	    initColorIndex(2, 0);
     }
     //store corner colors
     void initColor(int a, int b, int c)
@@ -111,6 +127,18 @@ public:
         initColorIndex(1, b);
         initColorIndex(2, c);
     }
+	//check if color-num (int) matches any colors
+    // currently stored in struct data (3 sided)
+	bool matchesColor(int color) const
+	{
+		if ((data._colorNum[0] == color) || 
+		    (data._colorNum[1] == color) || 
+		    (data._colorNum[2] == color))
+		{
+			return true;
+		}
+		return false;
+	}
     /**
      * \brief 
      * \param target used in almost every other algo
@@ -205,6 +233,131 @@ public:
             break;
         }
     }
+
+    /**
+	 * \brief flip/rotate/switch-colors for current piece.
+	 * \param corner Boolean true if its a corner piece. False if its Edge.
+	 * TODO: check what type of piece it is based on other fields.
+	 */
+	void flip(bool corner)
+	{
+		double buf[3];
+		for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
+		for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
+		for (int i = 0; i < 3; ++i) data._color[1][i] = buf[i];
+		if (corner)
+		{
+			for (int i = 0; i < 3; ++i) buf[i] = data._color[1][i];
+			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
+			for (int i = 0; i < 3; ++i) data._color[2][i] = buf[i];
+		}
+	}
+	/**
+	* \brief Does two flips. Thats it.
+	*/
+	void flipTwice(bool corner)
+	{
+		flip(corner);
+		flip(corner);
+	}
+	//Creates the common starting vertexes for all Corner pieces
+	double* cornerInit()
+	{
+		numSides = 3;
+		for (int i = 0; i < 7; ++i)
+		{
+			_vertex[i][2] = -INS_SPHERE_RAD;
+		}
+
+		_vertex[0][0] = INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5;
+		_vertex[0][1] = INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5;
+
+		_vertex[1][0] = INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5;
+		_vertex[1][1] = INS_CIRCLE_RAD * sin(pim(3.5));
+
+		_vertex[2][0] = INS_CIRCLE_RAD * cos(pim(3.5));
+		_vertex[2][1] = INS_CIRCLE_RAD * sin(pim(3.5));
+
+		_vertex[3][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
+		_vertex[3][1] = INS_CIRCLE_RAD * sin(pim(1.5));
+		rotateVertex(_vertex[3], 'z', pim(2));
+
+		_vertex[4][0] = INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5;
+		_vertex[4][1] = INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5;
+		rotateVertex(_vertex[4], 'z', pim(-3));
+		rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
+		rotateVertex(_vertex[4], 'z', pim(2));
+
+		_vertex[5][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
+		_vertex[5][1] = INS_CIRCLE_RAD * sin(pim(1.5));
+		rotateVertex(_vertex[5], 'z', pim(-3));
+		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+		rotateVertex(_vertex[5], 'z', pim(2));
+
+		_vertex[6][0] = INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5;
+		_vertex[6][1] = INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5;
+		rotateVertex(_vertex[6], 'z', pim(-5));
+		rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
+		return &_vertex[0][0];
+	}
+	//Creates the common starting vertexes for all Edge pieces
+    double* edgeInit()
+	{
+		numSides = 2;
+		for (int i = 0; i < 6; ++i)
+		{
+			_vertex[i][2] = -INS_SPHERE_RAD;
+		}
+
+		_vertex[0][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5);
+		_vertex[0][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5);
+
+		_vertex[1][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5);
+		_vertex[1][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5);
+
+		_vertex[2][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5);
+		_vertex[2][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(1.5)));
+
+		_vertex[3][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5);
+		_vertex[3][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(3.5)));
+
+		_vertex[4][0] = _vertex[1][0];
+		_vertex[4][1] = _vertex[1][1];
+		rotateVertex(_vertex[4], 'z', PI);
+		rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
+
+		_vertex[5][0] = _vertex[0][0];
+		_vertex[5][1] = _vertex[0][1];
+		rotateVertex(_vertex[5], 'z', PI);
+		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+		return &_vertex[0][0];
+	}
+	//Creates the common starting vertexes for all Center pieces
+	double* centerInit()
+	{
+		numSides = 1;
+		for (int i = 0; i < 5; ++i)
+		{
+			_vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * 2 / 5;
+			_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5)) * 2 / 5;
+			_vertex[i][2] = -INS_SPHERE_RAD;
+		}
+		return &_vertex[0][0];
+	}
+	double* faceInit()
+	{
+		numSides = 0;
+		for (int i = 0; i < 5; ++i)
+		{
+			_vertex[i][0] = -INS_CIRCLE_RAD * cos(pim(1.5)) + 100 / sin(pim(2)) * 2 / 5;
+			_vertex[i][1] = -INS_CIRCLE_RAD * sin(pim(1.5));
+			_vertex[i][2] = -INS_SPHERE_RAD;
+			rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+			rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
+			rotateVertex(_vertex[i], 'z', 2 * i * PI / 5);
+		}
+		return &_vertex[0][0];
+	}
 };
 
 #endif

@@ -7,11 +7,10 @@ class Center : public Piece
 public:
     Center();
     static void createAxis(int n, double* target);
-    virtual ~Center() = default;
+	~Center() {}
 
     void init(int n);
 	void render();
-    double* origin();
 };
 
 #endif

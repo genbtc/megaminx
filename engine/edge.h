@@ -5,15 +5,14 @@
 class Edge : public Piece
 {
 public:
-    Edge();
+    Edge() = default;
     ~Edge() {}
 
-    void createAxis(int n, double* target);
+    static void createAxis(int n, double* target);
+    void init(int n, double* edgeVertexBase);
 
     void init(int n);
     void render();
-
-	void flip();
 };
 
 #endif 	

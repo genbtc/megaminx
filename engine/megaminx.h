@@ -7,8 +7,9 @@ class Megaminx
 {
 public:
     void solve();
-	Megaminx();
-	~Megaminx();
+    void initFacePieces();
+    Megaminx();
+	~Megaminx() = default;
 
 	void render();
 	void rotate(int, int);
@@ -16,15 +17,21 @@ public:
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
 	void setCurrentFace(int i);
+    int resetFace(int n);
+    void grayStar();
     /* y axis */
 	double n;
     /* x axis */
 	double k;
-	bool _rotate;
+	bool rotating;
+	/* pointer */
     Face* g_currentFace;
+	/* number by reflection*/
+    unsigned numEdges;
+    unsigned numCorners;
+    unsigned numFaces;
 private:
-
-	int rSide;
+	int _rSide;
 
 	Face face[12];
 	Center center[12];

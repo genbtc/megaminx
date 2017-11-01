@@ -3,9 +3,12 @@
 #include "face.h"
 #include "utils.h"
 #include <iostream>
+#include <vector>
 
 Face::Face()
 {
+	m_pos = 0;
+    m_radius = 0;
     center = nullptr;
     turnDir = 0;
     thisNum = 0;
@@ -16,41 +19,53 @@ Face::Face()
     axis[2] = -1;
 }
 
-void Face::initEdge(Edge *a, Edge *b, Edge *c, Edge *d, Edge *e)
+void Face::initEdge(Edge& n,int num)
 {
-    edge[0] = a;
-    edge[1] = b;
-    edge[2] = c;
-    edge[3] = d;
-    edge[4] = e;
+	const auto pieceList = findPiece(n,num);
+	edge[0] = &n + pieceList[0];
+	edge[1] = &n + pieceList[1];
+	edge[2] = &n + pieceList[2];
+	edge[3] = &n + pieceList[3];
+	edge[4] = &n + pieceList[4];
 }
 
-void Face::initCorner(Corner *a, Corner *b, Corner *c, Corner *d, Corner *e)
+void Face::initCorner(Corner& n,int num)
 {
-    corner[0] = a;
-    corner[1] = b;
-    corner[2] = c;
-    corner[3] = d;
-    corner[4] = e;
+    const auto pieceList = findPiece(n,num);
+	corner[0] = &n + pieceList[0];
+	corner[1] = &n + pieceList[1];
+	corner[2] = &n + pieceList[2];
+	corner[3] = &n + pieceList[3];
+	corner[4] = &n + pieceList[4];
 }
 
-void Face::initNum(int num)
+
+std::vector<int> Face::findPiece(Piece& n,int times) const
 {
-    thisNum = num;
+	std::vector<int> pieceList;
+	const auto color = center->data._colorNum[0];
+	const auto pieceRef = &n;
+	int count = 0;
+	for (int i = 0; i < times; ++i)
+	{
+	    const bool result = pieceRef[i].matchesColor(color);
+		if (result)
+		{
+			count++;
+			pieceList.push_back(i);
+		}
+	}
+	return pieceList;
 }
 
 void Face::initCenter(Center *a)
 {
     center = a;
-    for (int i = 0; i < 5; ++i)
-    {
-        _vertex[i][0] = -INS_CIRCLE_RAD * cos(3 * PI / 10) + 100 / sin(2 * PI / 5) * 2 / 5;
-        _vertex[i][1] = -INS_CIRCLE_RAD * sin(3 * PI / 10);
-        _vertex[i][2] = -INS_SPHERE_RAD;
-        rotateVertex(_vertex[i], 'z', 2 * PI / 5);
-        rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-        rotateVertex(_vertex[i], 'z', 2 * i * PI / 5);
-    }
+}
+void Face::initCenter(Center *a, double* centerVertexBase)
+{
+	center = a;
+	memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
 }
 
 /**
@@ -59,6 +74,7 @@ void Face::initCenter(Center *a)
  */
 void Face::initAxis(int n)
 {
+	thisNum = n;
     center->createAxis(n,axis);
     for (int i = 0; i < 5; ++i)
     {
@@ -67,29 +83,21 @@ void Face::initAxis(int n)
 }
 
 /**
- * \brief Simple-Flips (inverts) one Edge-piece and then the other.(individually)
- *  Colors end up as follows. etc:
- * \param x //edgeflip(0, 1);//purple green
-            //edgeflip(0, 2);//purple bone 
-            //edgeflip(0, 3);//purple orange
-            //edgeflip(0, 4);//purple gray 
-            //edgeflip(1, 2);//green bone
-            //edgeflip(2, 3);//bone orange
-            //edgeflip(4, 3);//gray orange 
- * \param y 
+ * \brief Simple-Flips (inverts) one Edge-piece 
+ * and then the other, individually.
  */
-void Face::twoEdgeFlips(int a,int b)
+void Face::twoEdgesFlip(int a,int b)
 {
-    edge[a]->flip();
-    edge[b]->flip();
+    edge[a]->flip(false);
+	edge[b]->flip(false);
 }
 
 void Face::genericFlip(int a, int b, int c, int d, fourPack pack)
 {
-    pack.four[0] ? corner[a]->flip() : corner[a]->flipBack();
-    pack.four[1] ? corner[b]->flip() : corner[b]->flipBack();
-    pack.four[2] ? corner[c]->flip() : corner[c]->flipBack();
-    pack.four[3] ? corner[d]->flip() : corner[d]->flipBack();
+	pack.four[0] ? corner[a]->flip(true) : corner[a]->flipTwice(true);
+	pack.four[1] ? corner[b]->flip(true) : corner[b]->flipTwice(true);
+	pack.four[2] ? corner[c]->flip(true) : corner[c]->flipTwice(true);
+	pack.four[3] ? corner[d]->flip(true) : corner[d]->flipTwice(true);
 }
 void Face::inwardsFlip(int a, int b, int c, int d)
 {
@@ -150,29 +158,29 @@ bool Face::placeParts(int right)
             backwardsFlip(0, 1, 2, 4);
             QuadSwapCorners({ 4, 0, 4, 2, 0, 3, 0, 1 });
             QuadSwapEdges({ 4, 1, 1, 3, 0, 1, 0, 2 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             break;
         case 2:
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapEdges({ 1, 0, 1, 2, 1, 3, 3, 4 });
             backwardsFlip(0, 1, 3, 4);
             QuadSwapCorners({ 0, 1, 0, 2, 2, 3, 2, 4 });
             break;
         case 3:
             QuadSwapEdges({ 3, 2, 4, 3, 0, 1, 1, 2 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapCorners({ 3, 4, 1, 3, 1, 2, 0, 1 });
             alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 4:
             QuadSwapEdges({ 0, 1, 1, 2, 1, 3, 3, 4 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapCorners({ 0, 1, 0, 3, 0, 4, 0, 2 });
             alternatingBackwardsFlip(1, 2, 3, 4);
             break;
         case 5:
             QuadSwapEdges({ 2, 4, 2, 3, 0, 2, 0, 1 });
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapCorners({ 1, 3, 1, 4, 1, 2, 0, 1 });
             alternatingBackwardsFlip(1, 2, 3, 4);
             break;
@@ -182,31 +190,31 @@ bool Face::placeParts(int right)
             break;
         case 7:
             QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 4, 0, 2, 0, 1, 0, 3 });
             outwardsFlip(0, 1, 3, 4);
             break;
         case 8:
             QuadSwapEdges({ 0, 1, 1, 2, 2, 4, 3, 4 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
             alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 9:
             QuadSwapEdges({ 0, 1, 1, 2, 2, 4, 3, 4 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
             alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 10:
             QuadSwapEdges({ 0, 1, 1, 3, 3, 4, 2, 4 });
-            twoEdgeFlips(2, 4);
+            twoEdgesFlip(2, 4);
             QuadSwapCorners({ 0, 4, 1, 4, 1, 2, 2, 3 });
             alternatingForwardsFlip(0, 1, 3, 4);
             break;
         case 11:
             QuadSwapEdges({ 0, 3, 0, 4, 0, 2, 0, 1 });
-            twoEdgeFlips(3, 4);
+            twoEdgesFlip(3, 4);
             QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
             alternatingForwardsFlip(0, 2, 3, 4);
             break;
@@ -226,29 +234,29 @@ bool Face::placeParts(int right)
             forwardsFlip(0, 2, 3, 4);
             QuadSwapCorners({ 0, 1, 0, 3, 4, 2, 4, 0 });
             QuadSwapEdges({ 0, 2, 0, 1, 1, 3, 4, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             break;
         case 2:
-            twoEdgeFlips(1, 2);
+            twoEdgesFlip(1, 2);
             QuadSwapEdges({ 3, 4, 1, 3, 1, 2, 1, 0 });
             alternatingForwardsFlip(1, 2, 3, 4);
             QuadSwapCorners({ 2, 4, 2, 3, 0, 2, 0, 1 });
             break;
         case 3:
             QuadSwapEdges({ 1, 2, 0, 1, 4, 3, 3, 2 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 1, 1, 2, 1, 3, 3, 4 });
             forwardsFlip(0, 1, 3, 4);
             break;
         case 4:
             QuadSwapEdges({ 3, 4, 1, 3, 1, 2, 0, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 2, 0, 4, 0, 3, 0, 1 });
             forwardsFlip(0, 1, 3, 4);
             break;
         case 5:
             QuadSwapEdges({ 0, 1, 0, 2, 2, 3, 2, 4 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 1, 1, 2, 1, 4, 1, 3 });
             forwardsFlip(0, 1, 3, 4);
             break;
@@ -258,31 +266,31 @@ bool Face::placeParts(int right)
             break;
         case 7: //front clockwise;
             QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
             inwardsFlip(0, 1, 2, 3);
             break;
         case 8:
             QuadSwapEdges({ 3, 4, 2, 4, 1, 2, 0, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
             inwardsFlip(0, 1, 2, 4);
             break;
         case 9:
             QuadSwapEdges({ 3, 4, 2, 4, 1, 2, 0, 1 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
             inwardsFlip(0, 1, 2, 4);
             break;
         case 10:
             QuadSwapEdges({ 2, 4, 3, 4, 1, 3, 0, 1 });
-            twoEdgeFlips(0, 2);
+            twoEdgesFlip(0, 2);
             QuadSwapCorners({ 2, 3, 1, 2, 1, 4, 0, 4 });
             inwardsFlip(0, 1, 2, 4);
             break;
         case 11:
             QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
-            twoEdgeFlips(0, 3);
+            twoEdgesFlip(0, 3);
             QuadSwapCorners({ 0, 4, 0, 2, 0, 1, 0, 3 });
             inwardsFlip(0, 1, 2, 4);
             break;
@@ -340,22 +348,10 @@ void Face::rotate(int _turnDir)
 
 void Face::swapCorners(int n, int k)
 {
-    double buf;
-    for (int i = 0; i < 9; ++i)
-    {
-        buf = corner[n]->getcolor()[i];
-        corner[n]->getcolor()[i] = corner[k]->getcolor()[i];
-        corner[k]->getcolor()[i] = buf;
-    }
+	corner[n]->swapdata(corner[k]->data);
 }
 
 void Face::swapEdges(int n, int k)
 {
-    double buf;
-    for (int i = 0; i < 6; ++i)
-    {
-        buf = edge[n]->getcolor()[i];
-        edge[n]->getcolor()[i] = edge[k]->getcolor()[i];
-        edge[k]->getcolor()[i] = buf;
-    }
+	edge[n]->swapdata(edge[k]->data);
 }

@@ -1,9 +1,9 @@
 #include <math.h>
 #include "utils.h"
-static double PI = acos(-1);
+static const long double PI = acos(-1);
 void rotate_vertex(double &vx, double &vy, double angle)
 {
-	double r = sqrt(vx * vx + vy * vy);
+    const double r = sqrt(vx * vx + vy * vy);
 	double a = vy > 0 ? acos(vx / r) : 2 * PI - acos(vx / r);
 	a += angle;
 	vx = r * cos(a);

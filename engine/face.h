@@ -5,6 +5,7 @@
 #include "edge.h"
 #include "corner.h"
 #include "../common_physics/input.h"
+#include <vector>
 
 enum FaceTurnDir { Clockwise, CounterClockwise };
 struct eightPack
@@ -15,15 +16,22 @@ struct fourPack
 {
     int four[4];
 };
-class Face
+struct fivePack
+{
+	int five[5];
+};
+class Face : public Piece
 {
 public:
 	Face();
-	void initEdge(Edge*, Edge*, Edge*, Edge*, Edge*);
-	void initCorner(Corner*, Corner*, Corner*, Corner*, Corner*);
-	void initCenter(Center*);
+	~Face() {}
+    void initEdge(Edge& n, int num);
+    void initCorner(Corner& n, int num);
+
+	std::vector<int> findPiece(Piece& n, int times) const;
+    void initCenter(Center*);
+    void initCenter(Center* a, double* centerVertexBase);
     void initAxis(int n);
-	void initNum(int);
 
     bool render();
 	void rotate(int);
@@ -45,7 +53,7 @@ public:
 	Center *center;
 
 private:
-    void twoEdgeFlips(int a,int b);
+    void twoEdgesFlip(int a,int b);
     void genericFlip(int a, int b, int c, int d, fourPack pack);
     void inwardsFlip(int a, int b,int c, int d);
     void backwardsFlip(int a, int b, int c, int d);
@@ -57,12 +65,11 @@ private:
     void QuadSwapEdges(eightPack pack);
 
     int turnDir;
-    double _vertex[5][3];
-
 	bool _rotate;
 	double angle;
 	double axis[3];
 	int thisNum;
+public:
 };
 
 #endif

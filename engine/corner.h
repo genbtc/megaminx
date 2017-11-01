@@ -5,19 +5,14 @@
 class Corner : public Piece
 {
 public:
-    Corner();
-    void createAxis(int n, double* target);
+
+    Corner() = default;
+    static void createAxis(int n, double* target);
+    void init(int n, double* cornerVertexBase);
     ~Corner() {}
 
     void init(int n);
     void render();
-
-	void flip();
-	void flipBack();
-
-private:
-	bool inited;
-	bool turn;
 };
 
 #endif

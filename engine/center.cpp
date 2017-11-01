@@ -1,17 +1,10 @@
 #include <GL/glut.h>
-#include <math.h>
 #include "center.h"
 
 Center::Center()
 {
-    for (int i = 0; i < 5; ++i)
-    {
-        _vertex[i][0] = (INS_CIRCLE_RAD * cos(PI * 2 / 5 * i + 3 * PI / 10) / 5) * 2;
-        _vertex[i][1] = (INS_CIRCLE_RAD * sin(PI * 2 / 5 * i + 3 * PI / 10) / 5) * 2;
-        _vertex[i][2] = -INS_SPHERE_RAD;
-    }
+	this->centerInit();
 }
-
 
 void Center::createAxis(int n, double* target)
 {
@@ -55,7 +48,7 @@ void Center::init(int n)
 
 void Center::render()
 {
-	glColor3dv(_color[0]);
+	glColor3dv(data._color[0]);
 	glBegin(GL_POLYGON);
 	for (int i = 0; i < 5; ++i)
 	{
