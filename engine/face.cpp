@@ -15,7 +15,21 @@ Face::Face(): m_pos(0), m_radius(0)
     axis[1] = 0.0001;
     axis[2] = -1;
 }
-
+void Face::initEdge(Edge &n)
+{
+    const auto color = center->data._colorNum;
+    const auto edgeref = &n;
+	int count = 0;
+	for (int i = 0; i < 30; ++i)
+	{
+		if ((edgeref[i].data._colorNum[0] == color[0]) || 
+			(edgeref[i].data._colorNum[1] == color[0]))
+		{
+			edge[count] = edgeref + i;
+			count++;
+		} 
+	}
+}
 void Face::initEdge(Edge *n, int a, int b, int c, int d, int e)
 {
 	edge[0] = n + a;

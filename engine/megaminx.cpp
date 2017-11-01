@@ -32,54 +32,43 @@ void Megaminx::solve()
 
 void Megaminx::initFacePieces(int i)
 {
+	face[i].initEdge(edge[0]);
 	switch (i + 1)
 	{
 	case WHITE:
-		face[i].initEdge(edge, 0, 1, 2, 3, 4);
 		face[i].initCorner(corner, 0, 1, 2, 3, 4);
 		break;
 	case BLUE:
-		face[i].initEdge(edge, 0, 5, 9, 10, 15);
 		face[i].initCorner(corner, 0, 4, 5, 9, 17);
 		break;
 	case RED:
-		face[i].initEdge(edge, 1, 5, 6, 11, 16);
 		face[i].initCorner(corner, 0, 1, 5, 6, 16);
 		break;
 	case GREEN:
-		face[i].initEdge(edge, 2, 6, 7, 12, 17);
 		face[i].initCorner(corner, 1, 2, 6, 7, 15);
 		break;
 	case PURPLE:
-		face[i].initEdge(edge, 3, 7, 8, 13, 18);
 		face[i].initCorner(corner, 2, 3, 7, 8, 19);
 		break;
 	case YELLOW:
-		face[i].initEdge(edge, 4, 8, 9, 14, 19);
 		face[i].initCorner(corner, 3, 4, 8, 9, 18);
 		break;
 	case GRAY:
-		face[i].initEdge(edge, 25, 26, 27, 28, 29);
 		face[i].initCorner(corner, 10, 11, 12, 13, 14);
 		break;
 	case LIGHT_BLUE:
-		face[i].initEdge(edge, 13, 17, 21, 22, 25);
 		face[i].initCorner(corner, 7, 10, 11, 15, 19);
 		break;
 	case ORANGE:
-		face[i].initEdge(edge, 14, 18, 22, 23, 26);
 		face[i].initCorner(corner, 8, 11, 12, 18, 19);
 		break;
 	case LIGHT_GREEN:
-		face[i].initEdge(edge, 10, 19, 23, 24, 27);
 		face[i].initCorner(corner, 9, 12, 13, 17, 18);
 		break;
 	case PINK:
-		face[i].initEdge(edge, 11, 15, 20, 24, 28);
 		face[i].initCorner(corner, 5, 13, 14, 16, 17);
 		break;
 	case BONE:
-		face[i].initEdge(edge, 12, 16, 20, 21, 29);
 		face[i].initCorner(corner, 6, 10, 14, 15, 16);
 		break;
 	default:
