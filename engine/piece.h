@@ -259,17 +259,8 @@ public:
 		flip(corner);
 		flip(corner);
 	}
-	
-	double* cacheCorner()
-	{
-		double* _cacheCorner;
-	    const auto temp = &_vertex[0][0];
-		cornerInit();
-		_cacheCorner = &_vertex[0][0];
-		_vertex[0][0] = *temp;
-		return _cacheCorner;
-	}
-	void cornerInit()
+
+	double* cornerInit()
 	{
 		numSides = 3;
 		for (int i = 0; i < 7; ++i)
@@ -306,17 +297,9 @@ public:
 		_vertex[6][1] = INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2;
 		rotateVertex(_vertex[6], 'z', -PI * 5 / 5);
 		rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
+		return &_vertex[0][0];
 	}
-	double* cacheEdge()
-	{
-		double* _cacheEdge;
-		const auto temp = &_vertex[0][0];
-		edgeInit();
-		_cacheEdge = &_vertex[0][0];
-		_vertex[0][0] = *temp;
-		return _cacheEdge;
-	}
-	void edgeInit()
+	double* edgeInit()
 	{
 		numSides = 2;
 		for (int i = 0; i < 6; ++i)
@@ -345,6 +328,7 @@ public:
 		_vertex[5][1] = _vertex[0][1];
 		rotateVertex(_vertex[5], 'z', PI);
 		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+		return &_vertex[0][0];
 	}
 };
 
