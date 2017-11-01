@@ -1,11 +1,8 @@
 #include <GL/glut.h>
-#include <math.h>
 #include "corner.h"
-#include "utils.h"
 
 Corner::Corner()
 {
-	this->cornerInit();
 }
 
 void Corner::createAxis(int n, double* target)
@@ -48,7 +45,7 @@ void Corner::createAxis(int n, double* target)
 
 void Corner::init(int n, double* cornerVertexBase)
 {
-	_vertex[0][0] = *cornerVertexBase;
+	memcpy(&_vertex, cornerVertexBase, sizeof(_vertex));
     init(n);
 }
 void Corner::init(int n)

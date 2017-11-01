@@ -15,7 +15,7 @@ void Megaminx::solve()
     {
         edge[i].init(i, edgeVertexBase);
     }
-	double* cornerVertexBase = corner[0].cornerInit();
+    double* cornerVertexBase = corner[0].cornerInit();
     for (int i = 0; i < numCorners; ++i)
     {
 	    corner[i].init(i, cornerVertexBase);

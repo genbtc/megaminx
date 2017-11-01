@@ -1,11 +1,9 @@
 #include <GL/glut.h>
-#include <math.h>
 #include "edge.h"
-#include "utils.h"
 
 Edge::Edge()
 {
-	this->edgeInit();
+
 }
 
 void Edge::createAxis(int n, double* target)
@@ -63,7 +61,7 @@ void Edge::createAxis(int n, double* target)
 
 void Edge::init(int n, double* edgeVertexBase)
 {
-	_vertex[0][0] = *edgeVertexBase;
+	memcpy(&_vertex, edgeVertexBase, sizeof(_vertex));
 	init(n);
 }
 

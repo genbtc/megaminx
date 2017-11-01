@@ -68,6 +68,7 @@ public:
     virtual ~Piece() {}
 
     double _vertex[7][3];
+
 	struct _data
 	{
 		//data-members
