@@ -5,35 +5,8 @@
 
 Edge::Edge()
 {
-	numSides = 2;
-	for (int i = 0; i < 6; ++i)
-	{
-		_vertex[i][2] = -INS_SPHERE_RAD;
-	}
-
-	_vertex[0][0] = 0.99 * (INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) / 5 * 2);
-	_vertex[0][1] = 0.99 * (INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10) / 5 * 2);
-
-	_vertex[1][0] = 0.99 * (INS_CIRCLE_RAD * cos(3 * PI / 10) / 5 * 2);
-	_vertex[1][1] = 0.99 * (INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2);
-
-	_vertex[2][0] = 0.99 * (INS_CIRCLE_RAD * cos(3 * PI / 10) - 100 / sin(2 * PI / 5) * 2 / 5);
-	_vertex[2][1] = 0.99 * (INS_CIRCLE_RAD * sin(3 * PI / 10));
-
-	_vertex[3][0] = 0.99 * (INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) + 100 / sin(2 * PI / 5) * 2 / 5);
-	_vertex[3][1] = 0.99 * (INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10));
-
-	_vertex[4][0] = _vertex[1][0];
-	_vertex[4][1] = _vertex[1][1];
-    rotateVertex(_vertex[4], 'z', PI);
-    rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
-
-    _vertex[5][0] = _vertex[0][0];
-    _vertex[5][1] = _vertex[0][1];
-	rotateVertex(_vertex[5], 'z', PI);
-	rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+	this->edgeInit();
 }
-
 
 void Edge::createAxis(int n, double* target)
 {
@@ -86,6 +59,12 @@ void Edge::createAxis(int n, double* target)
     default:
         break;
     }
+}
+
+void Edge::init(int n, double* edgeVertexBase)
+{
+	_vertex[0][0] = *edgeVertexBase;
+	init(n);
 }
 
 void Edge::init(int n)

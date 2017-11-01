@@ -9,6 +9,7 @@ public:
     ~Edge() {}
 
     static void createAxis(int n, double* target);
+    void init(int n, double* edgeVertexBase);
 
     void init(int n);
     void render();

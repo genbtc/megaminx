@@ -8,10 +8,10 @@ void Megaminx::solve()
     k = 0;
     _rotate = false;
     rSide = 0;
-
+	double* edgeVertexBase = edge[0].cacheEdge();
     for (int i = 0; i < 30; ++i)
     {
-        edge[i].init(i);
+        edge[i].init(i, edgeVertexBase);
     }
 	double* cornerVertexBase = corner[0].cacheCorner();
     for (int i = 0; i < 20; ++i)

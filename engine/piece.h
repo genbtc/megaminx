@@ -307,6 +307,45 @@ public:
 		rotateVertex(_vertex[6], 'z', -PI * 5 / 5);
 		rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
 	}
+	double* cacheEdge()
+	{
+		double* _cacheEdge;
+		const auto temp = &_vertex[0][0];
+		edgeInit();
+		_cacheEdge = &_vertex[0][0];
+		_vertex[0][0] = *temp;
+		return _cacheEdge;
+	}
+	void edgeInit()
+	{
+		numSides = 2;
+		for (int i = 0; i < 6; ++i)
+		{
+			_vertex[i][2] = -INS_SPHERE_RAD;
+		}
+
+		_vertex[0][0] = 0.99 * (INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) / 5 * 2);
+		_vertex[0][1] = 0.99 * (INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10) / 5 * 2);
+
+		_vertex[1][0] = 0.99 * (INS_CIRCLE_RAD * cos(3 * PI / 10) / 5 * 2);
+		_vertex[1][1] = 0.99 * (INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2);
+
+		_vertex[2][0] = 0.99 * (INS_CIRCLE_RAD * cos(3 * PI / 10) - 100 / sin(2 * PI / 5) * 2 / 5);
+		_vertex[2][1] = 0.99 * (INS_CIRCLE_RAD * sin(3 * PI / 10));
+
+		_vertex[3][0] = 0.99 * (INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) + 100 / sin(2 * PI / 5) * 2 / 5);
+		_vertex[3][1] = 0.99 * (INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10));
+
+		_vertex[4][0] = _vertex[1][0];
+		_vertex[4][1] = _vertex[1][1];
+		rotateVertex(_vertex[4], 'z', PI);
+		rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
+
+		_vertex[5][0] = _vertex[0][0];
+		_vertex[5][1] = _vertex[0][1];
+		rotateVertex(_vertex[5], 'z', PI);
+		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+	}
 };
 
 #endif

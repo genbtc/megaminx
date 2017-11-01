@@ -3,11 +3,9 @@
 #include "corner.h"
 #include "utils.h"
 
-
-
 Corner::Corner()
 {
-	cornerInit();
+	this->cornerInit();
 }
 
 void Corner::createAxis(int n, double* target)
