@@ -16,14 +16,18 @@ struct fourPack
 {
     int four[4];
 };
+struct fivePack
+{
+	int five[5];
+};
 class Face
 {
 public:
 	Face();
-    std::vector<int> initEdge(Edge& n);
-    void initEdge(Edge* n, int a, int b, int c, int d, int e);
-    std::vector<int> initCorner(Corner& n);
-    void initCorner(Corner* n, int a, int b, int c, int d, int e);
+    void initEdge(Edge& n, int num);
+    void initCorner(Corner& n, int num);
+
+	std::vector<int> findPiece(Piece& n, int times) const;
     void initCenter(Center*);
     void initAxis(int n);
 	void initNum(int);

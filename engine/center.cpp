@@ -4,6 +4,7 @@
 
 Center::Center()
 {
+	numSides = 1;
     for (int i = 0; i < 5; ++i)
     {
         _vertex[i][0] = (INS_CIRCLE_RAD * cos(PI * 2 / 5 * i + 3 * PI / 10) / 5) * 2;

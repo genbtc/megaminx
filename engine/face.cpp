@@ -17,59 +17,43 @@ Face::Face(): m_pos(0), m_radius(0)
     axis[2] = -1;
 }
 
-std::vector<int> Face::initEdge(Edge& n)
+void Face::initEdge(Edge& n,int num)
 {
-	std::vector<int> edgelist;
-    const auto color = center->data._colorNum;
-    const auto edgeref = &n;
-	int count = 0;
-	for (int i = 0; i < 30; ++i)
-	{
-		if ((edgeref[i].data._colorNum[0] == color[0]) || 
-			(edgeref[i].data._colorNum[1] == color[0]))
-		{
-			edge[count] = edgeref + i;
-			count++;
-			edgelist.push_back(i);
-		} 
-	}
-	return edgelist;
-}
-void Face::initEdge(Edge *n, int a, int b, int c, int d, int e)
-{
-	edge[0] = n + a;
-	edge[1] = n + b;
-	edge[2] = n + c;
-	edge[3] = n + d;
-	edge[4] = n + e;
+	const auto pieceList = findPiece(n,num);
+	edge[0] = &n + pieceList[0];
+	edge[1] = &n + pieceList[1];
+	edge[2] = &n + pieceList[2];
+	edge[3] = &n + pieceList[3];
+	edge[4] = &n + pieceList[4];
 }
 
-std::vector<int> Face::initCorner(Corner& n)
+void Face::initCorner(Corner& n,int num)
 {
-	std::vector<int> cornerlist;
-	const auto color = center->data._colorNum;
-	const auto cornerref = &n;
-	int count = 0;
-	for (int i = 0; i < 20; ++i)
-	{
-		if ((cornerref[i].data._colorNum[0] == color[0]) || 
-			(cornerref[i].data._colorNum[1] == color[0]) || 
-			(cornerref[i].data._colorNum[2] == color[0]))
-		{
-			corner[count] = cornerref + i;
-			count++;
-			cornerlist.push_back(i);
-		} 
-	}
-	return cornerlist;
+    const auto pieceList = findPiece(n,num);
+	corner[0] = &n + pieceList[0];
+	corner[1] = &n + pieceList[1];
+	corner[2] = &n + pieceList[2];
+	corner[3] = &n + pieceList[3];
+	corner[4] = &n + pieceList[4];
 }
-void Face::initCorner(Corner *n, int a, int b, int c, int d, int e)
+
+
+std::vector<int> Face::findPiece(Piece& n,int times) const
 {
-	corner[0] = n + a;
-	corner[1] = n + b;
-	corner[2] = n + c;
-	corner[3] = n + d;
-	corner[4] = n + e;
+	std::vector<int> pieceList;
+	const auto color = center->data._colorNum[0];
+	const auto pieceRef = &n;
+	int count = 0;
+	for (int i = 0; i < times; ++i)
+	{
+		bool result = pieceRef[i].matchesColor(color);
+		if (result)
+		{
+			count++;
+			pieceList.push_back(i);
+		}
+	}
+	return pieceList;
 }
 
 void Face::initNum(int num)

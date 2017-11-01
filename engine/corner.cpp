@@ -3,42 +3,11 @@
 #include "corner.h"
 #include "utils.h"
 
+
+
 Corner::Corner()
 {
-    for (int i = 0; i < 7; ++i)
-    {
-        _vertex[i][2] = -INS_SPHERE_RAD;
-    }
-
-    _vertex[0][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) / 5 * 2;
-    _vertex[0][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10) / 5 * 2;
-
-    _vertex[1][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) + 100 / sin(2 * PI / 5) * 2 / 5;
-    _vertex[1][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10);
-
-    _vertex[2][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10);
-    _vertex[2][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10);
-
-    _vertex[3][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) - 100 / sin(2 * PI / 5) * 2 / 5;
-    _vertex[3][1] = INS_CIRCLE_RAD * sin(3 * PI / 10);
-    rotateVertex(_vertex[3], 'z', PI * 2 / 5);
-
-    _vertex[4][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) / 5 * 2;
-    _vertex[4][1] = INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2;
-    rotateVertex(_vertex[4], 'z', -PI * 3 / 5);
-    rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
-    rotateVertex(_vertex[4], 'z', PI * 2 / 5);
-
-    _vertex[5][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) - 100 / sin(2 * PI / 5) * 2 / 5;
-    _vertex[5][1] = INS_CIRCLE_RAD * sin(3 * PI / 10);
-    rotateVertex(_vertex[5], 'z', -PI * 3 / 5);
-    rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
-    rotateVertex(_vertex[5], 'z', PI * 2 / 5);
-
-    _vertex[6][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) / 5 * 2;
-    _vertex[6][1] = INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2;
-    rotateVertex(_vertex[6], 'z', -PI * 5 / 5);
-    rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
+	cornerInit();
 }
 
 void Corner::createAxis(int n, double* target)
@@ -79,6 +48,11 @@ void Corner::createAxis(int n, double* target)
     }
 }
 
+void Corner::init(int n, double* cornerVertexBase)
+{
+	_vertex[0][0] = *cornerVertexBase;
+    init(n);
+}
 void Corner::init(int n)
 {
 	switch (n + 1)

@@ -5,6 +5,7 @@
 
 Edge::Edge()
 {
+	numSides = 2;
 	for (int i = 0; i < 6; ++i)
 	{
 		_vertex[i][2] = -INS_SPHERE_RAD;

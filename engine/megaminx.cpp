@@ -13,9 +13,10 @@ void Megaminx::solve()
     {
         edge[i].init(i);
     }
+	double* cornerVertexBase = corner[0].cacheCorner();
     for (int i = 0; i < 20; ++i)
     {
-        corner[i].init(i);
+	    corner[i].init(i, cornerVertexBase);
     }
 	initFacePieces();
 }
@@ -28,8 +29,8 @@ void Megaminx::initFacePieces()
 		face[i].initNum(i);
 		face[i].initCenter(center + i);
 		face[i].initAxis(i);
-		face[i].initEdge(edge[0]);
-		face[i].initCorner(corner[0]);
+		face[i].initEdge(edge[0],sizeof(edge) / sizeof(Edge));
+		face[i].initCorner(corner[0], sizeof(corner) / sizeof(Corner));
 	}
 }
 

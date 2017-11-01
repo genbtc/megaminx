@@ -5,8 +5,10 @@
 class Corner : public Piece
 {
 public:
+
     Corner();
     static void createAxis(int n, double* target);
+    void init(int n, double* cornerVertexBase);
     ~Corner() {}
 
     void init(int n);

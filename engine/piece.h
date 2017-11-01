@@ -76,6 +76,7 @@ public:
 		const wchar_t* _colorName[3];
 		Vector3d v3d[7];
 	} data;
+	int numSides;
 
 	//swap
 	void swapdata(_data &out)
@@ -114,6 +115,9 @@ public:
     {
         initColorIndex(0, a);
         initColorIndex(1, b);
+	    //set non-existant 3rd side of edge to
+	    // 0==black aka not undefined so we can re-use corner.
+	    initColorIndex(2, 0);
     }
     //store corner colors
     void initColor(int a, int b, int c)
@@ -122,6 +126,18 @@ public:
         initColorIndex(1, b);
         initColorIndex(2, c);
     }
+	//check if color-num (int) matches any colors
+    // currently stored in struct data (3 sided)
+	bool matchesColor(int color) const
+	{
+		if ((data._colorNum[0] == color) || 
+		    (data._colorNum[1] == color) || 
+		    (data._colorNum[2] == color))
+		{
+			return true;
+		}
+		return false;
+	}
     /**
      * \brief 
      * \param target used in almost every other algo
@@ -242,6 +258,54 @@ public:
 	{
 		flip(corner);
 		flip(corner);
+	}
+	
+	double* cacheCorner()
+	{
+		double* _cacheCorner;
+	    const auto temp = &_vertex[0][0];
+		cornerInit();
+		_cacheCorner = &_vertex[0][0];
+		_vertex[0][0] = *temp;
+		return _cacheCorner;
+	}
+	void cornerInit()
+	{
+		numSides = 3;
+		for (int i = 0; i < 7; ++i)
+		{
+			_vertex[i][2] = -INS_SPHERE_RAD;
+		}
+
+		_vertex[0][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) / 5 * 2;
+		_vertex[0][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10) / 5 * 2;
+
+		_vertex[1][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10) + 100 / sin(2 * PI / 5) * 2 / 5;
+		_vertex[1][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10);
+
+		_vertex[2][0] = INS_CIRCLE_RAD * cos(PI * 2 / 5 + 3 * PI / 10);
+		_vertex[2][1] = INS_CIRCLE_RAD * sin(PI * 2 / 5 + 3 * PI / 10);
+
+		_vertex[3][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) - 100 / sin(2 * PI / 5) * 2 / 5;
+		_vertex[3][1] = INS_CIRCLE_RAD * sin(3 * PI / 10);
+		rotateVertex(_vertex[3], 'z', PI * 2 / 5);
+
+		_vertex[4][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) / 5 * 2;
+		_vertex[4][1] = INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2;
+		rotateVertex(_vertex[4], 'z', -PI * 3 / 5);
+		rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
+		rotateVertex(_vertex[4], 'z', PI * 2 / 5);
+
+		_vertex[5][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) - 100 / sin(2 * PI / 5) * 2 / 5;
+		_vertex[5][1] = INS_CIRCLE_RAD * sin(3 * PI / 10);
+		rotateVertex(_vertex[5], 'z', -PI * 3 / 5);
+		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+		rotateVertex(_vertex[5], 'z', PI * 2 / 5);
+
+		_vertex[6][0] = INS_CIRCLE_RAD * cos(3 * PI / 10) / 5 * 2;
+		_vertex[6][1] = INS_CIRCLE_RAD * sin(3 * PI / 10) / 5 * 2;
+		rotateVertex(_vertex[6], 'z', -PI * 5 / 5);
+		rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
 	}
 };
 
