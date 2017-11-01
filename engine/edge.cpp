@@ -59,6 +59,11 @@ void Edge::createAxis(int n, double* target)
     }
 }
 
+/**
+ * \brief Inits the piece with a pre-existing Vertex Array
+ * \param n the number of the piece
+ * \param edgeVertexBase the starting points to be memcpy'ed in
+ */
 void Edge::init(int n, double* edgeVertexBase)
 {
 	memcpy(&_vertex, edgeVertexBase, sizeof(_vertex));

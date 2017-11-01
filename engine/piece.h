@@ -260,7 +260,7 @@ public:
 		flip(corner);
 		flip(corner);
 	}
-
+	//Creates the common starting vertexes for all Corner pieces
 	double* cornerInit()
 	{
 		numSides = 3;
@@ -300,7 +300,8 @@ public:
 		rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
 		return &_vertex[0][0];
 	}
-	double* edgeInit()
+	//Creates the common starting vertexes for all Edge pieces
+    double* edgeInit()
 	{
 		numSides = 2;
 		for (int i = 0; i < 6; ++i)
@@ -331,6 +332,7 @@ public:
 		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
 		return &_vertex[0][0];
 	}
+	//Creates the common starting vertexes for all Center pieces
 	double* centerInit()
 	{
 		numSides = 1;

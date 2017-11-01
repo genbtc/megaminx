@@ -1,15 +1,13 @@
 #include "megaminx.h"
 #include <cstdlib>
-#include <vector>
+
 void Megaminx::solve()
 {
     n = 0; 
     k = 0;
-    _rotate = false;
-    rSide = 0;
-	numFaces = sizeof(face) / sizeof(Face);
-	numEdges = sizeof(edge) / sizeof(Edge);
-	numCorners = sizeof(corner) / sizeof(Corner);
+	_rSide = 0;
+    rotating = false;    
+	//store the value of the base start vertexes
     double* edgeVertexBase = edge[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
     {
@@ -37,16 +35,15 @@ void Megaminx::initFacePieces()
 
 Megaminx::Megaminx()
 {
+	numFaces = sizeof(face) / sizeof(Face);
+	numEdges = sizeof(edge) / sizeof(Edge);
+	numCorners = sizeof(corner) / sizeof(Corner);
     solve();
-}
-
-Megaminx::~Megaminx()
-{
 }
 
 void Megaminx::render()
 {
-	if (!_rotate)
+	if (!rotating)
 	{
 		for (int i=0; i < numFaces; ++i)
 			center[i].render();
@@ -58,32 +55,32 @@ void Megaminx::render()
 	else
 	{
 		for (int i=0, k=0; i < numFaces; ++i) {			
-			if (&center[i] != face[rSide].center)
+			if (&center[i] != face[_rSide].center)
 				center[i].render();
 		}
 		for (int i=0, k=0; i < numEdges; ++i) {
-			if (&edge[i] == face[rSide].edge[k])
+			if (&edge[i] == face[_rSide].edge[k])
 				k++;
 			else
 				edge[i].render();
 		}
 		for (int i=0, k=0; i < numCorners; ++i) {
-			if (&corner[i] == face[rSide].corner[k])
+			if (&corner[i] == face[_rSide].corner[k])
 				k++;
 			else
 				corner[i].render();
 		}
-		if (face[rSide].render()) {
-			_rotate = false;
+		if (face[_rSide].render()) {
+			rotating = false;
 		}
 	}
 }
 
 void Megaminx::rotate(int num, int dir)
 {
-	if (!_rotate) {
-		_rotate = true;
-		rSide = num;
+	if (!rotating) {
+		rotating = true;
+		_rSide = num;
 		face[num].rotate(dir);
 	}
 }

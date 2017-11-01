@@ -9,7 +9,7 @@ public:
     void solve();
     void initFacePieces();
     Megaminx();
-	~Megaminx();
+	~Megaminx() = default;
 
 	void render();
 	void rotate(int, int);
@@ -23,14 +23,15 @@ public:
 	double n;
     /* x axis */
 	double k;
-	bool _rotate;
+	bool rotating;
+	/* pointer */
     Face* g_currentFace;
+	/* number by reflection*/
     unsigned numEdges;
     unsigned numCorners;
     unsigned numFaces;
 private:
-
-	int rSide;
+	int _rSide;
 
 	Face face[12];
 	Center center[12];
