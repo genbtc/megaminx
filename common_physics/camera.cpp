@@ -14,15 +14,10 @@
 //////////////////////////////////////////////////////////////////////////
 // Camera
 //////////////////////////////////////////////////////////////////////////
-Camera::Camera()
-    : m_angleX(0), m_angleY(0), m_zoom(0)
-    , m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0)
-    , m_isLeftPressed(false)
-    , m_isMiddlePressed(false)
-    , m_lastX(0), m_lastY(0)
-    , m_mouseX(0), m_mouseY(0)
-	, m_screenWidth(0), m_screenHeight(0)
-	, m_screenRatio(0), m_forced_aspect_ratio(1)
+Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0),
+                   m_isLeftPressed(false), m_isMiddlePressed(false), m_lastX(0), m_lastY(0), m_mouseX(0), 
+				   m_mouseY(0), m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(1), 
+				   defN(0), defK(0), defMX(0), defMY(0), megaminx_x(0), megaminx_y(0)
 {
 }
 
@@ -77,52 +72,37 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
 	{		
 		if (state == GLUT_DOWN)
 		{
-			m_isLeftPressed = true;
 			m_lastX = x;
 			m_lastY = y;
-			//printf("left mouse button pressed...\n");
+			m_isLeftPressed = true;
 		}
 		else if (state == GLUT_UP)
-		{
 			m_isLeftPressed = false;
-			//printf("left mouse button up...\n");
-		}
 	}
 	else if (button == GLUT_MIDDLE_BUTTON)
 	{
 		if (state == GLUT_DOWN)
-		{
 			m_isMiddlePressed = true;
-			m_lastX = x;
-			m_lastY = y;
-			//printf("left mouse button pressed...\n");
-		}
 		else if (state == GLUT_UP)
-		{
 			m_isMiddlePressed = false;
-			//printf("left mouse button up...\n");
-		}	
-	}	
+	}
+	//Original Implementation:
+	if(state == GLUT_DOWN)
+	{
+		defMX = x;
+		defMY = y;
+		defN = megaminx_y;
+		defK = megaminx_x;
+	}
 }
 
 void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 {
-	m_mouseX = x;
-	m_mouseY = y;
-
-    const int dx = m_lastX - x;
-    const int dy = m_lastY - y;
-	m_lastX = x;
-	m_lastY = y;
-
-	if (m_isLeftPressed && calcRotation)
+	if (calcRotation)
 	{
-		m_angleX -= dx*0.5f;
-		m_angleY -= dy*0.5f;
-	}
-	if (m_isMiddlePressed && calcRotation)
-	{
-		m_zoom += dy*0.1f;
+		//Original Implementation:
+		megaminx_y = defN + (defMY - y) / 3;
+		megaminx_x = defK + (x - defMX) / 3;
 	}
 }
 
@@ -131,11 +111,10 @@ void Camera::ProcessPassiveMouseMotion(int x, int y)
 	m_mouseX = x;
 	m_mouseY = y;
 }
-
 /**
  * \brief Call this before your Update 
  */
-void Camera::Update(double deltaTime)
+void Camera::UpdateDelta(double deltaTime)
 {
 	m_zoom += m_deltaZoom;
 	m_angleX += m_deltaAngX;
@@ -145,11 +124,11 @@ void Camera::Update(double deltaTime)
 /**
  * \brief Call this during/after your Update or render function to enable camera behavior.
  */
-void Camera::SetSimpleView() const
+void Camera::RotateGLCameraView() const
 {
-	glTranslatef(0.0f, 0.0f, -m_zoom);
-	glRotatef(m_angleX, 0.0f, 1.0f, 0.0f);
-	glRotatef(m_angleY, 1.0f, 0.0f, 0.0f);
+	glTranslatef(0.0f, 0.0f, m_zoom);
+    glRotated(megaminx_y, -1, 0, 0);
+    glRotated(megaminx_x, 0, 0, 1);    
 }
 
 //////////////////////////////////////////////////////////////////////////

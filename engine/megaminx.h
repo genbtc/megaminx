@@ -20,9 +20,9 @@ public:
     int resetFace(int n);
     void grayStar();
     /* y axis */
-	double n;
+	double y;
     /* x axis */
-	double k;
+	double x;
 	bool rotating;
 	/* pointer */
     Face* g_currentFace;

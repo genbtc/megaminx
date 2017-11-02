@@ -3,8 +3,8 @@
 
 void Megaminx::solve()
 {
-    n = 0; 
-    k = 0;
+    y = 0; 
+    x = 0;
 	_rSide = 0;
     rotating = false;    
 	//store the value of the base start vertexes

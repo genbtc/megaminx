@@ -36,10 +36,6 @@ int activeWindow = 0;
 bool paused = true;
 bool help = true;
 
-double defK = 0;
-double defN = 0;
-double defMX, defMY;
-
 int pressedButton;
 int specialKey;
 int currentFace;
@@ -53,8 +49,8 @@ void ChangeSize(int w, int h)
 void resetCameraView()
 {
 	g_camera = Camera();
-	g_camera.m_zoom = ZDIST;
-	g_camera.m_angleY = -60.0f;
+	g_camera.m_zoom = -ZDIST;
+	g_camera.megaminx_y = 60.0f;
 	g_areWeDraggingPoint = false;
 	ChangeSize(WIDTH, HEIGHT);
 }
@@ -192,13 +188,13 @@ void display()
 	// average:
 	deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
 	g_appTime = g_appTime + deltaTime;
-	g_camera.Update(deltaTime);
+	//g_camera.Update(deltaTime);
 
 	//spinning can be disabled(toggled)
 	if(!paused)
 	    g_camera.m_angleX++;
 
-	g_camera.SetSimpleView();
+	g_camera.RotateGLCameraView();
 	megaminx->render();
 	glPopMatrix();
 
