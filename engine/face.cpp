@@ -355,3 +355,11 @@ void Face::swapEdges(int n, int k)
 {
 	edge[n]->swapdata(edge[k]->data);
 }
+
+bool Face::RayTest(const Vec3d &start, const Vec3d &end, Vec3d *pt, double *t, double epsilon)
+{
+	*pt = ClosestPoint(start, end, m_pos, t);
+	double len = Distance(*pt, m_pos);
+
+	return len < (m_radius + epsilon);
+}

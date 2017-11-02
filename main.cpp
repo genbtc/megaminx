@@ -510,10 +510,12 @@ void HitTest()
 	g_rayTest.CalculateRay(g_camera);
 
 	if (g_areWeDraggingPoint == false)
-	{		
+	{
+	    const auto vertex = megaminx->g_currentFace->_vertex[0];
+		Vec3d vtx3d(vertex);
 		// perform hit test with all point in the scene
 		// not optimal - one can use some scene tree system to optimise it... 
-		g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, megaminx->g_currentFace, &g_rayTest.m_lastT);
+		g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, &vtx3d, &g_rayTest.m_lastT);
 
 		// now in:
 		// m_hit - did we hit something?

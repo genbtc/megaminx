@@ -19,6 +19,11 @@ public:
 	void setCurrentFace(int i);
     int resetFace(int n);
     void grayStar();
+	
+	/** test ray collision against points, returns true when found collision and
+	 * in "id" there is id of the point (point wth rad represents little sphere) that collides with the ray.
+	 * if more than one collision is found then "id" points to the closest to "start" point */
+    bool RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon);
     /* y axis */
 	double y;
     /* x axis */

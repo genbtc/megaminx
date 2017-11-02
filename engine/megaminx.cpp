@@ -119,3 +119,29 @@ void Megaminx::grayStar()
 {
 //	face[GRAY-1].edge
 }
+
+bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
+{
+	unsigned int pointID = numFaces + 1;
+	bool foundCollision = false;
+	double minDistToStart = 10000000.0;
+	double dst;
+	Vec3d pt;
+	for (unsigned int i = 0; i < numFaces; ++i)
+	{
+		if (face[i].RayTest(start, end, &pt, t, epsilon))
+		{
+			dst = Distance(start, pt);
+			if (dst < minDistToStart)
+			{
+				minDistToStart = dst;
+				pointID = i;
+				foundCollision = true;
+			}
+		}
+	}
+
+	*id = pointID;
+
+	return foundCollision;
+}
