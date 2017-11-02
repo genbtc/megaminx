@@ -93,6 +93,15 @@ void utDrawText2D(float x, float y, void *font, char *string)
 	}
 }
 
+void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
+{
+	static char anglesStr[16];
+	sprintf(anglesStr, "X: %5.3f", x1);
+	utDrawText2D(x, y, anglesStr);
+	sprintf(anglesStr, "Y: %5.3f", y1);
+	utDrawText2D(x, y+13, anglesStr);
+}
+
 void utCalculateAndPrintFps(float x, float y)
 {
 	static char fpsStr[16];
@@ -204,6 +213,7 @@ void display()
 	glColor3f(0, 1, 0);
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
+		utCalculateAndPrintAngles(WIDTH - 90, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
 	utResetPerspectiveProjection();
 	//Print out Text (Help display)
 	if (!help)
@@ -511,7 +521,8 @@ void HitTest()
 
 	if (g_areWeDraggingPoint == false)
 	{
-	    const auto vertex = megaminx->g_currentFace->_vertex[0];
+		megaminx->setCurrentFace(7);
+		auto const vertex = megaminx->g_currentFace->_vertex[0];
 		Vec3d vtx3d(vertex);
 		// perform hit test with all point in the scene
 		// not optimal - one can use some scene tree system to optimise it... 

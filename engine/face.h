@@ -41,6 +41,7 @@ public:
     void swapEdges(int, int);
 	double m_pos, m_radius;
     bool RayTest(const Vec3d& start, const Vec3d& end, Vec3d* pt, double* t, double epsilon=0.0001);
+    bool RayPlaneIntersection(Vec3d normal, Vec3d ray);
 
     Corner *corner[5];
 	Edge *edge[5];
