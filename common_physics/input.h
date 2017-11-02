@@ -14,11 +14,12 @@ public:
 	double m_angleX, m_angleY, m_zoom;
 	bool m_isLeftPressed, m_isMiddlePressed;
 	int	m_mouseX, m_mouseY;
-private:
-	double m_deltaAngX, m_deltaAngY, m_deltaZoom;	
-	int	m_lastX, m_lastY;	
-	int m_screenWidth, m_screenHeight;
 	double m_screenRatio, m_forced_aspect_ratio;
+	int m_screenWidth, m_screenHeight;
+private:
+    double m_deltaAngX, m_deltaAngY, m_deltaZoom;	
+	int	m_lastX, m_lastY;	
+	
 public:
 	Camera();
 	~Camera() { }

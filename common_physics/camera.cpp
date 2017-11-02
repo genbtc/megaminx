@@ -14,9 +14,9 @@
 //////////////////////////////////////////////////////////////////////////
 // Camera
 //////////////////////////////////////////////////////////////////////////
-Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0),
-                   m_isLeftPressed(false), m_isMiddlePressed(false), m_lastX(0), m_lastY(0), m_mouseX(0), 
-				   m_mouseY(0), m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(1)
+Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_isLeftPressed(false), m_isMiddlePressed(false), m_mouseX(0),
+                   m_mouseY(0), m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0), m_lastX(0), 
+				   m_lastY(0), m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(0)
 {
 }
 
@@ -52,6 +52,7 @@ void Camera::PressSpecialKey(int key, int x, int y)
 		case GLUT_KEY_RIGHT : m_deltaAngX = 1.1f;break;
 		case GLUT_KEY_UP    : m_deltaAngY = -1.1f;break;
 		case GLUT_KEY_DOWN  : m_deltaAngY = 1.1f; break;
+	default: break;
 	}
 }
 
@@ -62,6 +63,7 @@ void Camera::ReleaseSpecialKey(int key, int x, int y)
 		case GLUT_KEY_RIGHT : m_deltaAngX = 0.0f; break;
 		case GLUT_KEY_UP    : m_deltaAngY = 0.0f; break;
 		case GLUT_KEY_DOWN  : m_deltaAngY = 0.0f; break;
+	default: break;
 	}
 }
 
@@ -92,11 +94,13 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
 
 void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 {
+	m_mouseX = x;
+	m_mouseY = y;
 	if (calcRotation)
 	{
 		//Original Implementation:
-		m_angleY = m_deltaAngY + (m_lastY - y) / 3;
-		m_angleX = m_deltaAngX + (x - m_lastX) / 3;
+		m_angleY = m_deltaAngY + (m_lastY - m_mouseY) / 2;
+		m_angleX = m_deltaAngX + (m_mouseX - m_lastX) / 2;
 	}
 }
 

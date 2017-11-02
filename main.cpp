@@ -51,6 +51,7 @@ void resetCameraView()
 	g_camera = Camera();
 	g_camera.m_zoom = -ZDIST;
 	g_camera.m_angleY = 60.0f;
+	g_camera.m_forced_aspect_ratio = 1;
 	g_areWeDraggingPoint = false;
 	ChangeSize(WIDTH, HEIGHT);
 }
