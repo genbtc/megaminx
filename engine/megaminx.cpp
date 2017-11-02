@@ -6,7 +6,8 @@ void Megaminx::solve()
     y = 0; 
     x = 0;
 	_rSide = 0;
-    rotating = false;    
+    rotating = false;
+	cache[0] = 0; cache[1] = 0;
 	//store the value of the base start vertexes
     double* edgeVertexBase = edge[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
@@ -84,6 +85,14 @@ void Megaminx::rotate(int num, int dir)
 		_rSide = num;
 		face[num].rotate(dir);
 	}
+	cache[0] = num; cache[1] = dir;
+}
+
+void Megaminx::undo()
+{
+	if (cache[1] == 0 || cache[0] == 0) return;
+	cache[1] *= -1;
+	rotate(cache[0], cache[1]);
 }
 
 void Megaminx::scramble()

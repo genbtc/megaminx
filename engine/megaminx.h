@@ -13,7 +13,8 @@ public:
 
 	void render();
 	void rotate(int, int);
-	void scramble();
+    void undo();
+    void scramble();
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
 	void setCurrentFace(int i);
@@ -37,6 +38,7 @@ public:
     unsigned numFaces;
 private:
 	int _rSide;
+	int cache[2];
 
 	Face face[12];
 	Center center[12];

@@ -33,7 +33,7 @@ bool g_areWeDraggingPoint;
 double g_appTime = 0.0;
 int activeWindow = 0;
 
-bool paused = true;
+bool spinning = false;
 bool help = true;
 
 int pressedButton;
@@ -196,10 +196,9 @@ void display()
 	// average:
 	deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
 	g_appTime = g_appTime + deltaTime;
-	//g_camera.Update(deltaTime);
 
-	//spinning can be disabled(toggled)
-	if(!paused)
+	// spinning - can be toggled w/ spacebar
+	if(spinning)
 	    g_camera.m_angleX++;
 	//Rotate the Cube into View
 	g_camera.RotateGLCameraView();
@@ -342,11 +341,21 @@ void printHelpMenu()
 }
 void keyboard(unsigned char key, int x, int y)
 {
+	specialKey = glutGetModifiers();
+	if (specialKey == GLUT_ACTIVE_CTRL) {
+		switch (key) {
+		case 3:	//Ctrl+C
+			exit(0);		  
+		case 26: //Ctrl+Z
+			megaminx->undo();
+		default: break;
+		}
+	}
 	switch (key)
 	{
 	case ' ':
 		//spacebar
-		paused = !paused;
+		spinning = !spinning;
 		break;
 	case 'h':
 	case 'H':
@@ -370,17 +379,11 @@ void keyboard(unsigned char key, int x, int y)
 void PressSpecialKey(int key, int x, int y)
 {
     specialKey = glutGetModifiers();
-    if ((specialKey == GLUT_ACTIVE_CTRL) &&
-        ((key == 'c') || (key == 'C'))) {
-        exit(0);
-    }
     const int dir = (specialKey == 1) ? 1 : -1;
 	switch (key)
 	{
     case GLUT_KEY_PAGE_UP:
-		break;
     case GLUT_KEY_PAGE_DOWN:
-		break;
     case GLUT_KEY_HOME:
     case GLUT_KEY_END:
     case GLUT_KEY_INSERT:
@@ -408,7 +411,8 @@ void PressSpecialKey(int key, int x, int y)
 void createMenu(void) {
 	//SubLevel 0 menu - last layer
 	submenu0_id = glutCreateMenu(menu);
-	glutAddMenuEntry("Solve All/(reset)", 9);
+	glutAddMenuEntry("Edit... Undo", 91);
+	glutAddMenuEntry("Solve All/(reset)", 92);
 	glutAddMenuEntry("Scramble", 100);
 	glutAddMenuEntry("Redraw", 101);
 	glutAddMenuEntry("Quit", 102);
@@ -418,9 +422,9 @@ void createMenu(void) {
 	submenu1_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Make Grey Star", 31);
 	glutAddMenuEntry("Make Grey Corners", 32);
-	//glutAddMenuEntry("One Edge Swap", 33);
-	//glutAddMenuEntry("One Corner Swap", 34);
-	//glutAddMenuEntry("Two Corner Swaps", 35);
+	glutAddMenuEntry("One Edge Swap", 33);
+	glutAddMenuEntry("One Corner Swap", 34);
+	glutAddMenuEntry("Two Corner Swaps", 35);
     
 	//SubLevel2 Menu - rotations
 	submenu2_id = glutCreateMenu(menu);
@@ -477,19 +481,19 @@ void createMenu(void) {
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 void menu(int num) {
-	if (num == 9)
+	if (num == 92)
 	{
 		delete megaminx;
 		createMegaMinx();
 	}
+	if (num == 91)
+		megaminx->undo();
 	if (num == 1)
-		paused = !paused;
+		spinning = !spinning;
 	if (num == 3)
 		rotateDispatch('s');
 	if (num == 21)
-	{
 		int result = megaminx->resetFace(GLUT_KEY_F8);
-	}
 	if (num == 23)  //rotate corner piece
 	    megaminx->swapOneCorner(8, 1);
 	if (num == 24)  //rotate edge piece
