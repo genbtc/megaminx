@@ -66,7 +66,6 @@ void mousePressedMove(int x, int y);
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void PressSpecialKey(int key, int x, int y);
-void ReleaseSpecialKey(int key, int x, int y);
 void rotateDispatch(unsigned char key);
 void createMenu();
 void menu(int num);
@@ -140,7 +139,6 @@ int main(int argc, char *argv[])
     glutPassiveMotionFunc(processMousePassiveMotion);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(PressSpecialKey);
-	glutSpecialUpFunc(ReleaseSpecialKey);
 	//Display and Loop forever
     glutDisplayFunc(display);
 	glutMainLoop();
@@ -405,10 +403,6 @@ void PressSpecialKey(int key, int x, int y)
         break;
 	}
 	g_camera.PressSpecialKey(key, x, y);
-}
-void ReleaseSpecialKey(int key, int x, int y) 
-{
-	g_camera.ReleaseSpecialKey(key, x, y);
 }
 
 void createMenu(void) {

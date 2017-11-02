@@ -48,21 +48,10 @@ void Camera::ChangeViewportSize(int w, int h)
 void Camera::PressSpecialKey(int key, int x, int y)
 {
 	switch (key) {
-		case GLUT_KEY_LEFT  : m_deltaAngX = -1.1f;break;
-		case GLUT_KEY_RIGHT : m_deltaAngX = 1.1f;break;
-		case GLUT_KEY_UP    : m_deltaAngY = -1.1f;break;
-		case GLUT_KEY_DOWN  : m_deltaAngY = 1.1f; break;
-	default: break;
-	}
-}
-
-void Camera::ReleaseSpecialKey(int key, int x, int y)
-{
-	switch (key) {
-		case GLUT_KEY_LEFT  : m_deltaAngX = 0.0f; break;
-		case GLUT_KEY_RIGHT : m_deltaAngX = 0.0f; break;
-		case GLUT_KEY_UP    : m_deltaAngY = 0.0f; break;
-		case GLUT_KEY_DOWN  : m_deltaAngY = 0.0f; break;
+		case GLUT_KEY_LEFT  : m_angleX += -1.f; break;
+		case GLUT_KEY_RIGHT : m_angleX += 1.f; break;
+		case GLUT_KEY_UP    : m_angleY += 1.f; break;
+		case GLUT_KEY_DOWN  : m_angleY += -1.f; break;
 	default: break;
 	}
 }
@@ -102,6 +91,7 @@ void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 		m_angleY = m_deltaAngY + (m_lastY - m_mouseY) / 2;
 		m_angleX = m_deltaAngX + (m_mouseX - m_lastX) / 2;
 	}
+
 }
 
 void Camera::ProcessPassiveMouseMotion(int x, int y)
@@ -110,21 +100,28 @@ void Camera::ProcessPassiveMouseMotion(int x, int y)
 	m_mouseY = y;
 }
 /**
- * \brief Call this before your Update 
+ * \brief Call this before your Update (no need)
  */
 void Camera::UpdateDelta(double deltaTime)
 {
+	/*
 	m_zoom += m_deltaZoom;
 	m_angleX += m_deltaAngX;
 	m_angleY += m_deltaAngY;
+	*/
 }
 
 /**
- * \brief Call this during/after your Update or render function to enable camera behavior.
+ * \brief Required. Call this during/after your Update or render function to enable camera behavior.
  */
-void Camera::RotateGLCameraView() const
+void Camera::RotateGLCameraView()
 {
-	//They must be transformed in this order for mouse to work right.
+	//Prevent over-rotation.
+	if (m_angleX >= 360) m_angleX -= 360;
+	if (m_angleX <= -360) m_angleX += 360;
+	if (m_angleY >= 360) m_angleY -= 360;
+	if (m_angleY <= -360) m_angleY += 360;
+    //These must be transformed in this order for mouse to work right.
     glTranslated(0, 0, m_zoom);
 	glRotated(m_angleY, -1, 0, 0);
 	glRotated(m_angleX, 0, 0, 1);
@@ -134,13 +131,12 @@ void Camera::RotateGLCameraView() const
 // MouseRayTestData
 //////////////////////////////////////////////////////////////////////////
 
-MouseRayTestData::MouseRayTestData() :
-	m_start(0.0),
-	m_end(0.0),
-	m_lastT(0.0),
-	m_hit(false)
+MouseRayTestData::MouseRayTestData()
+	: m_start(0.0)
+	, m_end(0.0)
+	, m_lastT(0.0)
+	, m_hit(false)
 {
-
 }
 
 void MouseRayTestData::CalculateRay(const Camera &cam)

@@ -32,7 +32,7 @@ public:
 	void ProcessPassiveMouseMotion(int x, int y);
 
 	void UpdateDelta(double deltaTime);
-	void RotateGLCameraView() const;
+	void RotateGLCameraView();
 };
 
 /** simple class that can calculate ray into scene from mouse position
