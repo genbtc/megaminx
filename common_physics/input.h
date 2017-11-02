@@ -11,16 +11,14 @@
 class Camera
 {
 public:
-	float m_angleX, m_angleY, m_zoom;
-	float m_deltaAngX, m_deltaAngY, m_deltaZoom;
+	double m_angleX, m_angleY, m_zoom;
 	bool m_isLeftPressed, m_isMiddlePressed;
-	int	m_lastX, m_lastY;
 	int	m_mouseX, m_mouseY;
+private:
+	double m_deltaAngX, m_deltaAngY, m_deltaZoom;	
+	int	m_lastX, m_lastY;	
 	int m_screenWidth, m_screenHeight;
-	float m_screenRatio, m_forced_aspect_ratio;
-	double defN, defK;
-	double defMX, defMY;
-	double megaminx_x, megaminx_y;
+	double m_screenRatio, m_forced_aspect_ratio;
 public:
 	Camera();
 	~Camera() { }

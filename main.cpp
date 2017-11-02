@@ -50,7 +50,7 @@ void resetCameraView()
 {
 	g_camera = Camera();
 	g_camera.m_zoom = -ZDIST;
-	g_camera.megaminx_y = 60.0f;
+	g_camera.m_angleY = 60.0f;
 	g_areWeDraggingPoint = false;
 	ChangeSize(WIDTH, HEIGHT);
 }
@@ -150,7 +150,7 @@ void utSetOrthographicProjection(int scrW, int scrH) {
 	gluOrtho2D(0, scrW, 0, scrH);
 	// invert the y axis, down is positive
 	glScalef(1, -1, 1);
-	// mover the origin from the bottom left corner
+	// move the origin from the bottom left corner
 	// to the upper left corner
 	glTranslatef(0, -(float)scrH, 0);
 	glMatrixMode(GL_MODELVIEW);
@@ -193,18 +193,21 @@ void display()
 	//spinning can be disabled(toggled)
 	if(!paused)
 	    g_camera.m_angleX++;
-
+	//Rotate the Cube into View
 	g_camera.RotateGLCameraView();
+	//Render it.
 	megaminx->render();
+	//Pop
 	glPopMatrix();
-
+	//Print out Text (FPS display)
 	glColor3f(0, 1, 0);
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
 	utResetPerspectiveProjection();
+	//Print out Text (Help display)
 	if (!help)
 		printHelpMenu();
-
+	//Clean up.
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHT1);

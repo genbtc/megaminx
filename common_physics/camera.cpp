@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0),
                    m_isLeftPressed(false), m_isMiddlePressed(false), m_lastX(0), m_lastY(0), m_mouseX(0), 
-				   m_mouseY(0), m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(1), 
-				   defN(0), defK(0), defMX(0), defMY(0), megaminx_x(0), megaminx_y(0)
+				   m_mouseY(0), m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(1)
 {
 }
 
@@ -31,7 +30,7 @@ void Camera::ChangeViewportSize(int w, int h)
 	//Turn on forced aspect ratio of 1.0
 	if (m_forced_aspect_ratio == 1)
 	{
-		const auto minx = std::min((float)w, h*m_forced_aspect_ratio);
+		const auto minx = std::min((double)w, h*m_forced_aspect_ratio);
 		h = w = (int)minx;
 	}
 	m_screenWidth = w;
@@ -72,8 +71,11 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
 	{		
 		if (state == GLUT_DOWN)
 		{
+			//mouse look controls:
 			m_lastX = x;
 			m_lastY = y;
+			m_deltaAngY = m_angleY;
+			m_deltaAngX = m_angleX;
 			m_isLeftPressed = true;
 		}
 		else if (state == GLUT_UP)
@@ -86,14 +88,6 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
 		else if (state == GLUT_UP)
 			m_isMiddlePressed = false;
 	}
-	//Original Implementation:
-	if(state == GLUT_DOWN)
-	{
-		defMX = x;
-		defMY = y;
-		defN = megaminx_y;
-		defK = megaminx_x;
-	}
 }
 
 void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
@@ -101,8 +95,8 @@ void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 	if (calcRotation)
 	{
 		//Original Implementation:
-		megaminx_y = defN + (defMY - y) / 3;
-		megaminx_x = defK + (x - defMX) / 3;
+		m_angleY = m_deltaAngY + (m_lastY - y) / 3;
+		m_angleX = m_deltaAngX + (x - m_lastX) / 3;
 	}
 }
 
@@ -126,9 +120,10 @@ void Camera::UpdateDelta(double deltaTime)
  */
 void Camera::RotateGLCameraView() const
 {
-	glTranslatef(0.0f, 0.0f, m_zoom);
-    glRotated(megaminx_y, -1, 0, 0);
-    glRotated(megaminx_x, 0, 0, 1);    
+	//They must be transformed in this order for mouse to work right.
+    glTranslated(0, 0, m_zoom);
+	glRotated(m_angleY, -1, 0, 0);
+	glRotated(m_angleX, 0, 0, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
