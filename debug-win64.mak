@@ -16,14 +16,14 @@ PREPROCESSOR_MACROS := DEBUG=1
 INCLUDE_DIRS := 
 LIBRARY_DIRS := 
 LIBRARY_NAMES := freeglut glu32 opengl32
-ADDITIONAL_LINKER_INPUTS := 
+ADDITIONAL_LINKER_INPUTS := Res.rc.o
 MACOS_FRAMEWORKS := 
 LINUX_PACKAGES := 
 
 CFLAGS := -ggdb -ffunction-sections -O0
 CXXFLAGS := -ggdb -ffunction-sections -O0
 ASFLAGS := 
-LDFLAGS := -Wl,-gc-sections,--subsystem,windows
+LDFLAGS := -mwindows -Wl,-gc-sections,--subsystem,windows
 COMMONFLAGS := 
 LINKER_SCRIPT := 
 

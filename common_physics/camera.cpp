@@ -22,7 +22,7 @@ Camera::Camera()
     , m_lastX(0), m_lastY(0)
     , m_mouseX(0), m_mouseY(0)
 	, m_screenWidth(0), m_screenHeight(0)
-	, m_screenRatio(0), m_forced_aspect_ratio(0)
+	, m_screenRatio(0), m_forced_aspect_ratio(1)
 {
 }
 
@@ -34,7 +34,7 @@ void Camera::ChangeViewportSize(int w, int h)
 		h = 1;
 	
 	//Turn on forced aspect ratio of 1.0
-	if (m_forced_aspect_ratio == 1.0f)
+	if (m_forced_aspect_ratio == 1)
 	{
 		const auto minx = std::min((float)w, h*m_forced_aspect_ratio);
 		h = w = (int)minx;

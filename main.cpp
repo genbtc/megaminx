@@ -13,13 +13,10 @@
 #include <cmath>
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
-//#include "common_physics/utils_shaders.h"
-//#include "common_physics/utils_math.h"
 #include "common_physics/input.h"
-#include "common_physics/material_point.h"
-//#include "common_physics/points_with_collision.h"
+
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.29 - genBTC mod";
+const char *title = "Megaminx v1.44 - genBTC mod";
 // initial window screen size
 int WIDTH = 700;
 int HEIGHT = 700;
