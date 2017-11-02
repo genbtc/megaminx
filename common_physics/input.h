@@ -11,20 +11,15 @@
 class Camera
 {
 public:
-	float m_angleX, m_angleY, m_zoom;
-	float m_deltaAngX, m_deltaAngY, m_deltaZoom;
-
-	bool m_isLeftPressed;
-	bool m_isMiddlePressed;
-	int	m_lastX;
-	int m_lastY;
-	int	m_mouseX;
-	int m_mouseY;
-
-	int m_screenWidth;
-	int m_screenHeight;
-	float m_screenRatio;
-	float m_forced_aspect_ratio;
+	double m_angleX, m_angleY, m_zoom;
+	bool m_isLeftPressed, m_isMiddlePressed;
+	int	m_mouseX, m_mouseY;
+	double m_screenRatio, m_forced_aspect_ratio;
+	int m_screenWidth, m_screenHeight;
+private:
+    double m_deltaAngX, m_deltaAngY, m_deltaZoom;	
+	int	m_lastX, m_lastY;	
+	
 public:
 	Camera();
 	~Camera() { }
@@ -36,8 +31,8 @@ public:
 	void ProcessMouseMotion(int x, int y, bool calcRotation = true);
 	void ProcessPassiveMouseMotion(int x, int y);
 
-	void Update(double deltaTime);
-	void SetSimpleView() const;
+	void UpdateDelta(double deltaTime);
+	void RotateGLCameraView();
 };
 
 /** simple class that can calculate ray into scene from mouse position

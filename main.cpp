@@ -13,13 +13,10 @@
 #include <cmath>
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
-//#include "common_physics/utils_shaders.h"
-//#include "common_physics/utils_math.h"
 #include "common_physics/input.h"
-#include "common_physics/material_point.h"
-//#include "common_physics/points_with_collision.h"
+
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.29 - genBTC mod";
+const char *title = "Megaminx v1.44 - genBTC mod";
 // initial window screen size
 int WIDTH = 700;
 int HEIGHT = 700;
@@ -36,12 +33,8 @@ bool g_areWeDraggingPoint;
 double g_appTime = 0.0;
 int activeWindow = 0;
 
-bool paused = true;
+bool spinning = false;
 bool help = true;
-
-double defK = 0;
-double defN = 0;
-double defMX, defMY;
 
 int pressedButton;
 int specialKey;
@@ -56,8 +49,9 @@ void ChangeSize(int w, int h)
 void resetCameraView()
 {
 	g_camera = Camera();
-	g_camera.m_zoom = ZDIST;
-	g_camera.m_angleY = -60.0f;
+	g_camera.m_zoom = -ZDIST;
+	g_camera.m_angleY = 60.0f;
+	g_camera.m_forced_aspect_ratio = 1;
 	g_areWeDraggingPoint = false;
 	ChangeSize(WIDTH, HEIGHT);
 }
@@ -72,7 +66,6 @@ void mousePressedMove(int x, int y);
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void PressSpecialKey(int key, int x, int y);
-void ReleaseSpecialKey(int key, int x, int y);
 void rotateDispatch(unsigned char key);
 void createMenu();
 void menu(int num);
@@ -97,6 +90,15 @@ void utDrawText2D(float x, float y, void *font, char *string)
 	for(c = string ; *c != '\0' ; c++) {
 		glutBitmapCharacter(font, *c);
 	}
+}
+
+void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
+{
+	static char anglesStr[16];
+	sprintf(anglesStr, "X: %5.3f", x1);
+	utDrawText2D(x, y, anglesStr);
+	sprintf(anglesStr, "Y: %5.3f", y1);
+	utDrawText2D(x, y+13, anglesStr);
 }
 
 void utCalculateAndPrintFps(float x, float y)
@@ -137,7 +139,6 @@ int main(int argc, char *argv[])
     glutPassiveMotionFunc(processMousePassiveMotion);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(PressSpecialKey);
-	glutSpecialUpFunc(ReleaseSpecialKey);
 	//Display and Loop forever
     glutDisplayFunc(display);
 	glutMainLoop();
@@ -157,7 +158,7 @@ void utSetOrthographicProjection(int scrW, int scrH) {
 	gluOrtho2D(0, scrW, 0, scrH);
 	// invert the y axis, down is positive
 	glScalef(1, -1, 1);
-	// mover the origin from the bottom left corner
+	// move the origin from the bottom left corner
 	// to the upper left corner
 	glTranslatef(0, -(float)scrH, 0);
 	glMatrixMode(GL_MODELVIEW);
@@ -195,23 +196,26 @@ void display()
 	// average:
 	deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
 	g_appTime = g_appTime + deltaTime;
-	g_camera.Update(deltaTime);
 
-	//spinning can be disabled(toggled)
-	if(!paused)
+	// spinning - can be toggled w/ spacebar
+	if(spinning)
 	    g_camera.m_angleX++;
-
-	g_camera.SetSimpleView();
+	//Rotate the Cube into View
+	g_camera.RotateGLCameraView();
+	//Render it.
 	megaminx->render();
+	//Pop
 	glPopMatrix();
-
+	//Print out Text (FPS display)
 	glColor3f(0, 1, 0);
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
+		utCalculateAndPrintAngles(WIDTH - 90, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
 	utResetPerspectiveProjection();
+	//Print out Text (Help display)
 	if (!help)
 		printHelpMenu();
-
+	//Clean up.
 	glDisable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHT1);
@@ -337,11 +341,21 @@ void printHelpMenu()
 }
 void keyboard(unsigned char key, int x, int y)
 {
+	specialKey = glutGetModifiers();
+	if (specialKey == GLUT_ACTIVE_CTRL) {
+		switch (key) {
+		case 3:	//Ctrl+C
+			exit(0);		  
+		case 26: //Ctrl+Z
+			megaminx->undo();
+		default: break;
+		}
+	}
 	switch (key)
 	{
 	case ' ':
 		//spacebar
-		paused = !paused;
+		spinning = !spinning;
 		break;
 	case 'h':
 	case 'H':
@@ -365,17 +379,11 @@ void keyboard(unsigned char key, int x, int y)
 void PressSpecialKey(int key, int x, int y)
 {
     specialKey = glutGetModifiers();
-    if ((specialKey == GLUT_ACTIVE_CTRL) &&
-        ((key == 'c') || (key == 'C'))) {
-        exit(0);
-    }
     const int dir = (specialKey == 1) ? 1 : -1;
 	switch (key)
 	{
     case GLUT_KEY_PAGE_UP:
-		break;
     case GLUT_KEY_PAGE_DOWN:
-		break;
     case GLUT_KEY_HOME:
     case GLUT_KEY_END:
     case GLUT_KEY_INSERT:
@@ -399,15 +407,12 @@ void PressSpecialKey(int key, int x, int y)
 	}
 	g_camera.PressSpecialKey(key, x, y);
 }
-void ReleaseSpecialKey(int key, int x, int y) 
-{
-	g_camera.ReleaseSpecialKey(key, x, y);
-}
 
 void createMenu(void) {
 	//SubLevel 0 menu - last layer
 	submenu0_id = glutCreateMenu(menu);
-	glutAddMenuEntry("Solve All/(reset)", 9);
+	glutAddMenuEntry("Edit... Undo", 91);
+	glutAddMenuEntry("Solve All/(reset)", 92);
 	glutAddMenuEntry("Scramble", 100);
 	glutAddMenuEntry("Redraw", 101);
 	glutAddMenuEntry("Quit", 102);
@@ -417,9 +422,9 @@ void createMenu(void) {
 	submenu1_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Make Grey Star", 31);
 	glutAddMenuEntry("Make Grey Corners", 32);
-	//glutAddMenuEntry("One Edge Swap", 33);
-	//glutAddMenuEntry("One Corner Swap", 34);
-	//glutAddMenuEntry("Two Corner Swaps", 35);
+	glutAddMenuEntry("One Edge Swap", 33);
+	glutAddMenuEntry("One Corner Swap", 34);
+	glutAddMenuEntry("Two Corner Swaps", 35);
     
 	//SubLevel2 Menu - rotations
 	submenu2_id = glutCreateMenu(menu);
@@ -476,19 +481,19 @@ void createMenu(void) {
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 void menu(int num) {
-	if (num == 9)
+	if (num == 92)
 	{
 		delete megaminx;
 		createMegaMinx();
 	}
+	if (num == 91)
+		megaminx->undo();
 	if (num == 1)
-		paused = !paused;
+		spinning = !spinning;
 	if (num == 3)
 		rotateDispatch('s');
 	if (num == 21)
-	{
 		int result = megaminx->resetFace(GLUT_KEY_F8);
-	}
 	if (num == 23)  //rotate corner piece
 	    megaminx->swapOneCorner(8, 1);
 	if (num == 24)  //rotate edge piece
@@ -513,10 +518,13 @@ void HitTest()
 	g_rayTest.CalculateRay(g_camera);
 
 	if (g_areWeDraggingPoint == false)
-	{		
+	{
+		megaminx->setCurrentFace(7);
+		auto const vertex = megaminx->g_currentFace->_vertex[0];
+		Vec3d vtx3d(vertex);
 		// perform hit test with all point in the scene
 		// not optimal - one can use some scene tree system to optimise it... 
-		g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, megaminx->g_currentFace, &g_rayTest.m_lastT);
+		g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, &vtx3d, &g_rayTest.m_lastT);
 
 		// now in:
 		// m_hit - did we hit something?

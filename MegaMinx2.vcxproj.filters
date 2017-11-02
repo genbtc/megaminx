@@ -104,4 +104,14 @@
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Res.rc">
+      <Filter>Resource files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MAINICON.ico">
+      <Filter>Resource files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

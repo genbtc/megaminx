@@ -355,3 +355,24 @@ void Face::swapEdges(int n, int k)
 {
 	edge[n]->swapdata(edge[k]->data);
 }
+
+bool Face::RayTest(const Vec3d &start, const Vec3d &end, Vec3d *pt, double *t, double epsilon)
+{
+	*pt = ClosestPoint(start, end, m_pos, t);
+	double len = Distance(*pt, m_pos);
+
+	return len < (m_radius + epsilon);
+}
+
+bool Face::RayPlaneIntersection(Vec3d normal, Vec3d ray)
+{
+	/*
+	float denom = normal.DotProduct(ray.direction);
+	if (std::abs(denom) > 0.0001f) // your favorite epsilon
+		{
+			float t = (center - ray.origin).dot(normal) / denom;
+			if (t >= 0) return true; // you might want to allow an epsilon here too
+		}
+	return false;
+	*/
+}

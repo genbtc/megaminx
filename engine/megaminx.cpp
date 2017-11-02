@@ -3,10 +3,11 @@
 
 void Megaminx::solve()
 {
-    n = 0; 
-    k = 0;
+    y = 0; 
+    x = 0;
 	_rSide = 0;
-    rotating = false;    
+    rotating = false;
+	cache[0] = 0; cache[1] = 0;
 	//store the value of the base start vertexes
     double* edgeVertexBase = edge[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
@@ -84,6 +85,14 @@ void Megaminx::rotate(int num, int dir)
 		_rSide = num;
 		face[num].rotate(dir);
 	}
+	cache[0] = num; cache[1] = dir;
+}
+
+void Megaminx::undo()
+{
+	if (cache[1] == 0 || cache[0] == 0) return;
+	cache[1] *= -1;
+	rotate(cache[0], cache[1]);
 }
 
 void Megaminx::scramble()
@@ -118,4 +127,30 @@ int Megaminx::resetFace(int n)
 void Megaminx::grayStar()
 {
 //	face[GRAY-1].edge
+}
+
+bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
+{
+	unsigned int pointID = numFaces + 1;
+	bool foundCollision = false;
+	double minDistToStart = 10000000.0;
+	double dst;
+	Vec3d pt;
+	for (unsigned int i = 0; i < numFaces; ++i)
+	{
+		if (face[i].RayTest(start, end, &pt, t, epsilon))
+		{
+			dst = Distance(start, pt);
+			if (dst < minDistToStart)
+			{
+				minDistToStart = dst;
+				pointID = i;
+				foundCollision = true;
+			}
+		}
+	}
+
+	*id = pointID;
+
+	return foundCollision;
 }

@@ -14,15 +14,9 @@
 //////////////////////////////////////////////////////////////////////////
 // Camera
 //////////////////////////////////////////////////////////////////////////
-Camera::Camera()
-    : m_angleX(0), m_angleY(0), m_zoom(0)
-    , m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0)
-    , m_isLeftPressed(false)
-    , m_isMiddlePressed(false)
-    , m_lastX(0), m_lastY(0)
-    , m_mouseX(0), m_mouseY(0)
-	, m_screenWidth(0), m_screenHeight(0)
-	, m_screenRatio(0), m_forced_aspect_ratio(0)
+Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_isLeftPressed(false), m_isMiddlePressed(false), m_mouseX(0),
+                   m_mouseY(0), m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0), m_lastX(0), 
+				   m_lastY(0), m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(0)
 {
 }
 
@@ -34,9 +28,9 @@ void Camera::ChangeViewportSize(int w, int h)
 		h = 1;
 	
 	//Turn on forced aspect ratio of 1.0
-	if (m_forced_aspect_ratio == 1.0f)
+	if (m_forced_aspect_ratio == 1)
 	{
-		const auto minx = std::min((float)w, h*m_forced_aspect_ratio);
+		const auto minx = std::min((double)w, h*m_forced_aspect_ratio);
 		h = w = (int)minx;
 	}
 	m_screenWidth = w;
@@ -54,20 +48,11 @@ void Camera::ChangeViewportSize(int w, int h)
 void Camera::PressSpecialKey(int key, int x, int y)
 {
 	switch (key) {
-		case GLUT_KEY_LEFT  : m_deltaAngX = -1.1f;break;
-		case GLUT_KEY_RIGHT : m_deltaAngX = 1.1f;break;
-		case GLUT_KEY_UP    : m_deltaAngY = -1.1f;break;
-		case GLUT_KEY_DOWN  : m_deltaAngY = 1.1f; break;
-	}
-}
-
-void Camera::ReleaseSpecialKey(int key, int x, int y)
-{
-	switch (key) {
-		case GLUT_KEY_LEFT  : m_deltaAngX = 0.0f; break;
-		case GLUT_KEY_RIGHT : m_deltaAngX = 0.0f; break;
-		case GLUT_KEY_UP    : m_deltaAngY = 0.0f; break;
-		case GLUT_KEY_DOWN  : m_deltaAngY = 0.0f; break;
+		case GLUT_KEY_LEFT  : m_angleX += -1.f; break;
+		case GLUT_KEY_RIGHT : m_angleX += 1.f; break;
+		case GLUT_KEY_UP    : m_angleY += 1.f; break;
+		case GLUT_KEY_DOWN  : m_angleY += -1.f; break;
+	default: break;
 	}
 }
 
@@ -77,53 +62,36 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
 	{		
 		if (state == GLUT_DOWN)
 		{
-			m_isLeftPressed = true;
+			//mouse look controls:
 			m_lastX = x;
 			m_lastY = y;
-			//printf("left mouse button pressed...\n");
+			m_deltaAngY = m_angleY;
+			m_deltaAngX = m_angleX;
+			m_isLeftPressed = true;
 		}
 		else if (state == GLUT_UP)
-		{
 			m_isLeftPressed = false;
-			//printf("left mouse button up...\n");
-		}
 	}
 	else if (button == GLUT_MIDDLE_BUTTON)
 	{
 		if (state == GLUT_DOWN)
-		{
 			m_isMiddlePressed = true;
-			m_lastX = x;
-			m_lastY = y;
-			//printf("left mouse button pressed...\n");
-		}
 		else if (state == GLUT_UP)
-		{
 			m_isMiddlePressed = false;
-			//printf("left mouse button up...\n");
-		}	
-	}	
+	}
 }
 
 void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 {
 	m_mouseX = x;
 	m_mouseY = y;
-
-    const int dx = m_lastX - x;
-    const int dy = m_lastY - y;
-	m_lastX = x;
-	m_lastY = y;
-
-	if (m_isLeftPressed && calcRotation)
+	if (calcRotation)
 	{
-		m_angleX -= dx*0.5f;
-		m_angleY -= dy*0.5f;
+		//Original Implementation:
+		m_angleY = m_deltaAngY + (m_lastY - m_mouseY) / 2;
+		m_angleX = m_deltaAngX + (m_mouseX - m_lastX) / 2;
 	}
-	if (m_isMiddlePressed && calcRotation)
-	{
-		m_zoom += dy*0.1f;
-	}
+
 }
 
 void Camera::ProcessPassiveMouseMotion(int x, int y)
@@ -131,38 +99,44 @@ void Camera::ProcessPassiveMouseMotion(int x, int y)
 	m_mouseX = x;
 	m_mouseY = y;
 }
-
 /**
- * \brief Call this before your Update 
+ * \brief Call this before your Update (no need)
  */
-void Camera::Update(double deltaTime)
+void Camera::UpdateDelta(double deltaTime)
 {
+	/*
 	m_zoom += m_deltaZoom;
 	m_angleX += m_deltaAngX;
 	m_angleY += m_deltaAngY;
+	*/
 }
 
 /**
- * \brief Call this during/after your Update or render function to enable camera behavior.
+ * \brief Required. Call this during/after your Update or render function to enable camera behavior.
  */
-void Camera::SetSimpleView() const
+void Camera::RotateGLCameraView()
 {
-	glTranslatef(0.0f, 0.0f, -m_zoom);
-	glRotatef(m_angleX, 0.0f, 1.0f, 0.0f);
-	glRotatef(m_angleY, 1.0f, 0.0f, 0.0f);
+	//Prevent over-rotation.
+	if (m_angleX >= 360) m_angleX -= 360;
+	if (m_angleX <= -360) m_angleX += 360;
+	if (m_angleY >= 360) m_angleY -= 360;
+	if (m_angleY <= -360) m_angleY += 360;
+    //These must be transformed in this order for mouse to work right.
+    glTranslated(0, 0, m_zoom);
+	glRotated(m_angleY, -1, 0, 0);
+	glRotated(m_angleX, 0, 0, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // MouseRayTestData
 //////////////////////////////////////////////////////////////////////////
 
-MouseRayTestData::MouseRayTestData() :
-	m_start(0.0),
-	m_end(0.0),
-	m_lastT(0.0),
-	m_hit(false)
+MouseRayTestData::MouseRayTestData()
+	: m_start(0.0)
+	, m_end(0.0)
+	, m_lastT(0.0)
+	, m_hit(false)
 {
-
 }
 
 void MouseRayTestData::CalculateRay(const Camera &cam)

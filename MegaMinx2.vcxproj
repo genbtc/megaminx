@@ -137,4 +137,10 @@
     <ClInclude Include="engine\utils.h" />
     <ClInclude Include="engine\vector3d.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Res.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MAINICON.ico" />
+  </ItemGroup>
 </Project>
