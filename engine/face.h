@@ -4,7 +4,7 @@
 #include "center.h"
 #include "edge.h"
 #include "corner.h"
-#include "../common_physics/input.h"
+#include "../common_physics/camera.h"
 #include <vector>
 
 enum FaceTurnDir { Clockwise, CounterClockwise };

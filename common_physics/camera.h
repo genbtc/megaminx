@@ -1,8 +1,9 @@
-/** @file input.h
- *  @brief common input functions
+/** @file camera.h
+ *  @brief camera and input functions and MouseRayTestData
  *
  *	@author Bartlomiej Filipek
  *	@date April 2011
+ *	//edited by genBTC November 2017
  */
 
 #pragma once

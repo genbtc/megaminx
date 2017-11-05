@@ -13,7 +13,7 @@
 #include <cmath>
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
-#include "common_physics/input.h"
+#include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.44 - genBTC mod";
