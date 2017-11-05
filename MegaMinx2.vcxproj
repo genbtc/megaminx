@@ -111,7 +111,6 @@
     <ClCompile Include="engine\megaminx.cpp" />
     <ClCompile Include="engine\utils.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Piece.cpp" />
     <ClCompile Include="raytri.cpp" />
     <None Include="release-win32.mak" />
     <None Include="release-win64.mak" />
@@ -127,6 +126,8 @@
     <None Include="MegaMinx2-Release.vgdbsettings" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="common_physics\camera.h" />
+    <ClInclude Include="common_physics\utils_math.h" />
     <ClInclude Include="engine\center.h" />
     <ClInclude Include="engine\corner.h" />
     <ClInclude Include="engine\edge.h" />

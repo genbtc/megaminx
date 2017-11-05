@@ -26,7 +26,7 @@ public:
 
 	void ChangeViewportSize(int w, int h);
 	void PressSpecialKey(int key, int x, int y);
-	void ReleaseSpecialKey(int key, int x, int y);
+
 	void ProcessMouse(int button, int state, int x, int y);
 	void ProcessMouseMotion(int x, int y, bool calcRotation = true);
 	void ProcessPassiveMouseMotion(int x, int y);

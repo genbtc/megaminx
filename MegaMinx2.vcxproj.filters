@@ -65,9 +65,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Piece.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="raytri.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -101,6 +98,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="engine\geometry.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="common_physics\utils_math.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="common_physics\camera.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
