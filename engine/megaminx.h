@@ -42,10 +42,10 @@ private:
 	int _rSide;
 	int undoCache[2];
 
-	Face face[12];
-	Center center[12];
-	Edge edge[30];
-	Corner corner[20];
+	Face faces[12];
+	Center centers[12];
+	Edge edges[30];
+	Corner corners[20];
 };
 
 #endif

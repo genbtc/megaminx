@@ -9,37 +9,37 @@ void Megaminx::solve()
     rotating = false;
 	undoCache[0] = 0; undoCache[1] = 0;
 	//store the value of the base start vertexes (outside the loop)
-    double* edgeVertexList = edge[0].edgeInit();
+    double* edgeVertexList = edges[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
     {
-        edge[i].init(i, edgeVertexList);
+        edges[i].init(i, edgeVertexList);
     }
-    double* cornerVertexList = corner[0].cornerInit();
+    double* cornerVertexList = corners[0].cornerInit();
     for (int i = 0; i < numCorners; ++i)
     {
-	    corner[i].init(i, cornerVertexList);
+	    corners[i].init(i, cornerVertexList);
     }
 	initFacePieces();
 }
 
 void Megaminx::initFacePieces()
 {
-	double* centerVertexList = face[0].faceInit();
+	double* centerVertexList = faces[0].faceInit();
 	for (int i = 0; i < numFaces; ++i)
 	{
-		center[i].init(i);
-		face[i].attachCenter(center + i, centerVertexList);
-		face[i].initAxis(i);
-		face[i].attachEdgePieces(edge[0], numEdges);
-		face[i].attachCornerPieces(corner[0], numCorners);
+		centers[i].init(i);
+		faces[i].attachCenter(centers + i, centerVertexList);
+		faces[i].initAxis(i);
+		faces[i].attachEdgePieces(edges[0], numEdges);
+		faces[i].attachCornerPieces(corners[0], numCorners);
 	}
 }
 
 Megaminx::Megaminx()
 {
-	numFaces = sizeof(face) / sizeof(Face);
-	numEdges = sizeof(edge) / sizeof(Edge);
-	numCorners = sizeof(corner) / sizeof(Corner);
+	numFaces = sizeof(faces) / sizeof(Face);
+	numEdges = sizeof(edges) / sizeof(Edge);
+	numCorners = sizeof(corners) / sizeof(Corner);
     solve();
 }
 
@@ -48,31 +48,31 @@ void Megaminx::render()
 	if (!rotating)
 	{
 		for (int i=0; i < numFaces; ++i)
-			center[i].render();
+			centers[i].render();
 		for (int i=0; i < numEdges; ++i)
-			edge[i].render();
+			edges[i].render();
 		for (int i=0; i < numCorners; ++i)
-			corner[i].render();
+			corners[i].render();
 	}
 	else
 	{
 		for (int i=0, k=0; i < numFaces; ++i) {			
-			if (&center[i] != face[_rSide].center)
-				center[i].render();
+			if (&centers[i] != faces[_rSide].center)
+				centers[i].render();
 		}
 		for (int i=0, k=0; i < numEdges; ++i) {
-			if (&edge[i] == face[_rSide].edge[k])
+			if (&edges[i] == faces[_rSide].edge[k])
 				k++;
 			else
-				edge[i].render();
+				edges[i].render();
 		}
 		for (int i=0, k=0; i < numCorners; ++i) {
-			if (&corner[i] == face[_rSide].corner[k])
+			if (&corners[i] == faces[_rSide].corner[k])
 				k++;
 			else
-				corner[i].render();
+				corners[i].render();
 		}
-		if (face[_rSide].render()) {
+		if (faces[_rSide].render()) {
 			rotating = false;
 		}
 	}
@@ -83,7 +83,7 @@ void Megaminx::rotate(int num, int dir)
 	if (!rotating) {
 		rotating = true;
 		_rSide = num;
-		face[num].rotate(dir);
+		faces[num].rotate(dir);
 	}
 	undoCache[0] = num; undoCache[1] = dir;
 }
@@ -99,23 +99,23 @@ void Megaminx::scramble()
 {
     for (int i = 0; i < numFaces; i++) {
         const int r = rand() % 2 * 2 - 1;
-        face[i].placeParts(r);
+        faces[i].placeParts(r);
     }
 }
 
 void Megaminx::swapOneCorner(int i, int x)
 {
-	face[i].corner[x]->flip();
+	faces[i].corner[x]->flip();
 }
 
 void Megaminx::swapOneEdge(int i,int x)
 {    
-	face[i].edge[x]->flip();
+	faces[i].edge[x]->flip();
 }
 
 void Megaminx::setCurrentFace(int i)
 {
-	g_currentFace = &face[i];
+	g_currentFace = &faces[i];
 }
 
 //sample temp. no good.
@@ -126,12 +126,12 @@ int Megaminx::resetFace(int n)
 //Find all edge pieces:
 std::vector<int> Megaminx::findEdges(int i)
 {
-	return face[(i - 1)].findPiece(edge[0], numEdges);
+	return faces[(i - 1)].findPiece(edges[0], numEdges);
 }
 //Find all corner pieces:
 std::vector<int> Megaminx::findCorners(int i)
 {
-	return face[(i - 1)].findPiece(corner[0], numCorners);
+	return faces[(i - 1)].findPiece(corners[0], numCorners);
 }
 
 /**
@@ -142,24 +142,29 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::grayEdges(int color_n)
 {
-	auto activeFace = face[(color_n - 1)];
-	auto foundGrayEdges = activeFace.findPiece(edge[0], numEdges);
+	auto activeFace = faces[(color_n - 1)];
+	auto foundGrayEdges = activeFace.findPiece(edges[0], numEdges);
 	auto defaultGrayEdges = activeFace.edgeNativePos;
-	std::vector<int> pieceList;
+	std::vector<int> isGrayList, isNotGrayList;
 	for (int i = 0; i < 5; ++i)
 	{
 		const auto result = activeFace.edge[i]->matchesColor(color_n);
-		if (result)
-			pieceList.push_back(i);
+		result ? isGrayList.push_back(i) : isNotGrayList.push_back(i);
 	}
-	return pieceList.size();
+	for (int i = 0; i < isNotGrayList.size(); ++i)
+	{
+		const auto nidx = isNotGrayList[i];
+		const auto cidx = foundGrayEdges[i];
+		activeFace.edge[nidx]->swapdata(edges[cidx].data);
+	}
+	return 1;
 }
 
 int Megaminx::grayCorners(int color_n)
 {
-	auto activeFace = face[(color_n - 1)];
+	auto activeFace = faces[(color_n - 1)];
 	//find gray Corners - findPiece returns { a,b,c,d,e }
-	auto foundGrayCorners = activeFace.findPiece(corner[0], numCorners);
+	auto foundGrayCorners = activeFace.findPiece(corners[0], numCorners);
 	//To replace the non-gray corners we would first have to find any available 
     //  slots because we may have a gray corner up there we dont want to mess up.
 	//So we would want to check if we do. If we do, that makes it harder 
@@ -175,6 +180,12 @@ int Megaminx::grayCorners(int color_n)
 		const auto result = activeFace.corner[i]->matchesColor(color_n);
 		result ? isGrayList.push_back(i) : isNotGrayList.push_back(i);
 	}
+	for (int i = 0; i < isNotGrayList.size(); ++i)
+	{
+		const auto nidx = isNotGrayList[i];
+		const auto cidx = foundGrayCorners[i];
+		activeFace.corner[nidx]->swapdata(corners[cidx].data);
+	}
 	return 1;
 }
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
@@ -186,7 +197,7 @@ bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, doubl
 	Vec3d pt;
 	for (unsigned int i = 0; i < numFaces; ++i)
 	{
-		if (face[i].RayTest(start, end, &pt, t, epsilon))
+		if (faces[i].RayTest(start, end, &pt, t, epsilon))
 		{
 			dst = Distance(start, pt);
 			if (dst < minDistToStart)
