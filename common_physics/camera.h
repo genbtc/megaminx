@@ -1,8 +1,9 @@
-/** @file input.h
- *  @brief common input functions
+/** @file camera.h
+ *  @brief camera and input functions and MouseRayTestData
  *
  *	@author Bartlomiej Filipek
  *	@date April 2011
+ *	//edited by genBTC November 2017
  */
 
 #pragma once
@@ -26,7 +27,7 @@ public:
 
 	void ChangeViewportSize(int w, int h);
 	void PressSpecialKey(int key, int x, int y);
-	void ReleaseSpecialKey(int key, int x, int y);
+
 	void ProcessMouse(int button, int state, int x, int y);
 	void ProcessMouseMotion(int x, int y, bool calcRotation = true);
 	void ProcessPassiveMouseMotion(int x, int y);

@@ -9,7 +9,7 @@
 #include <GL/freeglut_std.h>
 #include <algorithm>
 #include "utils_math.h"
-#include "input.h"
+#include "camera.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Camera

@@ -27,18 +27,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //[/ignore]
 
-#include <cstdio>
+
 #include <cstdlib>
 #include <memory>
 #include <vector>
-#include <utility>
-#include <cstdint>
-#include <iostream>
 #include <fstream>
 #include <cmath>
-#include <limits>
 #include <random>
-
 #include "engine/geometry.h"
 
 using namespace std;

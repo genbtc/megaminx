@@ -13,10 +13,10 @@
 #include <cmath>
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
-#include "common_physics/input.h"
+#include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.44 - genBTC mod";
+const char *title = "Megaminx v1.1105 - genBTC mod";
 // initial window screen size
 int WIDTH = 700;
 int HEIGHT = 700;
@@ -81,41 +81,6 @@ void createMegaMinx()
     megaminx = new Megaminx;
 }
 
-void utDrawText2D(float x, float y, void *font, char *string)
-{
-	char *c;
-	// set position to start drawing fonts
-	glRasterPos2f(x, y);
-	// loop all the characters in the string
-	for(c = string ; *c != '\0' ; c++) {
-		glutBitmapCharacter(font, *c);
-	}
-}
-
-void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
-{
-	static char anglesStr[16];
-	sprintf(anglesStr, "X: %5.3f", x1);
-	utDrawText2D(x, y, anglesStr);
-	sprintf(anglesStr, "Y: %5.3f", y1);
-	utDrawText2D(x, y+13, anglesStr);
-}
-
-void utCalculateAndPrintFps(float x, float y)
-{
-	static char fpsStr[16];
-	static unsigned int frame = 0;
-	static int timeBase = 0;	
-	frame++;
-    const int t = glutGet(GLUT_ELAPSED_TIME);
-	if (t - timeBase > 1000) {
-		sprintf(fpsStr, "FPS: %4.2f", frame*1000.0/(t - timeBase));
-		timeBase = t;		
-		frame = 0;
-	}
-	utDrawText2D(x, y, fpsStr);
-}
-
 int main(int argc, char *argv[])
 {
 	srand(time(nullptr));
@@ -143,36 +108,6 @@ int main(int argc, char *argv[])
     glutDisplayFunc(display);
 	glutMainLoop();
 	return 1;
-}
-
-void utSetOrthographicProjection(int scrW, int scrH) {
-
-	// switch to projection mode
-	glMatrixMode(GL_PROJECTION);
-	// save previous matrix which contains the 
-	//settings for the perspective projection
-	glPushMatrix();
-	// reset matrix
-	glLoadIdentity();
-	// set a 2D orthographic projection
-	gluOrtho2D(0, scrW, 0, scrH);
-	// invert the y axis, down is positive
-	glScalef(1, -1, 1);
-	// move the origin from the bottom left corner
-	// to the upper left corner
-	glTranslatef(0, -(float)scrH, 0);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-}
-void utResetPerspectiveProjection() {
-	// set the current matrix to GL_PROJECTION
-	glMatrixMode(GL_PROJECTION);
-	// restore previous settings
-	glPopMatrix();
-	// get back to GL_MODELVIEW matrix
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
 }
 
 void display()
@@ -210,7 +145,7 @@ void display()
 	glColor3f(0, 1, 0);
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
-		utCalculateAndPrintAngles(WIDTH - 90, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
+		utCalculateAndPrintAngles(10, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
 	utResetPerspectiveProjection();
 	//Print out Text (Help display)
 	if (!help)
@@ -277,40 +212,36 @@ void mousePressedMove(int x, int y)
 
 void rotateDispatch(unsigned char key)
 {
+	specialKey = glutGetModifiers();
+	int dir = -1;
+	if (specialKey == GLUT_ACTIVE_SHIFT) 
+		dir = (specialKey == 1) ? 1 : -1;
     switch (key)
     {
     case 'a':   //Left
-        megaminx->rotate(GLUT_KEY_F12 - 1, -1); break;
     case 'A':
-        megaminx->rotate(GLUT_KEY_F12 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F12 - 1, dir); break;
     case 'd':   //Right
-        megaminx->rotate(GLUT_KEY_F9 - 1, -1); break;
     case 'D':
-        megaminx->rotate(GLUT_KEY_F9 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F9 - 1, dir); break;
     case 'w':   //Upper(Top)
-        megaminx->rotate(GLUT_KEY_F7 - 1, -1); break;
     case 'W':
-        megaminx->rotate(GLUT_KEY_F7 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F7 - 1, dir); break;
     case 's':   //Front
-        megaminx->rotate(GLUT_KEY_F8 - 1, -1); break;
     case 'S':
-        megaminx->rotate(GLUT_KEY_F8 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F8 - 1, dir); break;
     case 'b':   //Bottom(White)
-        megaminx->rotate(GLUT_KEY_F1 - 1, -1); break;
     case 'B':
-        megaminx->rotate(GLUT_KEY_F1 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F1 - 1, dir); break;
     case 'c':   //Diagonal/Corner
-        megaminx->rotate(GLUT_KEY_F5 - 1, -1); break;
     case 'C':   //alias because its close to the keyboard.
-        megaminx->rotate(GLUT_KEY_F5 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F5 - 1, dir); break;
     case 'z':   //Back Reverze Diag
-        megaminx->rotate(GLUT_KEY_F3 - 1, -1); break;
     case 'Z':
-        megaminx->rotate(GLUT_KEY_F3 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F3 - 1, dir); break;
     case 'x':   //Semantically near on QWERTY
-        megaminx->rotate(GLUT_KEY_F4 - 1, -1); break;
     case 'X':
-        megaminx->rotate(GLUT_KEY_F4 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F4 - 1, dir); break;
     default:
         break;
     }
@@ -499,7 +430,9 @@ void menu(int num) {
 	if (num == 24)  //rotate edge piece
 	    megaminx->swapOneEdge(8, 1);
 	if (num == 31)	//gray star
-		megaminx->grayStar();
+		auto resuEdge = megaminx->findEdges(GRAY);
+	if (num == 32)	//gray corners
+		auto resuCor = megaminx->findCorners(GRAY);
 	if (num >= 61 && num <= 72)
 		megaminx->setCurrentFace(num - 60);
 	if (num == 100)

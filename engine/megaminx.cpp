@@ -7,31 +7,31 @@ void Megaminx::solve()
     x = 0;
 	_rSide = 0;
     rotating = false;
-	cache[0] = 0; cache[1] = 0;
-	//store the value of the base start vertexes
-    double* edgeVertexBase = edge[0].edgeInit();
+	undoCache[0] = 0; undoCache[1] = 0;
+	//store the value of the base start vertexes (outside the loop)
+    double* edgeVertexList = edge[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
     {
-        edge[i].init(i, edgeVertexBase);
+        edge[i].init(i, edgeVertexList);
     }
-    double* cornerVertexBase = corner[0].cornerInit();
+    double* cornerVertexList = corner[0].cornerInit();
     for (int i = 0; i < numCorners; ++i)
     {
-	    corner[i].init(i, cornerVertexBase);
+	    corner[i].init(i, cornerVertexList);
     }
 	initFacePieces();
 }
 
 void Megaminx::initFacePieces()
 {
-	double* centerVertexBase = face[0].faceInit();
+	double* centerVertexList = face[0].faceInit();
 	for (int i = 0; i < numFaces; ++i)
 	{
 		center[i].init(i);
-		face[i].initCenter(center + i, centerVertexBase);
+		face[i].attachCenter(center + i, centerVertexList);
 		face[i].initAxis(i);
-		face[i].initEdge(edge[0], numEdges);
-		face[i].initCorner(corner[0], numCorners);
+		face[i].attachEdgePieces(edge[0], numEdges);
+		face[i].attachCornerPieces(corner[0], numCorners);
 	}
 }
 
@@ -85,14 +85,14 @@ void Megaminx::rotate(int num, int dir)
 		_rSide = num;
 		face[num].rotate(dir);
 	}
-	cache[0] = num; cache[1] = dir;
+	undoCache[0] = num; undoCache[1] = dir;
 }
 
 void Megaminx::undo()
 {
-	if (cache[1] == 0 || cache[0] == 0) return;
-	cache[1] *= -1;
-	rotate(cache[0], cache[1]);
+	if (undoCache[1] == 0 || undoCache[0] == 0) return;
+	undoCache[1] *= -1;
+	rotate(undoCache[0], undoCache[1]);
 }
 
 void Megaminx::scramble()
@@ -105,12 +105,12 @@ void Megaminx::scramble()
 
 void Megaminx::swapOneCorner(int i, int x)
 {
-	face[i].corner[x]->flip(true);
+	face[i].corner[x]->flip();
 }
 
 void Megaminx::swapOneEdge(int i,int x)
 {    
-	face[i].edge[x]->flip(false);
+	face[i].edge[x]->flip();
 }
 
 void Megaminx::setCurrentFace(int i)
@@ -121,14 +121,38 @@ void Megaminx::setCurrentFace(int i)
 //sample temp. no good.
 int Megaminx::resetFace(int n)
 {
-
+	return n;
 }
-
-void Megaminx::grayStar()
+//Find all edge pieces:
+std::vector<int> Megaminx::findEdges(int i)
 {
-//	face[GRAY-1].edge
+	return face[(i - 1)].findPiece(edge[0], numEdges);
+}
+//Find all corner pieces:
+std::vector<int> Megaminx::findCorners(int i)
+{
+	return face[(i - 1)].findPiece(corner[0], numCorners);
 }
 
+void Megaminx::grayEdges(int n)
+{
+	auto grayEdges = face[(GRAY - 1)].findPiece(edge[0], numEdges);
+}
+int Megaminx::grayCorners(int n)
+{
+	//find gray Corners - findPiece returns { a,b,c,d,e }
+	auto foundGrayCorners = face[(GRAY - 1)].findPiece(corner[0], numCorners);
+	//To replace the non-gray corners we would first have to find any available 
+    //  slots because we may have a gray corner up there we dont want to mess up.
+	//So we would want to check if we do. If we do, that makes it harder 
+    //	because it may be in the wrong spot,  in which case we can switch it first. 
+	//Search the gray face's corners which is [25-29] - (but how do we know that ?)
+	// We can to store the numbers when we initialize them? DONE. stored in edgeNativePos and cornerNativePos
+	auto defaultGrayCorners = face[(GRAY - 1)].cornerNativePos;
+	//Search face[gray].corner[0-4] for anything thats not gray and get them marked for removal.
+	//Search face[gray].corner[0-4] for anything thats is gray and check if its in the right spot.
+	return n;
+}
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
 {
 	unsigned int pointID = numFaces + 1;

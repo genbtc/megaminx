@@ -65,13 +65,13 @@
     <ClCompile Include="main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="Piece.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="raytri.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="common_physics\camera.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="common_physics\opengl.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -91,9 +91,6 @@
     <ClInclude Include="engine\megaminx.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="engine\utils.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="engine\piece.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -101,6 +98,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="engine\geometry.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="common_physics\utils_math.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="common_physics\camera.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

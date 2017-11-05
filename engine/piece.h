@@ -2,8 +2,8 @@
 #define _PIECE_H_
 #include <math.h>
 #include "vector3d.h"
-#include "utils.h"
 
+void rotateVertex(double *vertex, char axis, double angle);
 //common constants
 
 static const long double FI = (1 + sqrt(5)) / 2;
@@ -110,6 +110,7 @@ public:
     void initColor(int a)
     {
         initColorIndex(0,a);
+	    numSides = 1;
     }
     //store edge colors
     void initColor(int a, int b)
@@ -119,6 +120,7 @@ public:
 	    //set non-existant 3rd side of edge to
 	    // 0==black aka not undefined so we can re-use corner.
 	    initColorIndex(2, 0);
+	    numSides = 2;
     }
     //store corner colors
     void initColor(int a, int b, int c)
@@ -126,6 +128,7 @@ public:
         initColorIndex(0, a);
         initColorIndex(1, b);
         initColorIndex(2, c);
+	    numSides = 3;
     }
 	//check if color-num (int) matches any colors
     // currently stored in struct data (3 sided)
@@ -236,16 +239,16 @@ public:
 
     /**
 	 * \brief flip/rotate/switch-colors for current piece.
-	 * \param corner Boolean true if its a corner piece. False if its Edge.
-	 * TODO: check what type of piece it is based on other fields.
+	 * \ OLD: Boolean true if its a corner piece. False if its Edge.
+	 * \ NEW: if Sides = 3 == Corner
 	 */
-	void flip(bool corner)
+	void flip()
 	{
 		double buf[3];
 		for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
 		for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
 		for (int i = 0; i < 3; ++i) data._color[1][i] = buf[i];
-		if (corner)
+		if (numSides == 3)	//corner
 		{
 			for (int i = 0; i < 3; ++i) buf[i] = data._color[1][i];
 			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
@@ -255,10 +258,10 @@ public:
 	/**
 	* \brief Does two flips. Thats it.
 	*/
-	void flipTwice(bool corner)
+	void flipTwice()
 	{
-		flip(corner);
-		flip(corner);
+		flip();
+		flip();
 	}
 	//Creates the common starting vertexes for all Corner pieces
 	double* cornerInit()
