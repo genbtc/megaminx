@@ -20,7 +20,7 @@ public:
     int resetFace(int n);
     std::vector<int> findEdges(int i);
     std::vector<int> findCorners(int i);
-    void grayEdges(int n);
+    int grayEdges(int n);
     int grayCorners(int n);
 
     /** test ray collision against points, returns true when found collision and

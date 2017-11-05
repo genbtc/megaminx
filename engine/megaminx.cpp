@@ -134,24 +134,48 @@ std::vector<int> Megaminx::findCorners(int i)
 	return face[(i - 1)].findPiece(corner[0], numCorners);
 }
 
-void Megaminx::grayEdges(int n)
+/**
+ * \brief Revert all the edge pieces on the Nth colored face back to normal.
+ *			To do so we must swap the pieces that are in there, OUT.
+ * \param color_n N'th Face/Color Number
+ * \return success
+ */
+int Megaminx::grayEdges(int color_n)
 {
-	auto grayEdges = face[(GRAY - 1)].findPiece(edge[0], numEdges);
+	auto activeFace = face[(color_n - 1)];
+	auto foundGrayEdges = activeFace.findPiece(edge[0], numEdges);
+	auto defaultGrayEdges = activeFace.edgeNativePos;
+	std::vector<int> pieceList;
+	for (int i = 0; i < 5; ++i)
+	{
+		const auto result = activeFace.edge[i]->matchesColor(color_n);
+		if (result)
+			pieceList.push_back(i);
+	}
+	return pieceList.size();
 }
-int Megaminx::grayCorners(int n)
+
+int Megaminx::grayCorners(int color_n)
 {
+	auto activeFace = face[(color_n - 1)];
 	//find gray Corners - findPiece returns { a,b,c,d,e }
-	auto foundGrayCorners = face[(GRAY - 1)].findPiece(corner[0], numCorners);
+	auto foundGrayCorners = activeFace.findPiece(corner[0], numCorners);
 	//To replace the non-gray corners we would first have to find any available 
     //  slots because we may have a gray corner up there we dont want to mess up.
 	//So we would want to check if we do. If we do, that makes it harder 
     //	because it may be in the wrong spot,  in which case we can switch it first. 
 	//Search the gray face's corners which is [25-29] - (but how do we know that ?)
 	// We can to store the numbers when we initialize them? DONE. stored in edgeNativePos and cornerNativePos
-	auto defaultGrayCorners = face[(GRAY - 1)].cornerNativePos;
+	auto defaultGrayCorners = activeFace.cornerNativePos;
 	//Search face[gray].corner[0-4] for anything thats not gray and get them marked for removal.
 	//Search face[gray].corner[0-4] for anything thats is gray and check if its in the right spot.
-	return n;
+	std::vector<int> isGrayList,isNotGrayList;
+	for (int i = 0; i < 5; ++i)
+	{
+		const auto result = activeFace.corner[i]->matchesColor(color_n);
+		result ? isGrayList.push_back(i) : isNotGrayList.push_back(i);
+	}
+	return 1;
 }
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
 {

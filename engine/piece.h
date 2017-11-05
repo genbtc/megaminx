@@ -238,17 +238,16 @@ public:
     }
 
     /**
-	 * \brief flip/rotate/switch-colors for current piece.
-	 * \ OLD: Boolean true if its a corner piece. False if its Edge.
-	 * \ NEW: if Sides = 3 == Corner
+	 * \brief Deals with colors. Flip/rotate/switches colors for current piece.
 	 */
 	void flip()
 	{
+	    const bool isCorner = (numSides == 3);
 		double buf[3];
 		for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
 		for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
 		for (int i = 0; i < 3; ++i) data._color[1][i] = buf[i];
-		if (numSides == 3)	//corner
+		if (isCorner)
 		{
 			for (int i = 0; i < 3; ++i) buf[i] = data._color[1][i];
 			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
@@ -263,7 +262,7 @@ public:
 		flip();
 		flip();
 	}
-	//Creates the common starting vertexes for all Corner pieces
+	//Creates the common starting vertexes for all pieces that are CORNERS
 	double* cornerInit()
 	{
 		numSides = 3;
@@ -303,7 +302,7 @@ public:
 		rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
 		return &_vertex[0][0];
 	}
-	//Creates the common starting vertexes for all Edge pieces
+	//Creates the common starting vertexes for all pieces that are EDGES
     double* edgeInit()
 	{
 		numSides = 2;
@@ -335,7 +334,7 @@ public:
 		rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
 		return &_vertex[0][0];
 	}
-	//Creates the common starting vertexes for all Center pieces
+	//Creates the common starting vertexes for all pieces that are CENTERS
 	double* centerInit()
 	{
 		numSides = 1;
@@ -347,6 +346,7 @@ public:
 		}
 		return &_vertex[0][0];
 	}
+	//Creates the common starting vertexes for all pieces that are FACES
 	double* faceInit()
 	{
 		numSides = 0;

@@ -430,9 +430,11 @@ void menu(int num) {
 	if (num == 24)  //rotate edge piece
 	    megaminx->swapOneEdge(8, 1);
 	if (num == 31)	//gray star
-		auto resuEdge = megaminx->findEdges(GRAY);
+		//auto resuEdge = megaminx->findEdges(GRAY);
+		auto resuEdge = megaminx->grayEdges(GRAY);
 	if (num == 32)	//gray corners
-		auto resuCor = megaminx->findCorners(GRAY);
+		//auto resuCor = megaminx->findCorners(GRAY);
+		auto resuCor = megaminx->grayCorners(GRAY);
 	if (num >= 61 && num <= 72)
 		megaminx->setCurrentFace(num - 60);
 	if (num == 100)
