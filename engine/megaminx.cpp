@@ -1,5 +1,7 @@
 #include "megaminx.h"
 #include <cstdlib>
+#include <algorithm>
+#include <iterator>
 
 void Megaminx::solve()
 {
@@ -9,37 +11,37 @@ void Megaminx::solve()
     rotating = false;
 	undoCache[0] = 0; undoCache[1] = 0;
 	//store the value of the base start vertexes (outside the loop)
-    double* edgeVertexList = edge[0].edgeInit();
+    double* edgeVertexList = edges[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
     {
-        edge[i].init(i, edgeVertexList);
+        edges[i].init(i, edgeVertexList);
     }
-    double* cornerVertexList = corner[0].cornerInit();
+    double* cornerVertexList = corners[0].cornerInit();
     for (int i = 0; i < numCorners; ++i)
     {
-	    corner[i].init(i, cornerVertexList);
+	    corners[i].init(i, cornerVertexList);
     }
 	initFacePieces();
 }
 
 void Megaminx::initFacePieces()
 {
-	double* centerVertexList = face[0].faceInit();
+	double* centerVertexList = faces[0].faceInit();
 	for (int i = 0; i < numFaces; ++i)
 	{
-		center[i].init(i);
-		face[i].attachCenter(center + i, centerVertexList);
-		face[i].initAxis(i);
-		face[i].attachEdgePieces(edge[0], numEdges);
-		face[i].attachCornerPieces(corner[0], numCorners);
+		centers[i].init(i);
+		faces[i].attachCenter(centers + i, centerVertexList);
+		faces[i].initAxis(i);
+		faces[i].attachEdgePieces(edges[0], numEdges);
+		faces[i].attachCornerPieces(corners[0], numCorners);
 	}
 }
 
 Megaminx::Megaminx()
 {
-	numFaces = sizeof(face) / sizeof(Face);
-	numEdges = sizeof(edge) / sizeof(Edge);
-	numCorners = sizeof(corner) / sizeof(Corner);
+	numFaces = sizeof(faces) / sizeof(Face);
+	numEdges = sizeof(edges) / sizeof(Edge);
+	numCorners = sizeof(corners) / sizeof(Corner);
     solve();
 }
 
@@ -48,31 +50,31 @@ void Megaminx::render()
 	if (!rotating)
 	{
 		for (int i=0; i < numFaces; ++i)
-			center[i].render();
+			centers[i].render();
 		for (int i=0; i < numEdges; ++i)
-			edge[i].render();
+			edges[i].render();
 		for (int i=0; i < numCorners; ++i)
-			corner[i].render();
+			corners[i].render();
 	}
 	else
 	{
 		for (int i=0, k=0; i < numFaces; ++i) {			
-			if (&center[i] != face[_rSide].center)
-				center[i].render();
+			if (&centers[i] != faces[_rSide].center)
+				centers[i].render();
 		}
 		for (int i=0, k=0; i < numEdges; ++i) {
-			if (&edge[i] == face[_rSide].edge[k])
+			if (&edges[i] == faces[_rSide].edge[k])
 				k++;
 			else
-				edge[i].render();
+				edges[i].render();
 		}
 		for (int i=0, k=0; i < numCorners; ++i) {
-			if (&corner[i] == face[_rSide].corner[k])
+			if (&corners[i] == faces[_rSide].corner[k])
 				k++;
 			else
-				corner[i].render();
+				corners[i].render();
 		}
-		if (face[_rSide].render()) {
+		if (faces[_rSide].render()) {
 			rotating = false;
 		}
 	}
@@ -83,11 +85,15 @@ void Megaminx::rotate(int num, int dir)
 	if (!rotating) {
 		rotating = true;
 		_rSide = num;
-		face[num].rotate(dir);
+		faces[num].rotate(dir);
 	}
 	undoCache[0] = num; undoCache[1] = dir;
 }
 
+
+/**
+ * \brief Implement an undo cache,aka: Edit... Undo. 
+ */
 void Megaminx::undo()
 {
 	if (undoCache[1] == 0 || undoCache[0] == 0) return;
@@ -95,27 +101,46 @@ void Megaminx::undo()
 	rotate(undoCache[0], undoCache[1]);
 }
 
+//600 iterations.
 void Megaminx::scramble()
 {
-    for (int i = 0; i < numFaces; i++) {
-        const int r = rand() % 2 * 2 - 1;
-        face[i].placeParts(r);
-    }
+	//Do 50 iterations of scrambling (like a human)
+	for (int q = 0; q < 50; q++)
+	{
+		//12 faces - turn one each, randomizing direction
+		for (int i = 0; i < numFaces; i++) {
+			const int r = rand() % 2 * 2 - 1;
+			faces[i].placeParts(r);
+		}
+	}
 }
 
+/**
+ * \brief Toggle the colors of a single Corner piece
+ * \param i Nth-face's number (color) 0-11
+ * \param x Nth-Corner's index 0-4
+ */
 void Megaminx::swapOneCorner(int i, int x)
 {
-	face[i].corner[x]->flip();
+	faces[i].corner[x]->flip();
 }
-
+/**
+ * \brief Toggle the colors of a single Edge piece
+ * \param i Nth-face's number (color) 0-11
+ * \param x Nth-Corner's index 0-4
+ */
 void Megaminx::swapOneEdge(int i,int x)
 {    
-	face[i].edge[x]->flip();
+	faces[i].edge[x]->flip();
 }
 
+/**
+ * \brief Makes a pointer to g_currentFace
+ * \param i Nth-face number index 0-11
+ */
 void Megaminx::setCurrentFace(int i)
 {
-	g_currentFace = &face[i];
+	g_currentFace = &faces[i];
 }
 
 //sample temp. no good.
@@ -123,36 +148,93 @@ int Megaminx::resetFace(int n)
 {
 	return n;
 }
-//Find all edge pieces:
+//
+/**
+ * \brief Find all edge pieces.
+ */
 std::vector<int> Megaminx::findEdges(int i)
 {
-	return face[(i - 1)].findPiece(edge[0], numEdges);
-}
-//Find all corner pieces:
-std::vector<int> Megaminx::findCorners(int i)
-{
-	return face[(i - 1)].findPiece(corner[0], numCorners);
+	return faces[(i - 1)].findPiece(edges[0], numEdges);
 }
 
-void Megaminx::grayEdges(int n)
+/**
+ * \brief Find all corner pieces.
+ */
+std::vector<int> Megaminx::findCorners(int i)
 {
-	auto grayEdges = face[(GRAY - 1)].findPiece(edge[0], numEdges);
+	return faces[(i - 1)].findPiece(corners[0], numCorners);
 }
-int Megaminx::grayCorners(int n)
+
+/**
+ * \brief Revert all the edge pieces on the Nth colored face back to normal.
+ *			To do so we must swap the pieces that are in there, OUT.
+ * \param color_n N'th Face/Color Number
+ * \return success
+ */
+int Megaminx::resetFacesEdges(int color_n)
 {
-	//find gray Corners - findPiece returns { a,b,c,d,e }
-	auto foundGrayCorners = face[(GRAY - 1)].findPiece(corner[0], numCorners);
-	//To replace the non-gray corners we would first have to find any available 
-    //  slots because we may have a gray corner up there we dont want to mess up.
-	//So we would want to check if we do. If we do, that makes it harder 
-    //	because it may be in the wrong spot,  in which case we can switch it first. 
-	//Search the gray face's corners which is [25-29] - (but how do we know that ?)
-	// We can to store the numbers when we initialize them? DONE. stored in edgeNativePos and cornerNativePos
-	auto defaultGrayCorners = face[(GRAY - 1)].cornerNativePos;
-	//Search face[gray].corner[0-4] for anything thats not gray and get them marked for removal.
-	//Search face[gray].corner[0-4] for anything thats is gray and check if its in the right spot.
-	return n;
+	int total = 0;
+    const auto activeFace = faces[(color_n - 1)];
+    const auto defaultEdges = activeFace.edgeNativePos;	
+	auto foundEdges = findEdges(color_n);
+	for (int j = 0; j < foundEdges.size(); ++j) 
+	{
+		if (edges[foundEdges[j]].matchesColor(color_n))
+		{
+			if (activeFace.edge[j]->matchesColor(color_n))
+				continue;
+			edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
+			total++;
+		}
+	}
+	foundEdges = findEdges(color_n);
+	//assert checking
+    if (!(foundEdges == defaultEdges))
+		resetFacesEdges(color_n);
+	for(int j = 0 ; j < defaultEdges.size() ; ++j)
+	{
+		while (edges[defaultEdges[j]].data._colorNum[0] != color_n)
+			edges[defaultEdges[j]].flip();
+	}
+	printf("Total swaps was: %i",total);
+	return 1;
 }
+
+/**
+ * \brief Revert all the Corners pieces on the Nth colored face back to normal.
+ *			To do so we must swap the pieces that are in there, OUT.
+ * \param color_n N'th Face/Color Number
+ * \return success
+ */
+int Megaminx::resetFacesCorners(int color_n)
+{
+	int total = 0;
+	const auto activeFace = faces[(color_n - 1)];
+	const auto defaultCorners = activeFace.cornerNativePos;	
+	auto foundCorners = findCorners(color_n);
+	for (int j = 0; j < foundCorners.size(); ++j) 
+	{
+		if (corners[foundCorners[j]].matchesColor(color_n))
+		{
+			if (activeFace.corner[j]->matchesColor(color_n))
+				continue;
+			corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
+			total++;
+		}
+	}
+	foundCorners = findCorners(color_n);
+	//assert checking
+    if(!(foundCorners == defaultCorners))
+		resetFacesCorners(color_n);
+	for (int j = 0; j < defaultCorners.size(); ++j)
+	{
+		while (corners[defaultCorners[j]].data._colorNum[0] != color_n)
+			corners[defaultCorners[j]].flip();
+	}
+	printf("Total swaps was: %i", total);
+	return 1;
+}
+
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
 {
 	unsigned int pointID = numFaces + 1;
@@ -162,7 +244,7 @@ bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, doubl
 	Vec3d pt;
 	for (unsigned int i = 0; i < numFaces; ++i)
 	{
-		if (face[i].RayTest(start, end, &pt, t, epsilon))
+		if (faces[i].RayTest(start, end, &pt, t, epsilon))
 		{
 			dst = Distance(start, pt);
 			if (dst < minDistToStart)

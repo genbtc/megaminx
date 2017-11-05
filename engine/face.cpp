@@ -136,7 +136,7 @@ void Face::QuadSwapEdges(std::vector<int> pack)
     swapEdges(pack[6], pack[7]);
 }
 /**
- * \brief 
+ * \brief Colorizing function. Intricate series of flips/swaps.
  * \param right Each case is for each of the 12 faces, 
  * / in order to get it to switch colors after it rotates.
  */
@@ -342,17 +342,17 @@ bool Face::render()
 }
 
 /**
- * \brief Calling this sets off a chain of events in the render loops to rotate.
- * \param _turnDir turn direction - 1 for Right, -1 for left.
+ * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
+ * \param direction turn direction - 1 for Right, -1 for left.
  */
-void Face::rotate(int _turnDir)
+void Face::rotate(int direction)
 {
     _rotate = true;
-    turnDir = _turnDir;
+	turnDir = direction;
 }
 
 /**
- * \brief given two indexes, swap the corners.
+ * \brief Public. Given two indexes, swap the corners.
  */
 void Face::swapCorners(int n, int k)
 {
@@ -360,7 +360,7 @@ void Face::swapCorners(int n, int k)
 }
 
 /**
- * \brief given two indexes, swap the edges.
+ * \brief Public. given two indexes, swap the edges.
  */
 void Face::swapEdges(int n, int k)
 {

@@ -20,8 +20,8 @@ public:
     int resetFace(int n);
     std::vector<int> findEdges(int i);
     std::vector<int> findCorners(int i);
-    void grayEdges(int n);
-    int grayCorners(int n);
+    int resetFacesEdges(int n);
+    int resetFacesCorners(int n);
 
     /** test ray collision against points, returns true when found collision and
 	 * in "id" there is id of the point (point wth rad represents little sphere) that collides with the ray.
@@ -42,10 +42,10 @@ private:
 	int _rSide;
 	int undoCache[2];
 
-	Face face[12];
-	Center center[12];
-	Edge edge[30];
-	Corner corner[20];
+	Face faces[12];
+	Center centers[12];
+	Edge edges[30];
+	Corner corners[20];
 };
 
 #endif
