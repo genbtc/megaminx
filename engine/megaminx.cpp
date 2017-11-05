@@ -176,48 +176,22 @@ int Megaminx::resetFacesEdges(int color_n)
 	auto foundEdges = findEdges(color_n);
 	auto defaultEdges = faces[(color_n - 1)].edgeNativePos;
 	int total = 0;
-//	for (int i = 0; i < foundEdges.size(); ++i)
-//	{
-//		bool weGoodFam = false;
-//	    for (int j = 0; j < defaultEdges.size(); ++j)
-//		{
-//			if (defaultEdges[j] == foundEdges[i])
-//				weGoodFam=true;
-//		}
-//		if (weGoodFam)
-//			continue;
-//		//it sometimes does 1 less than it needs to.
-//		//it can miss one when there is already one on the board.
-//		bool match = faces[(color_n - 1)].edge[i]->matchesColor(color_n);
-//		if (!match)
-//		{
-//			total++;
-//			faces[(color_n - 1)].edge[i]->swapdata(edges[foundEdges[i]].data);
-//		}
-//	}
-	//Debugs the after state
-	//foundEdges.clear();
-	foundEdges = findEdges(color_n);
-	for (int i = 0; i < numEdges; ++i)
+	for (int j = 0; j < foundEdges.size(); ++j) 
 	{
-		for (int j = 0; j < foundEdges.size(); ++j) 
+		bool result = edges[foundEdges[j]].matchesColor(color_n);
+		if (result)
 		{
-			bool result = edges[foundEdges[j]].matchesColor(color_n);
-			if (result)
-			{
-				total++;
-				if (faces[(color_n - 1)].edge[j]->matchesColor(color_n))
-					continue;
-				edges[foundEdges[j]].swapdata(faces[(color_n - 1)].edge[j]->data);
-			}
+			if (faces[(color_n - 1)].edge[j]->matchesColor(color_n))
+				continue;
+			edges[foundEdges[j]].swapdata(faces[(color_n - 1)].edge[j]->data);
+			total++;
 		}
 	}
 	foundEdges = findEdges(color_n);
-	if (!(foundEdges == defaultEdges))
-	{
+	//assert checking
+    if (!(foundEdges == defaultEdges))
 		resetFacesEdges(color_n);
-	}
-	printf("%i",total);
+	printf("Total swaps was: %i",total);
 	return 1;
 }
 
@@ -229,25 +203,24 @@ int Megaminx::resetFacesEdges(int color_n)
  */
 int Megaminx::resetFacesCorners(int color_n)
 {
-    const auto activeFace = faces[(color_n - 1)];
 	auto foundCorners = findCorners(color_n);
-	sort(foundCorners.begin(), foundCorners.end());
-	auto defaultCorners = activeFace.cornerNativePos;
-	for (int i = 0; i < 5; ++i)
+	auto defaultCorners = faces[(color_n - 1)].cornerNativePos;
+	int total = 0;
+	for (int j = 0; j < foundCorners.size(); ++j) 
 	{
-		auto result = activeFace.corner[i]->matchesColor(color_n);
-		if (!result)
-			activeFace.corner[i]->swapdata(corners[foundCorners[i]].data);
+		bool result = corners[foundCorners[j]].matchesColor(color_n);
+		if (result)
+		{
+			if (faces[(color_n - 1)].corner[j]->matchesColor(color_n))
+				continue;
+			corners[foundCorners[j]].swapdata(faces[(color_n - 1)].corner[j]->data);
+			total++;
+		}
 	}
-	//Debugs the after state
-
-	for (int i = 0; i < numCorners; ++i)
-	{
-	bool result = corners[i].matchesColor(color_n);
-	if (result)
-		foundCorners.push_back(i);
-	}
-	
+	foundCorners = findCorners(color_n);
+	if (!(foundCorners == defaultCorners))
+		resetFacesCorners(color_n);
+	printf("Total swaps was: %i", total);
 	return 1;
 }
 
