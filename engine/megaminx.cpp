@@ -126,11 +126,9 @@ int Megaminx::resetFace(int n)
 
 void Megaminx::grayStar()
 {
-	//	face[GRAY-1].edge
-		//pseudo code:
-		//Find all gray edge pieces: 
-	auto grayPieces = face[(GRAY - 1)].findPiece(edge[0], GRAY);
-	return;
+	//Find all gray edge pieces (Works): 
+	auto grayPieces = face[(GRAY - 1)].findPiece(edge[0], numEdges);
+
 }
 
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)

@@ -17,9 +17,9 @@ Face::Face()
     axis[2] = -1;
 }
 
-void Face::initEdge(Edge& n,int num)
+void Face::initEdge(Edge& n, int numEdges)
 {
-	const auto pieceList = findPiece(n,num);
+	const auto pieceList = findPiece(n, numEdges);
 	edge[0] = &n + pieceList[0];
 	edge[1] = &n + pieceList[1];
 	edge[2] = &n + pieceList[2];
@@ -27,9 +27,9 @@ void Face::initEdge(Edge& n,int num)
 	edge[4] = &n + pieceList[4];
 }
 
-void Face::initCorner(Corner& n,int num)
+void Face::initCorner(Corner& n, int numCorners)
 {
-    const auto pieceList = findPiece(n,num);
+	const auto pieceList = findPiece(n, numCorners);
 	corner[0] = &n + pieceList[0];
 	corner[1] = &n + pieceList[1];
 	corner[2] = &n + pieceList[2];
@@ -37,20 +37,15 @@ void Face::initCorner(Corner& n,int num)
 	corner[4] = &n + pieceList[4];
 }
 
-std::vector<int> Face::findPiece(Piece& n,int times) const
+std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
 {
 	std::vector<int> pieceList;
 	const auto color = center->data._colorNum[0];
-	const auto pieceRef = &n;
-	int count = 0;
 	for (int i = 0; i < times; ++i)
 	{
-	    const bool result = pieceRef[i].matchesColor(color);
+	    const bool result = (&pieceRef)[i].matchesColor(color);
 		if (result)
-		{
-			count++;
 			pieceList.push_back(i);
-		}
 	}
 	return pieceList;
 }

@@ -14,8 +14,8 @@ class Face : public Piece
 public:
 	Face();
 	~Face() {}
-    void initEdge(Edge& n, int num);
-    void initCorner(Corner& n, int num);
+	void initEdge(Edge& n, int numEdges);
+	void initCorner(Corner& n, int numCorners);
     //void initPiece(Piece& in, int num, Piece* output);
 
     std::vector<int> findPiece(Piece& n, int times) const;
