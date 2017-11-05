@@ -387,7 +387,7 @@ void createMenu(void) {
 	//SubLevel6 Menu - Faces
 	submenu6_id = glutCreateMenu(menu);
 	glutAddMenuEntry("1  WHITE", 61);
-	glutAddMenuEntry("[2] BLUE", 62);
+	glutAddMenuEntry("2 BLUE", 62);
 	glutAddMenuEntry("3  RED", 63);
 	glutAddMenuEntry("4  GREEN", 64);
 	glutAddMenuEntry("5  PURPLE", 65);
@@ -407,7 +407,7 @@ void createMenu(void) {
 	glutAddSubMenu("Rotations -->", submenu2_id);
 	//glutAddSubMenu("Steps------->", submenu3_id);
 	//glutAddSubMenu("Algos ------>", submenu4_id);
-	glutAddSubMenu("Front is: -->", submenu6_id);
+	glutAddSubMenu("Reset Faces: -->", submenu6_id);
 	glutAddMenuEntry("Exit Menu...", 9999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -436,7 +436,11 @@ void menu(int num) {
 		//auto resuCor = megaminx->findCorners(GRAY);
 		auto resuCor = megaminx->resetFacesCorners(GRAY);
 	if (num >= 61 && num <= 72)
-		megaminx->setCurrentFace(num - 60);
+	{
+		auto resuEdge = megaminx->resetFacesEdges(num - 60);
+		auto resuCor = megaminx->resetFacesCorners(num - 60);
+		//megaminx->setCurrentFace(num - 60);
+	}	
 	if (num == 100)
 		megaminx->scramble();
 	if (num == 102)
