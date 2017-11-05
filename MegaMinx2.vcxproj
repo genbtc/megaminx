@@ -104,6 +104,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common_physics\camera.cpp" />
+    <ClCompile Include="common_physics\opengl.cpp" />
     <ClCompile Include="engine\center.cpp" />
     <ClCompile Include="engine\corner.cpp" />
     <ClCompile Include="engine\edge.cpp" />

@@ -2,8 +2,8 @@
 #define _PIECE_H_
 #include <math.h>
 #include "vector3d.h"
-#include "utils.h"
 
+void rotateVertex(double *vertex, char axis, double angle);
 //common constants
 
 static const long double FI = (1 + sqrt(5)) / 2;

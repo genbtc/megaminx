@@ -17,7 +17,7 @@ Face::Face()
     axis[2] = -1;
 }
 
-void Face::initEdge(Edge& n, int numEdges)
+void Face::attachEdgePieces(Edge& n, int numEdges)
 {
 	const auto pieceList = findPiece(n, numEdges);
 	edge[0] = &n + pieceList[0];
@@ -28,7 +28,7 @@ void Face::initEdge(Edge& n, int numEdges)
 	edgeNativePos = pieceList;
 }
 
-void Face::initCorner(Corner& n, int numCorners)
+void Face::attachCornerPieces(Corner& n, int numCorners)
 {
 	const auto pieceList = findPiece(n, numCorners);
 	corner[0] = &n + pieceList[0];
@@ -59,19 +59,26 @@ std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
 	return pieceList;
 }
 
-void Face::initCenter(Center *a)
+void Face::attachCenter(Center *a)
 {
     center = a;
 }
-void Face::initCenter(Center *a, double* centerVertexBase)
+
+/**
+ * \brief Pre-initialize center with a re-usable list 
+ * \param a The center to attach
+ * \param centerVertexBase array of geometric vertexes 
+ */
+void Face::attachCenter(Center *a, double* centerVertexBase)
 {
 	center = a;
 	memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
 }
 
 /**
- * \brief create our Face
- * \param n We can re-use the Center axis creation
+ * \brief create our Face's Axes
+ * We can re-use the Center axis creation
+ * \param n is the number of this face
  */
 void Face::initAxis(int n)
 {
@@ -292,6 +299,10 @@ bool Face::placeParts(int right)
 }
 
 
+/**
+ * \brief OpenGL Display function. Calling this makes the faces rotate,the only real move.
+ * \return true if we full-spun, to tell the parent function that _rotate=false and to set rotating=false also.
+ */
 bool Face::render()
 {
 	//8 is the current speed for turnDir(rotational).
@@ -330,22 +341,36 @@ bool Face::render()
     return false;
 }
 
+/**
+ * \brief Calling this sets off a chain of events in the render loops to rotate.
+ * \param _turnDir turn direction - 1 for Right, -1 for left.
+ */
 void Face::rotate(int _turnDir)
 {
     _rotate = true;
     turnDir = _turnDir;
 }
 
+/**
+ * \brief given two indexes, swap the corners.
+ */
 void Face::swapCorners(int n, int k)
 {
 	corner[n]->swapdata(corner[k]->data);
 }
 
+/**
+ * \brief given two indexes, swap the edges.
+ */
 void Face::swapEdges(int n, int k)
 {
 	edge[n]->swapdata(edge[k]->data);
 }
 
+/**
+ * \brief This is supposed to help generate a Ray of the face of a buncha points on a plane.
+ * \return Couldnt get any meaningful results because we dont have Vec3D's yet
+ */
 bool Face::RayTest(const Vec3d &start, const Vec3d &end, Vec3d *pt, double *t, double epsilon)
 {
 	*pt = ClosestPoint(start, end, m_pos, t);

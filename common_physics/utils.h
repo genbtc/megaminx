@@ -32,6 +32,7 @@ inline void utDrawText2D(float x, float y, char *string) {
 }
 
 void utCalculateAndPrintFps(float x, float y);
+void utCalculateAndPrintAngles(float x, float y, double x1, double y1);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Draw helpers

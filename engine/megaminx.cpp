@@ -28,10 +28,10 @@ void Megaminx::initFacePieces()
 	for (int i = 0; i < numFaces; ++i)
 	{
 		center[i].init(i);
-		face[i].initCenter(center + i, centerVertexList);
+		face[i].attachCenter(center + i, centerVertexList);
 		face[i].initAxis(i);
-		face[i].initEdge(edge[0], numEdges);
-		face[i].initCorner(corner[0], numCorners);
+		face[i].attachEdgePieces(edge[0], numEdges);
+		face[i].attachCornerPieces(corner[0], numCorners);
 	}
 }
 

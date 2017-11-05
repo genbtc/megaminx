@@ -71,6 +71,9 @@
     <ClCompile Include="common_physics\camera.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="common_physics\opengl.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\center.h">
