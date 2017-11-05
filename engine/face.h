@@ -33,7 +33,9 @@ public:
     bool RayTest(const Vec3d& start, const Vec3d& end, Vec3d* pt, double* t, double epsilon=0.0001);
     bool RayPlaneIntersection(Vec3d normal, Vec3d ray);
 
-    Corner *corner[5];
+	std::vector<int> cornerNativePos;
+	std::vector<int> edgeNativePos;
+    Corner *corner[5];	
 	Edge *edge[5];
 	Center *center;
 

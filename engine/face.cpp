@@ -25,6 +25,7 @@ void Face::initEdge(Edge& n, int numEdges)
 	edge[2] = &n + pieceList[2];
 	edge[3] = &n + pieceList[3];
 	edge[4] = &n + pieceList[4];
+	edgeNativePos = pieceList;
 }
 
 void Face::initCorner(Corner& n, int numCorners)
@@ -35,8 +36,16 @@ void Face::initCorner(Corner& n, int numCorners)
 	corner[2] = &n + pieceList[2];
 	corner[3] = &n + pieceList[3];
 	corner[4] = &n + pieceList[4];
+	cornerNativePos = pieceList;
 }
 
+/**
+ * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
+ *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
+ * \pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's) 
+ * \times how many times to iterate (for simplicity).
+ * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
+ */
 std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
 {
 	std::vector<int> pieceList;

@@ -8,7 +8,7 @@ void Megaminx::solve()
 	_rSide = 0;
     rotating = false;
 	undoCache[0] = 0; undoCache[1] = 0;
-	//store the value of the base start vertexes
+	//store the value of the base start vertexes (outside the loop)
     double* edgeVertexList = edge[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
     {
@@ -123,17 +123,36 @@ int Megaminx::resetFace(int n)
 {
 	return n;
 }
-//Find all edge pieces (Works): 
+//Find all edge pieces:
 std::vector<int> Megaminx::findEdges(int i)
 {
 	return face[(i - 1)].findPiece(edge[0], numEdges);
 }
-//Find all corner pieces (Works): 
+//Find all corner pieces:
 std::vector<int> Megaminx::findCorners(int i)
 {
 	return face[(i - 1)].findPiece(corner[0], numCorners);
 }
 
+void Megaminx::grayEdges(int n)
+{
+	auto grayEdges = face[(GRAY - 1)].findPiece(edge[0], numEdges);
+}
+int Megaminx::grayCorners(int n)
+{
+	//find gray Corners - findPiece returns { a,b,c,d,e }
+	auto foundGrayCorners = face[(GRAY - 1)].findPiece(corner[0], numCorners);
+	//To replace the non-gray corners we would first have to find any available 
+    //  slots because we may have a gray corner up there we dont want to mess up.
+	//So we would want to check if we do. If we do, that makes it harder 
+    //	because it may be in the wrong spot,  in which case we can switch it first. 
+	//Search the gray face's corners which is [25-29] - (but how do we know that ?)
+	// We can to store the numbers when we initialize them? DONE. stored in edgeNativePos and cornerNativePos
+	auto defaultGrayCorners = face[(GRAY - 1)].cornerNativePos;
+	//Search face[gray].corner[0-4] for anything thats not gray and get them marked for removal.
+	//Search face[gray].corner[0-4] for anything thats is gray and check if its in the right spot.
+	return n;
+}
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
 {
 	unsigned int pointID = numFaces + 1;
