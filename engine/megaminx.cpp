@@ -7,28 +7,28 @@ void Megaminx::solve()
     x = 0;
 	_rSide = 0;
     rotating = false;
-	cache[0] = 0; cache[1] = 0;
+	undoCache[0] = 0; undoCache[1] = 0;
 	//store the value of the base start vertexes
-    double* edgeVertexBase = edge[0].edgeInit();
+    double* edgeVertexList = edge[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
     {
-        edge[i].init(i, edgeVertexBase);
+        edge[i].init(i, edgeVertexList);
     }
-    double* cornerVertexBase = corner[0].cornerInit();
+    double* cornerVertexList = corner[0].cornerInit();
     for (int i = 0; i < numCorners; ++i)
     {
-	    corner[i].init(i, cornerVertexBase);
+	    corner[i].init(i, cornerVertexList);
     }
 	initFacePieces();
 }
 
 void Megaminx::initFacePieces()
 {
-	double* centerVertexBase = face[0].faceInit();
+	double* centerVertexList = face[0].faceInit();
 	for (int i = 0; i < numFaces; ++i)
 	{
 		center[i].init(i);
-		face[i].initCenter(center + i, centerVertexBase);
+		face[i].initCenter(center + i, centerVertexList);
 		face[i].initAxis(i);
 		face[i].initEdge(edge[0], numEdges);
 		face[i].initCorner(corner[0], numCorners);
@@ -85,14 +85,14 @@ void Megaminx::rotate(int num, int dir)
 		_rSide = num;
 		face[num].rotate(dir);
 	}
-	cache[0] = num; cache[1] = dir;
+	undoCache[0] = num; undoCache[1] = dir;
 }
 
 void Megaminx::undo()
 {
-	if (cache[1] == 0 || cache[0] == 0) return;
-	cache[1] *= -1;
-	rotate(cache[0], cache[1]);
+	if (undoCache[1] == 0 || undoCache[0] == 0) return;
+	undoCache[1] *= -1;
+	rotate(undoCache[0], undoCache[1]);
 }
 
 void Megaminx::scramble()

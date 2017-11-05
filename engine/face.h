@@ -8,18 +8,7 @@
 #include <vector>
 
 enum FaceTurnDir { Clockwise, CounterClockwise };
-struct eightPack
-{
-    int eight[8];
-};
-struct fourPack
-{
-    int four[4];
-};
-struct fivePack
-{
-	int five[5];
-};
+
 class Face : public Piece
 {
 public:
@@ -51,8 +40,8 @@ public:
 private:
     void twoEdgesFlip(int a,int b);
     void Flip(int a, int b, int c, int d, std::vector<int> pack);
-    void QuadSwapCorners(eightPack pack);
-    void QuadSwapEdges(eightPack pack);
+    void QuadSwapCorners(std::vector<int> pack);
+    void QuadSwapEdges(std::vector<int> pack);
 
     int turnDir;
 	bool _rotate;

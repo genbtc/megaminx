@@ -38,7 +38,7 @@ public:
     unsigned numFaces;
 private:
 	int _rSide;
-	int cache[2];
+	int undoCache[2];
 
 	Face face[12];
 	Center center[12];

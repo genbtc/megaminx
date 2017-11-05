@@ -109,20 +109,20 @@ std::vector<int> FlipForwards = { 1, 1, 0, 0 };
 std::vector<int> FlipAlternatingBackwards = { 0, 1, 0, 1 };
 std::vector<int> FlipAlternatingForwards = { 1, 0, 1, 0 };
 
-void Face::QuadSwapCorners(eightPack pack)
+void Face::QuadSwapCorners(std::vector<int> pack)
 {
-    swapCorners(pack.eight[0], pack.eight[1]);
-    swapCorners(pack.eight[2], pack.eight[3]);
-    swapCorners(pack.eight[4], pack.eight[5]);
-    swapCorners(pack.eight[6], pack.eight[7]);
+    swapCorners(pack[0], pack[1]);
+    swapCorners(pack[2], pack[3]);
+    swapCorners(pack[4], pack[5]);
+    swapCorners(pack[6], pack[7]);
 }
 
-void Face::QuadSwapEdges(eightPack pack)
+void Face::QuadSwapEdges(std::vector<int> pack)
 {
-    swapEdges(pack.eight[0], pack.eight[1]);
-    swapEdges(pack.eight[2], pack.eight[3]);
-    swapEdges(pack.eight[4], pack.eight[5]);
-    swapEdges(pack.eight[6], pack.eight[7]);
+    swapEdges(pack[0], pack[1]);
+    swapEdges(pack[2], pack[3]);
+    swapEdges(pack[4], pack[5]);
+    swapEdges(pack[6], pack[7]);
 }
 /**
  * \brief 
@@ -290,7 +290,7 @@ bool Face::placeParts(int right)
 
 bool Face::render()
 {
-    //8 is the current speed.
+	//8 is the current speed for turnDir(rotational).
     if (_rotate) angle += turnDir * 8;
 	if (angle >= 56 || angle <= -56)
 	{
