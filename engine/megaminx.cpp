@@ -159,9 +159,9 @@ std::vector<int> Megaminx::findCorners(int i)
  * \param color_n N'th Face/Color Number
  * \return success
  */
-int Megaminx::grayEdges(int color_n)
+int Megaminx::resetFacesEdges(int color_n)
 {
-	auto activeFace = faces[(color_n - 1)];
+	const auto activeFace = faces[(color_n - 1)];
 	auto foundEdges = activeFace.findPiece(edges[0], numEdges);
 	auto defaultEdges = activeFace.edgeNativePos;
 	for (int i = 0; i < 5; ++i)
@@ -169,54 +169,45 @@ int Megaminx::grayEdges(int color_n)
 		const auto result = activeFace.edge[i]->matchesColor(color_n);
 		if (!result)
 		{
-			const auto eidx = foundEdges[i];
-			activeFace.edge[i]->swapdata(edges[eidx].data);
+			const auto foundE = foundEdges[i];
+			activeFace.edge[i]->swapdata(edges[foundE].data);
 		}
 	}
 	return 1;
 }
 
 //works
-int Megaminx::grayCorners(int color_n)
+int Megaminx::resetFacesCorners(int color_n)
 {
-	auto activeFace = faces[(color_n - 1)];
+	//alias activeface to face[n]
+    const auto activeFace = faces[(color_n - 1)];
 	//find gray Corners - findPiece returns { a,b,c,d,e }
-	//auto foundCorners = activeFace.findPiece(corners[0], numCorners);
-	std::vector<int> foundCorners;
-	for(int i = 0 ; i < numCorners ; ++i)
-	{
-		const bool result = corners[i].matchesColor(color_n);
-		if(result)
-			foundCorners.push_back(i);
-	}
+	auto foundCorners = activeFace.findPiece(corners[0], numCorners);
+//	std::vector<int> foundCorners;
+//	for(int i = 0 ; i < numCorners ; ++i)
+//	{
+//		const bool result = corners[i].matchesColor(color_n);
+//		if(result)
+//			foundCorners.push_back(i);
+//	}
 	//To replace the non-gray corners we would first have to find any available 
     //  slots because we may have a gray corner up there we dont want to mess up.
 	//So we would want to check if we do. If we do, that makes it harder 
     //	because it may be in the wrong spot,  in which case we can switch it first. 
-	//Search the gray face's corners which is [25-29] - (but how do we know that ?)
-	// We can to store the numbers when we initialize them? DONE. stored in edgeNativePos and cornerNativePos
+	//EX: Search the gray face's corners which is [25-29] - (but how do we know that ?)
+	//DONE: We've stored the original numbers when we initialized them.	In the 
+    //  Face:attachCenter/Edge functions we store edge/cornerNativePos (as stdvec)
 	auto defaultCorners = activeFace.cornerNativePos;
-	//Search face[gray].corner[0-4] for anything thats not gray and get them marked for removal.
-	//Search face[gray].corner[0-4] for anything thats is gray and check if its in the right spot.
+	//Search activeface's corner's [0-4] for anything thats not gray and swap with the first found corner
 	for (int i = 0; i < 5; ++i)
 	{
 		const auto result = activeFace.corner[i]->matchesColor(color_n);
 		if (!result)
 		{
-			const auto cidx = foundCorners[i];
-			activeFace.corner[i]->swapdata(corners[cidx].data);
+			const auto foundC = foundCorners[i];
+			activeFace.corner[i]->swapdata(corners[foundC].data);
 		}
 	}
-
-	//Debugs the after state
-    /*
-	for (int i = 0; i < numCorners; ++i)
-	{
-		const bool result = corners[i].matchesColor(color_n);
-		if (result)
-			foundCorners.push_back(i);
-	}
-	*/
 	return 1;
 }
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)

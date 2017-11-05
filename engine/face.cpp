@@ -136,7 +136,7 @@ void Face::QuadSwapEdges(std::vector<int> pack)
     swapEdges(pack[6], pack[7]);
 }
 /**
- * \brief 
+ * \brief Colorizing function. Intricate series of flips/swaps.
  * \param right Each case is for each of the 12 faces, 
  * / in order to get it to switch colors after it rotates.
  */
