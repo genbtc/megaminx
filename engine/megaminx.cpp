@@ -191,6 +191,11 @@ int Megaminx::resetFacesEdges(int color_n)
 	//assert checking
     if (!(foundEdges == defaultEdges))
 		resetFacesEdges(color_n);
+	for(int j = 0 ; j < defaultEdges.size() ; ++j)
+	{
+		while (edges[defaultEdges[j]].data._colorNum[0] != color_n)
+			edges[defaultEdges[j]].flip();
+	}
 	printf("Total swaps was: %i",total);
 	return 1;
 }
@@ -221,6 +226,11 @@ int Megaminx::resetFacesCorners(int color_n)
 	//assert checking
     if(!(foundCorners == defaultCorners))
 		resetFacesCorners(color_n);
+	for (int j = 0; j < defaultCorners.size(); ++j)
+	{
+		while (corners[defaultCorners[j]].data._colorNum[0] != color_n)
+			corners[defaultCorners[j]].flip();
+	}
 	printf("Total swaps was: %i", total);
 	return 1;
 }
