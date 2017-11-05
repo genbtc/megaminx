@@ -253,7 +253,28 @@ public:
 			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
 			for (int i = 0; i < 3; ++i) data._color[2][i] = buf[i];
 		}
+	    const wchar_t *namebuf;
+		namebuf = data._colorName[0];
+		data._colorName[0] = data._colorName[1];
+		data._colorName[1] = namebuf;
+		if (isCorner)
+		{
+			namebuf = data._colorName[1];
+			data._colorName[1] = data._colorName[2];
+			data._colorName[2] = namebuf;
+		}
+		int numbuff;
+		numbuff = data._colorNum[0];
+		data._colorNum[0] = data._colorNum[1];
+		data._colorNum[1] = numbuff;
+		if (isCorner)
+		{
+			numbuff = data._colorNum[1];
+			data._colorNum[1] = data._colorNum[2];
+			data._colorNum[2] = numbuff;
+		}		    
 	}
+
 	/**
 	* \brief Does two flips. Thats it.
 	*/

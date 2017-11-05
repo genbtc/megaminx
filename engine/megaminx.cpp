@@ -173,17 +173,17 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
-	auto foundEdges = findEdges(color_n);
-	auto defaultEdges = faces[(color_n - 1)].edgeNativePos;
 	int total = 0;
+    const auto activeFace = faces[(color_n - 1)];
+    const auto defaultEdges = activeFace.edgeNativePos;	
+	auto foundEdges = findEdges(color_n);
 	for (int j = 0; j < foundEdges.size(); ++j) 
 	{
-		bool result = edges[foundEdges[j]].matchesColor(color_n);
-		if (result)
+		if (edges[foundEdges[j]].matchesColor(color_n))
 		{
-			if (faces[(color_n - 1)].edge[j]->matchesColor(color_n))
+			if (activeFace.edge[j]->matchesColor(color_n))
 				continue;
-			edges[foundEdges[j]].swapdata(faces[(color_n - 1)].edge[j]->data);
+			edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
 			total++;
 		}
 	}
@@ -203,22 +203,23 @@ int Megaminx::resetFacesEdges(int color_n)
  */
 int Megaminx::resetFacesCorners(int color_n)
 {
-	auto foundCorners = findCorners(color_n);
-	auto defaultCorners = faces[(color_n - 1)].cornerNativePos;
 	int total = 0;
+	const auto activeFace = faces[(color_n - 1)];
+	const auto defaultCorners = activeFace.cornerNativePos;	
+	auto foundCorners = findCorners(color_n);
 	for (int j = 0; j < foundCorners.size(); ++j) 
 	{
-		bool result = corners[foundCorners[j]].matchesColor(color_n);
-		if (result)
+		if (corners[foundCorners[j]].matchesColor(color_n))
 		{
-			if (faces[(color_n - 1)].corner[j]->matchesColor(color_n))
+			if (activeFace.corner[j]->matchesColor(color_n))
 				continue;
-			corners[foundCorners[j]].swapdata(faces[(color_n - 1)].corner[j]->data);
+			corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
 			total++;
 		}
 	}
 	foundCorners = findCorners(color_n);
-	if (!(foundCorners == defaultCorners))
+	//assert checking
+    if(!(foundCorners == defaultCorners))
 		resetFacesCorners(color_n);
 	printf("Total swaps was: %i", total);
 	return 1;
