@@ -16,7 +16,7 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.44 - genBTC mod";
+const char *title = "Megaminx v1.1105 - genBTC mod";
 // initial window screen size
 int WIDTH = 700;
 int HEIGHT = 700;
@@ -145,7 +145,7 @@ void display()
 	glColor3f(0, 1, 0);
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
-		utCalculateAndPrintAngles(WIDTH - 90, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
+		utCalculateAndPrintAngles(10, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
 	utResetPerspectiveProjection();
 	//Print out Text (Help display)
 	if (!help)
@@ -212,40 +212,36 @@ void mousePressedMove(int x, int y)
 
 void rotateDispatch(unsigned char key)
 {
+	specialKey = glutGetModifiers();
+	int dir = -1;
+	if (specialKey == GLUT_ACTIVE_SHIFT) 
+		dir = (specialKey == 1) ? 1 : -1;
     switch (key)
     {
     case 'a':   //Left
-        megaminx->rotate(GLUT_KEY_F12 - 1, -1); break;
     case 'A':
-        megaminx->rotate(GLUT_KEY_F12 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F12 - 1, dir); break;
     case 'd':   //Right
-        megaminx->rotate(GLUT_KEY_F9 - 1, -1); break;
     case 'D':
-        megaminx->rotate(GLUT_KEY_F9 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F9 - 1, dir); break;
     case 'w':   //Upper(Top)
-        megaminx->rotate(GLUT_KEY_F7 - 1, -1); break;
     case 'W':
-        megaminx->rotate(GLUT_KEY_F7 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F7 - 1, dir); break;
     case 's':   //Front
-        megaminx->rotate(GLUT_KEY_F8 - 1, -1); break;
     case 'S':
-        megaminx->rotate(GLUT_KEY_F8 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F8 - 1, dir); break;
     case 'b':   //Bottom(White)
-        megaminx->rotate(GLUT_KEY_F1 - 1, -1); break;
     case 'B':
-        megaminx->rotate(GLUT_KEY_F1 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F1 - 1, dir); break;
     case 'c':   //Diagonal/Corner
-        megaminx->rotate(GLUT_KEY_F5 - 1, -1); break;
     case 'C':   //alias because its close to the keyboard.
-        megaminx->rotate(GLUT_KEY_F5 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F5 - 1, dir); break;
     case 'z':   //Back Reverze Diag
-        megaminx->rotate(GLUT_KEY_F3 - 1, -1); break;
     case 'Z':
-        megaminx->rotate(GLUT_KEY_F3 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F3 - 1, dir); break;
     case 'x':   //Semantically near on QWERTY
-        megaminx->rotate(GLUT_KEY_F4 - 1, -1); break;
     case 'X':
-        megaminx->rotate(GLUT_KEY_F4 - 1, 1); break;
+        megaminx->rotate(GLUT_KEY_F4 - 1, dir); break;
     default:
         break;
     }

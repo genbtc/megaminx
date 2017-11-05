@@ -136,7 +136,6 @@
     <ClInclude Include="engine\geometry.h" />
     <ClInclude Include="engine\megaminx.h" />
     <ClInclude Include="engine\piece.h" />
-    <ClInclude Include="engine\utils.h" />
     <ClInclude Include="engine\vector3d.h" />
   </ItemGroup>
   <ItemGroup>

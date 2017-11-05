@@ -91,9 +91,6 @@
     <ClInclude Include="engine\megaminx.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="engine\utils.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="engine\piece.h">
       <Filter>Header files</Filter>
     </ClInclude>
