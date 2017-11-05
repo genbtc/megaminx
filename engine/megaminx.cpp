@@ -1,5 +1,7 @@
 #include "megaminx.h"
 #include <cstdlib>
+#include <algorithm>
+#include <iterator>
 
 void Megaminx::solve()
 {
@@ -114,7 +116,7 @@ void Megaminx::scramble()
 }
 
 /**
- * \brief Toggle the colors of a single piece
+ * \brief Toggle the colors of a single Corner piece
  * \param i Nth-face's number (color) 0-11
  * \param x Nth-Corner's index 0-4
  */
@@ -122,7 +124,11 @@ void Megaminx::swapOneCorner(int i, int x)
 {
 	faces[i].corner[x]->flip();
 }
-
+/**
+ * \brief Toggle the colors of a single Edge piece
+ * \param i Nth-face's number (color) 0-11
+ * \param x Nth-Corner's index 0-4
+ */
 void Megaminx::swapOneEdge(int i,int x)
 {    
 	faces[i].edge[x]->flip();
@@ -142,12 +148,18 @@ int Megaminx::resetFace(int n)
 {
 	return n;
 }
-//Find all edge pieces:
+//
+/**
+ * \brief Find all edge pieces.
+ */
 std::vector<int> Megaminx::findEdges(int i)
 {
 	return faces[(i - 1)].findPiece(edges[0], numEdges);
 }
-//Find all corner pieces:
+
+/**
+ * \brief Find all corner pieces.
+ */
 std::vector<int> Megaminx::findCorners(int i)
 {
 	return faces[(i - 1)].findPiece(corners[0], numCorners);
@@ -161,55 +173,84 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
-	const auto activeFace = faces[(color_n - 1)];
-	auto foundEdges = activeFace.findPiece(edges[0], numEdges);
-	auto defaultEdges = activeFace.edgeNativePos;
-	for (int i = 0; i < 5; ++i)
+	auto foundEdges = findEdges(color_n);
+	auto defaultEdges = faces[(color_n - 1)].edgeNativePos;
+	int total = 0;
+//	for (int i = 0; i < foundEdges.size(); ++i)
+//	{
+//		bool weGoodFam = false;
+//	    for (int j = 0; j < defaultEdges.size(); ++j)
+//		{
+//			if (defaultEdges[j] == foundEdges[i])
+//				weGoodFam=true;
+//		}
+//		if (weGoodFam)
+//			continue;
+//		//it sometimes does 1 less than it needs to.
+//		//it can miss one when there is already one on the board.
+//		bool match = faces[(color_n - 1)].edge[i]->matchesColor(color_n);
+//		if (!match)
+//		{
+//			total++;
+//			faces[(color_n - 1)].edge[i]->swapdata(edges[foundEdges[i]].data);
+//		}
+//	}
+	//Debugs the after state
+	//foundEdges.clear();
+	foundEdges = findEdges(color_n);
+	for (int i = 0; i < numEdges; ++i)
 	{
-		const auto result = activeFace.edge[i]->matchesColor(color_n);
-		if (!result)
+		for (int j = 0; j < foundEdges.size(); ++j) 
 		{
-			const auto foundE = foundEdges[i];
-			activeFace.edge[i]->swapdata(edges[foundE].data);
+			bool result = edges[foundEdges[j]].matchesColor(color_n);
+			if (result)
+			{
+				total++;
+				if (faces[(color_n - 1)].edge[j]->matchesColor(color_n))
+					continue;
+				edges[foundEdges[j]].swapdata(faces[(color_n - 1)].edge[j]->data);
+			}
 		}
 	}
+	foundEdges = findEdges(color_n);
+	if (!(foundEdges == defaultEdges))
+	{
+		resetFacesEdges(color_n);
+	}
+	printf("%i",total);
 	return 1;
 }
 
-//works
+/**
+ * \brief Revert all the Corners pieces on the Nth colored face back to normal.
+ *			To do so we must swap the pieces that are in there, OUT.
+ * \param color_n N'th Face/Color Number
+ * \return success
+ */
 int Megaminx::resetFacesCorners(int color_n)
 {
-	//alias activeface to face[n]
     const auto activeFace = faces[(color_n - 1)];
-	//find gray Corners - findPiece returns { a,b,c,d,e }
-	auto foundCorners = activeFace.findPiece(corners[0], numCorners);
-//	std::vector<int> foundCorners;
-//	for(int i = 0 ; i < numCorners ; ++i)
-//	{
-//		const bool result = corners[i].matchesColor(color_n);
-//		if(result)
-//			foundCorners.push_back(i);
-//	}
-	//To replace the non-gray corners we would first have to find any available 
-    //  slots because we may have a gray corner up there we dont want to mess up.
-	//So we would want to check if we do. If we do, that makes it harder 
-    //	because it may be in the wrong spot,  in which case we can switch it first. 
-	//EX: Search the gray face's corners which is [25-29] - (but how do we know that ?)
-	//DONE: We've stored the original numbers when we initialized them.	In the 
-    //  Face:attachCenter/Edge functions we store edge/cornerNativePos (as stdvec)
+	auto foundCorners = findCorners(color_n);
+	sort(foundCorners.begin(), foundCorners.end());
 	auto defaultCorners = activeFace.cornerNativePos;
-	//Search activeface's corner's [0-4] for anything thats not gray and swap with the first found corner
 	for (int i = 0; i < 5; ++i)
 	{
-		const auto result = activeFace.corner[i]->matchesColor(color_n);
+		auto result = activeFace.corner[i]->matchesColor(color_n);
 		if (!result)
-		{
-			const auto foundC = foundCorners[i];
-			activeFace.corner[i]->swapdata(corners[foundC].data);
-		}
+			activeFace.corner[i]->swapdata(corners[foundCorners[i]].data);
 	}
+	//Debugs the after state
+
+	for (int i = 0; i < numCorners; ++i)
+	{
+	bool result = corners[i].matchesColor(color_n);
+	if (result)
+		foundCorners.push_back(i);
+	}
+	
 	return 1;
 }
+
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
 {
 	unsigned int pointID = numFaces + 1;

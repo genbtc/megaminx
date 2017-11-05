@@ -426,9 +426,9 @@ void menu(int num) {
 	if (num == 21)
 		int result = megaminx->resetFace(GLUT_KEY_F8);
 	if (num == 23)  //rotate corner piece
-	    megaminx->swapOneCorner(8, 1);
+	    megaminx->swapOneCorner(GLUT_KEY_F8, 1);
 	if (num == 24)  //rotate edge piece
-	    megaminx->swapOneEdge(8, 1);
+	    megaminx->swapOneEdge(GLUT_KEY_F8, 1);
 	if (num == 31)	//make gray edges (star)
 		//auto resuEdge = megaminx->findEdges(GRAY);
 		auto resuEdge = megaminx->resetFacesEdges(GRAY);
