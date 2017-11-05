@@ -50,14 +50,7 @@ public:
 
 private:
     void twoEdgesFlip(int a,int b);
-    void genericFlip(int a, int b, int c, int d, fourPack pack);
-    void genericFlip(int a, int b, int c, int d, std::vector<int> pack);
-    void inwardsFlip(int a, int b,int c, int d);
-    void backwardsFlip(int a, int b, int c, int d);
-    void forwardsFlip(int a, int b, int c, int d);
-    void alternatingBackwardsFlip(int a, int b, int c, int d);
-    void alternatingForwardsFlip(int a, int b, int c, int d);
-    void outwardsFlip(int a, int b, int c, int d);
+    void Flip(int a, int b, int c, int d, std::vector<int> pack);
     void QuadSwapCorners(eightPack pack);
     void QuadSwapEdges(eightPack pack);
 
