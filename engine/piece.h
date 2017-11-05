@@ -110,6 +110,7 @@ public:
     void initColor(int a)
     {
         initColorIndex(0,a);
+	    numSides = 1;
     }
     //store edge colors
     void initColor(int a, int b)
@@ -119,6 +120,7 @@ public:
 	    //set non-existant 3rd side of edge to
 	    // 0==black aka not undefined so we can re-use corner.
 	    initColorIndex(2, 0);
+	    numSides = 2;
     }
     //store corner colors
     void initColor(int a, int b, int c)
@@ -126,6 +128,7 @@ public:
         initColorIndex(0, a);
         initColorIndex(1, b);
         initColorIndex(2, c);
+	    numSides = 3;
     }
 	//check if color-num (int) matches any colors
     // currently stored in struct data (3 sided)
@@ -237,7 +240,7 @@ public:
     /**
 	 * \brief flip/rotate/switch-colors for current piece.
 	 * \ OLD: Boolean true if its a corner piece. False if its Edge.
-	 * \ NEW: Sides = 3 == Corner
+	 * \ NEW: if Sides = 3 == Corner
 	 */
 	void flip()
 	{
