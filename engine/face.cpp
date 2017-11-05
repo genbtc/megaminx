@@ -80,8 +80,8 @@ void Face::initAxis(int n)
  */
 void Face::twoEdgesFlip(int a,int b)
 {
-    edge[a]->flip(false);
-	edge[b]->flip(false);
+    edge[a]->flip();
+	edge[b]->flip();
 }
 
 //Functional Generic Switch that flips 
@@ -91,10 +91,10 @@ void Face::Flip(int a, int b, int c, int d, std::vector<int> pack)
     // (hint: [0-4]=5, but we only need to flip 4 at once)
 	//Feed in these vector lists like { 0, 1, 1, 0 }; telling each index how to flip
 	// Boolean ? 1 = Flip piece once ||  0      = Flip twice 
-	pack[0] ? corner[a]->flip(true) : corner[a]->flipTwice(true);
-	pack[1] ? corner[b]->flip(true) : corner[b]->flipTwice(true);
-	pack[2] ? corner[c]->flip(true) : corner[c]->flipTwice(true);
-	pack[3] ? corner[d]->flip(true) : corner[d]->flipTwice(true);
+	pack[0] ? corner[a]->flip() : corner[a]->flipTwice();
+	pack[1] ? corner[b]->flip() : corner[b]->flipTwice();
+	pack[2] ? corner[c]->flip() : corner[c]->flipTwice();
+	pack[3] ? corner[d]->flip() : corner[d]->flipTwice();
 }
 //Named Flip Direction lists:
 std::vector<int> FlipInwards = { 0, 1, 1, 0 };

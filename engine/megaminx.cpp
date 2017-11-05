@@ -105,12 +105,12 @@ void Megaminx::scramble()
 
 void Megaminx::swapOneCorner(int i, int x)
 {
-	face[i].corner[x]->flip(true);
+	face[i].corner[x]->flip();
 }
 
 void Megaminx::swapOneEdge(int i,int x)
 {    
-	face[i].edge[x]->flip(false);
+	face[i].edge[x]->flip();
 }
 
 void Megaminx::setCurrentFace(int i)
@@ -121,14 +121,17 @@ void Megaminx::setCurrentFace(int i)
 //sample temp. no good.
 int Megaminx::resetFace(int n)
 {
-
+	return n;
 }
-
-void Megaminx::grayStar()
+//Find all edge pieces (Works): 
+std::vector<int> Megaminx::findEdges(int i)
 {
-	//Find all gray edge pieces (Works): 
-	auto grayPieces = face[(GRAY - 1)].findPiece(edge[0], numEdges);
-
+	return face[(i - 1)].findPiece(edge[0], numEdges);
+}
+//Find all corner pieces (Works): 
+std::vector<int> Megaminx::findCorners(int i)
+{
+	return face[(i - 1)].findPiece(corner[0], numCorners);
 }
 
 bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)

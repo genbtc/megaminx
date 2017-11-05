@@ -236,16 +236,16 @@ public:
 
     /**
 	 * \brief flip/rotate/switch-colors for current piece.
-	 * \param corner Boolean true if its a corner piece. False if its Edge.
-	 * TODO: check what type of piece it is based on other fields.
+	 * \ OLD: Boolean true if its a corner piece. False if its Edge.
+	 * \ NEW: Sides = 3 == Corner
 	 */
-	void flip(bool corner)
+	void flip()
 	{
 		double buf[3];
 		for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
 		for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
 		for (int i = 0; i < 3; ++i) data._color[1][i] = buf[i];
-		if (corner)
+		if (numSides == 3)	//corner
 		{
 			for (int i = 0; i < 3; ++i) buf[i] = data._color[1][i];
 			for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
@@ -255,10 +255,10 @@ public:
 	/**
 	* \brief Does two flips. Thats it.
 	*/
-	void flipTwice(bool corner)
+	void flipTwice()
 	{
-		flip(corner);
-		flip(corner);
+		flip();
+		flip();
 	}
 	//Creates the common starting vertexes for all Corner pieces
 	double* cornerInit()
