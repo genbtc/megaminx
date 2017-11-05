@@ -27,8 +27,9 @@ public:
 	~Face() {}
     void initEdge(Edge& n, int num);
     void initCorner(Corner& n, int num);
+    //void initPiece(Piece& in, int num, Piece* output);
 
-	std::vector<int> findPiece(Piece& n, int times) const;
+    std::vector<int> findPiece(Piece& n, int times) const;
     void initCenter(Center*);
     void initCenter(Center* a, double* centerVertexBase);
     void initAxis(int n);
@@ -50,6 +51,7 @@ public:
 private:
     void twoEdgesFlip(int a,int b);
     void genericFlip(int a, int b, int c, int d, fourPack pack);
+    void genericFlip(int a, int b, int c, int d, std::vector<int> pack);
     void inwardsFlip(int a, int b,int c, int d);
     void backwardsFlip(int a, int b, int c, int d);
     void forwardsFlip(int a, int b, int c, int d);

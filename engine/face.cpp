@@ -1,9 +1,7 @@
 #include <GL/glut.h>
-#include <math.h>
 #include "face.h"
-#include "utils.h"
-#include <iostream>
 #include <vector>
+#include <map>
 
 Face::Face()
 {
@@ -38,7 +36,6 @@ void Face::initCorner(Corner& n,int num)
 	corner[3] = &n + pieceList[3];
 	corner[4] = &n + pieceList[4];
 }
-
 
 std::vector<int> Face::findPiece(Piece& n,int times) const
 {
@@ -92,36 +89,49 @@ void Face::twoEdgesFlip(int a,int b)
 	edge[b]->flip(false);
 }
 
-void Face::genericFlip(int a, int b, int c, int d, fourPack pack)
+//Functional Generic Switch that flips 
+void Face::genericFlip(int a, int b, int c, int d, std::vector<int> pack)
 {
-	pack.four[0] ? corner[a]->flip(true) : corner[a]->flipTwice(true);
-	pack.four[1] ? corner[b]->flip(true) : corner[b]->flipTwice(true);
-	pack.four[2] ? corner[c]->flip(true) : corner[c]->flipTwice(true);
-	pack.four[3] ? corner[d]->flip(true) : corner[d]->flipTwice(true);
+	//Feed in 4 ints abcd representing the face's five corner indexes 0-4 
+    // (hint: [0-4]=5, but we only need to flip 4 at once)
+	//Feed in these vector lists like { 0, 1, 1, 0 }; telling each index how to flip
+	// Boolean ? 1 = Flip piece once ||  0      = Flip twice 
+	pack[0] ? corner[a]->flip(true) : corner[a]->flipTwice(true);
+	pack[1] ? corner[b]->flip(true) : corner[b]->flipTwice(true);
+	pack[2] ? corner[c]->flip(true) : corner[c]->flipTwice(true);
+	pack[3] ? corner[d]->flip(true) : corner[d]->flipTwice(true);
 }
+//Named Flip Direction lists:
+std::vector<int> FlipInwards = { 0, 1, 1, 0 };
+std::vector<int> FlipOutwards = { 1, 0, 0, 1 };
+std::vector<int> FlipBackwards = { 0, 0, 1, 1 };
+std::vector<int> FlipForwards = { 1, 1, 0, 0 };
+std::vector<int> FlipAlternatingBackwards = { 0, 1, 0, 1 };
+std::vector<int> FlipAlternatingForwards = { 1, 0, 1, 0 };
+//Function Aliases:
 void Face::inwardsFlip(int a, int b, int c, int d)
 {
-    genericFlip(a, b, c, d, {0, 1, 1, 0});
+	genericFlip(a, b, c, d, FlipInwards);
 }
 void Face::outwardsFlip(int a, int b, int c, int d)
 {
-    genericFlip(a, b, c, d, {1, 0, 0, 1});
+	genericFlip(a, b, c, d, FlipOutwards);
 }
 void Face::backwardsFlip(int a, int b, int c, int d)
 {
-    genericFlip(a, b, c, d, {0, 0, 1, 1});
+	genericFlip(a, b, c, d, FlipBackwards);
 }
 void Face::forwardsFlip(int a, int b, int c, int d)
 {
-    genericFlip(a, b, c, d, {1, 1, 0, 0});
+	genericFlip(a, b, c, d, FlipForwards);
 }
 void Face::alternatingBackwardsFlip(int a, int b, int c, int d)
 {
-    genericFlip(a, b, c, d, {0, 1, 0, 1});
+	genericFlip(a, b, c, d, FlipAlternatingBackwards);
 }
 void Face::alternatingForwardsFlip(int a, int b, int c, int d)
 {
-    genericFlip(a, b, c, d, {1, 0, 1, 0});
+	genericFlip(a, b, c, d, FlipAlternatingForwards);
 }
 
 void Face::QuadSwapCorners(eightPack pack)
