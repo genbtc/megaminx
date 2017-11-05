@@ -10,8 +10,6 @@
 #include <math.h>
 #include "utils.h"
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 void utSetOrthographicProjection(int scrW, int scrH) {
 
