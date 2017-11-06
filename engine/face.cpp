@@ -26,6 +26,8 @@ void Face::attachEdgePieces(Edge& n, int numEdges)
 	edge[3] = &n + pieceList[3];
 	edge[4] = &n + pieceList[4];
 	edgeNativePos = pieceList;
+	//when this is run, iterate through and check to see which position the Face->center color is in 
+	edgeColorPos = returnPositionalArray(*edge[0]);
 }
 
 void Face::attachCornerPieces(Corner& n, int numCorners)
@@ -37,8 +39,27 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
 	corner[3] = &n + pieceList[3];
 	corner[4] = &n + pieceList[4];
 	cornerNativePos = pieceList;
+	// in the InitColor(color1,color2,color3) it will be end up assosciated with a particular face.
+	// the face then needs to record which position the major color is in, for future determination.
+	cornerColorPos = returnPositionalArray(*corner[0]);
 }
 
+std::vector<int> Face::returnPositionalArray(Piece& pieceRef)
+{
+	std::vector<int> posList;
+	const auto centerColor = center->data._colorNum[0];
+	int result = -1;
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			if ((&pieceRef)[i].data._colorNum[j] == centerColor)
+				result = j;
+		}
+		posList.push_back(result);
+	}
+	return posList;
+}
 /**
  * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
  *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
