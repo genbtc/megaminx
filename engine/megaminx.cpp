@@ -190,10 +190,11 @@ int Megaminx::resetFacesEdges(int color_n)
     if (!(foundEdges == defaultEdges))
 		resetFacesEdges(color_n);
 	auto epos = activeFace.edgeColorPos;
-	for (int j = 0; j < epos.size(); ++j)
+	for (int j = 0; j < foundEdges.size(); ++j)
 	{		
 		while (activeFace.edge[j]->data._colorNum[epos[j]] != color_n)
-			activeFace.edge[j]->flip();
+			//activeFace.edge[j]->flip();
+			activeFace.edge[j]->init(foundEdges[j],false);
 	}
 	return 1;
 }
@@ -223,10 +224,11 @@ int Megaminx::resetFacesCorners(int color_n)
     if(!(foundCorners == defaultCorners))
 		resetFacesCorners(color_n);
 	auto cpos = activeFace.cornerColorPos;
-	for (int j = 0; j < cpos.size(); ++j)
+	for (int j = 0; j < foundCorners.size(); ++j)
 	{
 		while (activeFace.corner[j]->data._colorNum[cpos[j]] != color_n)
-			activeFace.corner[j]->flip();
+			//activeFace.corner[j]->flip();
+			activeFace.corner[j]->init(foundCorners[j], false);
 	}
 	return 1;
 }

@@ -41,12 +41,14 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
 	cornerNativePos = pieceList;
 	// in the InitColor(color1,color2,color3) it will be end up assosciated with a particular face.
 	// the face then needs to record which position the major color is in, for future determination.
+	//Face 7 Blue says its 2,2,2,2,1 when its supposed to be 22101
+	//F 8 orange says its 2,2,2,1 when its ** " " 22110
 	cornerColorPos = returnPositionalArray(*corner[0]);
 }
 
 std::vector<int> Face::returnPositionalArray(Piece& pieceRef)
 {
-	std::vector<int> posList;
+    std::vector<int> posList;
 	const auto centerColor = center->data._colorNum[0];
 	int result = -1;
 	for (int i = 0; i < 5; ++i)
