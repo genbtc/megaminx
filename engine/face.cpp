@@ -27,7 +27,14 @@ void Face::attachEdgePieces(Edge& n, int numEdges)
 	edge[4] = &n + pieceList[4];
 	edgeNativePos = pieceList;
 	//when this is run, iterate through and check to see which position the Face->center color is in 
-	edgeColorPos = returnPositionalArray(*edge[0]);
+	for(int i = 0 ; i < 5 ; ++i)
+	{
+		for (int j = 0; j < 2; ++j)
+		{
+			if (edge[i]->data._colorNum[j] == thisNum + 1)
+				edgeColorPos.push_back(j);
+		}
+	}
 	//edgeColorPos = {1,0,1,0,0 }; for blue
 }
 
@@ -42,25 +49,34 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
 	cornerNativePos = pieceList;
 	// in the InitColor(color1,color2,color3) it will be end up assosciated with a particular face.
 	// the face then needs to record which position the major color is in, for future determination.
-	//Face 7 Blue says its 2,2,2,2,1 when its supposed to be 22101
+	//Face 7 lightBlue says its 2,2,2,2,1 when its supposed to be 22101
 	//F 8 orange says its 2,2,2,1 when its ** " " 22110
-	cornerColorPos = returnPositionalArray(*corner[0]);
+	//f 1 darkblue says 7 Blue says its 2,2,2,2,1 when its really 21012
+		//std::vector<int> posList;
+	//const auto centerColor = center->data._colorNum[0];
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			if (corner[i]->data._colorNum[j] == thisNum + 1)
+				cornerColorPos.push_back(j);
+		}
+	}
+	//cornerColorPos = returnPositionalArray(*corner[0]);
 	//cornerColorPos = { 2, 1, 0, 1, 2 }; for blue
 }
 
 std::vector<int> Face::returnPositionalArray(Piece& pieceRef)
 {
-    std::vector<int> posList;
+	std::vector<int> posList;
 	const auto centerColor = center->data._colorNum[0];
-	int result = -1;
 	for (int i = 0; i < 5; ++i)
 	{
 		for (int j = 0; j < 3; ++j)
 		{
 			if ((&pieceRef)[i].data._colorNum[j] == centerColor)
-				result = j;
+				posList.push_back(j);
 		}
-		posList.push_back(result);
 	}
 	return posList;
 }
