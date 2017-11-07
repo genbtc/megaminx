@@ -13,12 +13,14 @@ class Face : public Piece
 {
 public:
 	Face();
-	~Face() {}
+    void makeEdgePositionArray();
+    ~Face() {}
 	//void initPiece(Piece& in, int num, Piece* output);
     void attachEdgePieces(Edge& n, int numEdges);
-	void attachCornerPieces(Corner& n, int numCorners);
+    void makeCornerPositionArray();
+    void attachCornerPieces(Corner& n, int numCorners);
 
-    std::vector<int> returnPositionalArray(Piece& pieceRef);
+    std::vector<int> returnPositionalArray(Piece*& pieceRef);
     void attachCenter(Center* a, double* centerVertexBase);
 	void attachCenter(Center*);    
     void initAxis(int n);
