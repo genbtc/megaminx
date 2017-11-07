@@ -65,7 +65,7 @@ void Edge::init(int n, double* edgeVertexBase)
 	init(n);
 }
 
-void Edge::init(int n)
+void Edge::init(int n, bool doAxes)
 {
 	switch (n + 1)
 	{
@@ -167,6 +167,7 @@ void Edge::init(int n)
 	default:
 		break;
 	}
+	if (doAxes)
 	for (int i = 0; i < 6; ++i)
 	{
         createAxis(n, _vertex[i]);

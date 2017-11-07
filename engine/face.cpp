@@ -17,28 +17,69 @@ Face::Face()
     axis[2] = -1;
 }
 
+void Face::makeEdgePositionArray()
+{
+    for(int i = 0 ; i < 5 ; ++i)
+        for (int j = 0; j < 2; ++j)
+            if (edge[i]->data._colorNum[j] == thisNum + 1)
+                edgeColorPos.push_back(j);
+}
+
 void Face::attachEdgePieces(Edge& n, int numEdges)
 {
 	const auto pieceList = findPiece(n, numEdges);
-	edge[0] = &n + pieceList[0];
-	edge[1] = &n + pieceList[1];
-	edge[2] = &n + pieceList[2];
-	edge[3] = &n + pieceList[3];
-	edge[4] = &n + pieceList[4];
+	for (int i = 0; i < 5; ++i)
+	{
+		edge[i] = &n + pieceList[i];
+	}
 	edgeNativePos = pieceList;
+	makeEdgePositionArray();
+	//edgeColorPos = {1,0,1,0,0 }; for blue
+}
+
+//when this is run, iterate through and check to see which position the Face->center color is in 
+void Face::makeCornerPositionArray()
+{
+    for (int i = 0; i < 5; ++i)
+        for (int j = 0; j < 3; ++j)
+            if (corner[i]->data._colorNum[j] == thisNum + 1)
+                cornerColorPos.push_back(j);
 }
 
 void Face::attachCornerPieces(Corner& n, int numCorners)
 {
 	const auto pieceList = findPiece(n, numCorners);
-	corner[0] = &n + pieceList[0];
-	corner[1] = &n + pieceList[1];
-	corner[2] = &n + pieceList[2];
-	corner[3] = &n + pieceList[3];
-	corner[4] = &n + pieceList[4];
+	for (int i = 0; i < 5; ++i)
+	{
+		corner[i] = &n + pieceList[i];
+	}
 	cornerNativePos = pieceList;
+	makeCornerPositionArray();
+	// in the InitColor(color1,color2,color3) it will be end up assosciated with a particular face.
+	// the face then needs to record which position the major color is in, for future determination.
+	//Face 7 lightBlue says its 2,2,2,2,1 when its supposed to be 22101
+	//F 8 orange says its 2,2,2,1 when its ** " " 22110
+	//f 1 darkblue says 7 Blue says its 2,2,2,2,1 when its really 21012
+		//std::vector<int> posList;
+	//const auto centerColor = center->data._colorNum[0];
+	//cornerColorPos = returnPositionalArray(*corner[0]);
+	//cornerColorPos = { 2, 1, 0, 1, 2 }; for blue
 }
 
+std::vector<int> Face::returnPositionalArray(Piece*& pieceRef)
+{
+	std::vector<int> posList;
+	const auto centerColor = center->data._colorNum[0];
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			if ((&pieceRef)[i]->data._colorNum[j] == centerColor)
+				posList.push_back(j);
+		}
+	}
+	return posList;
+}
 /**
  * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
  *   and then iterates the entire list of pieces to find when the colors match, outputs a list.

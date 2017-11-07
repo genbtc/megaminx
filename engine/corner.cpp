@@ -45,7 +45,7 @@ void Corner::init(int n, double* cornerVertexBase)
 	memcpy(&_vertex, cornerVertexBase, sizeof(_vertex));
     init(n);
 }
-void Corner::init(int n)
+void Corner::init(int n, bool doAxes)
 {
 	switch (n + 1)
 	{
@@ -115,6 +115,7 @@ void Corner::init(int n)
 	default:
 		break;
 	}
+	if (doAxes)
 	for (int i = 0; i < 7; ++i)
 	{
         createAxis(n, _vertex[i]);

@@ -173,7 +173,6 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
-	int total = 0;
     const auto activeFace = faces[(color_n - 1)];
     const auto defaultEdges = activeFace.edgeNativePos;	
 	auto foundEdges = findEdges(color_n);
@@ -184,19 +183,18 @@ int Megaminx::resetFacesEdges(int color_n)
 			if (activeFace.edge[j]->matchesColor(color_n))
 				continue;
 			edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
-			total++;
 		}
 	}
 	foundEdges = findEdges(color_n);
-	//assert checking
+	//assert check just double checking:
     if (!(foundEdges == defaultEdges))
 		resetFacesEdges(color_n);
-	for(int j = 0 ; j < defaultEdges.size() ; ++j)
-	{
-		while (edges[defaultEdges[j]].data._colorNum[0] != color_n)
-			edges[defaultEdges[j]].flip();
+	auto epos = activeFace.edgeColorPos;
+	for (int j = 0; j < foundEdges.size(); ++j)
+	{		
+		while (activeFace.edge[j]->data._colorNum[epos[j]] != color_n)
+			activeFace.edge[j]->flip();
 	}
-	printf("Total swaps was: %i",total);
 	return 1;
 }
 
@@ -208,7 +206,6 @@ int Megaminx::resetFacesEdges(int color_n)
  */
 int Megaminx::resetFacesCorners(int color_n)
 {
-	int total = 0;
 	const auto activeFace = faces[(color_n - 1)];
 	const auto defaultCorners = activeFace.cornerNativePos;	
 	auto foundCorners = findCorners(color_n);
@@ -219,19 +216,18 @@ int Megaminx::resetFacesCorners(int color_n)
 			if (activeFace.corner[j]->matchesColor(color_n))
 				continue;
 			corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
-			total++;
 		}
 	}
 	foundCorners = findCorners(color_n);
-	//assert checking
+	//assert check just double checking:
     if(!(foundCorners == defaultCorners))
 		resetFacesCorners(color_n);
-	for (int j = 0; j < defaultCorners.size(); ++j)
+	auto cpos = activeFace.cornerColorPos;
+	for (int j = 0; j < foundCorners.size(); ++j)
 	{
-		while (corners[defaultCorners[j]].data._colorNum[0] != color_n)
-			corners[defaultCorners[j]].flip();
+		while (activeFace.corner[j]->data._colorNum[cpos[j]] != color_n)
+			activeFace.corner[j]->flip();
 	}
-	printf("Total swaps was: %i", total);
 	return 1;
 }
 

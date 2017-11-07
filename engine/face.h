@@ -13,10 +13,14 @@ class Face : public Piece
 {
 public:
 	Face();
-	~Face() {}
+    void makeEdgePositionArray();
+    ~Face() {}
 	//void initPiece(Piece& in, int num, Piece* output);
     void attachEdgePieces(Edge& n, int numEdges);
-	void attachCornerPieces(Corner& n, int numCorners);
+    void makeCornerPositionArray();
+    void attachCornerPieces(Corner& n, int numCorners);
+
+    std::vector<int> returnPositionalArray(Piece*& pieceRef);
     void attachCenter(Center* a, double* centerVertexBase);
 	void attachCenter(Center*);    
     void initAxis(int n);
@@ -32,7 +36,9 @@ public:
     bool RayPlaneIntersection(Vec3d normal, Vec3d ray);
 
 	std::vector<int> cornerNativePos;
+	std::vector<int> cornerColorPos;
 	std::vector<int> edgeNativePos;
+	std::vector<int> edgeColorPos;
     Corner *corner[5];	
 	Edge *edge[5];
 	Center *center;
