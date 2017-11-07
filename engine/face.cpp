@@ -28,6 +28,7 @@ void Face::attachEdgePieces(Edge& n, int numEdges)
 	edgeNativePos = pieceList;
 	//when this is run, iterate through and check to see which position the Face->center color is in 
 	edgeColorPos = returnPositionalArray(*edge[0]);
+	//edgeColorPos = {1,0,1,0,0 }; for blue
 }
 
 void Face::attachCornerPieces(Corner& n, int numCorners)
@@ -44,6 +45,7 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
 	//Face 7 Blue says its 2,2,2,2,1 when its supposed to be 22101
 	//F 8 orange says its 2,2,2,1 when its ** " " 22110
 	cornerColorPos = returnPositionalArray(*corner[0]);
+	//cornerColorPos = { 2, 1, 0, 1, 2 }; for blue
 }
 
 std::vector<int> Face::returnPositionalArray(Piece& pieceRef)
