@@ -5,22 +5,21 @@
 #include <GL/glu.h>
 #include <GL/glext.h>
 #include <iostream>
-#include <math.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdint.h>
 #include <cstdlib>
 #include <cmath>
+#include <time.h>
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.1105 - genBTC mod";
+const char *title = "Megaminx v1.1117 - genBTC mod";
 // initial window screen size
+double REFRESH_RATE = 60.0;  	// monitor with 60 Hz
 int WIDTH = 700;
 int HEIGHT = 700;
 int ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
+double START_ANGLE = 60.0f;
 double view_distance_view_angle = 20;
 ///////////////////////////////////////////////////////////////////////////////
 // data for mouse selection
@@ -39,6 +38,7 @@ bool help = true;
 int pressedButton;
 int specialKey;
 int currentFace;
+char lastface[32];
 
 // globals
 Camera g_camera;
@@ -50,16 +50,17 @@ void resetCameraView()
 {
 	g_camera = Camera();
 	g_camera.m_zoom = -ZDIST;
-	g_camera.m_angleY = 60.0f;
+	g_camera.m_angleY = START_ANGLE;
 	g_camera.m_forced_aspect_ratio = 1;
 	g_areWeDraggingPoint = false;
 	ChangeSize(WIDTH, HEIGHT);
 }
 
 // Glut prototype functions for callbacks (see main()
-void display();
+void Idle();
+void RenderScene();
+void UpdateScene(double deltaSeconds);
 void reshape(int x, int y);
-void timer(int);
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
@@ -71,9 +72,9 @@ void createMenu();
 void menu(int num);
 void HitTest();
 void printHelpMenu();
+void getCurrentFaceFromAngles(int x, int y);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 
-using namespace std;
 Megaminx* megaminx;
 void createMegaMinx()
 {
@@ -83,7 +84,8 @@ void createMegaMinx()
 
 int main(int argc, char *argv[])
 {
-	srand(time(nullptr));
+	std::srand(time(nullptr));
+	wsprintf(lastface, "%ws", L"STARTUP");
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
 	glutInitWindowSize(WIDTH, HEIGHT);
@@ -95,7 +97,6 @@ int main(int argc, char *argv[])
     gluPerspective(view_distance_view_angle, 1.0 , 1.0, 1000);	//<-?
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glutTimerFunc(0, timer, 0);
 	createMenu();  	//right click menu
 	//Glut Functs:
     glutReshapeFunc(ChangeSize);
@@ -105,12 +106,42 @@ int main(int argc, char *argv[])
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(PressSpecialKey);
 	//Display and Loop forever
-    glutDisplayFunc(display);
+    glutDisplayFunc(RenderScene);
+	glutIdleFunc(Idle);
 	glutMainLoop();
 	return 1;
 }
 
-void display()
+
+///////////////////////////////////////////////////////////////////////////////
+void Idle()
+{
+	static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
+	static const double REFRESH_TIME = 1.0 / REFRESH_RATE;
+	
+	// in millisec
+	const int t = glutGet(GLUT_ELAPSED_TIME);
+	const double newTime = (double)t * 0.001;
+
+	double deltaTime = newTime - g_appTime;
+	if (deltaTime > REFRESH_TIME) deltaTime = REFRESH_TIME;
+
+	// average:
+	deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
+
+	// set global:
+    g_appTime = g_appTime + deltaTime;
+
+	//Render Scene:
+	glutPostRedisplay();
+
+    // save delta:
+	lastDeltas[0] = lastDeltas[1];
+	lastDeltas[1] = lastDeltas[2];
+	lastDeltas[2] = deltaTime;
+}
+
+void RenderScene()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_MULTISAMPLE_ARB);
@@ -121,16 +152,6 @@ void display()
 	glPointSize(5);
 
 	glPushMatrix();
-
-    const int t = glutGet(GLUT_ELAPSED_TIME);
-    const double newTime = (double)t * 0.001;
-	double deltaTime = newTime - g_appTime;
-	static const double REFRESH_TIME = 1.0 / 60.0; 	// monitor with 60 Hz
-	static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
-	if (deltaTime > REFRESH_TIME) deltaTime = REFRESH_TIME;
-	// average:
-	deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
-	g_appTime = g_appTime + deltaTime;
 
 	// spinning - can be toggled w/ spacebar
 	if(spinning)
@@ -146,6 +167,7 @@ void display()
 	utSetOrthographicProjection(WIDTH, HEIGHT);
 		utCalculateAndPrintFps(10, 20);
 		utCalculateAndPrintAngles(10, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
+		utDrawText2D(10, HEIGHT - 40, lastface);
 	utResetPerspectiveProjection();
 	//Print out Text (Help display)
 	if (!help)
@@ -156,24 +178,19 @@ void display()
 	glDisable(GL_LIGHT1);
     glDisable(GL_MULTISAMPLE_ARB);
 	glutSwapBuffers();
-		// save time deltas:
-	lastDeltas[0] = lastDeltas[1];
-	lastDeltas[1] = lastDeltas[2];
-	lastDeltas[2] = deltaTime;
+
 }
-void timer(int)
-{
-	glutPostRedisplay();
-	glutTimerFunc(2, timer, 0);	
-}
+
 
 void double_click(int x, int y)
 {
-	HitTest();
+	//HitTest();
+	getCurrentFaceFromAngles(x, y);
     //not implemented
-	//#define DOUBLE_CLICK_INTERVAL	400
 }
 
+#define DOUBLE_CLICK_INTERVAL	400
+static int bnstate[16];
 void mousePressed(int button, int state, int x, int y)
 {
 	g_camera.ProcessMouse(button, state, x, y);
@@ -187,7 +204,28 @@ void mousePressed(int button, int state, int x, int y)
 	else
 		g_areWeDraggingPoint = false;
 
-	if (state == GLUT_UP)		return; // Disregard redundant GLUT_UP events	//
+	static unsigned int prev_left_click;
+	static int prev_left_x, prev_left_y;
+
+	bnstate[button] = state == GLUT_DOWN ? 1 : 0;
+	if (state == GLUT_DOWN) {
+		if (button == GLUT_LEFT_BUTTON) {
+			const unsigned int msec = glutGet(GLUT_ELAPSED_TIME);
+			const int dx = abs(x - prev_left_x);
+			const int dy = abs(y - prev_left_y);
+
+			if (msec - prev_left_click < DOUBLE_CLICK_INTERVAL && dx < 3 && dy < 3) {
+				double_click(x, y);
+				prev_left_click = 0;
+			}
+			else {
+				prev_left_click = msec;
+				prev_left_x = x;
+				prev_left_y = y;
+			}
+		}
+	}
+	else if (state == GLUT_UP)		return; // Disregard redundant GLUT_UP events	//
 	//	Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)	//
 	if(button == 3) {
 		//Mouse wheel up
@@ -220,28 +258,28 @@ void rotateDispatch(unsigned char key)
     {
     case 'a':   //Left
     case 'A':
-        megaminx->rotate(GLUT_KEY_F12 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F12, dir); break;
     case 'd':   //Right
     case 'D':
-        megaminx->rotate(GLUT_KEY_F9 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F9, dir); break;
     case 'w':   //Upper(Top)
     case 'W':
-        megaminx->rotate(GLUT_KEY_F7 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F7, dir); break;
     case 's':   //Front
     case 'S':
-        megaminx->rotate(GLUT_KEY_F8 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F8, dir); break;
     case 'b':   //Bottom(White)
     case 'B':
-        megaminx->rotate(GLUT_KEY_F1 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F1, dir); break;
     case 'c':   //Diagonal/Corner
     case 'C':   //alias because its close to the keyboard.
-        megaminx->rotate(GLUT_KEY_F5 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F5, dir); break;
     case 'z':   //Back Reverze Diag
     case 'Z':
-        megaminx->rotate(GLUT_KEY_F3 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F3, dir); break;
     case 'x':   //Semantically near on QWERTY
     case 'X':
-        megaminx->rotate(GLUT_KEY_F4 - 1, dir); break;
+        megaminx->rotate(GLUT_KEY_F4, dir); break;
     default:
         break;
     }
@@ -276,33 +314,26 @@ void keyboard(unsigned char key, int x, int y)
 	if (specialKey == GLUT_ACTIVE_CTRL) {
 		switch (key) {
 		case 3:	//Ctrl+C
-			exit(0);		  
+			glutDestroyWindow(1); exit(0); break;
 		case 26: //Ctrl+Z
-			megaminx->undo();
+			megaminx->undo(); break;
 		default: break;
 		}
 	}
 	switch (key)
 	{
-	case ' ':
-		//spacebar
-		spinning = !spinning;
-		break;
+	case ' ': //spacebar 32
+		spinning = !spinning; break;
 	case 'h':
 	case 'H':
-		help = !help;
-		break;
-	case 8:
-		//backspace
-		resetCameraView();
-		break;
-	case 127:
-		//delete
-		megaminx->scramble();
-		break;
-    default:
-        break;
+		help = !help; break;
+	case 8:   //backspace
+		resetCameraView(); break;
+	case 127: //delete
+		megaminx->scramble(); break;
+    default: break;
 	}
+	//(Enter is 13, escape is 27)
 	//call the megaminx specific key functions (above)
     rotateDispatch(key);
 }
@@ -331,7 +362,7 @@ void PressSpecialKey(int key, int x, int y)
 	case GLUT_KEY_F10:
 	case GLUT_KEY_F11:
 	case GLUT_KEY_F12:
-		megaminx->rotate(key - GLUT_KEY_F1, dir);
+		megaminx->rotate(key, dir);
 		break;
     default:
         break;
@@ -339,17 +370,16 @@ void PressSpecialKey(int key, int x, int y)
 	g_camera.PressSpecialKey(key, x, y);
 }
 
-void createMenu(void) {
-	//SubLevel 0 menu - last layer
+void createMenu() {
+	//SubLevel 0 menu - Function
 	submenu0_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Edit... Undo", 91);
 	glutAddMenuEntry("Solve All/(reset)", 92);
 	glutAddMenuEntry("Scramble", 100);
 	glutAddMenuEntry("Redraw", 101);
 	glutAddMenuEntry("Quit", 102);
-	
     
-	//SubLevel 1 menu - last layer
+	//SubLevel 1 menu - Last Layer
 	submenu1_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Make Grey Star", 31);
 	glutAddMenuEntry("Make Grey Corners", 32);
@@ -357,24 +387,24 @@ void createMenu(void) {
 	glutAddMenuEntry("One Corner Swap", 34);
 	glutAddMenuEntry("Two Corner Swaps", 35);
     
-	//SubLevel2 Menu - rotations
+	//SubLevel2 Menu - Rotations
 	submenu2_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Rotate Front Face", 3);
 	glutAddMenuEntry("Solve/Reset Current Face", 21);
 	glutAddMenuEntry("Rotate Corner Piece", 23);
 	glutAddMenuEntry("Swap Edge Piece", 24);
      
-	//SubLevel3 Menu - steps
+	//SubLevel3 Menu - Steps
 	submenu3_id = glutCreateMenu(menu);
 	glutAddMenuEntry("White Star", 41);
 	glutAddMenuEntry("White Face", 42);
-	glutAddMenuEntry("2nd Layer Edges", 43);
-	glutAddMenuEntry("Low Y's", 44);
-	glutAddMenuEntry("4th Layer Edges", 45);
-	glutAddMenuEntry("High Y's", 46);
-	glutAddMenuEntry("6th Layer Edges", 47);
-    
-	//SubLevel4 Menu - algos
+//	glutAddMenuEntry("2nd Layer Edges", 43);
+//	glutAddMenuEntry("Low Y's", 44);
+//	glutAddMenuEntry("4th Layer Edges", 45);
+//	glutAddMenuEntry("High Y's", 46);
+//	glutAddMenuEntry("6th Layer Edges", 47);
+
+	//SubLevel4 Menu - Algos
 	submenu4_id = glutCreateMenu(menu);
 	glutAddMenuEntry("r u R' U'", 51);
 	glutAddMenuEntry("l u L' U'", 52);
@@ -386,16 +416,16 @@ void createMenu(void) {
 
 	//SubLevel6 Menu - Faces
 	submenu6_id = glutCreateMenu(menu);
-	glutAddMenuEntry("1  WHITE", 61);
-	glutAddMenuEntry("2 BLUE", 62);
-	glutAddMenuEntry("3  RED", 63);
-	glutAddMenuEntry("4  GREEN", 64);
-	glutAddMenuEntry("5  PURPLE", 65);
-	glutAddMenuEntry("6  YELLOW", 66);
-	glutAddMenuEntry("7  GRAY", 67);
-	glutAddMenuEntry("8  LIGHT_BLUE", 68);
-	glutAddMenuEntry("9  ORANGE", 69);
-	glutAddMenuEntry("10 LIGHT_GREEN", 70);
+	glutAddMenuEntry(" 1 WHITE", 61);
+	glutAddMenuEntry(" 2 BLUE_DARK", 62);
+	glutAddMenuEntry(" 3 RED", 63);
+	glutAddMenuEntry(" 4 GREEN_DARK", 64);
+	glutAddMenuEntry(" 5 PURPLE", 65);
+	glutAddMenuEntry(" 6 YELLOW", 66);
+	glutAddMenuEntry(" 7 GRAY", 67);
+	glutAddMenuEntry(" 8 BLUE_LIGHT", 68);
+	glutAddMenuEntry(" 9 ORANGE", 69);
+	glutAddMenuEntry("10 GREEN_LIGHT", 70);
 	glutAddMenuEntry("11 PINK", 71);
 	glutAddMenuEntry("12 BONE", 72);    
         
@@ -405,8 +435,8 @@ void createMenu(void) {
 	glutAddSubMenu("Function  -->", submenu0_id);
 	glutAddSubMenu("Last Layer ->", submenu1_id);
 	glutAddSubMenu("Rotations -->", submenu2_id);
-	//glutAddSubMenu("Steps------->", submenu3_id);
-	//glutAddSubMenu("Algos ------>", submenu4_id);
+	glutAddSubMenu("Steps  ----->", submenu3_id);
+	//glutAddSubMenu("Algos  ----->", submenu4_id);
 	glutAddSubMenu("Reset Faces: -->", submenu6_id);
 	glutAddMenuEntry("Exit Menu...", 9999);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -422,31 +452,40 @@ void menu(int num) {
 	if (num == 1)
 		spinning = !spinning;
 	if (num == 3)
-		rotateDispatch('s');
+		megaminx->rotate(GLUT_KEY_F8, 1);
 	if (num == 21)
-		int result = megaminx->resetFace(GLUT_KEY_F8);
+		megaminx->resetFace(megaminx->g_currentFace->thisNum);
 	if (num == 23)  //rotate corner piece
 	    megaminx->swapOneCorner(GLUT_KEY_F8, 1);
 	if (num == 24)  //rotate edge piece
 	    megaminx->swapOneEdge(GLUT_KEY_F8, 1);
-	if (num == 31)	//make gray edges (star)
-		//auto resuEdge = megaminx->findEdges(GRAY);
-		auto resuEdge = megaminx->resetFacesEdges(GRAY);
-	if (num == 32)	//make gray corners
-		//auto resuCor = megaminx->findCorners(GRAY);
-		auto resuCor = megaminx->resetFacesCorners(GRAY);
+	if (num == 31)	//make GRAY edges (star)
+		megaminx->resetFacesEdges(GRAY);
+	if (num == 32)	//make GRAY corners
+		megaminx->resetFacesCorners(GRAY);
+	if (num == 41)	//make WHITE edges (star)
+		megaminx->resetFacesEdges(WHITE);
+	if (num == 42)	//make WHITE Face
+		megaminx->resetFace(WHITE);
 	if (num >= 61 && num <= 72)
-	{
-		auto resuEdge = megaminx->resetFacesEdges(num - 60);
-		auto resuCor = megaminx->resetFacesCorners(num - 60);
-		//megaminx->setCurrentFace(num - 60);
-	}	
+		megaminx->resetFace(num - 60);
 	if (num == 100)
 		megaminx->scramble();
 	if (num == 102)
 	{
 		glutDestroyWindow(1);
 		exit(0);
+	}
+}
+
+void MakeaVec3dOutofNormPlanes()
+{ 
+	auto const vertex = megaminx->g_currentFace->_vertex[0];
+	std::vector<Vec3d> g_points;
+	//12 faces - turn one each, randomizing direction
+	for(int i = 0 ; i < 12 ; i++) {
+	    const Vec3d vtx3d(vertex);
+		g_points.push_back(vtx3d);
 	}
 }
 
@@ -458,7 +497,7 @@ void HitTest()
 
 	if (g_areWeDraggingPoint == false)
 	{
-		megaminx->setCurrentFace(7);
+		megaminx->setCurrentFaceActive(8);
 		auto const vertex = megaminx->g_currentFace->_vertex[0];
 		Vec3d vtx3d(vertex);
 		// perform hit test with all point in the scene
@@ -473,3 +512,52 @@ void HitTest()
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
+
+void getCurrentFaceFromAngles(int x, int y)
+{ 
+	int face=0;
+	int d = 36;
+	int r = 72;
+	x = std::abs(g_camera.m_angleX);
+	y = std::abs(g_camera.m_angleY);
+	//Top half OK
+	auto y1 = y >= (START_ANGLE-30) && y <= (START_ANGLE+30); 	//60
+	if (y1 && x < d + r * 0)
+		face = LIGHT_BLUE;
+	if (y1 && x >= d + r * 0 && x < d + r * 1)
+		face = ORANGE;
+	if (y1 && x >= d + r * 1 && x < d + r * 2)
+		face = LIGHT_GREEN;
+	if (y1 && x >= d + r * 2 && x < d + r * 3)
+		face = PINK;
+	if (y1 && x >= d + r * 3 && x < d + r * 4)
+		face = BONE;
+	if (y1 && x >= d + r * 4 && x < d + r * 5)
+		face = LIGHT_BLUE;
+	//Bottom half not.
+	auto y2 = y >= (START_ANGLE-144 - 30) && y <= (START_ANGLE-144 + 30);  	//-108
+	if (y2 && x < d + r * 0)
+		face = BLUE;
+	if (y2 && x >= d + r * 0 && x < d + r * 1)
+		face = RED;
+	if (y2 && x >= d + r * 1 && x < d + r * 2)
+		face = GREEN;
+	if (y2 && x >= d + r * 2 && x < d + r * 3)
+		face = PURPLE;
+	if (y2 && x >= d + r * 3 && x < d + r * 4)
+		face = YELLOW;
+	if (y2 && x >= d + r * 4 && x < d + r * 5)
+		face = BLUE;
+	auto y3 = y >= -216 && y <= -144;	//-180
+	if (y3)
+		face = WHITE;
+	auto y4 = y <= 30;	//0
+	if (y4)
+		face = GRAY;
+	if (face == 0) return;
+	megaminx->setCurrentFaceActive(face);
+	megaminx->rotate(face, 1);
+	//Bottom half.
+	wsprintf(lastface, "%ws", g_colorRGBs[face].name);
+	//lastface = static_cast<char*
+}

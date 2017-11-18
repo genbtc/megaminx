@@ -116,10 +116,8 @@ void Corner::init(int n, bool doAxes)
 		break;
 	}
 	if (doAxes)
-	for (int i = 0; i < 7; ++i)
-	{
-        createAxis(n, _vertex[i]);
-	}
+		for (int i = 0; i < 7; ++i)
+			createAxis(n, _vertex[i]);
 }
 
 void Corner::render()

@@ -32,7 +32,6 @@ public:
 	void ProcessMouseMotion(int x, int y, bool calcRotation = true);
 	void ProcessPassiveMouseMotion(int x, int y);
 
-	void UpdateDelta(double deltaTime);
 	void RotateGLCameraView();
 };
 
@@ -41,6 +40,8 @@ public:
 class MouseRayTestData
 {
 public:
+	MouseRayTestData();
+
 	/** start pos of the ray - usually located in the near plane */
 	Vec3d m_start;
 	/** end pos of the ray - usually located in the far plane */
@@ -51,10 +52,8 @@ public:
 	Vec3d m_point;
 	/** scalar that means position on the ray where mouse hit something */
 	double m_lastT;
-	/** dit we hit something */
+	/** did we hit something */
 	bool m_hit;
-public:
-	MouseRayTestData();
 
 	/** calculates ray for the mouse, that ray can be used to perform picking
 	  * when hit is found the remember to set m_lastT param */

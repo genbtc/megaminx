@@ -2,6 +2,7 @@
 #include "face.h"
 #include <vector>
 #include <map>
+#include <cassert>
 
 Face::Face()
 {
@@ -55,31 +56,8 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
 	}
 	cornerNativePos = pieceList;
 	makeCornerPositionArray();
-	// in the InitColor(color1,color2,color3) it will be end up assosciated with a particular face.
-	// the face then needs to record which position the major color is in, for future determination.
-	//Face 7 lightBlue says its 2,2,2,2,1 when its supposed to be 22101
-	//F 8 orange says its 2,2,2,1 when its ** " " 22110
-	//f 1 darkblue says 7 Blue says its 2,2,2,2,1 when its really 21012
-		//std::vector<int> posList;
-	//const auto centerColor = center->data._colorNum[0];
-	//cornerColorPos = returnPositionalArray(*corner[0]);
-	//cornerColorPos = { 2, 1, 0, 1, 2 }; for blue
 }
 
-std::vector<int> Face::returnPositionalArray(Piece*& pieceRef)
-{
-	std::vector<int> posList;
-	const auto centerColor = center->data._colorNum[0];
-	for (int i = 0; i < 5; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			if ((&pieceRef)[i]->data._colorNum[j] == centerColor)
-				posList.push_back(j);
-		}
-	}
-	return posList;
-}
 /**
  * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
  *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
@@ -123,6 +101,7 @@ void Face::attachCenter(Center *a, double* centerVertexBase)
  */
 void Face::initAxis(int n)
 {
+	assert(n < 12);
 	thisNum = n;
     center->createAxis(n,axis);
     for (int i = 0; i < 5; ++i)
@@ -137,6 +116,7 @@ void Face::initAxis(int n)
  */
 void Face::twoEdgesFlip(int a,int b)
 {
+	assert(a >= 0 && a < 5 && b >= 0 && b < 5);
     edge[a]->flip();
 	edge[b]->flip();
 }
@@ -163,6 +143,7 @@ std::vector<int> FlipAlternatingForwards = { 1, 0, 1, 0 };
 
 void Face::QuadSwapCorners(std::vector<int> pack)
 {
+	assert(pack.size() > 7);
     swapCorners(pack[0], pack[1]);
     swapCorners(pack[2], pack[3]);
     swapCorners(pack[4], pack[5]);
@@ -171,6 +152,7 @@ void Face::QuadSwapCorners(std::vector<int> pack)
 
 void Face::QuadSwapEdges(std::vector<int> pack)
 {
+	assert(pack.size() > 7);
     swapEdges(pack[0], pack[1]);
     swapEdges(pack[2], pack[3]);
     swapEdges(pack[4], pack[5]);
@@ -183,6 +165,7 @@ void Face::QuadSwapEdges(std::vector<int> pack)
  */
 bool Face::placeParts(int right)
 {
+	assert(right == 1 || right == -1);
 	if (right == 1)
 	{
 		switch (thisNum)
@@ -388,6 +371,7 @@ bool Face::render()
  */
 void Face::rotate(int direction)
 {
+	assert(direction == 1 || direction == -1);
     _rotate = true;
 	turnDir = direction;
 }
@@ -395,17 +379,19 @@ void Face::rotate(int direction)
 /**
  * \brief Public. Given two indexes, swap the corners.
  */
-void Face::swapCorners(int n, int k)
+void Face::swapCorners(int a, int b)
 {
-	corner[n]->swapdata(corner[k]->data);
+	assert(a >= 0 && a < 5 && b >= 0 && b < 5);
+	corner[a]->swapdata(corner[b]->data);
 }
 
 /**
  * \brief Public. given two indexes, swap the edges.
  */
-void Face::swapEdges(int n, int k)
+void Face::swapEdges(int a, int b)
 {
-	edge[n]->swapdata(edge[k]->data);
+	assert(a >= 0 && a < 5 && b >= 0 && b < 5);
+	edge[a]->swapdata(edge[b]->data);
 }
 
 /**

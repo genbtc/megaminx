@@ -7,9 +7,8 @@
 
 #pragma once
 #include <cstdlib>
-#include <stdlib.h>
-#include <math.h>
-#include <memory.h>
+#include <cstring>
+#include <cmath>
 
 inline double DegToRad(double a) { return a*0.01745329252; };  /**< ang * M_PI / 180.0f */
 inline double RadToDeg(double a) { return a*57.29577951; };    /**< rads * 180.0f / M_PI */

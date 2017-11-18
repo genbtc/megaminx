@@ -168,10 +168,8 @@ void Edge::init(int n, bool doAxes)
 		break;
 	}
 	if (doAxes)
-	for (int i = 0; i < 6; ++i)
-	{
-        createAxis(n, _vertex[i]);
-	}
+		for (int i = 0; i < 6; ++i)
+			createAxis(n, _vertex[i]);
 }
 
 void Edge::render()

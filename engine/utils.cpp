@@ -1,4 +1,5 @@
-#include <math.h>
+//#include <math.h>
+#include <cmath>
 
 static const long double PI = acos(-1);
 void rotate_vertex(double &vx, double &vy, double angle)

@@ -30,10 +30,8 @@
 //[/ignore]
 #pragma once
 #include <cstdlib>
-#include <cstdio>
 #include <iostream>
 #include <iomanip>
-#include <cmath>
 
 template<typename T>
 class Vec2

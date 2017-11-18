@@ -99,17 +99,6 @@ void Camera::ProcessPassiveMouseMotion(int x, int y)
 	m_mouseX = x;
 	m_mouseY = y;
 }
-/**
- * \brief Call this before your Update (no need)
- */
-void Camera::UpdateDelta(double deltaTime)
-{
-	/*
-	m_zoom += m_deltaZoom;
-	m_angleX += m_deltaAngX;
-	m_angleY += m_deltaAngY;
-	*/
-}
 
 /**
  * \brief Required. Call this during/after your Update or render function to enable camera behavior.

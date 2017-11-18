@@ -4,10 +4,13 @@
  *	@author Bartlomiej Filipek
  *	@date March 2011
  */
-#include <stdlib.h>
+#include <cstdlib>
+#include <cmath>
+//#include <cstdint>
+//#include <stdlib.h>
 #include <iostream>
 #include <GL/freeglut_std.h>
-#include <math.h>
+//#include <math.h>
 #include "utils.h"
 
 ///////////////////////////////////////////////////////////////////////////////

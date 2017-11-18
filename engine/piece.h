@@ -1,6 +1,7 @@
 #ifndef _PIECE_H_
 #define _PIECE_H_
-#include <math.h>
+//#include <math.h>
+#include <cmath>
 #include "vector3d.h"
 
 void rotateVertex(double *vertex, char axis, double angle);

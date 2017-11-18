@@ -1,7 +1,7 @@
 #include "megaminx.h"
 #include <cstdlib>
-#include <algorithm>
-#include <iterator>
+#include <cassert>
+#include <cmath>
 
 void Megaminx::solve()
 {
@@ -45,6 +45,19 @@ Megaminx::Megaminx()
     solve();
 }
 
+void Megaminx::iterateAllPieces()
+{
+	for (int i = 0; i < numFaces; ++i)
+	{
+		centers[i].render();
+		for (int j = 0; j < 5; ++j)
+		{
+			edges[j].render();
+			corners[j].render();
+		}
+	}		
+}
+
 void Megaminx::render()
 {
 	if (!rotating)
@@ -82,6 +95,9 @@ void Megaminx::render()
 
 void Megaminx::rotate(int num, int dir)
 {
+	num -= 1; 	//Convert 1-12 Faces into array 0-11
+	assert(num < 12);
+    assert(dir == 1 || dir == -1);
 	if (!rotating) {
 		rotating = true;
 		_rSide = num;
@@ -109,7 +125,7 @@ void Megaminx::scramble()
 	{
 		//12 faces - turn one each, randomizing direction
 		for (int i = 0; i < numFaces; i++) {
-			const int r = rand() % 2 * 2 - 1;
+			const int r = std::rand() % 2 * 2 - 1;
 			faces[i].placeParts(r);
 		}
 	}
@@ -122,6 +138,8 @@ void Megaminx::scramble()
  */
 void Megaminx::swapOneCorner(int i, int x)
 {
+	assert(i < 12);
+	assert(x < 5);
 	faces[i].corner[x]->flip();
 }
 /**
@@ -131,6 +149,9 @@ void Megaminx::swapOneCorner(int i, int x)
  */
 void Megaminx::swapOneEdge(int i,int x)
 {    
+	i -= 1;  	//Convert 1-12 Faces into array 0-11
+	assert(i < 12);
+	assert(x < 5);
 	faces[i].edge[x]->flip();
 }
 
@@ -138,14 +159,22 @@ void Megaminx::swapOneEdge(int i,int x)
  * \brief Makes a pointer to g_currentFace
  * \param i Nth-face number index 0-11
  */
-void Megaminx::setCurrentFace(int i)
+void Megaminx::setCurrentFaceActive(int i)
 {
+	i -= 1;  	//Convert 1-12 Faces into array 0-11
+	assert(i < 12);
 	g_currentFace = &faces[i];
+	assert(g_currentFace->thisNum == i);
 }
 
-//sample temp. no good.
+//shortcut to reset all the things on a face and set it to active.
 int Megaminx::resetFace(int n)
 {
+	n -= 1;   	//Convert 1-12 Faces into array 0-11
+	assert(n < 12);
+	resetFacesEdges(n);
+	resetFacesCorners(n);
+	setCurrentFaceActive(n);
 	return n;
 }
 //
@@ -154,7 +183,9 @@ int Megaminx::resetFace(int n)
  */
 std::vector<int> Megaminx::findEdges(int i)
 {
-	return faces[(i - 1)].findPiece(edges[0], numEdges);
+	i -= 1;   	//Convert 1-12 Faces into array 0-11
+	assert(i < 12);
+	return faces[i].findPiece(edges[0], numEdges);
 }
 
 /**
@@ -162,7 +193,9 @@ std::vector<int> Megaminx::findEdges(int i)
  */
 std::vector<int> Megaminx::findCorners(int i)
 {
-	return faces[(i - 1)].findPiece(corners[0], numCorners);
+	i -= 1;   	//Convert 1-12 Faces into array 0-11
+	assert(i < 12);
+	return faces[i].findPiece(corners[0], numCorners);
 }
 
 /**
@@ -173,8 +206,8 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
-    const auto activeFace = faces[(color_n - 1)];
-    const auto defaultEdges = activeFace.edgeNativePos;	
+	const auto activeFace = faces[(color_n - 1)];
+	const auto defaultEdges = activeFace.edgeNativePos;	
 	auto foundEdges = findEdges(color_n);
 	for (int j = 0; j < foundEdges.size(); ++j) 
 	{
@@ -187,8 +220,7 @@ int Megaminx::resetFacesEdges(int color_n)
 	}
 	foundEdges = findEdges(color_n);
 	//assert check just double checking:
-    if (!(foundEdges == defaultEdges))
-		resetFacesEdges(color_n);
+	assert(foundEdges == defaultEdges);
 	auto epos = activeFace.edgeColorPos;
 	for (int j = 0; j < foundEdges.size(); ++j)
 	{		
@@ -220,8 +252,7 @@ int Megaminx::resetFacesCorners(int color_n)
 	}
 	foundCorners = findCorners(color_n);
 	//assert check just double checking:
-    if(!(foundCorners == defaultCorners))
-		resetFacesCorners(color_n);
+    assert(foundCorners == defaultCorners);
 	auto cpos = activeFace.cornerColorPos;
 	for (int j = 0; j < foundCorners.size(); ++j)
 	{
@@ -229,30 +260,4 @@ int Megaminx::resetFacesCorners(int color_n)
 			activeFace.corner[j]->flip();
 	}
 	return 1;
-}
-
-bool Megaminx::RayTest(const Vec3d& start, const Vec3d& end, unsigned* id, double* t, double epsilon)
-{
-	unsigned int pointID = numFaces + 1;
-	bool foundCollision = false;
-	double minDistToStart = 10000000.0;
-	double dst;
-	Vec3d pt;
-	for (unsigned int i = 0; i < numFaces; ++i)
-	{
-		if (faces[i].RayTest(start, end, &pt, t, epsilon))
-		{
-			dst = Distance(start, pt);
-			if (dst < minDistToStart)
-			{
-				minDistToStart = dst;
-				pointID = i;
-				foundCollision = true;
-			}
-		}
-	}
-
-	*id = pointID;
-
-	return foundCollision;
 }

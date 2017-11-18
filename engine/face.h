@@ -15,12 +15,11 @@ public:
 	Face();
     void makeEdgePositionArray();
     ~Face() {}
-	//void initPiece(Piece& in, int num, Piece* output);
+	
     void attachEdgePieces(Edge& n, int numEdges);
     void makeCornerPositionArray();
     void attachCornerPieces(Corner& n, int numCorners);
 
-    std::vector<int> returnPositionalArray(Piece*& pieceRef);
     void attachCenter(Center* a, double* centerVertexBase);
 	void attachCenter(Center*);    
     void initAxis(int n);
@@ -42,7 +41,7 @@ public:
     Corner *corner[5];	
 	Edge *edge[5];
 	Center *center;
-
+	int thisNum;
 private:
     void twoEdgesFlip(int a,int b);
     void Flip(int a, int b, int c, int d, std::vector<int> pack);
@@ -53,8 +52,6 @@ private:
 	bool _rotate;
 	double angle;
 	double axis[3];
-	int thisNum;
-
 };
 
 #endif
