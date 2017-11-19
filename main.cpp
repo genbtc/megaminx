@@ -13,7 +13,7 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.1117 - genBTC mod";
+const char *title = "Megaminx v1.1119 - genBTC mod";
 // initial window screen size
 double REFRESH_RATE = 60.0;  	// monitor with 60 Hz
 int WIDTH = 700;
@@ -36,7 +36,6 @@ bool spinning = false;
 bool help = true;
 
 int pressedButton;
-int specialKey;
 int currentFace;
 char lastface[32];
 
@@ -64,6 +63,7 @@ void reshape(int x, int y);
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
+void utShowCurrentFace();
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void PressSpecialKey(int key, int x, int y);
@@ -72,7 +72,7 @@ void createMenu();
 void menu(int num);
 void HitTest();
 void printHelpMenu();
-void getCurrentFaceFromAngles(int x, int y);
+int getCurrentFaceFromAngles(int x, int y);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 
 Megaminx* megaminx;
@@ -112,8 +112,6 @@ int main(int argc, char *argv[])
 	return 1;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
 void Idle()
 {
 	static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
@@ -132,6 +130,7 @@ void Idle()
 	// set global:
     g_appTime = g_appTime + deltaTime;
 
+	//TODO:Figure out how to actually limit to 60 FPS (This function does nothing currently)
 	//Render Scene:
 	glutPostRedisplay();
 
@@ -152,22 +151,24 @@ void RenderScene()
 	glPointSize(5);
 
 	glPushMatrix();
-
-	// spinning - can be toggled w/ spacebar
-	if(spinning)
-	    g_camera.m_angleX++;
-	//Rotate the Cube into View
-	g_camera.RotateGLCameraView();
-	//Render it.
-	megaminx->render();
-	//Pop
+	{
+		// spinning can be toggled w/ spacebar
+		if(spinning)
+			g_camera.m_angleX++;
+		//Rotate the Cube into View
+		g_camera.RotateGLCameraView();
+		//Render it.
+		megaminx->render();
+	}
 	glPopMatrix();
-	//Print out Text (FPS display)
 	glColor3f(0, 1, 0);
+	//Print out Text (FPS display + Angles + face Name )
 	utSetOrthographicProjection(WIDTH, HEIGHT);
+	{
 		utCalculateAndPrintFps(10, 20);
 		utCalculateAndPrintAngles(10, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
-		utDrawText2D(10, HEIGHT - 40, lastface);
+		utShowCurrentFace();
+	}
 	utResetPerspectiveProjection();
 	//Print out Text (Help display)
 	if (!help)
@@ -181,12 +182,21 @@ void RenderScene()
 
 }
 
+void utShowCurrentFace()
+{
+	currentFace = getCurrentFaceFromAngles(0, 0);
+	if (currentFace != 0) {
+		wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
+		megaminx->setCurrentFaceActive(currentFace);
+		utDrawText2D(10, HEIGHT - 40, lastface);
+	}
+}
 
 void double_click(int x, int y)
 {
-	//HitTest();
-	getCurrentFaceFromAngles(x, y);
-    //not implemented
+	auto specialKey = glutGetModifiers();
+	const int dir = (specialKey == 1) ? 1 : -1;
+	megaminx->rotate(currentFace, dir);
 }
 
 #define DOUBLE_CLICK_INTERVAL	400
@@ -195,7 +205,7 @@ void mousePressed(int button, int state, int x, int y)
 {
 	g_camera.ProcessMouse(button, state, x, y);
 
-	// can we move any ball?
+	// can we move?
 	if(g_camera.m_isLeftPressed && g_rayTest.m_hit)
 	{
 		g_draggedPointID = g_lastHitPointID;
@@ -250,7 +260,7 @@ void mousePressedMove(int x, int y)
 
 void rotateDispatch(unsigned char key)
 {
-	specialKey = glutGetModifiers();
+	auto specialKey = glutGetModifiers();
 	int dir = -1;
 	if (specialKey == GLUT_ACTIVE_SHIFT) 
 		dir = (specialKey == 1) ? 1 : -1;
@@ -284,33 +294,37 @@ void rotateDispatch(unsigned char key)
         break;
     }
 }
+
 void printHelpMenu()
 {
 	glColor3f(1, 1, 1);
 	utSetOrthographicProjection(WIDTH, HEIGHT);
-	static char helpStr[240];
-	const int startwidth = WIDTH - 240;
+	static char helpStr[255];
+	const int startwidth = WIDTH - 245;
 	const int startheight = 510;
 	int w = startwidth;
 	int h = startheight;
 	sprintf(helpStr, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[D/d] = Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[A/a] = Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[S/s] = Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[W/w] = Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Zz,Xx,Cc] = Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[B/b] = Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[F1]-[F12]/+Shift = Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Space] = Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[BackSpace] = Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Delete] = Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
-	sprintf(helpStr, "[Right Click] = Menu"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Right Click]  Action Menu"); utDrawText2D(w, h, helpStr); h += 15;
+//	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Dbl Click]  Rotate Current >>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "  /+Shift  CounterClockwise <<"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[D/d]  Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[A/a]  Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[S/s]  Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[W/w]  Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Zz,Xx,Cc]  Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[B/b]  Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[F1]-[F12]/+Shift  Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Space]  Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[BackSpace]  Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
+	sprintf(helpStr, "[Delete]  Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
 	utResetPerspectiveProjection();
 }
+
 void keyboard(unsigned char key, int x, int y)
 {
-	specialKey = glutGetModifiers();
+	auto specialKey = glutGetModifiers();
 	if (specialKey == GLUT_ACTIVE_CTRL) {
 		switch (key) {
 		case 3:	//Ctrl+C
@@ -340,7 +354,8 @@ void keyboard(unsigned char key, int x, int y)
 
 void PressSpecialKey(int key, int x, int y)
 {
-    specialKey = glutGetModifiers();
+	//TODO Add Caps Lock to determine rotation direction also.
+    auto specialKey = glutGetModifiers();
     const int dir = (specialKey == 1) ? 1 : -1;
 	switch (key)
 	{
@@ -375,24 +390,25 @@ void createMenu() {
 	submenu0_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Edit... Undo", 91);
 	glutAddMenuEntry("Solve All/(reset)", 92);
+	glutAddMenuEntry("Reset Camera", 93);
 	glutAddMenuEntry("Scramble", 100);
-	glutAddMenuEntry("Redraw", 101);
+	//glutAddMenuEntry("Redraw", 101);
 	glutAddMenuEntry("Quit", 102);
     
 	//SubLevel 1 menu - Last Layer
 	submenu1_id = glutCreateMenu(menu);
 	glutAddMenuEntry("Make Grey Star", 31);
 	glutAddMenuEntry("Make Grey Corners", 32);
-	glutAddMenuEntry("One Edge Swap", 33);
-	glutAddMenuEntry("One Corner Swap", 34);
-	glutAddMenuEntry("Two Corner Swaps", 35);
+	glutAddMenuEntry("Swap 1 Gray Edge", 33);
+	glutAddMenuEntry("Swap 1 Gray Corner", 34);
+	glutAddMenuEntry("Swap 2 Gray Corners", 35);
     
 	//SubLevel2 Menu - Rotations
 	submenu2_id = glutCreateMenu(menu);
-	glutAddMenuEntry("Rotate Front Face", 3);
+	glutAddMenuEntry("Rotate Front Face CCW", 3);
 	glutAddMenuEntry("Solve/Reset Current Face", 21);
-	glutAddMenuEntry("Rotate Corner Piece", 23);
-	glutAddMenuEntry("Swap Edge Piece", 24);
+	glutAddMenuEntry("Rotate a Random Corner", 23);
+	glutAddMenuEntry("Swap a Random Edge", 24);
      
 	//SubLevel3 Menu - Steps
 	submenu3_id = glutCreateMenu(menu);
@@ -449,6 +465,8 @@ void menu(int num) {
 	}
 	if (num == 91)
 		megaminx->undo();
+	if (num == 93)
+		resetCameraView();
 	if (num == 1)
 		spinning = !spinning;
 	if (num == 3)
@@ -497,7 +515,7 @@ void HitTest()
 
 	if (g_areWeDraggingPoint == false)
 	{
-		megaminx->setCurrentFaceActive(8);
+		//megaminx->setCurrentFaceActive(BLUE);
 		auto const vertex = megaminx->g_currentFace->_vertex[0];
 		Vec3d vtx3d(vertex);
 		// perform hit test with all point in the scene
@@ -513,51 +531,76 @@ void HitTest()
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-void getCurrentFaceFromAngles(int x, int y)
+int getCurrentFaceFromAngles(int x, int y)
 { 
 	int face=0;
 	int d = 36;
 	int r = 72;
-	x = std::abs(g_camera.m_angleX);
-	y = std::abs(g_camera.m_angleY);
-	//Top half OK
-	auto y1 = y >= (START_ANGLE-30) && y <= (START_ANGLE+30); 	//60
+	int ox = g_camera.m_angleX;
+	int oy = g_camera.m_angleY;
+	x = ox;
+	y = std::abs(oy);
+	//Top half OK - Part 1 (Positive x Angles)
+	auto y1a = y >= (START_ANGLE-d) && y <= (START_ANGLE+d); 	//60
+	auto y1b = oy >= (-300 - d) && oy <= (-300 + d);    	//-300 (other opposite)
+	auto y1 = y1a || y1b;
 	if (y1 && x < d + r * 0)
 		face = LIGHT_BLUE;
 	if (y1 && x >= d + r * 0 && x < d + r * 1)
-		face = ORANGE;
-	if (y1 && x >= d + r * 1 && x < d + r * 2)
-		face = LIGHT_GREEN;
-	if (y1 && x >= d + r * 2 && x < d + r * 3)
-		face = PINK;
-	if (y1 && x >= d + r * 3 && x < d + r * 4)
 		face = BONE;
+	if (y1 && x >= d + r * 1 && x < d + r * 2)
+		face = PINK;
+	if (y1 && x >= d + r * 2 && x < d + r * 3)
+		face = LIGHT_GREEN;
+	if (y1 && x >= d + r * 3 && x < d + r * 4)
+		face = ORANGE;
 	if (y1 && x >= d + r * 4 && x < d + r * 5)
 		face = LIGHT_BLUE;
-	//Bottom half not.
-	auto y2 = y >= (START_ANGLE-144 - 30) && y <= (START_ANGLE-144 + 30);  	//-108
+	//Top half OK - Part 1 (Negative x Angles)	150?
+	if (y1 && x <= -d - r * 0 && x > -d - r * 1)
+		face = ORANGE;
+	if (y1 && x <= -d - r * 1 && x > -d - r * 2)
+		face = LIGHT_GREEN;
+	if (y1 && x <= -d - r * 2 && x > -d - r * 3)
+		face = PINK;
+	if (y1 && x <= -d - r * 3 && x > -d - r * 4)
+		face = BONE;
+	if (y1 && x <= -d - r * 4 && x > -d - r * 5)
+		face = LIGHT_BLUE;
+	//Bottom half OK - Part 1 (Positive x Angles)
+	auto y2a = y >= (240 - d) && y <= (240 + d);  	//240
+	auto y2b = oy >= (-120 - d) && oy <= (-120 + d);   	//-120 (other opposite)
+	auto y2 = y2a || y2b;
 	if (y2 && x < d + r * 0)
 		face = BLUE;
 	if (y2 && x >= d + r * 0 && x < d + r * 1)
-		face = RED;
-	if (y2 && x >= d + r * 1 && x < d + r * 2)
-		face = GREEN;
-	if (y2 && x >= d + r * 2 && x < d + r * 3)
-		face = PURPLE;
-	if (y2 && x >= d + r * 3 && x < d + r * 4)
 		face = YELLOW;
+	if (y2 && x >= d + r * 1 && x < d + r * 2)
+		face = PURPLE;
+	if (y2 && x >= d + r * 2 && x < d + r * 3)
+		face = GREEN;
+	if (y2 && x >= d + r * 3 && x < d + r * 4)
+		face = RED;
 	if (y2 && x >= d + r * 4 && x < d + r * 5)
 		face = BLUE;
-	auto y3 = y >= -216 && y <= -144;	//-180
-	if (y3)
+	//Bottom half OK - Part 2 (Negative x Angles) 330?
+	if (y2 && x <= -d - r * 0 && x > -d - r * 1)
+		face = RED;
+	if (y2 && x <= -d - r * 1 && x > -d - r * 2)
+		face = GREEN;
+	if (y2 && x <= -d - r * 2 && x > -d - r * 3)
+		face = PURPLE;
+	if (y2 && x <= -d - r * 3 && x > -d - r * 4)
+		face = YELLOW;
+	if (y2 && x <= -d - r * 4 && x > -d - r * 5)
+		face = BLUE;
+	//Bottom
+	auto y3 = y >= (180 - d) && y <= (180 + d);	//180
+	if (y3 && !face)
 		face = WHITE;
-	auto y4 = y <= 30;	//0
-	if (y4)
+	//Top
+	auto y4 = y >= (0 - d) && y <= (0 + d);    	//0
+	if (y4 && !face)
 		face = GRAY;
-	if (face == 0) return;
-	megaminx->setCurrentFaceActive(face);
-	megaminx->rotate(face, 1);
-	//Bottom half.
-	wsprintf(lastface, "%ws", g_colorRGBs[face].name);
-	//lastface = static_cast<char*
+	return face;
 }

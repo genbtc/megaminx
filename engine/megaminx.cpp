@@ -95,8 +95,8 @@ void Megaminx::render()
 
 void Megaminx::rotate(int num, int dir)
 {
-	num -= 1; 	//Convert 1-12 Faces into array 0-11
-	assert(num < 12);
+	num -= 1; 	//Convert 1-numFaces Faces into array 0-11
+	assert(num < numFaces);
     assert(dir == 1 || dir == -1);
 	if (!rotating) {
 		rotating = true;
@@ -123,7 +123,7 @@ void Megaminx::scramble()
 	//Do 50 iterations of scrambling (like a human)
 	for (int q = 0; q < 50; q++)
 	{
-		//12 faces - turn one each, randomizing direction
+		//numFaces faces - turn one each, randomizing direction
 		for (int i = 0; i < numFaces; i++) {
 			const int r = std::rand() % 2 * 2 - 1;
 			faces[i].placeParts(r);
@@ -138,7 +138,7 @@ void Megaminx::scramble()
  */
 void Megaminx::swapOneCorner(int i, int x)
 {
-	assert(i < 12);
+	assert(i < numFaces);
 	assert(x < 5);
 	faces[i].corner[x]->flip();
 }
@@ -149,8 +149,7 @@ void Megaminx::swapOneCorner(int i, int x)
  */
 void Megaminx::swapOneEdge(int i,int x)
 {    
-	i -= 1;  	//Convert 1-12 Faces into array 0-11
-	assert(i < 12);
+	assert(i < numFaces);
 	assert(x < 5);
 	faces[i].edge[x]->flip();
 }
@@ -161,17 +160,17 @@ void Megaminx::swapOneEdge(int i,int x)
  */
 void Megaminx::setCurrentFaceActive(int i)
 {
-	i -= 1;  	//Convert 1-12 Faces into array 0-11
-	assert(i < 12);
+	i -= 1;    	//Convert 1-numFaces Faces into array 0-11
+	assert(i < numFaces);
 	g_currentFace = &faces[i];
 	assert(g_currentFace->thisNum == i);
 }
 
 //shortcut to reset all the things on a face and set it to active.
+//Takes 1-12
 int Megaminx::resetFace(int n)
 {
-	n -= 1;   	//Convert 1-12 Faces into array 0-11
-	assert(n < 12);
+	assert(n < numFaces);
 	resetFacesEdges(n);
 	resetFacesCorners(n);
 	setCurrentFaceActive(n);
@@ -183,8 +182,8 @@ int Megaminx::resetFace(int n)
  */
 std::vector<int> Megaminx::findEdges(int i)
 {
-	i -= 1;   	//Convert 1-12 Faces into array 0-11
-	assert(i < 12);
+	i -= 1;   	//Convert 1-numFaces Faces into array 0-11
+	assert(i < numFaces);
 	return faces[i].findPiece(edges[0], numEdges);
 }
 
@@ -193,8 +192,8 @@ std::vector<int> Megaminx::findEdges(int i)
  */
 std::vector<int> Megaminx::findCorners(int i)
 {
-	i -= 1;   	//Convert 1-12 Faces into array 0-11
-	assert(i < 12);
+	i -= 1;   	//Convert 1-numFaces Faces into array 0-11
+	assert(i < numFaces);
 	return faces[i].findPiece(corners[0], numCorners);
 }
 
