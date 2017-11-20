@@ -23,6 +23,7 @@ public:
     std::vector<int> findCorners(int i);
     int resetFacesEdges(int n);
     int resetFacesCorners(int n);
+    int getCurrentFaceFromAngles(int x, int y) const;
     /* y axis */
 	double y;
     /* x axis */

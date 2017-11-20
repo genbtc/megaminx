@@ -85,7 +85,7 @@ void Megaminx::render()
 
 void Megaminx::rotate(int num, int dir)
 {
-    num -= 1; 	//Convert 1-numFaces Faces into array 0-11
+    num -= 1; 	//Convert 1-12 Faces into array [0-11]
     assert(num < numFaces);
     assert(dir == 1 || dir == -1);
     if (!rotating) {
@@ -123,7 +123,7 @@ void Megaminx::scramble()
 
 /**
  * \brief Toggle the colors of a single Corner piece
- * \param i Nth-face's number (color) 0-11
+ * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
 void Megaminx::swapOneCorner(int i, int x)
@@ -134,7 +134,7 @@ void Megaminx::swapOneCorner(int i, int x)
 }
 /**
  * \brief Toggle the colors of a single Edge piece
- * \param i Nth-face's number (color) 0-11
+ * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
 void Megaminx::swapOneEdge(int i,int x)
@@ -146,7 +146,7 @@ void Megaminx::swapOneEdge(int i,int x)
 
 /**
  * \brief Makes a pointer to g_currentFace
- * \param i Nth-face number index 0-11
+ * \param i Nth-face number index (1-12)
  */
 void Megaminx::setCurrentFaceActive(int i)
 {
@@ -157,10 +157,10 @@ void Megaminx::setCurrentFaceActive(int i)
 }
 
 //shortcut to reset all the things on a face and set it to active.
-//Takes 1-12
+//Takes (1-12)
 int Megaminx::resetFace(int n)
 {
-    assert(n < numFaces);
+    assert(n <= numFaces);
     resetFacesEdges(n);
     resetFacesCorners(n);
     setCurrentFaceActive(n);
@@ -168,7 +168,7 @@ int Megaminx::resetFace(int n)
 }
 //
 /**
- * \brief Find all edge pieces.
+ * \brief Find all edge pieces.[0-11]
  */
 std::vector<int> Megaminx::findEdges(int i)
 {
@@ -178,7 +178,7 @@ std::vector<int> Megaminx::findEdges(int i)
 }
 
 /**
- * \brief Find all corner pieces.
+ * \brief Find all corner pieces.[0-11]
  */
 std::vector<int> Megaminx::findCorners(int i)
 {
@@ -190,7 +190,7 @@ std::vector<int> Megaminx::findCorners(int i)
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.
  *			To do so we must swap the pieces that are in there, OUT.
- * \param color_n N'th Face/Color Number
+ * \param color_n N'th Face/Color Number (1-12)
  * \return success
  */
 int Megaminx::resetFacesEdges(int color_n)
@@ -251,62 +251,61 @@ int Megaminx::resetFacesCorners(int color_n)
     return 1;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-///	//x = g_camera.m_angleX;
-    //y = g_camera.m_angleY;
-int getCurrentFaceFromAngles(int x, int y)
+
+/**
+ * \brief Takes camera position angles and tells what face is most showing
+ * \param x camera_angleX
+ * \param y camera_angleY
+ * \return face # color-int (1-12) as result.
+ */
+int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 {
     //Vars:
-    int face = 0;	//color-int (1-12)
-    int r = 72;  	//face angles
-    int d = r / 2; 	//36 half of face 	
-    auto s = 60;	//START_ANGLE from main.cpp
-
-    //Top half - Part 1
-    auto y1 = y >= (s - d) && y <= (s + d);  		//60    
-    if (y1 && x < d + r)
-        face = LIGHT_BLUE;
-    int list1[5] = { BONE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };	//{12,11,10,9,8}
-    for (int i = 0; i < 5; ++i)
-    {
-        if (y1 && x >= d + r * i && x < d + r * (i + 1))
-            face = list1[i];		
-    }
-    //Top half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2)
-    auto y1c = y >= (s + 240 - d) && y <= (s + 240 + d);  	//300 (other opposite)
-    std::rotate(std::begin(list1), std::begin(list1) + 2, std::end(list1));
-    for (int i = 0; i < 5; ++i)
-    {
-        if (y1c && x >= r * i && x < r * (i + 1))
-            face = list1[i];
-    }
-    //Bottom half - Part 1
-    auto y2 = y >= (s + 180 - d) && y <= (s + 180 + d);   	//240
-    if (y2 && x < d + r)
-        face = BLUE;
-    int list2[5] = { YELLOW, PURPLE, GREEN, RED, BLUE };	//{6,5,4,3,2}
-    for (int i = 0; i < 5; ++i)
-    {
-        if (y2 && x >= d + r * i && x < d + r * (i + 1))
-            face = list2[i];
-    }
+    const int r = 72;   	//face angles
+    const int d = r / 2;  	//36 half of face 	
+    const auto s = 60; 	//START_ANGLE from main.cpp
+	int face = 0; 	//color-int (1-12) as result.
+	//Top half - Part 1:
+	const auto y1 = y >= (s - d) && y <= (s + d);      		//60
+	if(y1 && x < d + r)
+		face = LIGHT_BLUE;
+	int list1[5] = { BONE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };    	//{12,11,10,9,8}
+	for(int i = 0 ; i < 5 ; ++i)
+		if(y1 && x >= d + r * i && x < d + r * (i + 1))
+		    face = list1[i];
+	if (face) return face;
+	//Top half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2)
+	const auto y1b = y >= (s + 240 - d) && y <= (s + 240 + d);       	//300 (other opposite)
+	std::rotate(std::begin(list1), std::begin(list1) + 2, std::end(list1));
+	for (int i = 0; i < 5; ++i)
+		if (y1b && x >= r * i && x < r * (i + 1))
+			face = list1[i];
+	if (face) return face;
+	//Bottom half - Part 1:
+	const auto y2 = y >= (s + 180 - d) && y <= (s + 180 + d);        	//240
+	if(y2 && x < d + r)
+		face = BLUE;
+	int list2[5] = { YELLOW, PURPLE, GREEN, RED, BLUE };    	//{6,5,4,3,2}
+	for(int i = 0 ; i < 5 ; ++i)
+		if(y2 && x >= d + r * i && x < d + r * (i + 1))
+		    face = list2[i];
+	if (face) return face;
 	//Bottom half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2).
-    auto y2c = y >= (s + 60 - d) && y <= (s + 60 + d); 	//120 (other opposite)
-    std::rotate(std::begin(list2), std::begin(list2) + 2, std::end(list2));
-    for (int i = 0; i < 5; ++i)
-    {
-        if (y2c && x >= r * i && x < r * (i + 1))
-            face = list2[i];
-    }
-    //Bottom
-    auto y3 = y >= (s + 120 - d) && y <= (s + 120 + d); 	//180
-    if(y3 && !face)
-        face = WHITE;
-    //Top
-    auto y4a = y >= (0 - d) && y <= (0 + d); 	//0
-    auto y4b = y >= (360 - d) && y <= (360 + d); //360
-    auto y4 = y4a || y4b;
-    if (y4 && !face)
-        face = GRAY;
-    return face;
+	const auto y2b = y >= (s + 60 - d) && y <= (s + 60 + d);      	//120 (other opposite)
+	std::rotate(std::begin(list2), std::begin(list2) + 2, std::end(list2));
+	for (int i = 0; i < 5; ++i)
+		if (y2b && x >= r * i && x < r * (i + 1))
+			face = list2[i];
+	if (face) return face;
+	//Bottom
+	const auto y3 = y >= (s + 120 - d) && y <= (s + 120 + d);      	//180
+	if(y3 && !face)
+		face = WHITE;
+	//Top
+	const auto y4a = y >= (0 - d) && y <= (0 + d);      	//0
+	const auto y4b = y >= (360 - d) && y <= (360 + d);      //360
+	const auto y4 = y4a || y4b;
+	if (y4 && !face)
+		face = GRAY;
+	return face;
 }

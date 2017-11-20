@@ -72,7 +72,6 @@ void createMenu();
 void menu(int num);
 void HitTest();
 void printHelpMenu();
-int getCurrentFaceFromAngles(int x, int y);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 
 Megaminx* megaminx;
@@ -184,7 +183,7 @@ void RenderScene()
 
 void utShowCurrentFace()
 {
-    currentFace = getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
+    currentFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
     if (currentFace != 0) {
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
         megaminx->setCurrentFaceActive(currentFace);
@@ -194,7 +193,7 @@ void utShowCurrentFace()
 
 void double_click(int x, int y)
 {
-    auto specialKey = glutGetModifiers();
+    const auto specialKey = glutGetModifiers();
     const int dir = (specialKey == 1) ? 1 : -1;
     megaminx->rotate(currentFace, dir);
 }
@@ -260,7 +259,7 @@ void mousePressedMove(int x, int y)
 
 void rotateDispatch(unsigned char key)
 {
-    auto specialKey = glutGetModifiers();
+    const auto specialKey = glutGetModifiers();
     int dir = -1;
     if (specialKey == GLUT_ACTIVE_SHIFT) 
         dir = (specialKey == 1) ? 1 : -1;
@@ -324,7 +323,7 @@ void printHelpMenu()
 
 void keyboard(unsigned char key, int x, int y)
 {
-    auto specialKey = glutGetModifiers();
+	const auto specialKey = glutGetModifiers();
     if (specialKey == GLUT_ACTIVE_CTRL) {
         switch (key) {
         case 3:	//Ctrl+C
@@ -355,7 +354,7 @@ void keyboard(unsigned char key, int x, int y)
 void PressSpecialKey(int key, int x, int y)
 {
     //TODO Add Caps Lock to determine rotation direction also.
-    auto specialKey = glutGetModifiers();
+    const auto specialKey = glutGetModifiers();
     const int dir = (specialKey == 1) ? 1 : -1;
     switch (key)
     {
@@ -469,8 +468,8 @@ void menu(int num) {
         resetCameraView();
     if (num == 1)
         spinning = !spinning;
-    if (num == 21)
-        megaminx->resetFace(megaminx->g_currentFace->thisNum);
+	if (num == 21)
+		megaminx->resetFace(currentFace);
     if (num == 22)
         megaminx->rotate(currentFace, 1);
     if (num == 23)  //rotate corner piece
