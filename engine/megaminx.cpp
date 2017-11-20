@@ -39,35 +39,24 @@ void Megaminx::initFacePieces()
 
 Megaminx::Megaminx()
 {
-	numFaces = sizeof(faces) / sizeof(Face);
-	numEdges = sizeof(edges) / sizeof(Edge);
-	numCorners = sizeof(corners) / sizeof(Corner);
     solve();
 }
 
 void Megaminx::iterateAllPieces()
 {
 	for (int i = 0; i < numFaces; ++i)
-	{
 		centers[i].render();
-		for (int j = 0; j < 5; ++j)
-		{
-			edges[j].render();
-			corners[j].render();
-		}
-	}		
+	for (int i = 0; i < numEdges; ++i)
+		edges[i].render();
+	for (int i = 0; i < numCorners; ++i)
+		corners[i].render();	
 }
 
 void Megaminx::render()
 {
 	if (!rotating)
 	{
-		for (int i=0; i < numFaces; ++i)
-			centers[i].render();
-		for (int i=0; i < numEdges; ++i)
-			edges[i].render();
-		for (int i=0; i < numCorners; ++i)
-			corners[i].render();
+		iterateAllPieces();
 	}
 	else
 	{

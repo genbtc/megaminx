@@ -30,18 +30,18 @@ public:
 	bool rotating;
 	/* pointer */
     Face* g_currentFace;
-	/* number by reflection*/
-    unsigned numEdges;
-    unsigned numCorners;
-    unsigned numFaces;
+	/* static numbers at compile time*/
+	static const unsigned int numEdges = 30;
+	static const unsigned int numCorners = 20;
+	static const unsigned int numFaces = 12;
 private:
 	int _rSide;
 	int undoCache[2];
 
-	Face faces[12];
-	Center centers[12];
-	Edge edges[30];
-	Corner corners[20];
+	Face faces[numFaces];
+	Center centers[numFaces];
+	Edge edges[numEdges];
+	Corner corners[numCorners];
 };
 
 #endif
