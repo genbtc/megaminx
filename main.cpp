@@ -405,10 +405,10 @@ void createMenu() {
     
 	//SubLevel2 Menu - Rotations
 	submenu2_id = glutCreateMenu(menu);
-	glutAddMenuEntry("Rotate Front Face CCW", 3);
 	glutAddMenuEntry("Solve/Reset Current Face", 21);
-	glutAddMenuEntry("Rotate a Random Corner", 23);
-	glutAddMenuEntry("Swap a Random Edge", 24);
+	//glutAddMenuEntry("Rotate Current Face CW", 22);
+	glutAddMenuEntry("Rotate Face's 1st Corner", 23);
+	glutAddMenuEntry("Swap Face's 1st Edge", 24);
      
 	//SubLevel3 Menu - Steps
 	submenu3_id = glutCreateMenu(menu);
@@ -469,14 +469,14 @@ void menu(int num) {
 		resetCameraView();
 	if (num == 1)
 		spinning = !spinning;
-	if (num == 3)
-		megaminx->rotate(GLUT_KEY_F8, 1);
 	if (num == 21)
 		megaminx->resetFace(megaminx->g_currentFace->thisNum);
+	if (num == 22)
+		megaminx->rotate(currentFace, 1);
 	if (num == 23)  //rotate corner piece
-	    megaminx->swapOneCorner(GLUT_KEY_F8, 1);
+	    megaminx->swapOneCorner(currentFace, 0);
 	if (num == 24)  //rotate edge piece
-	    megaminx->swapOneEdge(GLUT_KEY_F8, 1);
+	    megaminx->swapOneEdge(currentFace, 0);
 	if (num == 31)	//make GRAY edges (star)
 		megaminx->resetFacesEdges(GRAY);
 	if (num == 32)	//make GRAY corners
@@ -536,10 +536,12 @@ int getCurrentFaceFromAngles(int x, int y)
 	int face=0;
 	int d = 36;
 	int r = 72;
+	auto s = START_ANGLE;
 	x = g_camera.m_angleX;
 	y = g_camera.m_angleY;
+	
 	//Top half OK - Part 1 (Positive x Angles)
-	auto y1 = y >= (60 - d) && y <= (60 + d); 		//60
+	auto y1 = y >= (s - d) && y <= (s + d); 		//60
 	if (y1 && x < d + r * 0)
 		face = LIGHT_BLUE;
 	if (y1 && x >= d + r * 0 && x < d + r * 1)
@@ -553,7 +555,7 @@ int getCurrentFaceFromAngles(int x, int y)
 	if (y1 && x >= d + r * 4 && x < d + r * 5)
 		face = LIGHT_BLUE;
 	//These are offset by 180 Degrees, therefore the starting point is a diff color.
-	auto y1c = y >= (300 - d) && y <= (300 + d); 	//300 (other opposite)
+	auto y1c = y >= (s+240 - d) && y <= (s+240 + d); 	//300 (other opposite)
 	if (y1c && x >= r * 0 && x < r * 1)
 		face = LIGHT_GREEN;
 	if (y1c && x >= r * 1 && x < r * 2)
@@ -565,7 +567,7 @@ int getCurrentFaceFromAngles(int x, int y)
 	if (y1c && x >= r * 4 && x < r * 5)
 		face = PINK;
 	//Bottom half OK - Part 1 (Positive x Angles)
-	auto y2 = y >= (240 - d) && y <= (240 + d);  	//240
+	auto y2 = y >= (s+180 - d) && y <= (s+180 + d);  	//240
 	if (y2 && x < d + r * 0)
 		face = BLUE;
 	if (y2 && x >= d + r * 0 && x < d + r * 1)
@@ -579,7 +581,7 @@ int getCurrentFaceFromAngles(int x, int y)
 	if (y2 && x >= d + r * 4 && x < d + r * 5)
 		face = BLUE;
 	//These are offset by 180 Degrees, therefore the starting point is a diff color.
-	auto y2c = y >= (120 - d) && y <= (120 + d);	//120 (other opposite)
+	auto y2c = y >= (s+60 - d) && y <= (s+60 + d);	//120 (other opposite)
 	if (y2c && x >= r * 0 && x < r * 1)
 		face = GREEN;
 	if (y2c && x >= r * 1 && x < r * 2)
@@ -591,7 +593,7 @@ int getCurrentFaceFromAngles(int x, int y)
 	if (y2c && x >= r * 4 && x < r * 5)
 		face = PURPLE;
 	//Bottom
-	auto y3 = y >= (180 - d) && y <= (180 + d);	//180
+	auto y3 = y >= (s+120 - d) && y <= (s+120 + d);	//180
 	if (y3 && !face)
 		face = WHITE;
 	//Top
