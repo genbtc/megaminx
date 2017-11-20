@@ -202,19 +202,17 @@ int Megaminx::resetFacesEdges(int color_n)
 	assert(foundEdges.size() == 5);
 	for (int j = 0; j < foundEdges.size(); ++j) 
     {	    
-        if (edges[foundEdges[j]].matchesColor(color_n))
-        {
-            if (activeFace.edge[j]->matchesColor(color_n))
-                continue;
-            edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
-	        j = -1;
-        }
+	    if (activeFace.edge[j]->matchesColor(color_n))
+		    continue;
+	    edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
+	    j = -1;
     }
 	auto epos = activeFace.edgeColorPos;
     auto foundEdges2 = findEdges(color_n);
 	//assert check just double checking - we dont want to get stuck in while
     assert(foundEdges2 == defaultEdges);
 	assert(foundEdges2.size() == 5);
+	//Pieces are in the right place but maybe wrong orientation, so Swap the colors:
 	for (int j = 0; j < foundEdges2.size(); ++j)
     {		
         while (activeFace.edge[j]->data._colorNum[epos[j]] != color_n)
@@ -238,19 +236,17 @@ int Megaminx::resetFacesCorners(int color_n)
 	assert(foundCorners.size() == 5);
     for (int j = 0; j < foundCorners.size(); ++j) 
     {
-        if (corners[foundCorners[j]].matchesColor(color_n))
-        {
-            if (activeFace.corner[j]->matchesColor(color_n))
-                continue;
-            corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
-	        j = -1;
-        }
+	    if (activeFace.corner[j]->matchesColor(color_n))
+		    continue;
+	    corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
+	    j = -1;
     }
 	auto cpos = activeFace.cornerColorPos;
 	auto foundCorners2 = findCorners(color_n);
     //assert check just double checking - we dont want to get stuck in while	
 	assert(foundCorners2 == defaultCorners);
 	assert(foundCorners2.size() == 5);
+	//Pieces are in the right place but maybe wrong orientation, so Swap the colors:
 	for (int j = 0; j < foundCorners2.size(); ++j)
     {
         while (activeFace.corner[j]->data._colorNum[cpos[j]] != color_n)
@@ -273,47 +269,45 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
     const int d = r / 2;  	//36 half of face 	
     const auto s = 60; 	//START_ANGLE from main.cpp
 	int face = 0; 	//color-int (1-12) as result.
+	//Angle Conditions:
+	const auto y1  = y >= (s - d) && y <= (s + d);      			// 60
+	const auto y1b = y >= (s + 240 - d) && y <= (s + 240 + d);    	//300 (other opposite)
+	const auto y2  = y >= (s + 180 - d) && y <= (s + 180 + d);      //240
+	const auto y2b = y >= (s +  60 - d) && y <= (s +  60 + d);      //120 (other opposite)
+	const auto y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
+	const auto y4a = y >= (0 - d)   && y <= (0 + d);       			//0
+	const auto y4b = y >= (360 - d) && y <= (360 + d);				//360
+	int toplist[5] = { BONE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };   //{12,11,10,9,8}
+	int botlist[5] = { YELLOW, PURPLE, GREEN, RED, BLUE };     			//{6,5,4,3,2}
 	//Top half - Part 1:
-	const auto y1 = y >= (s - d) && y <= (s + d);      		//60
 	if(y1 && x < d + r)
 		face = LIGHT_BLUE;
-	int list1[5] = { BONE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };    	//{12,11,10,9,8}
-	for(int i = 0 ; i < 5 ; ++i)
-		if(y1 && x >= d + r * i && x < d + r * (i + 1))
-		    face = list1[i];
+	//Bottom half - Part 1:	
+	else if(y2 && x < d + r)
+		face = BLUE;	
+	for (int i = 0; i < 5; ++i)
+	{
+		if (y1 && x >= d + r * i && x < d + r * (i + 1))
+			face = toplist[i];
+		else if (y2 && x >= d + r * i && x < d + r * (i + 1))
+			face = botlist[i];
+	}
 	if (face) return face;
 	//Top half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2)
-	const auto y1b = y >= (s + 240 - d) && y <= (s + 240 + d);       	//300 (other opposite)
-	std::rotate(std::begin(list1), std::begin(list1) + 2, std::end(list1));
+	//Bottom half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2).	
+	std::rotate(std::begin(toplist), std::begin(toplist) + 2, std::end(toplist));
+	std::rotate(std::begin(botlist), std::begin(botlist) + 2, std::end(botlist));
 	for (int i = 0; i < 5; ++i)
+	{
 		if (y1b && x >= r * i && x < r * (i + 1))
-			face = list1[i];
+			face = toplist[i];
+		else if (y2b && x >= r * i && x < r * (i + 1))
+			face = botlist[i];
+	}
 	if (face) return face;
-	//Bottom half - Part 1:
-	const auto y2 = y >= (s + 180 - d) && y <= (s + 180 + d);        	//240
-	if(y2 && x < d + r)
-		face = BLUE;
-	int list2[5] = { YELLOW, PURPLE, GREEN, RED, BLUE };    	//{6,5,4,3,2}
-	for(int i = 0 ; i < 5 ; ++i)
-		if(y2 && x >= d + r * i && x < d + r * (i + 1))
-		    face = list2[i];
-	if (face) return face;
-	//Bottom half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2).
-	const auto y2b = y >= (s + 60 - d) && y <= (s + 60 + d);      	//120 (other opposite)
-	std::rotate(std::begin(list2), std::begin(list2) + 2, std::end(list2));
-	for (int i = 0; i < 5; ++i)
-		if (y2b && x >= r * i && x < r * (i + 1))
-			face = list2[i];
-	if (face) return face;
-	//Bottom
-	const auto y3 = y >= (s + 120 - d) && y <= (s + 120 + d);      	//180
-	if(y3 && !face)
+	if (y3 && !face)	//Bottom {1}
 		face = WHITE;
-	//Top
-	const auto y4a = y >= (0 - d) && y <= (0 + d);      	//0
-	const auto y4b = y >= (360 - d) && y <= (360 + d);      //360
-	const auto y4 = y4a || y4b;
-	if (y4 && !face)
+	else if ((y4a || y4b) && !face)	//Top {7}
 		face = GRAY;
 	return face;
 }
