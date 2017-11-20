@@ -195,23 +195,27 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
+	assert(color_n >= 1 && color_n <= 12);
     const auto activeFace = faces[(color_n - 1)];
     const auto defaultEdges = activeFace.edgeNativePos;	
-    auto foundEdges = findEdges(color_n);
-    for (int j = 0; j < foundEdges.size(); ++j) 
-    {
+	auto foundEdges = findEdges(color_n);
+	assert(foundEdges.size() == 5);
+	for (int j = 0; j < foundEdges.size(); ++j) 
+    {	    
         if (edges[foundEdges[j]].matchesColor(color_n))
         {
             if (activeFace.edge[j]->matchesColor(color_n))
                 continue;
             edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
+	        j = -1;
         }
     }
-    foundEdges = findEdges(color_n);
-    //assert check just double checking:
-    assert(foundEdges == defaultEdges);
-    auto epos = activeFace.edgeColorPos;
-    for (int j = 0; j < foundEdges.size(); ++j)
+	auto epos = activeFace.edgeColorPos;
+    auto foundEdges2 = findEdges(color_n);
+	//assert check just double checking - we dont want to get stuck in while
+    assert(foundEdges2 == defaultEdges);
+	assert(foundEdges2.size() == 5);
+	for (int j = 0; j < foundEdges2.size(); ++j)
     {		
         while (activeFace.edge[j]->data._colorNum[epos[j]] != color_n)
             activeFace.edge[j]->flip();
@@ -227,9 +231,11 @@ int Megaminx::resetFacesEdges(int color_n)
  */
 int Megaminx::resetFacesCorners(int color_n)
 {
+	assert(color_n >= 1 && color_n <= 12);
     const auto activeFace = faces[(color_n - 1)];
     const auto defaultCorners = activeFace.cornerNativePos;	
     auto foundCorners = findCorners(color_n);
+	assert(foundCorners.size() == 5);
     for (int j = 0; j < foundCorners.size(); ++j) 
     {
         if (corners[foundCorners[j]].matchesColor(color_n))
@@ -237,13 +243,15 @@ int Megaminx::resetFacesCorners(int color_n)
             if (activeFace.corner[j]->matchesColor(color_n))
                 continue;
             corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
+	        j = -1;
         }
     }
-    foundCorners = findCorners(color_n);
-    //assert check just double checking:
-    assert(foundCorners == defaultCorners);
-    auto cpos = activeFace.cornerColorPos;
-    for (int j = 0; j < foundCorners.size(); ++j)
+	auto cpos = activeFace.cornerColorPos;
+	auto foundCorners2 = findCorners(color_n);
+    //assert check just double checking - we dont want to get stuck in while	
+	assert(foundCorners2 == defaultCorners);
+	assert(foundCorners2.size() == 5);
+	for (int j = 0; j < foundCorners2.size(); ++j)
     {
         while (activeFace.corner[j]->data._colorNum[cpos[j]] != color_n)
             activeFace.corner[j]->flip();

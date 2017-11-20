@@ -183,8 +183,9 @@ void RenderScene()
 
 void utShowCurrentFace()
 {
-    currentFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
-    if (currentFace != 0) {
+	const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
+	if (tempFace != 0) {
+	    currentFace = tempFace;
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
         megaminx->setCurrentFaceActive(currentFace);
         utDrawText2D(10, HEIGHT - 40, lastface);
@@ -342,6 +343,8 @@ void keyboard(unsigned char key, int x, int y)
         help = !help; break;
     case 8:   //backspace
         resetCameraView(); break;
+    case 13:	//enter
+	    megaminx->resetFace(currentFace); break;
     case 127: //delete
         megaminx->scramble(); break;
     default: break;
