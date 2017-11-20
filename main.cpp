@@ -536,14 +536,10 @@ int getCurrentFaceFromAngles(int x, int y)
 	int face=0;
 	int d = 36;
 	int r = 72;
-	int ox = g_camera.m_angleX;
-	int oy = g_camera.m_angleY;
-	x = ox;
-	y = std::abs(oy);
+	x = g_camera.m_angleX;
+	y = g_camera.m_angleY;
 	//Top half OK - Part 1 (Positive x Angles)
-	auto y1a = y >= (r-d) && y <= (r+d); 	//72
-	auto y1b = oy >= (-300 - d) && oy <= (-300 + d);    	//-300 (other opposite)
-	auto y1 = y1a || y1b;
+	auto y1 = y >= (60 - d) && y <= (60 + d); 		//60
 	if (y1 && x < d + r * 0)
 		face = LIGHT_BLUE;
 	if (y1 && x >= d + r * 0 && x < d + r * 1)
@@ -556,22 +552,20 @@ int getCurrentFaceFromAngles(int x, int y)
 		face = ORANGE;
 	if (y1 && x >= d + r * 4 && x < d + r * 5)
 		face = LIGHT_BLUE;
-	//Top half OK - Part 1 (Negative x Angles)	150?
-	if (y1 && x <= -d - r * 0 && x > -d - r * 1)
-		face = ORANGE;
-	if (y1 && x <= -d - r * 1 && x > -d - r * 2)
+	//These are offset by 180 Degrees, therefore the starting point is a diff color.
+	auto y1c = y >= (300 - d) && y <= (300 + d); 	//300 (other opposite)
+	if (y1c && x >= r * 0 && x < r * 1)
 		face = LIGHT_GREEN;
-	if (y1 && x <= -d - r * 2 && x > -d - r * 3)
-		face = PINK;
-	if (y1 && x <= -d - r * 3 && x > -d - r * 4)
-		face = BONE;
-	if (y1 && x <= -d - r * 4 && x > -d - r * 5)
+	if (y1c && x >= r * 1 && x < r * 2)
+		face = ORANGE;	
+	if (y1c && x >= r * 2 && x < r * 3)
 		face = LIGHT_BLUE;
-
+	if (y1c && x >= r * 3 && x < r * 4)
+		face = BONE;
+	if (y1c && x >= r * 4 && x < r * 5)
+		face = PINK;
 	//Bottom half OK - Part 1 (Positive x Angles)
-	auto y2a = y >= (240 - d) && y <= (240 + d);  	//240
-	auto y2b = oy >= (-120 - d) && oy <= (-120 + d);   	//-120 (other opposite)
-	auto y2 = y2a || y2b;
+	auto y2 = y >= (240 - d) && y <= (240 + d);  	//240
 	if (y2 && x < d + r * 0)
 		face = BLUE;
 	if (y2 && x >= d + r * 0 && x < d + r * 1)
@@ -584,19 +578,8 @@ int getCurrentFaceFromAngles(int x, int y)
 		face = RED;
 	if (y2 && x >= d + r * 4 && x < d + r * 5)
 		face = BLUE;
-	//Bottom half OK - Part 2 (Negative x Angles) 330?
-	if (y2 && x <= -d - r * 0 && x > -d - r * 1)
-		face = RED;
-	if (y2 && x <= -d - r * 1 && x > -d - r * 2)
-		face = GREEN;
-	if (y2 && x <= -d - r * 2 && x > -d - r * 3)
-		face = PURPLE;
-	if (y2 && x <= -d - r * 3 && x > -d - r * 4)
-		face = YELLOW;
-	if (y2 && x <= -d - r * 4 && x > -d - r * 5)
-		face = BLUE;
 	//These are offset by 180 Degrees, therefore the starting point is a diff color.
-	auto y2c = oy >= (r*2 - d) && oy <= (r*2 + d);       	//144 (other opposite)
+	auto y2c = y >= (120 - d) && y <= (120 + d);	//120 (other opposite)
 	if (y2c && x >= r * 0 && x < r * 1)
 		face = GREEN;
 	if (y2c && x >= r * 1 && x < r * 2)
@@ -607,23 +590,14 @@ int getCurrentFaceFromAngles(int x, int y)
 		face = YELLOW;
 	if (y2c && x >= r * 4 && x < r * 5)
 		face = PURPLE;
-	//										 Part 2 (Negative x Angles) -144?
-	if (y2c && x <= -r * 0 && x > -r * 1)
-		face = PURPLE;
-	if (y2c && x <= -r * 1 && x > -r * 2)
-		face = YELLOW;
-	if (y2c && x <= -r * 2 && x > -r * 3)
-		face = BLUE;
-	if (y2c && x <= -r * 3 && x > -r * 4)
-		face = RED;
-	if (y2c && x <= -r * 4 && x > -r * 5)
-		face = GREEN;
 	//Bottom
 	auto y3 = y >= (180 - d) && y <= (180 + d);	//180
 	if (y3 && !face)
 		face = WHITE;
 	//Top
-	auto y4 = y >= (0 - d) && y <= (0 + d);    	//0
+	auto y4a = y >= (0 - d) && y <= (0 + d);	//0
+	auto y4b = y >= (360 - d) && y <= (360 + d);//360
+	auto y4 = y4a || y4b;
 	if (y4 && !face)
 		face = GRAY;
 	return face;

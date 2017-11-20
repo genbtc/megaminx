@@ -110,6 +110,8 @@ void Camera::RotateGLCameraView()
 	if (m_angleX <= -360) m_angleX += 360;
 	if (m_angleY >= 360) m_angleY -= 360;
 	if (m_angleY <= -360) m_angleY += 360;
+	if (m_angleX < 0) m_angleX += 360;
+	if (m_angleY < 0) m_angleY += 360;
     //These must be transformed in this order for mouse to work right.
     glTranslated(0, 0, m_zoom);
 	glRotated(m_angleY, -1, 0, 0);
