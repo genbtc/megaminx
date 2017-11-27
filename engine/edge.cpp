@@ -67,109 +67,10 @@ void Edge::init(int n, double* edgeVertexBase)
 
 void Edge::init(int n, bool doAxes)
 {
-	switch (n + 1)
-	{
-	case 1:
-		initColor(WHITE, BLUE);
-		break;
-	case 2:
-		initColor(WHITE, RED);
-		break;
-	case 3:
-		initColor(WHITE, GREEN);
-		break;
-	case 4:
-		initColor(WHITE, PURPLE);
-		break;
-	case 5:
-		initColor(WHITE, YELLOW);
-		break;
-		//
-	case 6:
-	    initColor(BLUE, RED);
-		break;
-	case 7:
-		initColor(RED, GREEN);
-		break;
-	case 8:
-		initColor(GREEN, PURPLE);
-		break;
-	case 9:
-		initColor(PURPLE, YELLOW);
-		break;
-	case 10:
-		initColor(YELLOW, BLUE);
-		break;
-		//
-	case 11:
-	    initColor(BLUE, LIGHT_GREEN);
-		break;
-	case 12:
-		initColor(RED, PINK);
-		break;
-	case 13:
-		initColor(GREEN, BONE);
-		break;
-	case 14:
-		initColor(PURPLE, LIGHT_BLUE);
-		break;
-	case 15:
-		initColor(YELLOW, ORANGE);
-		break;
-		//
-	case 16:
-	    initColor(BLUE, PINK);
-		break;
-	case 17:
-		initColor(RED, BONE);
-		break;
-	case 18:
-		initColor(GREEN, LIGHT_BLUE);
-		break;
-	case 19:
-		initColor(PURPLE, ORANGE);
-		break;
-	case 20:
-		initColor(YELLOW, LIGHT_GREEN);
-		break;
-		//
-	case 21:
-	    initColor(PINK, BONE);
-		break;
-	case 22:
-		initColor(BONE, LIGHT_BLUE);
-		break;
-	case 23:
-		initColor(LIGHT_BLUE, ORANGE);
-		break;
-	case 24:
-		initColor(ORANGE, LIGHT_GREEN);
-		break;
-	case 25:
-		initColor(LIGHT_GREEN, PINK);
-		break;
-		//
-	case 26:
-	    initColor(GRAY, LIGHT_BLUE);
-		break;
-	case 27:
-		initColor(GRAY, ORANGE);
-		break;
-	case 28:
-		initColor(GRAY, LIGHT_GREEN);
-		break;
-	case 29:
-		initColor(GRAY, PINK);
-		break;
-	case 30:
-		initColor(GRAY, BONE);
-		break;
-	default:
-		break;
-	}
 	if (doAxes)
 		for (int i = 0; i < 6; ++i)
 			createAxis(n, _vertex[i]);
+    initColor(g_edgePiecesColors[n], false);
 }
 
 void Edge::render()
@@ -193,7 +94,7 @@ void Edge::render()
 	glBegin(GL_LINE_LOOP);
 	for (int i = 0; i < 4; ++i)
 	{
-		// glVertex3dv(_vertex[i]);
+    	// glVertex3dv(_vertex[i]); * 1.005
 		glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
 	}
 	glEnd();

@@ -150,9 +150,9 @@ public:
 	Quaterniond(const Quaterniond& q) { w = q.w; x = q.x; y = q.y; z = q.z; }
 	~Quaterniond() { }
 
-	Quaterniond operator+ (const Quaterniond& q) { return Quaterniond(w+q.w, x+q.x, y+q.y, z+q.z); }
-	Quaterniond operator- (const Quaterniond& q) { return Quaterniond(w-q.w, x-q.x, y-q.y, z-q.z); }
-	Quaterniond operator* (double v) { return Quaterniond(w*v, x*v, y*v, z*v); }
+	Quaterniond operator+ (const Quaterniond& q) const { return Quaterniond(w+q.w, x+q.x, y+q.y, z+q.z); }
+	Quaterniond operator- (const Quaterniond& q) const { return Quaterniond(w-q.w, x-q.x, y-q.y, z-q.z); }
+	Quaterniond operator* (double v) const { return Quaterniond(w*v, x*v, y*v, z*v); }
 	Quaterniond operator* (const Quaterniond& q);
 
 	void operator+= (const Quaterniond& q) { w+=q.w; x+=q.x; y+=q.y; z+=q.z; }

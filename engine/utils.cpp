@@ -1,6 +1,6 @@
 //#include <math.h>
 #include <cmath>
-
+using namespace std;
 static const long double PI = acos(-1);
 void rotate_vertex(double &vx, double &vy, double angle)
 {

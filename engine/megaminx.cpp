@@ -1,8 +1,8 @@
-#include "megaminx.h"
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
 #include <algorithm>
+#include "megaminx.h"
 
 void Megaminx::solve()
 {
@@ -10,7 +10,6 @@ void Megaminx::solve()
     x = 0;
     _rSide = 0;
     rotating = false;
-    undoCache[0] = 0; undoCache[1] = 0;
     //store the value of the base start vertexes (outside the loop)
     double* edgeVertexList = edges[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
@@ -41,6 +40,7 @@ void Megaminx::initFacePieces()
 Megaminx::Megaminx()
 {
     solve();
+    iterateAllPieces();
 }
 
 void Megaminx::iterateAllPieces()
@@ -55,59 +55,64 @@ void Megaminx::iterateAllPieces()
 
 void Megaminx::render()
 {
-    if (!rotating)
-    {
-        iterateAllPieces();
+    for (int i=0, k=0; i < numFaces; ++i) {			
+        if (&centers[i] != faces[_rSide].center)
+            centers[i].render();
     }
-    else
+    for (int i=0, k=0; i < numEdges; ++i) {
+        if (&edges[i] == faces[_rSide].edge[k])
+            k++;
+        else
+            edges[i].render();
+    }
+    for (int i=0, k=0; i < numCorners; ++i) {
+        if (&corners[i] == faces[_rSide].corner[k])
+            k++;
+        else
+            corners[i].render();
+    }
+    
+    if (!rotateQueue.empty())
     {
-        for (int i=0, k=0; i < numFaces; ++i) {			
-            if (&centers[i] != faces[_rSide].center)
-                centers[i].render();
-        }
-        for (int i=0, k=0; i < numEdges; ++i) {
-            if (&edges[i] == faces[_rSide].edge[k])
-                k++;
-            else
-                edges[i].render();
-        }
-        for (int i=0, k=0; i < numCorners; ++i) {
-            if (&corners[i] == faces[_rSide].corner[k])
-                k++;
-            else
-                corners[i].render();
-        }
-        if (faces[_rSide].render()) {
+        const auto op = rotateQueue.front();
+        rotating = true;
+        _rSide = op.num;
+        faces[_rSide].rotate(op.dir);
+        const auto result = faces[_rSide].render();
+        if (result)
+            rotateQueue.pop();
+    } else
+        if (faces[_rSide].render())
             rotating = false;
-        }
-    }
 }
 
+void Megaminx::_rotate_internal(int num, int dir)
+{
+    rotateQueue.push({ num, dir });
+    undoQueue.push({ num, dir });
+}
 void Megaminx::rotate(int num, int dir)
 {
-    num -= 1; 	//Convert 1-12 Faces into array [0-11]
-    assert(num < numFaces);
+    assert(num > 0);
+    assert(num <= numFaces);
     assert(dir == 1 || dir == -1);
-    if (!rotating) {
-        rotating = true;
-        _rSide = num;
-        faces[num].rotate(dir);
-    }
-    undoCache[0] = num; undoCache[1] = dir;
+    //Convert 1-12 Faces into array [0-11]
+    _rotate_internal(num-1, dir);
 }
 
-
 /**
- * \brief Implement an undo cache,aka: Edit... Undo. 
+ * \brief An unlimited undo queue based off std::queue. 
  */
 void Megaminx::undo()
 {
-    if (undoCache[1] == 0 || undoCache[0] == 0) return;
-    undoCache[1] *= -1;
-    rotate(undoCache[0], undoCache[1]);
+    if (undoQueue.empty()) return;
+    auto op = undoQueue.front();
+    op.dir *= -1;
+    rotateQueue.push({ op.num, op.dir });
+    undoQueue.pop();
 }
 
-//600 iterations.
+//Scramble 600 times.
 void Megaminx::scramble()
 {
     //Do 50 iterations of scrambling (like a human)
@@ -195,7 +200,8 @@ std::vector<int> Megaminx::findCorners(int i)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
-	assert(color_n >= 1 && color_n <= 12);
+    assert(color_n > 0);
+    assert(color_n <= numFaces);
     const auto activeFace = faces[(color_n - 1)];
     const auto defaultEdges = activeFace.edgeNativePos;	
 	auto foundEdges = findEdges(color_n);
@@ -229,7 +235,8 @@ int Megaminx::resetFacesEdges(int color_n)
  */
 int Megaminx::resetFacesCorners(int color_n)
 {
-	assert(color_n >= 1 && color_n <= 12);
+    assert(color_n > 0);
+    assert(color_n <= numFaces);
     const auto activeFace = faces[(color_n - 1)];
     const auto defaultCorners = activeFace.cornerNativePos;	
     auto foundCorners = findCorners(color_n);
@@ -278,13 +285,13 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 	const auto y4a = y >= (0 - d)   && y <= (0 + d);       			//0
 	const auto y4b = y >= (360 - d) && y <= (360 + d);				//360
 	int toplist[5] = { BONE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };   //{12,11,10,9,8}
-	int botlist[5] = { YELLOW, PURPLE, GREEN, RED, BLUE };     			//{6,5,4,3,2}
+	int botlist[5] = { YELLOW, PURPLE, GREEN, RED, NAVY_BLUE };     			//{6,5,4,3,2}
 	//Top half - Part 1:
 	if(y1 && x < d + r)
 		face = LIGHT_BLUE;
 	//Bottom half - Part 1:	
 	else if(y2 && x < d + r)
-		face = BLUE;	
+		face = NAVY_BLUE;	
 	for (int i = 0; i < 5; ++i)
 	{
 		if (y1 && x >= d + r * i && x < d + r * (i + 1))
@@ -310,4 +317,82 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 	else if ((y4a || y4b) && !face)	//Top {7}
 		face = GRAY;
 	return face;
+}
+
+//glutAddMenuEntry("r u R' U'", 51);
+//glutAddMenuEntry("l u L' U'", 52);
+//glutAddMenuEntry("U' L' u l u r U' R'", 53);
+//glutAddMenuEntry("r u R' u r 2U' R'", 54);
+//glutAddMenuEntry("u l U' R' u L' U' r", 55);
+//glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
+//glutAddMenuEntry("R' D' R D", 57);
+void Megaminx::rotateAlgo(int current_face, int i)
+{
+    const auto loc = g_algodirections[current_face];
+    switch (i)
+    {
+    case 1:
+        rotate(loc.right, 1);
+        rotate(loc.up, 1);
+        rotate(loc.right, -1);
+        rotate(loc.up, -1);
+        break;
+    case 2:
+        rotate(loc.left, 1);
+        rotate(loc.up, 1);
+        rotate(loc.left, -1);
+        rotate(loc.up, -1);
+        break;
+    case 3:         
+        rotate(loc.up, -1);
+        rotate(loc.left, -1);
+        rotate(loc.up, 1);
+        rotate(loc.left, 1);
+        rotate(loc.up, 1);
+        rotate(loc.right, 1);
+        rotate(loc.up, -1);
+        rotate(loc.right, -1);
+        break;
+    case 4:         
+        rotate(loc.right, 1);
+        rotate(loc.up, 1);        
+        rotate(loc.right, -1);
+        rotate(loc.up, 1);
+        rotate(loc.right, 1);
+        rotate(loc.up, -1);
+        rotate(loc.up, -1);
+        rotate(loc.right, -1);
+        break;
+    case 5: 
+        rotate(loc.up, 1);
+        rotate(loc.left, 1);
+        rotate(loc.up, -1);
+        rotate(loc.right, -1);
+        rotate(loc.up, 1);
+        rotate(loc.left, -1);
+        rotate(loc.up, -1);
+        rotate(loc.right, 1);
+        break;
+    case 6: 
+        rotate(loc.up, 1);
+        rotate(loc.right, 1);
+        rotate(loc.up, -1);
+        rotate(loc.up, -1);
+        rotate(loc.left, -1);
+        rotate(loc.up, 1);
+        rotate(loc.up, 1);
+        rotate(loc.right, -1);
+        rotate(loc.up, -1);
+        rotate(loc.up, -1);
+        rotate(loc.left, 1);
+        rotate(loc.up, 1);
+        break;
+    case 7: 
+        rotate(loc.right, -1);
+        rotate(loc.downr, -1);
+        rotate(loc.right, 1);
+        rotate(loc.downr, 1);
+        break;
+    default: break;
+    }
 }

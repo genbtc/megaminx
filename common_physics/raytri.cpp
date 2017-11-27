@@ -34,14 +34,13 @@
 #include <fstream>
 #include <cmath>
 #include <random>
-#include "engine/geometry.h"
+#include "geometry.h"
 
 using namespace std;
 constexpr float kEpsilon = 1e-8;
 
-inline
-float deg2rad(const float &deg)
-{ return deg * M_PI / 180; }
+inline double deg2rad(double a) { return a * 0.01745329252; }
+
 
 inline
 float clamp(const float &lo, const float &hi, const float &v)

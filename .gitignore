@@ -30,3 +30,4 @@ _ReSharper*/
 /CodeDB/*
 /MegaMinx2.exe
 /rcedit-x64.exe
+/CMakeBuilds*

@@ -392,17 +392,17 @@ public:
             if (pivotsize < 0)
                 pivotsize = -pivotsize;
                 
-                for (j = i + 1; j < 4; j++) {
-                    T tmp = t[j][i];
+            for (j = i + 1; j < 4; j++) {
+                T tmp = t[j][i];
                     
-                    if (tmp < 0)
-                        tmp = -tmp;
+                if (tmp < 0)
+                    tmp = -tmp;
                         
-                        if (tmp > pivotsize) {
-                            pivot = j;
-                            pivotsize = tmp;
-                        }
-                }
+                    if (tmp > pivotsize) {
+                        pivot = j;
+                        pivotsize = tmp;
+                    }
+            }
             
             if (pivotsize == 0) {
                 // Cannot invert singular matrix

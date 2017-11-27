@@ -3,6 +3,7 @@
  *
  *	@author Bartlomiej Filipek
  *	@date March 2011
+ *	@Edited by genBTC 2017
  */
 #include <cstdlib>
 #include <cmath>
@@ -49,13 +50,13 @@ void utResetPerspectiveProjection() {
 ///////////////////////////////////////////////////////////////////////////////
 void utDrawText2D(float x, float y, void *font, char *string)
 {
-  char *c;
-  // set position to start drawing fonts
-  glRasterPos2f(x, y);
-  // loop all the characters in the string
-  for (c=string; *c != '\0'; c++) {
-    glutBitmapCharacter(font, *c);
-  }
+    char *c;
+    // set position to start drawing fonts
+    glRasterPos2f(x, y);
+    // loop all the characters in the string
+    for (c=string; *c != '\0'; c++) {
+        glutBitmapCharacter(font, *c);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,6 +69,7 @@ void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 	utDrawText2D(x, y + 13, anglesStr);
 }
 
+///////////////////////////////////////////////////////////////////////////////
 void utCalculateAndPrintFps(float x, float y)
 {
 	static char fpsStr[16];
@@ -81,54 +83,4 @@ void utCalculateAndPrintFps(float x, float y)
 		frame = 0;
 	}
 	utDrawText2D(x, y, fpsStr);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-void utDrawTransparentBox(float x, float y, float z, float w, float h, float d)
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glPushMatrix();		
-		glTranslatef(x, y, z);
-		glScaled(w, h, d);
-
-		glDepthMask(false);
-		glutSolidCube(1.0f);
-		glDepthMask(true);
-		
-		glDisable(GL_CULL_FACE);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		// red lines:
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glutSolidCube(1.0f);
-		glEnable(GL_CULL_FACE);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glPopMatrix();
-	glDisable(GL_BLEND);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void utDrawTransparentSphere(float x, float y, float z, float r)
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glPushMatrix();		
-		glTranslatef(x, y, z);
-
-		glDepthMask(false);
-		glutSolidSphere(r, 16, 16);
-		glDepthMask(true);
-		
-		//glDisable(GL_CULL_FACE);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		//// red lines:
-		//glColor3f(1.0f, 0.0f, 0.0f);
-		//glutSolidSphere(r, 16, 6);
-		//glEnable(GL_CULL_FACE);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glPopMatrix();
-	glDisable(GL_BLEND);
 }

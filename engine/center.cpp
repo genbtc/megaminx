@@ -11,7 +11,7 @@ void Center::createAxis(int n, double* target)
 	piecepack pack;
     switch (n + 1)
     {
-	//no case1.
+    //no need for case1.
     case 2:
     case 3:
     case 4:
@@ -40,10 +40,8 @@ void Center::createAxis(int n, double* target)
 void Center::init(int n)
 {
     for (int i = 0; i < 5; ++i)
-    {
         createAxis(n, _vertex[i]);
-    }
-	initColor(n + 1);
+    initColor(n + 1);
 }
 
 void Center::render()

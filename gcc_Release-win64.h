@@ -176,9 +176,6 @@
 #ifndef __FLT_EVAL_METHOD_TS_18661_3__
 #define __FLT_EVAL_METHOD_TS_18661_3__ 0
 #endif
-#ifndef __OPTIMIZE__
-#define __OPTIMIZE__ 1
-#endif
 #ifndef __UINT32_MAX__
 #define __UINT32_MAX__ 0xffffffffU
 #endif
@@ -223,9 +220,6 @@
 #endif
 #ifndef __SIZEOF_POINTER__
 #define __SIZEOF_POINTER__ 8
-#endif
-#ifndef NDEBUG
-#define NDEBUG 1
 #endif
 #ifndef __GCC_ATOMIC_CHAR16_T_LOCK_FREE
 #define __GCC_ATOMIC_CHAR16_T_LOCK_FREE 2
@@ -298,9 +292,6 @@
 #endif
 #ifndef __FLT64_MIN_EXP__
 #define __FLT64_MIN_EXP__ (-1021)
-#endif
-#ifndef RELEASE
-#define RELEASE 1
 #endif
 #ifndef __FLT64X_MIN_10_EXP__
 #define __FLT64X_MIN_10_EXP__ (-4931)
@@ -478,9 +469,6 @@
 #ifndef __cpp_hex_float
 #define __cpp_hex_float 201603
 #endif
-#ifndef __GCC_HAVE_DWARF2_CFI_ASM
-#define __GCC_HAVE_DWARF2_CFI_ASM 1
-#endif
 #ifndef __GXX_ABI_VERSION
 #define __GXX_ABI_VERSION 1011
 #endif
@@ -540,6 +528,9 @@
 #endif
 #ifndef __UINT8_TYPE__
 #define __UINT8_TYPE__ unsigned char
+#endif
+#ifndef __NO_INLINE__
+#define __NO_INLINE__ 1
 #endif
 #ifndef __FLT_MANT_DIG__
 #define __FLT_MANT_DIG__ 24

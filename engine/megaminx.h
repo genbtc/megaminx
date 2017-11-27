@@ -3,6 +3,7 @@
 
 #include "face.h"
 
+
 class Megaminx
 {
 public:
@@ -24,6 +25,7 @@ public:
     int resetFacesEdges(int n);
     int resetFacesCorners(int n);
     int getCurrentFaceFromAngles(int x, int y) const;
+    void rotateAlgo(int current_face, int i);
     /* y axis */
 	double y;
     /* x axis */
@@ -32,17 +34,24 @@ public:
 	/* pointer */
     Face* g_currentFace;
 	/* static numbers at compile time*/
-	static const unsigned int numEdges = 30;
-	static const unsigned int numCorners = 20;
-	static const unsigned int numFaces = 12;
+	static const int numEdges = 30;
+	static const int numCorners = 20;
+	static const int numFaces = 12;
 private:
 	int _rSide;
-	int undoCache[2];
+    struct numdir
+    {
+        int num;
+        int dir;
+    };
+    std::queue<numdir> rotateQueue;
+    std::queue<numdir> undoQueue;
 
 	Face faces[numFaces];
 	Center centers[numFaces];
 	Edge edges[numEdges];
 	Corner corners[numCorners];
+    void _rotate_internal(int num, int dir);
 };
 
 #endif

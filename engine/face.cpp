@@ -11,13 +11,22 @@ Face::Face()
     center = nullptr;
     turnDir = 0;
     thisNum = 0;
-    _rotate = false;
+    rotating = false;
     angle = 0;
     axis[0] = 0;
     axis[1] = 0.0001;
     axis[2] = -1;
-}
 
+}
+/*
+w* createNextImpl(std::true_type) { return new w(); }
+n* createNextImpl(std::false_type) { return new n(); }
+
+template <typename T>
+T* createNext() {
+    return createNextImpl(std::is_same<T, w>());
+};
+*/
 void Face::makeEdgePositionArray()
 {
     for(int i = 0 ; i < 5 ; ++i)
@@ -35,7 +44,6 @@ void Face::attachEdgePieces(Edge& n, int numEdges)
 	}
 	edgeNativePos = pieceList;
 	makeEdgePositionArray();
-	//edgeColorPos = {1,0,1,0,0 }; for blue
 }
 
 //when this is run, iterate through and check to see which position the Face->center color is in 
@@ -133,13 +141,7 @@ void Face::Flip(int a, int b, int c, int d, std::vector<int> pack)
 	pack[2] ? corner[c]->flip() : corner[c]->flipTwice();
 	pack[3] ? corner[d]->flip() : corner[d]->flipTwice();
 }
-//Named Flip Direction lists:
-std::vector<int> FlipInwards = { 0, 1, 1, 0 };
-std::vector<int> FlipOutwards = { 1, 0, 0, 1 };
-std::vector<int> FlipBackwards = { 0, 0, 1, 1 };
-std::vector<int> FlipForwards = { 1, 1, 0, 0 };
-std::vector<int> FlipAlternatingBackwards = { 0, 1, 0, 1 };
-std::vector<int> FlipAlternatingForwards = { 1, 0, 1, 0 };
+
 
 void Face::QuadSwapCorners(std::vector<int> pack)
 {
@@ -330,10 +332,10 @@ bool Face::placeParts(int right)
 bool Face::render()
 {
 	//8 is the current speed for turnDir(rotational).
-    if (_rotate) angle += turnDir * 8;
+    if (rotating) angle += turnDir * 6;
 	if (angle >= 56 || angle <= -56)
 	{
-		if (_rotate) angle -= turnDir * 2;
+		if (rotating) angle -= turnDir * 2;
 	}
     glPushMatrix();
     glRotated(angle, axis[0], axis[1], axis[2]);
@@ -359,7 +361,7 @@ bool Face::render()
     if (angle >= 72 || angle <= -72)
     {
         angle = 0;
-        _rotate = false;
+        rotating = false;
         return placeParts(turnDir);
     }
     return false;
@@ -372,7 +374,7 @@ bool Face::render()
 void Face::rotate(int direction)
 {
 	assert(direction == 1 || direction == -1);
-    _rotate = true;
+    rotating = true;
 	turnDir = direction;
 }
 
@@ -398,7 +400,7 @@ void Face::swapEdges(int a, int b)
  * \brief This is supposed to help generate a Ray of the face of a buncha points on a plane.
  * \return Couldnt get any meaningful results because we dont have Vec3D's yet
  */
-bool Face::RayTest(const Vec3d &start, const Vec3d &end, Vec3d *pt, double *t, double epsilon)
+bool Face::RayTest(const Vec3d &start, const Vec3d &end, Vec3d *pt, double *t, double epsilon) const
 {
 	*pt = ClosestPoint(start, end, m_pos, t);
 	double len = Distance(*pt, m_pos);
@@ -415,6 +417,6 @@ bool Face::RayPlaneIntersection(Vec3d normal, Vec3d ray)
 			float t = (center - ray.origin).dot(normal) / denom;
 			if (t >= 0) return true; // you might want to allow an epsilon here too
 		}
-	return false;
 	*/
+    return false;
 }

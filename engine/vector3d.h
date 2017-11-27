@@ -151,10 +151,12 @@ private:    //setters
     Vector3f clickPosInWorld;
     Vector3f direction;
 public:     //getters
-    Vector3f getClickPosInWorld() {
+    Vector3f getClickPosInWorld() const
+    {
         return clickPosInWorld;
     }
-    Vector3f getDirection() {
+    Vector3f getDirection() const
+    {
         return direction;
     }
 
@@ -162,7 +164,7 @@ public:     //getters
     * Computes the intersection of this ray with the X-Y Plane (where Z = 0)
     * and writes it back to the provided vector.
     */
-    void intersectionWithXyPlane(float* worldPos)
+    void intersectionWithXyPlane(float* worldPos) const
     {
         float s = -clickPosInWorld.z / direction.z;
         worldPos[0] = clickPosInWorld.x + direction.x*s;
@@ -182,7 +184,7 @@ public:
     * Computes the intersection of this ray with the X-Y Plane (where Z = 0)
     * and writes it back to the provided vector->
     */
-    void intersectionWithXyPlane(double* worldPos)
+    void intersectionWithXyPlane(double* worldPos) const
     {
         float s = -clickPosInWorld->z / direction->z;
         worldPos[0] = clickPosInWorld->x + direction->x*s;
@@ -190,10 +192,12 @@ public:
         worldPos[2] = 0;
     }
 
-    Vector3d* getClickPosInWorld() {
+    Vector3d* getClickPosInWorld() const
+    {
         return clickPosInWorld;
     }
-    Vector3d* getDirection() {
+    Vector3d* getDirection() const
+    {
         return direction;
     }
 };

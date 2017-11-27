@@ -13,13 +13,13 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.1120 - genBTC mod";
+const char *title = "Megaminx v1.1125 - genBTC mod";
 // initial window screen size
 double REFRESH_RATE = 60.0;  	// monitor with 60 Hz
 int WIDTH = 700;
 int HEIGHT = 700;
 int ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
-double START_ANGLE = 60.0f;
+double START_ANGLE = 72.0f;
 double view_distance_view_angle = 20;
 ///////////////////////////////////////////////////////////////////////////////
 // data for mouse selection
@@ -58,8 +58,6 @@ void resetCameraView()
 // Glut prototype functions for callbacks (see main()
 void Idle();
 void RenderScene();
-void UpdateScene(double deltaSeconds);
-void reshape(int x, int y);
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
@@ -72,12 +70,14 @@ void createMenu();
 void menu(int num);
 void HitTest();
 void printHelpMenu();
-static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id, submenu6_id;
+static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id;
 
-Megaminx* megaminx;
+Megaminx* megaminx = nullptr;
 void createMegaMinx()
 {
     resetCameraView();
+    if (megaminx)
+        delete megaminx;
     megaminx = new Megaminx;
 }
 
@@ -130,7 +130,7 @@ void Idle()
     g_appTime = g_appTime + deltaTime;
 
     //TODO:Figure out how to actually limit to 60 FPS (This function does nothing currently)
-    //Render Scene:
+    //ReRender Scene:
     glutPostRedisplay();
 
     // save delta:
@@ -183,19 +183,23 @@ void RenderScene()
 
 void utShowCurrentFace()
 {
-	const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
-	if (tempFace != 0) {
-	    currentFace = tempFace;
+    const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
+    if (tempFace != 0) {
+        currentFace = tempFace;
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
         megaminx->setCurrentFaceActive(currentFace);
         utDrawText2D(10, HEIGHT - 40, lastface);
     }
 }
 
+int GetDirFromSpecialKey()
+{
+    return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? 1 : -1;
+}
+
 void double_click(int x, int y)
 {
-    const auto specialKey = glutGetModifiers();
-    const int dir = (specialKey == 1) ? 1 : -1;
+    const int dir = GetDirFromSpecialKey();
     megaminx->rotate(currentFace, dir);
 }
 
@@ -260,10 +264,7 @@ void mousePressedMove(int x, int y)
 
 void rotateDispatch(unsigned char key)
 {
-    const auto specialKey = glutGetModifiers();
-    int dir = -1;
-    if (specialKey == GLUT_ACTIVE_SHIFT) 
-        dir = (specialKey == 1) ? 1 : -1;
+    const int dir = GetDirFromSpecialKey();
     switch (key)
     {
     case 'a':   //Left
@@ -324,7 +325,7 @@ void printHelpMenu()
 
 void keyboard(unsigned char key, int x, int y)
 {
-	const auto specialKey = glutGetModifiers();
+    const auto specialKey = glutGetModifiers();
     if (specialKey == GLUT_ACTIVE_CTRL) {
         switch (key) {
         case 3:	//Ctrl+C
@@ -344,7 +345,7 @@ void keyboard(unsigned char key, int x, int y)
     case 8:   //backspace
         resetCameraView(); break;
     case 13:	//enter
-	    megaminx->resetFace(currentFace); break;
+        megaminx->resetFace(currentFace); break;
     case 127: //delete
         megaminx->scramble(); break;
     default: break;
@@ -357,8 +358,7 @@ void keyboard(unsigned char key, int x, int y)
 void PressSpecialKey(int key, int x, int y)
 {
     //TODO Add Caps Lock to determine rotation direction also.
-    const auto specialKey = glutGetModifiers();
-    const int dir = (specialKey == 1) ? 1 : -1;
+    const int dir = GetDirFromSpecialKey();
     switch (key)
     {
     case GLUT_KEY_PAGE_UP:
@@ -432,8 +432,8 @@ void createMenu() {
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     glutAddMenuEntry("R' D' R D", 57);
 
-    //SubLevel6 Menu - Faces
-    submenu6_id = glutCreateMenu(menu);
+    //SubLevel5 Menu - Faces
+    submenu5_id = glutCreateMenu(menu);
     glutAddMenuEntry(" 1 WHITE", 61);
     glutAddMenuEntry(" 2 BLUE_DARK", 62);
     glutAddMenuEntry(" 3 RED", 63);
@@ -454,25 +454,22 @@ void createMenu() {
     glutAddSubMenu("Last Layer ->", submenu1_id);
     glutAddSubMenu("Rotations -->", submenu2_id);
     glutAddSubMenu("Steps  ----->", submenu3_id);
-    //glutAddSubMenu("Algos  ----->", submenu4_id);
-    glutAddSubMenu("Reset Faces: -->", submenu6_id);
+    glutAddSubMenu("Algos  ----->", submenu4_id);
+    glutAddSubMenu("Reset Face: -->", submenu5_id);
     glutAddMenuEntry("Exit Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 void menu(int num) {
     if (num == 92)
-    {
-        delete megaminx;
         createMegaMinx();
-    }
     if (num == 91)
         megaminx->undo();
     if (num == 93)
         resetCameraView();
     if (num == 1)
         spinning = !spinning;
-	if (num == 21)
-		megaminx->resetFace(currentFace);
+    if (num == 21)
+        megaminx->resetFace(currentFace);
     if (num == 22)
         megaminx->rotate(currentFace, 1);
     if (num == 23)  //rotate corner piece
@@ -487,6 +484,20 @@ void menu(int num) {
         megaminx->resetFacesEdges(WHITE);
     if (num == 42)	//make WHITE Face
         megaminx->resetFace(WHITE);
+    if (num == 51)     //glutAddMenuEntry("r u R' U'", 51);
+        megaminx->rotateAlgo(currentFace, 1);
+    if (num == 52)     //glutAddMenuEntry("l u L' U'", 52);
+        megaminx->rotateAlgo(currentFace, 2);
+    if (num == 53)     //glutAddMenuEntry("U' L' u l u r U' R'", 53);
+        megaminx->rotateAlgo(currentFace, 3);
+    if (num == 54)     //glutAddMenuEntry("r u R' u r 2U' R'", 54);
+        megaminx->rotateAlgo(currentFace, 4);
+    if (num == 55)     //glutAddMenuEntry("u l U' R' u L' U' r", 55);
+        megaminx->rotateAlgo(currentFace, 5);
+    if (num == 56)     //glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
+        megaminx->rotateAlgo(currentFace, 6);
+    if (num == 57)     //glutAddMenuEntry("R' D' R D", 57);
+        megaminx->rotateAlgo(currentFace, 7);
     if (num >= 61 && num <= 72)
         megaminx->resetFace(num - 60);
     if (num == 100)

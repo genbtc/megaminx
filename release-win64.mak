@@ -3,7 +3,7 @@
 #USE VISUALGDB PROJECT PROPERTIES DIALOG INSTEAD
 
 BINARYDIR := Release-win64
-
+#TOOLCHAIN_ROOT := C:/Software/msys64/mingw64
 #Toolchain
 CC := $(TOOLCHAIN_ROOT)/bin/gcc.exe
 CXX := $(TOOLCHAIN_ROOT)/bin/g++.exe
