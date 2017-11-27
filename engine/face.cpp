@@ -130,7 +130,7 @@ void Face::twoEdgesFlip(int a,int b)
 }
 
 //Functional Generic Switch that flips 
-void Face::Flip(int a, int b, int c, int d, std::vector<int> pack)
+void Face::Flip(int a, int b, int c, int d, const int* pack)
 {
 	//Feed in 4 ints abcd representing the face's five corner indexes 0-4 
     // (hint: [0-4]=5, but we only need to flip 4 at once)

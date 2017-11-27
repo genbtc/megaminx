@@ -416,6 +416,7 @@ void createMenu() {
     submenu3_id = glutCreateMenu(menu);
     glutAddMenuEntry("White Star", 41);
     glutAddMenuEntry("White Face", 42);
+    //TODO Add the rest of these:
 //	glutAddMenuEntry("2nd Layer Edges", 43);
 //	glutAddMenuEntry("Low Y's", 44);
 //	glutAddMenuEntry("4th Layer Edges", 45);
@@ -484,20 +485,8 @@ void menu(int num) {
         megaminx->resetFacesEdges(WHITE);
     if (num == 42)	//make WHITE Face
         megaminx->resetFace(WHITE);
-    if (num == 51)     //glutAddMenuEntry("r u R' U'", 51);
-        megaminx->rotateAlgo(currentFace, 1);
-    if (num == 52)     //glutAddMenuEntry("l u L' U'", 52);
-        megaminx->rotateAlgo(currentFace, 2);
-    if (num == 53)     //glutAddMenuEntry("U' L' u l u r U' R'", 53);
-        megaminx->rotateAlgo(currentFace, 3);
-    if (num == 54)     //glutAddMenuEntry("r u R' u r 2U' R'", 54);
-        megaminx->rotateAlgo(currentFace, 4);
-    if (num == 55)     //glutAddMenuEntry("u l U' R' u L' U' r", 55);
-        megaminx->rotateAlgo(currentFace, 5);
-    if (num == 56)     //glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
-        megaminx->rotateAlgo(currentFace, 6);
-    if (num == 57)     //glutAddMenuEntry("R' D' R D", 57);
-        megaminx->rotateAlgo(currentFace, 7);
+    if (num >= 51 && num <= 57)
+        megaminx->rotateAlgo(currentFace, (num - 50));
     if (num >= 61 && num <= 72)
         megaminx->resetFace(num - 60);
     if (num == 100)

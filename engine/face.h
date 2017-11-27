@@ -11,12 +11,12 @@
 //Named Face Directions
 enum FaceTurnDir { Clockwise, CounterClockwise };
 //Named Flip Direction lists:
-static const std::vector<int> FlipInwards = { 0, 1, 1, 0 };
-static const std::vector<int> FlipOutwards = { 1, 0, 0, 1 };
-static const std::vector<int> FlipBackwards = { 0, 0, 1, 1 };
-static const std::vector<int> FlipForwards = { 1, 1, 0, 0 };
-static const std::vector<int> FlipAlternatingBackwards = { 0, 1, 0, 1 };
-static const std::vector<int> FlipAlternatingForwards = { 1, 0, 1, 0 };
+constexpr int FlipInwards[4] = { 0, 1, 1, 0 };
+constexpr int FlipOutwards[4] = { 1, 0, 0, 1 };
+constexpr int FlipBackwards[4] = { 0, 0, 1, 1 };
+constexpr int FlipForwards[4] = { 1, 1, 0, 0 };
+constexpr int FlipAlternatingBackwards[4] = { 0, 1, 0, 1 };
+constexpr int FlipAlternatingForwards[4] = { 1, 0, 1, 0 };
 
 class Face : public Piece
 {
@@ -54,7 +54,7 @@ public:
     bool rotating;
 private:
     void twoEdgesFlip(int a,int b);
-    void Flip(int a, int b, int c, int d, std::vector<int> pack);
+    void Flip(int a, int b, int c, int d, const int* pack);
     void QuadSwapCorners(std::vector<int> pack);
     void QuadSwapEdges(std::vector<int> pack);
 
