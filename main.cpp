@@ -69,7 +69,7 @@ void rotateDispatch(unsigned char key);
 void createMenu();
 void menu(int num);
 void HitTest();
-void printHelpMenu();
+void printHelpMenu(float w, float h);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id;
 
 Megaminx* megaminx = nullptr;
@@ -129,7 +129,7 @@ void Idle()
     // set global:
     g_appTime = g_appTime + deltaTime;
 
-    //TODO:Figure out how to actually limit to 60 FPS (This function does nothing currently)
+    //TODO Figure out how to actually limit to 60 FPS (This function does nothing currently)
     //ReRender Scene:
     glutPostRedisplay();
 
@@ -171,7 +171,7 @@ void RenderScene()
     utResetPerspectiveProjection();
     //Print out Text (Help display)
     if (!help)
-        printHelpMenu();
+        printHelpMenu(WIDTH - 245, 510);
     //Clean up.
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
@@ -296,15 +296,11 @@ void rotateDispatch(unsigned char key)
     }
 }
 
-void printHelpMenu()
+void printHelpMenu(float w, float h)
 {
     glColor3f(1, 1, 1);
     utSetOrthographicProjection(WIDTH, HEIGHT);
     static char helpStr[255];
-    const int startwidth = WIDTH - 245;
-    const int startheight = 510;
-    int w = startwidth;
-    int h = startheight;
     sprintf(helpStr, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
     sprintf(helpStr, "[Right Click]  Action Menu"); utDrawText2D(w, h, helpStr); h += 15;
 //	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
@@ -522,7 +518,7 @@ void HitTest()
         // perform hit test with all point in the scene
         // not optimal - one can use some scene tree system to optimise it... 
         g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, &vtx3d, &g_rayTest.m_lastT);
-
+        // ??? idk
         // now in:
         // m_hit - did we hit something?
         // m_lastT - param that can be used to calculate next ball position

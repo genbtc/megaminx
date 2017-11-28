@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4)
-# by genBTC 2017, project set up for CMake on Windows 64 using MSYS2/MingW64/G++ compilers
+# by genBTC 2017, project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change as needed.
 project(MegaMinx2)
 # Target OS Name (also makes black console window go away)
 set(CMAKE_SYSTEM_NAME Windows)
