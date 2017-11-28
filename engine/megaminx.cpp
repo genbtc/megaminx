@@ -1,15 +1,33 @@
+/* MegaMinx2 - 2017 - genBTC mod
+ * Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
+ * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
+ */
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
 #include <algorithm>
 #include "megaminx.h"
 
+//constructor. simple.
+Megaminx::Megaminx()
+{
+    solve();
+    renderAllPieces();
+}
+
+//Solve aka Reset, aka real constructor.
 void Megaminx::solve()
 {
     y = 0; 
     x = 0;
     _rSide = 0;
     rotating = false;
+    initEdgeAndCornerPieces();
+    initFacePieces();
+}
+
+void Megaminx::initEdgeAndCornerPieces()
+{
     //store the value of the base start vertexes (outside the loop)
     double* edgeVertexList = edges[0].edgeInit();
     for (int i = 0; i < numEdges; ++i)
@@ -21,7 +39,6 @@ void Megaminx::solve()
     {
         corners[i].init(i, cornerVertexList);
     }
-    initFacePieces();
 }
 
 void Megaminx::initFacePieces()
@@ -37,13 +54,9 @@ void Megaminx::initFacePieces()
     }
 }
 
-Megaminx::Megaminx()
-{
-    solve();
-    iterateAllPieces();
-}
 
-void Megaminx::iterateAllPieces()
+//Initially we need to render all the pieces unconditionally. (once)
+void Megaminx::renderAllPieces()
 {
     for (int i = 0; i < numFaces; ++i)
         centers[i].render();
@@ -53,8 +66,10 @@ void Megaminx::iterateAllPieces()
         corners[i].render();	
 }
 
+//Display function for OpenGL
 void Megaminx::render()
 {
+    //Process all the pieces that are NOT part of a rotating face.
     for (int i=0, k=0; i < numFaces; ++i) {			
         if (&centers[i] != faces[_rSide].center)
             centers[i].render();
@@ -71,7 +86,7 @@ void Megaminx::render()
         else
             corners[i].render();
     }
-    
+    //Handle the face rotation Queue for multiple ops.
     if (!rotateQueue.empty())
     {
         const auto op = rotateQueue.front();
@@ -86,11 +101,6 @@ void Megaminx::render()
             rotating = false;
 }
 
-void Megaminx::_rotate_internal(int num, int dir)
-{
-    rotateQueue.push({ num, dir });
-    undoQueue.push({ num, dir });
-}
 void Megaminx::rotate(int num, int dir)
 {
     assert(num > 0);
@@ -98,6 +108,11 @@ void Megaminx::rotate(int num, int dir)
     assert(dir == 1 || dir == -1);
     //Convert 1-12 Faces into array [0-11]
     _rotate_internal(num-1, dir);
+}
+void Megaminx::_rotate_internal(int num, int dir)
+{
+    rotateQueue.push({ num, dir });
+    undoQueue.push({ num, dir });
 }
 
 /**
@@ -112,7 +127,7 @@ void Megaminx::undo()
     undoQueue.pop();
 }
 
-//Scramble 600 times.
+//Scramble 600 times (50 x 12)
 void Megaminx::scramble()
 {
     //Do 50 iterations of scrambling (like a human)
@@ -128,6 +143,7 @@ void Megaminx::scramble()
 
 /**
  * \brief Toggle the colors of a single Corner piece
+ * * If called externally make sure its 1-12.
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
@@ -139,6 +155,7 @@ void Megaminx::swapOneCorner(int i, int x)
 }
 /**
  * \brief Toggle the colors of a single Edge piece
+ * * If called externally make sure its 1-12.
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
@@ -161,19 +178,23 @@ void Megaminx::setCurrentFaceActive(int i)
     assert(g_currentFace->thisNum == i);
 }
 
-//shortcut to reset all the things on a face and set it to active.
-//Takes (1-12)
-int Megaminx::resetFace(int n)
+/**
+ * \brief Reset all the pieces on a face and set it to active.
+ * \param n Nth-face number index (1-12)
+ * \return n same thing.
+ */
+void Megaminx::resetFace(int n)
 {
     assert(n <= numFaces);
     resetFacesEdges(n);
     resetFacesCorners(n);
     setCurrentFaceActive(n);
-    return n;
 }
-//
+
 /**
- * \brief Find all edge pieces.[0-11]
+ * \brief Find all edge pieces.
+ * \param i Nth-face number index (1-12)
+ * \return std::vector, 5 long of index positions of found edges
  */
 std::vector<int> Megaminx::findEdges(int i)
 {
@@ -183,7 +204,9 @@ std::vector<int> Megaminx::findEdges(int i)
 }
 
 /**
- * \brief Find all corner pieces.[0-11]
+ * \brief Find all corner pieces.
+ * \param i Nth-face number index (1-12)
+ * \return std::vector, 5 long of index positions of found corners
  */
 std::vector<int> Megaminx::findCorners(int i)
 {
@@ -196,7 +219,7 @@ std::vector<int> Megaminx::findCorners(int i)
  * \brief Revert all the edge pieces on the Nth colored face back to normal.
  *			To do so we must swap the pieces that are in there, OUT.
  * \param color_n N'th Face/Color Number (1-12)
- * \return success
+ * \return success (1)
  */
 int Megaminx::resetFacesEdges(int color_n)
 {
@@ -231,7 +254,7 @@ int Megaminx::resetFacesEdges(int color_n)
  * \brief Revert all the Corners pieces on the Nth colored face back to normal.
  *			To do so we must swap the pieces that are in there, OUT.
  * \param color_n N'th Face/Color Number
- * \return success
+ * \return success (1)
  */
 int Megaminx::resetFacesCorners(int color_n)
 {
@@ -264,7 +287,8 @@ int Megaminx::resetFacesCorners(int color_n)
 
 
 /**
- * \brief Takes camera position angles and tells what face is most showing
+ * \brief Takes camera position angles and tells what face is most showing. 
+ * Brute force way by angle detection.
  * \param x camera_angleX
  * \param y camera_angleY
  * \return face # color-int (1-12) as result.
@@ -274,7 +298,7 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
     //Vars:
     const int r = 72;   	//face angles
     const int d = r / 2;  	//36 half of face 	
-    const auto s = 60; 	//START_ANGLE from main.cpp
+    const auto s = 60; 	// or match START_ANGLE in main.cpp
 	int face = 0; 	//color-int (1-12) as result.
 	//Angle Conditions:
 	const auto y1  = y >= (s - d) && y <= (s + d);      			// 60
@@ -284,14 +308,14 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 	const auto y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
 	const auto y4a = y >= (0 - d)   && y <= (0 + d);       			//0
 	const auto y4b = y >= (360 - d) && y <= (360 + d);				//360
-	int toplist[5] = { BONE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };   //{12,11,10,9,8}
-	int botlist[5] = { YELLOW, PURPLE, GREEN, RED, NAVY_BLUE };     			//{6,5,4,3,2}
+	int toplist[5] = { BEIGE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };   //{12,11,10,9,8}
+	int botlist[5] = { YELLOW, PURPLE, DARK_GREEN, RED, DARK_BLUE };     			//{6,5,4,3,2}
 	//Top half - Part 1:
 	if(y1 && x < d + r)
 		face = LIGHT_BLUE;
 	//Bottom half - Part 1:	
 	else if(y2 && x < d + r)
-		face = NAVY_BLUE;	
+		face = DARK_BLUE;	
 	for (int i = 0; i < 5; ++i)
 	{
 		if (y1 && x >= d + r * i && x < d + r * (i + 1))
@@ -302,6 +326,7 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 	if (face) return face;
 	//Top half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2)
 	//Bottom half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2).	
+    //std::rotate is to cyclically advance the list by +2.
 	std::rotate(std::begin(toplist), std::begin(toplist) + 2, std::end(toplist));
 	std::rotate(std::begin(botlist), std::begin(botlist) + 2, std::end(botlist));
 	for (int i = 0; i < 5; ++i)
@@ -319,30 +344,32 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 	return face;
 }
 
-//glutAddMenuEntry("r u R' U'", 51);
-//glutAddMenuEntry("l u L' U'", 52);
-//glutAddMenuEntry("U' L' u l u r U' R'", 53);
-//glutAddMenuEntry("r u R' u r 2U' R'", 54);
-//glutAddMenuEntry("u l U' R' u L' U' r", 55);
-//glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
-//glutAddMenuEntry("R' D' R D", 57);
+/**
+ * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops to happen
+ * in accordance with how a player would want to achieve certain swaps.
+ * \param current_face from 1 - 12
+ * \param i op # from 1 - 7
+ */
 void Megaminx::rotateAlgo(int current_face, int i)
 {
     const auto loc = g_algodirections[current_face];
     switch (i)
     {
+        //glutAddMenuEntry("r u R' U'", 51);
     case 1:
         rotate(loc.right, 1);
         rotate(loc.up, 1);
         rotate(loc.right, -1);
         rotate(loc.up, -1);
         break;
+        //glutAddMenuEntry("l u L' U'", 52);
     case 2:
         rotate(loc.left, 1);
         rotate(loc.up, 1);
         rotate(loc.left, -1);
         rotate(loc.up, -1);
         break;
+        //glutAddMenuEntry("U' L' u l u r U' R'", 53);
     case 3:         
         rotate(loc.up, -1);
         rotate(loc.left, -1);
@@ -353,6 +380,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, -1);
         rotate(loc.right, -1);
         break;
+        //glutAddMenuEntry("r u R' u r 2U' R'", 54);
     case 4:         
         rotate(loc.right, 1);
         rotate(loc.up, 1);        
@@ -363,6 +391,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, -1);
         rotate(loc.right, -1);
         break;
+        //glutAddMenuEntry("u l U' R' u L' U' r", 55);
     case 5: 
         rotate(loc.up, 1);
         rotate(loc.left, 1);
@@ -373,6 +402,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, -1);
         rotate(loc.right, 1);
         break;
+        //glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     case 6: 
         rotate(loc.up, 1);
         rotate(loc.right, 1);
@@ -387,6 +417,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.left, 1);
         rotate(loc.up, 1);
         break;
+        //glutAddMenuEntry("R' D' R D", 57);
     case 7: 
         rotate(loc.right, -1);
         rotate(loc.downr, -1);

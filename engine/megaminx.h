@@ -8,10 +8,11 @@ class Megaminx
 {
 public:
     Megaminx();
-    void iterateAllPieces();
     ~Megaminx() = default;
     void solve();
+    void initEdgeAndCornerPieces();    
     void initFacePieces();
+    void renderAllPieces();
     void render();
     void rotate(int, int);
     void undo();
@@ -19,7 +20,7 @@ public:
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
     void setCurrentFaceActive(int i);
-    int resetFace(int n);
+    void resetFace(int n);
     std::vector<int> findEdges(int i);
     std::vector<int> findCorners(int i);
     int resetFacesEdges(int n);
