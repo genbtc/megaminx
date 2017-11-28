@@ -61,7 +61,7 @@ void RenderScene();
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
-void utShowCurrentFace();
+void utShowCurrentFace(float x, float y);
 void double_click(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void PressSpecialKey(int key, int x, int y);
@@ -166,7 +166,7 @@ void RenderScene()
     {
         utCalculateAndPrintFps(10, 20);
         utCalculateAndPrintAngles(10, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
-        utShowCurrentFace();
+        utShowCurrentFace(10, HEIGHT - 40);
     }
     utResetPerspectiveProjection();
     //Print out Text (Help display)
@@ -181,14 +181,14 @@ void RenderScene()
 
 }
 
-void utShowCurrentFace()
+void utShowCurrentFace(float x, float y)
 {
     const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
         megaminx->setCurrentFaceActive(currentFace);
-        utDrawText2D(10, HEIGHT - 40, lastface);
+        utDrawText2D(x,y, lastface);
     }
 }
 

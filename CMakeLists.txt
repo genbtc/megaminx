@@ -1,23 +1,34 @@
-#by genBTC 2017
-
-cmake_minimum_required(VERSION 2.7)
+cmake_minimum_required(VERSION 3.4)
+# by genBTC 2017, project set up for CMake on Windows 64 using MSYS2/MingW64/G++ compilers
+project(MegaMinx2)
+# Target OS Name (also makes black console window go away)
+set(CMAKE_SYSTEM_NAME Windows)
+# Turn on C++ 17 and debug flags.
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
+#Little routine to detect Current CPUs.
 include(ProcessorCount)
 ProcessorCount(NumCPUS)
 message("detected number of processors: " ${NumCPUS})
-project(MegaMinx2)
-set(LIBRARIES_FROM_REFERENCES "")
-add_executable(MegaMinx2 WIN32 common_physics/camera.cpp common_physics/opengl.cpp common_physics/raytri.cpp engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Res.rc)
-# GLUT
+# need GLUT (or freeglut)
 find_package(GLUT REQUIRED)
 if(NOT GLUT_FOUND)
-    message(ERROR "GLUT not found!")
+    message(ERROR " - GLUT not found!")
 endif(NOT GLUT_FOUND)
-# OpenGL
+# need OpenGL (or Xmesa)
 find_package(OpenGL REQUIRED)
-if(NOT OPENGL_FOUND)
-    message(ERROR "OPENGL not found!")
+if(NOT OPENGL_FOUND) #OPENGL_XMESA_FOUND
+    message(ERROR " - OPENGL not found!")
 endif(NOT OPENGL_FOUND)
-target_link_libraries(MegaMinx2 -lfreeglut -lglu32 -lopengl32 "${LIBRARIES_FROM_REFERENCES}")
-SET(CMAKE_SYSTEM_NAME Windows)
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
+# need GLU of some sort (glu32 from openGL most likely)
+if(NOT OPENGL_GLU_FOUND)
+    message(ERROR " - OPENGL GLU not found!")
+endif(NOT OPENGL_GLU_FOUND)
+#Set Link libraries (Auto)
+set(LIBRARIES_FROM_REFERENCES "${GLUT_LIBRARIES};${OPENGL_gl_LIBRARY};${OPENGL_glu_LIBRARY}")
+#Set Link Libraries (Manually)
+#set(LIBRARIES_FROM_REFERENCES "-lfreeglut;-lopengl32;-lglu32;")
+#Set EXE by listing all source files, and the Resource.rc (icon)
+add_executable(MegaMinx2 WIN32 common_physics/camera.cpp common_physics/opengl.cpp common_physics/raytri.cpp engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Res.rc)
+#Make Exe, go!
+target_link_libraries(MegaMinx2 "${LIBRARIES_FROM_REFERENCES}")

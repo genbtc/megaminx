@@ -3,6 +3,7 @@
  *
  *	@author Bartlomiej Filipek
  *	@date March 2011
+  *	@Edited by genBTC 2017*	
  */
 
 #pragma once
@@ -18,9 +19,6 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-bool utInitOpenGL20();
-
-///////////////////////////////////////////////////////////////////////////////
 // 2D and TEXT MODE
 void utSetOrthographicProjection(int scrW, int scrH);
 void utResetPerspectiveProjection();
@@ -33,23 +31,3 @@ inline void utDrawText2D(float x, float y, char *string) {
 
 void utCalculateAndPrintFps(float x, float y);
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1);
-
-///////////////////////////////////////////////////////////////////////////////
-// Draw helpers
-
-/** draws nice box using current color and Red clor for outlines 
- * box is drawn around point (x, y, z), centered
- * @param w - width 
- * @param h - height 
- * @param d - depth
- */
-void utDrawTransparentBox(float x, float y, float z, float w, float h, float d);
-
-/** draws nice transparent sphere using current color and Red clor for outlines 
- * sphere is drawn around point (x, y, z), centered
- */
-void utDrawTransparentSphere(float x, float y, float z, float r);
-
-
-
-		
