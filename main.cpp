@@ -57,7 +57,7 @@ void RenderScene();
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);
-void utShowCurrentFace(float x, float y);
+void GetCurrentFace();
 void double_click(int x, int y);
 void onKeyboard(unsigned char key, int x, int y);
 void onSpecialKeyPress(int key, int x, int y);
@@ -106,7 +106,6 @@ int main(int argc, char *argv[])
     glutMainLoop();
     return 1;
 }
-
 
 //TODO Figure out how to actually limit to 60 FPS 
 // (This function does nothing currently besides count time).
@@ -164,7 +163,8 @@ void RenderScene()
     {
         utCalculateAndPrintFps(10, 20);
         utCalculateAndPrintAngles(10, HEIGHT - 20, g_camera.m_angleX, g_camera.m_angleY);
-        utShowCurrentFace(10, HEIGHT - 40);
+        GetCurrentFace();
+        utDrawText2D(10, HEIGHT - 40, lastface);
         //Print out Text (Help display)
         if (!help)
             utPrintHelpMenu(WIDTH - 245, 510);
@@ -179,20 +179,22 @@ void RenderScene()
 
 }
 
-void utShowCurrentFace(float x, float y)
+void GetCurrentFace()
 {
     const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
+        //Save it into the viewmodel (sync view)
         megaminx->setCurrentFaceActive(currentFace);
-        utDrawText2D(x,y, lastface);
     }
 }
 
 int GetDirFromSpecialKey()
 {
-    return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? 1 : -1;
+    const int result = (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? 
+        (int)Face::CCW : (int)Face::CW;
+    return result;
 }
 
 void double_click(int x, int y)
@@ -419,7 +421,7 @@ void createMenu() {
 
     //SubLevel4 Menu - Algos
     submenu4_id = glutCreateMenu(menuHandler);
-    //glutAddMenuEntry("Rotate Current Face CW", 50);
+    glutAddMenuEntry("Rotate Current Face CW", 50);
     glutAddMenuEntry("r u R' U'", 51);
     glutAddMenuEntry("l u L' U'", 52);
     glutAddMenuEntry("U' L' u l u r U' R'", 53);
@@ -477,7 +479,7 @@ void menuHandler(int num) {
     if (num == 42)	//make WHITE Face
         megaminx->resetFace(WHITE);
     if (num == 50)
-        megaminx->rotate(currentFace, 1);
+        megaminx->rotate(currentFace, Face::CW);
     if (num >= 51 && num <= 57)
         megaminx->rotateAlgo(currentFace, num - 50);
     if (num >= 61 && num <= 72)
@@ -501,7 +503,7 @@ void MakeaVec3dOutofNormPlanes()
 { 
     auto const vertex = megaminx->g_currentFace->_vertex[0];
     std::vector<Vec3d> g_points;
-    //12 faces - turn one each, randomizing direction
+    //12 faces
     for(int i = 0 ; i < 12 ; i++) {
         const Vec3d vtx3d(vertex);
         g_points.push_back(vtx3d);

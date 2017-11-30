@@ -162,13 +162,13 @@ void Face::QuadSwapEdges(std::vector<int> pack)
 }
 /**
  * \brief Colorizing function. Intricate series of flips/swaps.
- * \param right Each case is for each of the 12 faces, 
+ * \param dir Each case is for each of the 12 faces, 
  * / in order to get it to switch colors after it rotates.
  */
-bool Face::placeParts(int right)
+bool Face::placeParts(int dir)
 {
-	assert(right == 1 || right == -1);
-	if (right == 1)
+	assert(dir == 1 || dir == -1);
+	if (dir == 1)  // 1 = CCW
 	{
 		switch (thisNum)
 		{
@@ -245,8 +245,7 @@ bool Face::placeParts(int right)
 		}
 	}
 	else
-	{
-		           //CLOCKWISE.
+	{    // -1 = CW
 	    switch(thisNum)
 		{
 		case 0:
@@ -287,7 +286,7 @@ bool Face::placeParts(int right)
 			QuadSwapCorners({ 0, 1, 1, 2, 2, 3, 3, 4 });
 			QuadSwapEdges({ 0, 1, 1, 2, 2, 3, 3, 4 });
 			break;
-		case 7: //front clockwise;
+		case 7: //front CW;
 		    QuadSwapEdges({ 0, 1, 0, 2, 0, 4, 0, 3 });
 			twoEdgesFlip(0, 3);
 			QuadSwapCorners({ 0, 3, 0, 1, 0, 2, 0, 4 });
@@ -327,15 +326,16 @@ bool Face::placeParts(int right)
 
 /**
  * \brief OpenGL Display function. Calling this makes the faces rotate,the only real move.
- * \return true if we full-spun, to tell the parent function that _rotate=false and to set rotating=false also.
+ * \return true if we full-spun, to tell the parent function that rotating=false also.
  */
 bool Face::render()
 {
-	//8 is the current speed for turnDir(rotational).
-    if (rotating) angle += turnDir * 6;
+	//4 is the current rotational turnspeed for turnDir
+    constexpr int turnspeed = 4;
+    if (rotating) angle += turnDir * turnspeed;
 	if (angle >= 56 || angle <= -56)
 	{
-		if (rotating) angle -= turnDir * 2;
+		if (rotating) angle -= turnDir * (turnspeed/2);
 	}
     glPushMatrix();
     glRotated(angle, axis[0], axis[1], axis[2]);
@@ -379,7 +379,7 @@ void Face::rotate(int direction)
 }
 
 /**
- * \brief Public. Given two indexes, swap the corners.
+ * \brief Public. Given two local indexes 0-5, swap the Corners.
  */
 void Face::swapCorners(int a, int b)
 {
@@ -388,7 +388,7 @@ void Face::swapCorners(int a, int b)
 }
 
 /**
- * \brief Public. given two indexes, swap the edges.
+ * \brief Public. given two local indexes 0-5, swap the Edges.
  */
 void Face::swapEdges(int a, int b)
 {

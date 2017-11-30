@@ -124,7 +124,7 @@ constexpr colorpiece g_cornerPiecesColors[20] =
 };
 struct colordirs
 {
-    //Starting from face,then 9-oclock and going clockwise right around.
+    //Starting from face,then 9-oclock and going CW right around.
     g_enum_COLOR_STATES front = BLACK;
     g_enum_COLOR_STATES left = BLACK;
     g_enum_COLOR_STATES up = BLACK;
@@ -245,9 +245,9 @@ public:
     // currently stored in struct data (3 sided)
 	bool matchesColor(int color) const
 	{
-		return  (data._colorNum[0] == color) || 
-		        (data._colorNum[1] == color) || 
-		        (data._colorNum[2] == color);
+		return  data._colorNum[0] == color || 
+		        data._colorNum[1] == color || 
+		        data._colorNum[2] == color;
 	}
     //main transform: used in almost every other algo
     static void axis1multi(double* target, piecepack &pack)
@@ -345,7 +345,7 @@ public:
 	 */
 	void flip()
 	{
-	    const bool isCorner = (numSides == 3);
+	    const bool isCorner = numSides == 3;
 		double buf[3];
 		for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
 		for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
@@ -437,17 +437,17 @@ public:
 			_vertex[i][2] = -INS_SPHERE_RAD;
 		}
 
-		_vertex[0][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5);
-		_vertex[0][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5);
-
-		_vertex[1][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5);
-		_vertex[1][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5);
-
-		_vertex[2][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5);
-		_vertex[2][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(1.5)));
-
-		_vertex[3][0] = 0.99 * (INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5);
-		_vertex[3][1] = 0.99 * (INS_CIRCLE_RAD * sin(pim(3.5)));
+		_vertex[0][0] = INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5;
+		_vertex[0][1] = INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5;
+                        
+		_vertex[1][0] = INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5;
+		_vertex[1][1] = INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5;
+                        
+		_vertex[2][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
+		_vertex[2][1] = INS_CIRCLE_RAD * sin(pim(1.5));
+                        
+		_vertex[3][0] = INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5;
+		_vertex[3][1] = INS_CIRCLE_RAD * sin(pim(3.5));
 
 		_vertex[4][0] = _vertex[1][0];
 		_vertex[4][1] = _vertex[1][1];

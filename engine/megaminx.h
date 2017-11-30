@@ -2,7 +2,7 @@
 #define __MEGAMINX_H__
 
 #include "face.h"
-
+#include <queue>
 
 class Megaminx
 {

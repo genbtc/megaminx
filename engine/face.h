@@ -4,12 +4,9 @@
 #include "center.h"
 #include "edge.h"
 #include "corner.h"
-#include "../common_physics/camera.h"
 #include <vector>
-#include <queue>
+#include "../common_physics/utils_math.h"
 
-//Named Face Directions
-enum FaceTurnDir { Clockwise, CounterClockwise };
 //Named Flip Direction lists:
 constexpr int FlipInwards[4] = { 0, 1, 1, 0 };
 constexpr int FlipOutwards[4] = { 1, 0, 0, 1 };
@@ -20,6 +17,9 @@ constexpr int FlipAlternatingForwards[4] = { 1, 0, 1, 0 };
 
 class Face : public Piece
 {
+public: enum { Clockwise = -1, None, CounterClockwise = 1 };
+public: enum { CW = -1, CCW = 1 };
+    enum { asd = 'c', bsd = 'z'};
 public:
 	Face();
     ~Face() {}

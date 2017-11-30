@@ -93,16 +93,17 @@ void Megaminx::render()
         _rSide = op.num;
         faces[_rSide].rotate(op.dir);
     }
-    if (faces[_rSide].render()) {
-        rotating = false;
+    const bool isRotaFullyRendered = faces[_rSide].render();
+    if (isRotaFullyRendered) {
         rotateQueue.pop();
+        rotating = false;
     }
 }
 
 /**
  * \brief Rotate a face. Public function (Input Validated).
  * \param num  Nth-face number color (1-12)
- * \param dir  1 Clockwise, -1 CounterClockwise
+ * \param dir  1 CW, -1 CCW
  */
 void Megaminx::rotate(int num, int dir)
 {
@@ -361,72 +362,72 @@ void Megaminx::rotateAlgo(int current_face, int i)
     {
         //glutAddMenuEntry("r u R' U'", 51);
     case 1:
-        rotate(loc.right, 1);
-        rotate(loc.up, 1);
-        rotate(loc.right, -1);
-        rotate(loc.up, -1);
+        rotate(loc.right, Face::CW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::CCW);
         break;
         //glutAddMenuEntry("l u L' U'", 52);
     case 2:
-        rotate(loc.left, 1);
-        rotate(loc.up, 1);
-        rotate(loc.left, -1);
-        rotate(loc.up, -1);
+        rotate(loc.left, Face::CW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
         break;
         //glutAddMenuEntry("U' L' u l u r U' R'", 53);
     case 3:         
-        rotate(loc.up, -1);
-        rotate(loc.left, -1);
-        rotate(loc.up, 1);
-        rotate(loc.left, 1);
-        rotate(loc.up, 1);
-        rotate(loc.right, 1);
-        rotate(loc.up, -1);
-        rotate(loc.right, -1);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.left, Face::CW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.right, Face::CW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::CCW);
         break;
         //glutAddMenuEntry("r u R' u r 2U' R'", 54);
     case 4:         
-        rotate(loc.right, 1);
-        rotate(loc.up, 1);        
-        rotate(loc.right, -1);
-        rotate(loc.up, 1);
-        rotate(loc.right, 1);
-        rotate(loc.up, -1);
-        rotate(loc.up, -1);
-        rotate(loc.right, -1);
+        rotate(loc.right, Face::CW);
+        rotate(loc.up, Face::CW);        
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.right, Face::CW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::CCW);
         break;
         //glutAddMenuEntry("u l U' R' u L' U' r", 55);
     case 5: 
-        rotate(loc.up, 1);
-        rotate(loc.left, 1);
-        rotate(loc.up, -1);
-        rotate(loc.right, -1);
-        rotate(loc.up, 1);
-        rotate(loc.left, -1);
-        rotate(loc.up, -1);
-        rotate(loc.right, 1);
+        rotate(loc.up, Face::CW);
+        rotate(loc.left, Face::CW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::CW);
         break;
         //glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     case 6: 
-        rotate(loc.up, 1);
-        rotate(loc.right, 1);
-        rotate(loc.up, -1);
-        rotate(loc.up, -1);
-        rotate(loc.left, -1);
-        rotate(loc.up, 1);
-        rotate(loc.up, 1);
-        rotate(loc.right, -1);
-        rotate(loc.up, -1);
-        rotate(loc.up, -1);
-        rotate(loc.left, 1);
-        rotate(loc.up, 1);
+        rotate(loc.up, Face::CW);
+        rotate(loc.right, Face::CW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.up, Face::CW);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CW);
+        rotate(loc.up, Face::CW);
         break;
         //glutAddMenuEntry("R' D' R D", 57);
     case 7: 
-        rotate(loc.right, -1);
-        rotate(loc.downr, -1);
-        rotate(loc.right, 1);
-        rotate(loc.downr, 1);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.downr, Face::CCW);
+        rotate(loc.right, Face::CW);
+        rotate(loc.downr, Face::CW);
         break;
     default: break;
     }
