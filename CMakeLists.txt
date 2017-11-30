@@ -9,7 +9,7 @@ set( PACKAGE_VERSION "1.2.9" )
 set(CMAKE_SYSTEM_NAME Windows)
 # Turn on C++ 17 and debug flags.
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_PREFIX_PATH "C:/Software/msys64/mingw64/bin")
+set(CMAKE_PREFIX_PATH "C:/Software/msys64/mingw64/")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
 #Little routine to detect Current CPUs.
