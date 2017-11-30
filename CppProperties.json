@@ -44,12 +44,14 @@
         "c:\\Users\\EOFL\\Source\\Repos\\megaminx"
       ],
       "defines": [
+        "_WINDOWS",
         "WIN32",
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "intelliSenseMode": "windows-clang-x64"
+      "intelliSenseMode": "windows-clang-x64",
+      "compilerSwitches": "-std=c++1z"
     },
     {
       "inheritEnvironments": [
@@ -61,6 +63,7 @@
         "c:\\Users\\EOFL\\Source\\Repos\\megaminx"
       ],
       "defines": [
+        "_WINDOWS",
         "WIN32",
         "NDEBUG",
         "UNICODE",

@@ -54,8 +54,7 @@ void Megaminx::initFacePieces()
     }
 }
 
-
-//Initially we need to render all the pieces unconditionally. (once)
+//Need to render all the pieces unconditionally. (once at the start)
 void Megaminx::renderAllPieces()
 {
     for (int i = 0; i < numFaces; ++i)
@@ -66,10 +65,10 @@ void Megaminx::renderAllPieces()
         corners[i].render();	
 }
 
-//Display function for OpenGL
+//Display render function for OpenGL
 void Megaminx::render()
 {
-    //Process all the pieces that are NOT part of a rotating face.
+    //Process all pieces that are NOT part of a rotating face.
     for (int i=0, k=0; i < numFaces; ++i) {			
         if (&centers[i] != faces[_rSide].center)
             centers[i].render();
@@ -93,22 +92,27 @@ void Megaminx::render()
         rotating = true;
         _rSide = op.num;
         faces[_rSide].rotate(op.dir);
-        const auto result = faces[_rSide].render();
-        if (result)
-            rotateQueue.pop();
-    } else
-        if (faces[_rSide].render())
-            rotating = false;
+    }
+    if (faces[_rSide].render()) {
+        rotating = false;
+        rotateQueue.pop();
+    }
 }
 
+/**
+ * \brief Rotate a face. Public function (Input Validated).
+ * \param num  Nth-face number color (1-12)
+ * \param dir  1 Clockwise, -1 CounterClockwise
+ */
 void Megaminx::rotate(int num, int dir)
 {
     assert(num > 0);
     assert(num <= numFaces);
     assert(dir == 1 || dir == -1);
-    //Convert 1-12 Faces into array [0-11]
-    _rotate_internal(num-1, dir);
+    num -= 1; //Convert 1-12 Faces into array [0-11]
+    _rotate_internal(num, dir);
 }
+//The most important rotate function - with no validation.
 void Megaminx::_rotate_internal(int num, int dir)
 {
     rotateQueue.push({ num, dir });
@@ -143,7 +147,7 @@ void Megaminx::scramble()
 
 /**
  * \brief Toggle the colors of a single Corner piece
- * * If called externally make sure its 1-12.
+ * * If called externally make sure its color 1-12.
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
@@ -155,7 +159,7 @@ void Megaminx::swapOneCorner(int i, int x)
 }
 /**
  * \brief Toggle the colors of a single Edge piece
- * * If called externally make sure its 1-12.
+ * * If called externally make sure its color 1-12.
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
@@ -168,7 +172,7 @@ void Megaminx::swapOneEdge(int i,int x)
 
 /**
  * \brief Makes a pointer to g_currentFace
- * \param i Nth-face number index (1-12)
+ * \param i Nth-face number color (1-12)
  */
 void Megaminx::setCurrentFaceActive(int i)
 {
@@ -180,7 +184,7 @@ void Megaminx::setCurrentFaceActive(int i)
 
 /**
  * \brief Reset all the pieces on a face and set it to active.
- * \param n Nth-face number index (1-12)
+ * \param n Nth-face number color (1-12)
  * \return n same thing.
  */
 void Megaminx::resetFace(int n)
@@ -193,7 +197,7 @@ void Megaminx::resetFace(int n)
 
 /**
  * \brief Find all edge pieces.
- * \param i Nth-face number index (1-12)
+ * \param i Nth-face number color (1-12)
  * \return std::vector, 5 long of index positions of found edges
  */
 std::vector<int> Megaminx::findEdges(int i)
@@ -205,7 +209,7 @@ std::vector<int> Megaminx::findEdges(int i)
 
 /**
  * \brief Find all corner pieces.
- * \param i Nth-face number index (1-12)
+ * \param i Nth-face number color (1-12)
  * \return std::vector, 5 long of index positions of found corners
  */
 std::vector<int> Megaminx::findCorners(int i)
@@ -253,7 +257,7 @@ int Megaminx::resetFacesEdges(int color_n)
 /**
  * \brief Revert all the Corners pieces on the Nth colored face back to normal.
  *			To do so we must swap the pieces that are in there, OUT.
- * \param color_n N'th Face/Color Number
+ * \param color_n N'th Face/Color Number (1-12)
  * \return success (1)
  */
 int Megaminx::resetFacesCorners(int color_n)
@@ -347,7 +351,7 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 /**
  * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops to happen
  * in accordance with how a player would want to achieve certain swaps.
- * \param current_face from 1 - 12
+ * \param current_face from 1 - 12 
  * \param i op # from 1 - 7
  */
 void Megaminx::rotateAlgo(int current_face, int i)

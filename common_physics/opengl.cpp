@@ -7,11 +7,8 @@
  */
 #include <cstdlib>
 #include <cmath>
-//#include <cstdint>
-//#include <stdlib.h>
 #include <iostream>
-#include <GL/freeglut_std.h>
-//#include <math.h>
+#include <GL/glut.h>
 #include "utils.h"
 
 ///////////////////////////////////////////////////////////////////////////////

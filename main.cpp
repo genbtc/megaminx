@@ -3,7 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <GL/glu.h>
-#include <GL/glext.h>
+//#include <GL/glext.h>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
@@ -82,14 +82,14 @@ int main(int argc, char *argv[])
     std::srand(time(nullptr));
     wsprintf(lastface, "%ws", L"STARTUP");
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GL_MULTISAMPLE | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
     window = glutCreateWindow(title);
     createMegaMinx();
     glClearColor(0.22, 0.2, 0.2, 1.0);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
-    gluPerspective(view_distance_view_angle, 1.0 , 1.0, 1000);	//<-?
+    gluPerspective(view_distance_view_angle, 1.0, 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     createMenu();  	//right click menu
@@ -140,7 +140,7 @@ void Idle()
 void RenderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_MULTISAMPLE_ARB);
+    glEnable(GLUT_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_ALPHA);
@@ -174,7 +174,7 @@ void RenderScene()
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHT1);
-    glDisable(GL_MULTISAMPLE_ARB);
+    glDisable(GLUT_MULTISAMPLE);
     glutSwapBuffers();
 
 }

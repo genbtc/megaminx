@@ -389,6 +389,7 @@ public:
     //Creates the common starting vertexes for all pieces that are CORNERS
     double* cornerInit()
     {
+        using namespace std;
         numSides = 3;
 		for (int i = 0; i < 7; ++i)
 		{
@@ -429,6 +430,7 @@ public:
 	//Creates the common starting vertexes for all pieces that are EDGES
     double* edgeInit()
 	{
+        using namespace std;
 		numSides = 2;
 		for (int i = 0; i < 6; ++i)
 		{
@@ -461,6 +463,7 @@ public:
 	//Creates the common starting vertexes for all pieces that are CENTERS
 	double* centerInit()
 	{
+        using namespace std;
 		numSides = 1;
 		for (int i = 0; i < 5; ++i)
 		{
@@ -473,6 +476,7 @@ public:
 	//Creates the common starting vertexes for all pieces that are FACES
 	double* faceInit()
 	{
+        using namespace std;
 		numSides = 0;
 		for (int i = 0; i < 5; ++i)
 		{
