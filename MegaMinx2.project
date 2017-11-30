@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="MegaMinx2" InternalType="">
+	<VirtualDirectory Name="src">
+		<VirtualDirectory Name="common_physics">
+			<File Name="common_physics/camera.cpp"/>
+			<File Name="common_physics/opengl.cpp"/>
+			<File Name="common_physics/raytri.cpp"/>
+		</VirtualDirectory>
+		<VirtualDirectory Name="engine">
+			<File Name="engine/center.cpp"/>
+			<File Name="engine/corner.cpp"/>
+			<File Name="engine/edge.cpp"/>
+			<File Name="engine/face.cpp"/>
+			<File Name="engine/megaminx.cpp"/>
+			<File Name="engine/utils.cpp"/>
+		</VirtualDirectory>
+		<File Name="main.cpp"/>
+	</VirtualDirectory>
+	<VirtualDirectory Name="include">
+		<File Name="Res.rc"/>
+		<VirtualDirectory Name="common_physics">
+			<File Name="common_physics/camera.h"/>
+		</VirtualDirectory>
+		<VirtualDirectory Name="engine">
+			<File Name="engine/center.h"/>
+			<File Name="engine/corner.h"/>
+			<File Name="engine/edge.h"/>
+			<File Name="engine/face.h"/>
+			<File Name="engine/megaminx.h"/>
+		</VirtualDirectory>
+	</VirtualDirectory>
+	<Settings Type="">
+		<Configuration Name="NoConfig" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+			<Compiler Options="-g" Required="yes" PreCompiledHeader="">
+				<IncludePath Value="."/>
+			</Compiler>
+			<Linker Options="" Required="yes"/>
+			<ResourceCompiler Options="" Required="no"/>
+			<General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+			<Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+				<PostConnectCommands/>
+				<StartupCommands/>
+			</Debugger>
+			<PreBuild/>
+			<PostBuild/>
+			<CustomBuild Enabled="yes">
+				<RebuildCommand>C:/Software/msys64/usr/bin/make.exe -j 72 clean &amp;&amp; C:/Software/msys64/usr/bin/make.exe -j 72</RebuildCommand>
+				<CleanCommand>C:/Software/msys64/usr/bin/make.exe -j 72 clean</CleanCommand>
+				<BuildCommand>C:/Software/msys64/usr/bin/make.exe -j 72</BuildCommand>
+				<SingleFileCommand>C:/Software/msys64/usr/bin/make.exe -f$(ProjectPath)/Makefile $(CurrentFileName).cpp.o</SingleFileCommand>
+				<PreprocessFileCommand/>
+				<WorkingDirectory>$(WorkspacePath)</WorkingDirectory>
+			</CustomBuild>
+			<AdditionalRules>
+				<CustomPostBuild/>
+				<CustomPreBuild/>
+			</AdditionalRules>
+		</Configuration>
+		<GlobalSettings>
+			<Compiler Options="">
+				<IncludePath Value="."/>
+			</Compiler>
+			<Linker Options="">
+				<LibraryPath Value="."/>
+			</Linker>
+			<ResourceCompiler Options=""/>
+		</GlobalSettings>
+	</Settings>
+</CodeLite_Project>

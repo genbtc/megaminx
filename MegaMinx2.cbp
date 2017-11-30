@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="MegaMinx2"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/EOFL/Source/Repos/megaminx"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/EOFL/Source/Repos/megaminx"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MegaMinx2">
+				<Option output="C:/Users/EOFL/Source/Repos/megaminx/MegaMinx2.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/EOFL/Source/Repos/megaminx"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 MegaMinx2"/>
+					<CompileFile command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="MegaMinx2/fast">
+				<Option output="C:/Users/EOFL/Source/Repos/megaminx/MegaMinx2.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/EOFL/Source/Repos/megaminx"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 MegaMinx2/fast"/>
+					<CompileFile command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/EOFL/Source/Repos/megaminx"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/Software/msys64/usr/bin/make.exe -f &quot;C:/Users/EOFL/Source/Repos/megaminx/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/Res.rc">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/common_physics/camera.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/common_physics/camera.h">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/common_physics/opengl.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/common_physics/raytri.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/center.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/center.h">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/corner.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/corner.h">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/edge.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/edge.h">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/face.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/face.h">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/megaminx.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/megaminx.h">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/engine/utils.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/main.cpp">
+			<Option target="MegaMinx2"/>
+		</Unit>
+		<Unit filename="C:/Users/EOFL/Source/Repos/megaminx/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
