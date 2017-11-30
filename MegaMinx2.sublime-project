@@ -1,0 +1,47 @@
+{
+	"folders":
+	[
+		{
+			"path": "./"
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "MegaMinx2 - all",
+			"cmd": ["C:/Software/msys64/usr/bin/make.exe", "-f", "Makefile", "all"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "MegaMinx2 - clean",
+			"cmd": ["C:/Software/msys64/usr/bin/make.exe", "-f", "Makefile", "clean"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "MegaMinx2 - rebuild_cache",
+			"cmd": ["C:/Software/msys64/usr/bin/make.exe", "-f", "Makefile", "rebuild_cache"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "MegaMinx2 - MegaMinx2",
+			"cmd": ["C:/Software/msys64/usr/bin/make.exe", "-f", "Makefile", "MegaMinx2"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "MegaMinx2 - MegaMinx2/fast",
+			"cmd": ["C:/Software/msys64/usr/bin/make.exe", "-f", "Makefile", "MegaMinx2/fast"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		},
+		{
+			"name": "MegaMinx2 - edit_cache",
+			"cmd": ["C:/Software/msys64/usr/bin/make.exe", "-f", "Makefile", "edit_cache"],
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^:]*)(?::|\\()([0-9]+)(?::|\\))(?:([0-9]+):)?\\s*(.*)"
+		}
+	]
+}

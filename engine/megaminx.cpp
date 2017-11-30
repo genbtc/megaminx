@@ -293,9 +293,9 @@ int Megaminx::resetFacesCorners(int color_n)
 int Megaminx::getCurrentFaceFromAngles(int x, int y) const
 {
     //Vars:
-    const int r = 72;       //face angles
-    const int d = r / 2;    //36 half of face
-    const auto s = 60;  // or match START_ANGLE in main.cpp
+    constexpr int r = 72;       //face angles
+    constexpr int d = r / 2;    //36 half of face
+    constexpr int s = 60;  // or match START_ANGLE in main.cpp
     int face = 0;   //color-int (1-12) as result.
     //Angle Conditions:
     const auto y1  = y >= (s - d) && y <= (s + d);                  // 60

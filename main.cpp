@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
     window = glutCreateWindow(title);
-    createMegaMinx();
+    createMegaMinx();   //also includes glViewport(0,0,w,h);
     glClearColor(0.22, 0.2, 0.2, 1.0);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
@@ -166,7 +166,7 @@ void RenderScene()
         utDrawText2D(10, HEIGHT - 40, lastface);
         //Print out Text (Help display)
         if (!help)
-            utPrintHelpMenu(WIDTH - 245, 510);
+            utPrintHelpMenu(WIDTH - 245, HEIGHT - 190);
     }
     utResetPerspectiveProjection();
     //Clean up.
@@ -175,7 +175,6 @@ void RenderScene()
     glDisable(GL_LIGHT1);
     glDisable(GLUT_MULTISAMPLE);
     glutSwapBuffers();
-
 }
 
 void GetCurrentFace()
@@ -387,7 +386,6 @@ void createMenu() {
     glutAddMenuEntry("Solve All/(reset)", 92);
     glutAddMenuEntry("Reset Camera", 93);
     glutAddMenuEntry("Scramble", 100);
-    //glutAddMenuEntry("Redraw", 101);
     glutAddMenuEntry("Quit", 102);
     
     //SubLevel 1 menu - Last Layer
@@ -405,7 +403,6 @@ void createMenu() {
     glutAddMenuEntry("Solve Current Face's Corners", 23);
     glutAddMenuEntry("Swap Face's 1st Edge", 24);
     glutAddMenuEntry("Rotate Face's 1st Corner", 25);
-
      
     //SubLevel3 Menu - Steps
     submenu3_id = glutCreateMenu(menuHandler);
@@ -456,6 +453,7 @@ void createMenu() {
     glutAddMenuEntry("Exit Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
+
 void menuHandler(int num) {
     if (num == 1)
         spinning = !spinning;
