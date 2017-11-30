@@ -1,8 +1,7 @@
 #include <GL/glut.h>
-#include "face.h"
 #include <vector>
-#include <map>
 #include <cassert>
+#include "face.h"
 
 Face::Face()
 {
@@ -14,7 +13,7 @@ Face::Face()
     rotating = false;
     angle = 0;
     axis[0] = 0;
-    axis[1] = 0.0001;
+    axis[1] = 0.001;
     axis[2] = -1;
 
 }

@@ -19,7 +19,6 @@ class Face : public Piece
 {
 public: enum { Clockwise = -1, None, CounterClockwise = 1 };
 public: enum { CW = -1, CCW = 1 };
-    enum { asd = 'c', bsd = 'z'};
 public:
 	Face();
     ~Face() {}

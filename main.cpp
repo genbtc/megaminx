@@ -3,7 +3,6 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <GL/glu.h>
-//#include <GL/glext.h>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
@@ -13,7 +12,7 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.1128 - genBTC mod";
+const char *title = "Megaminx v1.29 - genBTC mod";
 // initial window screen size
 double REFRESH_RATE = 60.0;  	// monitor with 60 Hz
 int WIDTH = 700;

@@ -7,15 +7,17 @@
       "name": "x86-Debug",
       "includePath": [
         "${env.INCLUDE}",
-        "c:\\Users\\EOFL\\Source\\Repos\\megaminx"
+        "${workspaceRoot}"
       ],
       "defines": [
+        "_WINDOWS",
         "WIN32",
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "intelliSenseMode": "msvc-x86"
+      "intelliSenseMode": "windows-clang-x64",
+      "compilerSwitches": "-std=c++1z"
     },
     {
       "inheritEnvironments": [
@@ -24,15 +26,17 @@
       "name": "x86-Release",
       "includePath": [
         "${env.INCLUDE}",
-        "c:\\Users\\EOFL\\Source\\Repos\\megaminx"
+        "${workspaceRoot}"
       ],
       "defines": [
+        "_WINDOWS",
         "WIN32",
         "NDEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "intelliSenseMode": "msvc-x86"
+      "intelliSenseMode": "windows-clang-x64",
+      "compilerSwitches": "-std=c++1z"
     },
     {
       "inheritEnvironments": [
@@ -41,7 +45,7 @@
       "name": "x64-Debug",
       "includePath": [
         "${env.INCLUDE}",
-        "c:\\Users\\EOFL\\Source\\Repos\\megaminx"
+        "${workspaceRoot}"
       ],
       "defines": [
         "_WINDOWS",
@@ -60,7 +64,7 @@
       "name": "x64-Release",
       "includePath": [
         "${env.INCLUDE}",
-        "c:\\Users\\EOFL\\Source\\Repos\\megaminx"
+        "${workspaceRoot}"
       ],
       "defines": [
         "_WINDOWS",
@@ -69,7 +73,8 @@
         "UNICODE",
         "_UNICODE"
       ],
-      "intelliSenseMode": "msvc-x64"
+      "intelliSenseMode": "windows-clang-x64",
+      "compilerSwitches": "-std=c++1z"
     }
   ],
   "environments": [
@@ -77,13 +82,11 @@
       "MINGW_PREFIX": "C:/Software/msys64/mingw64",
       "MINGW_CHOST ": "x86_64-w64-mingw32",
       "MINGW_PACKAGE_PREFIX": "mingw-w64-x86_64",
-      "MSYSTEM": "MINGW64",
-      "MSYSTEM_CARCH": "x64_64",
       "MSYSTEM_PREFIX": "${env.MINGW_PREFIX}",
-      "SHELL": "${env.MINGW_PREFIX}/../usr/bin/bash",
-      "TEMP": "${env.MINGW_PREFIX}/../tmp",
+      "SHELL": "${env.MINGW_PREFIX}/usr/bin/bash",
+      "TEMP": "${env.MINGW_PREFIX}/tmp",
       "TMP": "${env.TEMP}",
-      "PATH": "${env.MINGW_PREFIX}/bin;${env.MINGW_PREFIX}/../usr/local/bin;${env.MINGW_PREFIX}/../usr/bin;${env.PATH}",
+      "PATH": "${env.MINGW_PREFIX}/bin;${env.MINGW_PREFIX}/usr/local/bin;${env.MINGW_PREFIX}/usr/bin;${env.PATH}",
       "INCLUDE": "${workspaceRoot}/lib/include;${env.MINGW_PREFIX}/include/c++/7.2.0;${env.MINGW_PREFIX}/include/c++/7.2.0/x86_64-w64-mingw32;${env.MINGW_PREFIX}/include/c++/7.2.0/backward;${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include;${env.MINGW_PREFIX}/include;${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed;${env.MINGW_PREFIX}/x86_64-w64-mingw32/include;"
     }
   ]
