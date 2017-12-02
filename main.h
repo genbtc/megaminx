@@ -1,6 +1,5 @@
 #pragma once
 #include "engine/megaminx.h"
-#include "common_physics/utils.h"
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,10 +30,10 @@ static int bnstate[16];
 // global Camera
 Camera g_camera;
 
-// main Megaminx object (pointer)
+// global main Megaminx object (pointer, managed)
 Megaminx* megaminx;
 
-// Glut prototype functions for callbacks (see main()
+// Glut function callbacks' prototypes
 void Idle();
 void RenderScene();
 void mousePressed(int button, int state, int x, int y);

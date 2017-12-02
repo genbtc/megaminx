@@ -282,7 +282,6 @@ int Megaminx::resetFacesCorners(int color_n)
     return 1;
 }
 
-
 /**
  * \brief Takes camera position angles and tells what face is most showing.
  * Brute force way by angle detection.

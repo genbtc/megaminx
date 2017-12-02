@@ -1,4 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////////
+/* MegaMinx2 - 2017 - genBTC mod
+* Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
+* genBTC November 30 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
+*/
 // Headers
 #include <GL/gl.h>
 #include <GL/glut.h>
