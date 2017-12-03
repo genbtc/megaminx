@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -141,7 +141,8 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -184,7 +185,8 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
-      <DebugInformationFormat></DebugInformationFormat>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -312,23 +314,39 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\common_physics\camera.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\common_physics\opengl.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\common_physics\raytri.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\center.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\corner.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\edge.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\face.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\megaminx.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\utils.cpp"  />
-    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\main.cpp"  />
-    <ResourceCompile Include="C:\Users\EOFL\Source\Repos\megaminx\Res.rc"  />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\common_physics\camera.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\common_physics\opengl.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\common_physics\raytri.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\center.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\corner.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\edge.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\face.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\megaminx.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\engine\utils.cpp" />
+    <ClCompile Include="C:\Users\EOFL\Source\Repos\megaminx\main.cpp" />
+    <ResourceCompile Include="C:\Users\EOFL\Source\Repos\megaminx\Res.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\EOFL\Source\Repos\megaminx\ZERO_CHECK.vcxproj">
-      <Project>{A0147FC7-5404-368B-898C-E65E90395F98}</Project>
-      <Name>ZERO_CHECK</Name>
-    </ProjectReference>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common_physics\camera.h" />
+    <ClInclude Include="common_physics\collision_shapes.h" />
+    <ClInclude Include="common_physics\geometry.h" />
+    <ClInclude Include="common_physics\material_point.h" />
+    <ClInclude Include="common_physics\points_with_collision.h" />
+    <ClInclude Include="common_physics\prohibited_area.h" />
+    <ClInclude Include="common_physics\utils.h" />
+    <ClInclude Include="common_physics\utils_math.h" />
+    <ClInclude Include="engine\center.h" />
+    <ClInclude Include="engine\color.h" />
+    <ClInclude Include="engine\corner.h" />
+    <ClInclude Include="engine\edge.h" />
+    <ClInclude Include="engine\face.h" />
+    <ClInclude Include="engine\megaminx.h" />
+    <ClInclude Include="engine\piece.h" />
+    <ClInclude Include="engine\vector3d.h" />
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

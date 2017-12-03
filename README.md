@@ -1,6 +1,6 @@
-MegaMinx - v1.29 genBTC Mod
+MegaMinx - v1.29 genBTC Mod (December 2, 2017)
 ========
-![Current129](https://puu.sh/y9LEC/fb26388442.png)
+![Current129](https://puu.sh/yyfd7/525320ef95.png)
 <p>It's a working simulator of a Rubik's cube like puzzle called the <b>Megaminx</b>!<br />
 <h2>Usage:</h2>
 <p>H - Help for: </p>
@@ -21,3 +21,22 @@ Requires Freeglut(mingw), OpenGL(windows), GLU(windows)
 Only requires libfreeglut.dll libgcc_s_dw2-1.dll libstdc++-6.dll libwinpthread-1.dll (from MSYS) 
 if you want to redistribute the binaries afterward.<br />
 <h2>Also Compatible out of the box with Visual Studio Open Folder w/ CMake.</h2>
+<h2>For Developers:</h2>
+<br>Class Diagram:</br>
+![Class Diagram](https://puu.sh/yycv0/5032380248.png)
+<h2>Keyboard Commands:</h2>
+"Default Front Face is Blue"
+"[Right Click]  Action Menu"
+"[Dbl Click]  Rotate Current Face Clockwise >>"
+"  /+Shift  Rotate Current Face CounterClockwise <<"
+"[D/d]  Rotate Right Face <>"
+"[A/a]  Rotate Left Face <>"
+"[S/s]  Rotate Front Face <>"
+"[W/w]  Rotate Upper Face <>"
+"[Z/z,X/x,C/c]  Rotate Diag <>"
+"[B/b]  Rotate Bottom Face <>"
+"[F1]-[F12]/+Shift  Rotate Face # <>"
+"[Space]  Toggle Auto-Spin"
+"[BackSpace]  Reset Camera"
+"[Delete]  Scramble Puzzle"
+"[Enter] Try Solve Current Face" (cheating)

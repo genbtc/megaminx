@@ -17,8 +17,8 @@ constexpr int FlipAlternatingForwards[4] = { 1, 0, 1, 0 };
 
 class Face : public Piece
 {
-public: enum { Clockwise = -1, None, CounterClockwise = 1 };
-public: enum { CW = -1, CCW = 1 };
+public: enum TurnDir  { Clockwise = -1, None = 0, CounterClockwise = 1 } td1;
+public: enum TurnDir2 { CW = -1, CCW = 1 } td2;
 public:
 	Face();
     ~Face() {}

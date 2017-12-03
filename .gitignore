@@ -36,3 +36,5 @@ _ReSharper*/
 /cmake_install.cmake
 /CMakeCache.txt
 *.vcxproj.filters
+/MegaMinx2.VC.db
+/MegaMinx2.VC.VC.opendb
