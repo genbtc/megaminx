@@ -38,3 +38,4 @@ _ReSharper*/
 *.vcxproj.filters
 /MegaMinx2.VC.db
 /MegaMinx2.VC.VC.opendb
+*.o
