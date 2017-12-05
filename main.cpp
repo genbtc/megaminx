@@ -9,6 +9,7 @@
 #include <GL/glu.h>
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
 #include <cmath>
 #include <time.h>
 #include "engine/megaminx.h"
@@ -258,21 +259,21 @@ void utPrintHelpMenu(float w, float h)
 {
     glColor3f(1, 1, 1);
     static char helpStr[255];
-    sprintf(helpStr, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[Right Click]  Action Menu"); utDrawText2D(w, h, helpStr); h += 15;
-//	sprintf(helpStr, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[Dbl Click]  Rotate Current >>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "  /+Shift  CounterClockwise <<"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[D/d]  Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[A/a]  Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[S/s]  Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[W/w]  Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[Zz,Xx,Cc]  Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[B/b]  Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[F1]-[F12]/+Shift  Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[Space]  Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[BackSpace]  Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
-    sprintf(helpStr, "[Delete]  Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[Right Click]  Action Menu"); utDrawText2D(w, h, helpStr); h += 15;
+//	snprintf(helpStr,255, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[Dbl Click]  Rotate Current >>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "  /+Shift  CounterClockwise <<"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[D/d]  Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[A/a]  Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[S/s]  Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[W/w]  Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[Zz,Xx,Cc]  Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[B/b]  Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[F1]-[F12]/+Shift  Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[Space]  Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[BackSpace]  Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
+    snprintf(helpStr,255, "[Delete]  Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
 }
 
 void onKeyboard(unsigned char key, int x, int y)
@@ -453,38 +454,5 @@ void menuHandler(int num) {
     {
         glutDestroyWindow(1);
         exit(0);
-    }
-}
-
-void MakeaVec3dOutofNormPlanes()
-{ 
-    auto const vertex = megaminx->g_currentFace->_vertex[0];
-    std::vector<Vec3d> g_points;
-    //12 faces
-    for(int i = 0 ; i < 12 ; i++) {
-        const Vec3d vtx3d(vertex);
-        g_points.push_back(vtx3d);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-void HitTest()
-{
-    // calculate ray for mouse:
-    g_rayTest.CalculateRay(g_camera);
-
-    if (g_areWeDraggingPoint == false)
-    {
-        auto const vertex = megaminx->g_currentFace->_vertex[0];
-        Vec3d vtx3d(vertex);
-        // perform hit test with all point in the scene
-        // not optimal - one can use some scene tree system to optimise it... 
-        g_rayTest.m_hit = megaminx->g_currentFace->RayTest(g_rayTest.m_start, g_rayTest.m_end, &vtx3d, &g_rayTest.m_lastT);
-        // ??? idk
-        // now in:
-        // m_hit - did we hit something?
-        // m_lastT - param that can be used to calculate next ball position
-        // note that can point to 2D position, so we can only move a point in TWO directions on a plane
-        // that is parallel to camera's near plane
     }
 }

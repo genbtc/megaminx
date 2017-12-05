@@ -186,33 +186,6 @@ common_physics/opengl.cpp.s:
 	$(MAKE) -f CMakeFiles/MegaMinx2.dir/build.make CMakeFiles/MegaMinx2.dir/common_physics/opengl.cpp.s
 .PHONY : common_physics/opengl.cpp.s
 
-common_physics/raytri.obj: common_physics/raytri.cpp.obj
-
-.PHONY : common_physics/raytri.obj
-
-# target to build an object file
-common_physics/raytri.cpp.obj:
-	$(MAKE) -f CMakeFiles/MegaMinx2.dir/build.make CMakeFiles/MegaMinx2.dir/common_physics/raytri.cpp.obj
-.PHONY : common_physics/raytri.cpp.obj
-
-common_physics/raytri.i: common_physics/raytri.cpp.i
-
-.PHONY : common_physics/raytri.i
-
-# target to preprocess a source file
-common_physics/raytri.cpp.i:
-	$(MAKE) -f CMakeFiles/MegaMinx2.dir/build.make CMakeFiles/MegaMinx2.dir/common_physics/raytri.cpp.i
-.PHONY : common_physics/raytri.cpp.i
-
-common_physics/raytri.s: common_physics/raytri.cpp.s
-
-.PHONY : common_physics/raytri.s
-
-# target to generate assembly for a file
-common_physics/raytri.cpp.s:
-	$(MAKE) -f CMakeFiles/MegaMinx2.dir/build.make CMakeFiles/MegaMinx2.dir/common_physics/raytri.cpp.s
-.PHONY : common_physics/raytri.cpp.s
-
 engine/center.obj: engine/center.cpp.obj
 
 .PHONY : engine/center.obj
@@ -418,9 +391,6 @@ help:
 	@echo "... common_physics/opengl.obj"
 	@echo "... common_physics/opengl.i"
 	@echo "... common_physics/opengl.s"
-	@echo "... common_physics/raytri.obj"
-	@echo "... common_physics/raytri.i"
-	@echo "... common_physics/raytri.s"
 	@echo "... engine/center.obj"
 	@echo "... engine/center.i"
 	@echo "... engine/center.s"

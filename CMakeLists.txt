@@ -1,21 +1,24 @@
-cmake_minimum_required(VERSION 3.8)
-# by genBTC 2017, project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change as needed.
+cmake_minimum_required(VERSION 3.4)
+# by genBTC 2017, project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change stuff as needed.
 project(MegaMinx2)
-set( PACKAGE_NAME "megaminx" )
-set( PACKAGE_STRING "megaminx 1.2.9" )
-set( PACKAGE_TARNAME "megaminx" )
+set( PACKAGE_NAME "Megaminx" )
+set( PACKAGE_STRING "Megaminx 1.2.9" )
+set( PACKAGE_TARNAME "Megaminx" )
 set( PACKAGE_VERSION "1.2.9" )
 # Target OS Name (also makes black console window go away)
 set(CMAKE_SYSTEM_NAME Windows)
 # Turn on C++ 17 and debug flags.
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_PREFIX_PATH "C:/Software/msys64/mingw64/")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++1z -DDEBUG=1")
+#This is now set in the CmakeSettings.JSON file
+set(CMAKE_CXX_STANDARD "17")
+set(CMAKE_CXX_STANDARD_COMPUTED_DEFAULT "17")
+set(CMAKE_PREFIX_PATH "C:/Software/msys64/mingw64")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=gnu++1z")
 #Little routine to detect Current CPUs.
 include(ProcessorCount)
 ProcessorCount(NumCPUS)
 message("detected number of CPU threads: " ${NumCPUS})
+set(MAKEFLAGS "-j${NumCPUS}")
+#// Linked Library Setup:
 # need GLUT (or freeglut)
 if(NOT WIN32)
     find_package(GLUT)
@@ -40,7 +43,7 @@ endif(NOT OPENGL_GLU_FOUND)
 set(LIBRARIES_FROM_REFERENCES "${GLUT_LIBRARIES};${OPENGL_gl_LIBRARY};${OPENGL_glu_LIBRARY}")
 #Set Link Libraries (Manually)
 #set(LIBRARIES_FROM_REFERENCES "-lfreeglut;-lopengl32;-lglu32;")
-#Set EXE by listing all source files, and the Resource.rc (icon)
-add_executable(MegaMinx2 WIN32 common_physics/camera.cpp common_physics/opengl.cpp common_physics/raytri.cpp engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Res.rc)
+#Prepare EXE - by listing all source files, and the Resource.rc (icon)
+add_executable(MegaMinx2 WIN32 common_physics/camera.cpp common_physics/opengl.cpp engine/center.cpp engine/corner.cpp engine/edge.cpp engine/face.cpp engine/megaminx.cpp engine/utils.cpp main.cpp Res.rc)
 #Make Exe, go!
 target_link_libraries(MegaMinx2 "${LIBRARIES_FROM_REFERENCES}")

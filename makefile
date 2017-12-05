@@ -10,8 +10,8 @@ endif
 
 all: megaminx
 
-megaminx: main.o center.o edge.o corner.o face.o utils.o megaminx.o camera.o opengl.o raytri.o Res.rc.o
-	g++ main.o center.o edge.o corner.o face.o utils.o megaminx.o camera.o opengl.o raytri.o Res.rc.o $(COMPILE_OPT) -o megaminx
+megaminx: main.o center.o edge.o corner.o face.o utils.o megaminx.o camera.o opengl.o Res.rc.o
+	g++ main.o center.o edge.o corner.o face.o utils.o megaminx.o camera.o opengl.o Res.rc.o $(COMPILE_OPT) -o megaminx
 
 main.o: main.cpp
 	g++ -c main.cpp
@@ -31,8 +31,6 @@ camera.o: common_physics/camera.cpp
 	g++ -c common_physics/camera.cpp
 opengl.o: common_physics/opengl.cpp
 	g++ -c common_physics/opengl.cpp
-raytri.o: common_physics/raytri.cpp
-	g++ -c common_physics/raytri.cpp
 #Res.rc.o is a Resource file for an Icon, and windres.exe needs to be used with arguments, it needs this stuff
 # (customized to use the 32-bit windres on a MingW64 setup)
 Res.rc.o:

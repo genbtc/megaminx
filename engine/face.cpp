@@ -1,12 +1,11 @@
 #include <GL/glut.h>
 #include <vector>
 #include <cassert>
+#include <initializer_list>
 #include "face.h"
 
 Face::Face()
 {
-	m_pos = 0;
-    m_radius = 0;
     center = nullptr;
     turnDir = 0;
     thisNum = 0;
@@ -26,6 +25,7 @@ T* createNext() {
     return createNextImpl(std::is_same<T, w>());
 };
 */
+//when this is run, iterate through and check to see which position the Face->center color is in 
 void Face::makeEdgePositionArray()
 {
     for(int i = 0 ; i < 5 ; ++i)
@@ -34,6 +34,7 @@ void Face::makeEdgePositionArray()
                 edgeColorPos.push_back(j);
 }
 
+//connect the right matching Edge pieces to the face. and store the list.
 void Face::attachEdgePieces(Edge& n, int numEdges)
 {
 	const auto pieceList = findPiece(n, numEdges);
@@ -54,6 +55,7 @@ void Face::makeCornerPositionArray()
                 cornerColorPos.push_back(j);
 }
 
+//connect the right Corner Edge pieces to the face. and store the list.
 void Face::attachCornerPieces(Corner& n, int numCorners)
 {
 	const auto pieceList = findPiece(n, numCorners);
@@ -118,7 +120,7 @@ void Face::initAxis(int n)
 }
 
 /**
- * \brief Simple-Flips (inverts) one Edge-piece 
+ * \brief Private. Simple-Flips (inverts) one Edge-piece 
  * and then the other, individually.
  */
 void Face::twoEdgesFlip(int a,int b)
@@ -128,7 +130,7 @@ void Face::twoEdgesFlip(int a,int b)
 	edge[b]->flip();
 }
 
-//Functional Generic Switch that flips 
+//Private. Functional Generic Switch that flips 
 void Face::Flip(int a, int b, int c, int d, const int* pack)
 {
 	//Feed in 4 ints abcd representing the face's five corner indexes 0-4 
@@ -141,19 +143,20 @@ void Face::Flip(int a, int b, int c, int d, const int* pack)
 	pack[3] ? corner[d]->flip() : corner[d]->flipTwice();
 }
 
-
+//Private. Swap 4 Corners, given a list of 8 indexes
 void Face::QuadSwapCorners(std::vector<int> pack)
 {
-	assert(pack.size() > 7);
+	assert(pack.size() == 8);
     swapCorners(pack[0], pack[1]);
     swapCorners(pack[2], pack[3]);
     swapCorners(pack[4], pack[5]);
     swapCorners(pack[6], pack[7]);
 }
 
+//Private. Swap 4 Edges, given a list of 8 indexes
 void Face::QuadSwapEdges(std::vector<int> pack)
 {
-	assert(pack.size() > 7);
+	assert(pack.size() == 8);
     swapEdges(pack[0], pack[1]);
     swapEdges(pack[2], pack[3]);
     swapEdges(pack[4], pack[5]);
@@ -176,6 +179,7 @@ bool Face::placeParts(int dir)
 			QuadSwapEdges({ 0, 1, 1, 2, 2, 3, 3, 4 });
 			break;
 		case 1:
+            //1,2,3,4,5
 			Flip(0, 1, 2, 4, FlipBackwards);
 			QuadSwapCorners({ 4, 0, 4, 2, 0, 3, 0, 1 });
 			QuadSwapEdges({ 4, 1, 1, 3, 0, 1, 0, 2 });
@@ -393,29 +397,4 @@ void Face::swapEdges(int a, int b)
 {
 	assert(a >= 0 && a < 5 && b >= 0 && b < 5);
 	edge[a]->swapdata(edge[b]->data);
-}
-
-/**
- * \brief This is supposed to help generate a Ray of the face of a buncha points on a plane.
- * \return Couldnt get any meaningful results because we dont have Vec3D's yet
- */
-bool Face::RayTest(const Vec3d &start, const Vec3d &end, Vec3d *pt, double *t, double epsilon) const
-{
-	*pt = ClosestPoint(start, end, m_pos, t);
-	double len = Distance(*pt, m_pos);
-
-	return len < (m_radius + epsilon);
-}
-
-bool Face::RayPlaneIntersection(Vec3d normal, Vec3d ray)
-{
-	/*
-	float denom = normal.DotProduct(ray.direction);
-	if (std::abs(denom) > 0.0001f) // your favorite epsilon
-		{
-			float t = (center - ray.origin).dot(normal) / denom;
-			if (t >= 0) return true; // you might want to allow an epsilon here too
-		}
-	*/
-    return false;
 }
