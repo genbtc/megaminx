@@ -17,10 +17,12 @@
 #include "common_physics/camera.h"
 #include "main.h"
 
+//Resize Window glut callBack function passthrough to the camera class
 void ChangeSize(int x, int y)
 {
     g_camera.ChangeViewportSize(x, y);
 }
+//Camera - init/reset camera and vars, set view angles, etc.
 void resetCameraView()
 {
     g_camera = Camera();
@@ -30,15 +32,16 @@ void resetCameraView()
     g_areWeDraggingPoint = false;
     ChangeSize(WIDTH, HEIGHT);
 }
-
+//Megaminx Dodecahedron. Creates object class and resets camera.
 void createMegaMinx()
 {
-    resetCameraView();
     if (megaminx)
         delete megaminx;
-    megaminx = new Megaminx;
+    megaminx = new Megaminx();
+    resetCameraView();
 }
 
+//Entire Program is 28 lines,sorta.
 int main(int argc, char *argv[])
 {
     std::srand(time(nullptr));
@@ -98,6 +101,7 @@ void Idle()
     lastDeltas[2] = deltaTime;
 }
 
+//OpenGL Render Func
 void RenderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -140,6 +144,7 @@ void RenderScene()
     glutSwapBuffers();
 }
 
+//query Megaminx for what face we're looking at?
 void GetCurrentFace()
 {
     const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
@@ -151,6 +156,7 @@ void GetCurrentFace()
     }
 }
 
+//Shift key Directional Shortcut, Shift on = Counterclockwise.
 int GetDirFromSpecialKey()
 {
     const int result = (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ?
@@ -158,6 +164,7 @@ int GetDirFromSpecialKey()
     return result;
 }
 
+//Double click Rotates Current Face with Shift Modifier.
 void double_click(int x, int y)
 {
     const int dir = GetDirFromSpecialKey();
@@ -201,11 +208,11 @@ void mousePressed(int button, int state, int x, int y)
     //  Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)  //
     if(button == 3) {
         //Mouse wheel up
-        g_camera.m_zoom += 2;
+        g_camera.m_zoom += 5;
     }
     if (button == 4) {
         //Mouse wheel down
-        g_camera.m_zoom -= 2;
+        g_camera.m_zoom -= 5;
     }
 }
 
@@ -221,91 +228,117 @@ void mousePressedMove(int x, int y)
     g_camera.ProcessMouseMotion(x, y, !g_areWeDraggingPoint);
 }
 
+//Switch block for routing directional key commands to rotate.
+//TODO Currently only is valid for Blue face F8 due to early beta of program so ehhh..
 void rotateDispatch(unsigned char key)
 {
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case 'a':   //Left
     case 'A':
-        megaminx->rotate(GLUT_KEY_F12, dir); break;
+        megaminx->rotate(GLUT_KEY_F12, dir);
+        break;
     case 'd':   //Right
     case 'D':
-        megaminx->rotate(GLUT_KEY_F9, dir); break;
+        megaminx->rotate(GLUT_KEY_F9, dir);
+        break;
     case 'w':   //Upper(Top)
     case 'W':
-        megaminx->rotate(GLUT_KEY_F7, dir); break;
+        megaminx->rotate(GLUT_KEY_F7, dir);
+        break;
     case 's':   //Front
     case 'S':
-        megaminx->rotate(GLUT_KEY_F8, dir); break;
+        megaminx->rotate(GLUT_KEY_F8, dir);
+        break;
     case 'b':   //Bottom(White)
     case 'B':
-        megaminx->rotate(GLUT_KEY_F1, dir); break;
+        megaminx->rotate(GLUT_KEY_F1, dir);
+        break;
     case 'c':   //Diagonal/Corner
     case 'C':   //alias because its close to the keyboard.
-        megaminx->rotate(GLUT_KEY_F5, dir); break;
+        megaminx->rotate(GLUT_KEY_F5, dir);
+        break;
     case 'z':   //Back Reverze Diag
     case 'Z':
-        megaminx->rotate(GLUT_KEY_F3, dir); break;
+        megaminx->rotate(GLUT_KEY_F3, dir);
+        break;
     case 'x':   //Semantically near on QWERTY
     case 'X':
-        megaminx->rotate(GLUT_KEY_F4, dir); break;
+        megaminx->rotate(GLUT_KEY_F4, dir);
+        break;
     default:
         break;
     }
 }
 
+//Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
 {
-    glColor3f(1, 1, 1);
-    static char helpStr[255];
-    snprintf(helpStr,255, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[Right Click]  Action Menu"); utDrawText2D(w, h, helpStr); h += 15;
-//  snprintf(helpStr,255, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[Dbl Click]  Rotate Current >>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "  /+Shift  CounterClockwise <<"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[D/d]  Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[A/a]  Rotate Left Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[S/s]  Rotate Front Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[W/w]  Rotate Upper Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[Zz,Xx,Cc]  Rotate Diag <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[B/b]  Rotate Bottom Face <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[F1]-[F12]/+Shift  Face # <>"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[Space]  Toggle Auto-Spin"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[BackSpace]  Reset Camera"); utDrawText2D(w, h, helpStr); h += 15;
-    snprintf(helpStr,255, "[Delete]  Scramble Puzzle"); utDrawText2D(w, h, helpStr); h += 15;
+    constexpr char helpStrings[14][32] = { "Help Menu:",
+                                           "[Right Click]  Action Menu",
+                                           "[Dbl Click]  Rotate Current >>",
+                                           "  /+Shift  CounterClockwise <<",
+                                           "[D/d]  Rotate Right Face <>",
+                                           "[A/a]  Rotate Left Face <>",
+                                           "[S/s]  Rotate Front Face <>",
+                                           "[W/w]  Rotate Upper Face <>",
+                                           "[Zz,Xx,Cc]  Rotate Diag <>",
+                                           "[B/b]  Rotate Bottom Face <>",
+                                           "[F1]-[F12]/+Shift  Face # <>",
+                                           "[Space]  Toggle Auto-Spin",
+                                           "[BackSpace]  Reset Camera",
+                                           "[Delete]  Scramble Puzzle"
+                                         };
+    glColor3f(1, 1, 1); //White
+    float incrementHeight = h;
+    for (int i = 0; i < 14; i++) {
+        utDrawText2D(w, incrementHeight, (char *)helpStrings[i]);
+        incrementHeight += 15;
+    }
 }
 
+//Main Keyboard Handler
 void onKeyboard(unsigned char key, int x, int y)
 {
     const auto specialKey = glutGetModifiers();
     if (specialKey == GLUT_ACTIVE_CTRL) {
         switch (key) {
         case 3: //Ctrl+C
-            glutDestroyWindow(1); exit(0); break;
+            glutDestroyWindow(1);
+            exit(0);
+            break;
         case 26: //Ctrl+Z
-            megaminx->undo(); break;
-        default: break;
+            megaminx->undo();
+            break;
+        default:
+            break;
         }
     }
     switch (key) {
     case ' ': //spacebar 32
-        spinning = !spinning; break;
+        spinning = !spinning;
+        break;
     case 'h':
     case 'H':
-        help = !help; break;
+        help = !help;
+        break;
     case 8:   //backspace
-        resetCameraView(); break;
+        resetCameraView();
+        break;
     case 13:    //enter
-        megaminx->resetFace(currentFace); break;
+        megaminx->resetFace(currentFace);
+        break;
     case 127: //delete
-        megaminx->scramble(); break;
-    default: break;
+        megaminx->scramble();
+        break;
+    default:
+        break;
     }
     //(Enter is 13, escape is 27)
     //call the megaminx specific key functions (above)
     rotateDispatch(key);
 }
-
+//Secondary Keyboard Handler (Special Keys)
 void onSpecialKeyPress(int key, int x, int y)
 {
     //TODO Add Caps Lock to determine rotation direction also.
@@ -316,6 +349,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_HOME:
     case GLUT_KEY_END:
     case GLUT_KEY_INSERT:
+        //Unused ^^
         break;
     case GLUT_KEY_F1:
     case GLUT_KEY_F2:
@@ -334,9 +368,11 @@ void onSpecialKeyPress(int key, int x, int y)
     default:
         break;
     }
+    //Route the arrow keys to the camera for motion
     g_camera.PressSpecialKey(key, x, y);
 }
 
+//Right Click Menu structure definitions.
 void createMenu()
 {
     //SubLevel 0 menu - Functions
@@ -357,6 +393,7 @@ void createMenu()
 
     //SubLevel2 Menu - Rotations
     submenu2_id = glutCreateMenu(menuHandler);
+    glutAddMenuEntry("Rotate Current Face CW", 50);
     glutAddMenuEntry("Solve/Reset Current Face (All)", 21);
     glutAddMenuEntry("Solve Current Face's Edges", 22);
     glutAddMenuEntry("Solve Current Face's Corners", 23);
@@ -376,7 +413,6 @@ void createMenu()
 
     //SubLevel4 Menu - Algos
     submenu4_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Rotate Current Face CW", 50);
     glutAddMenuEntry("r u R' U'", 51);
     glutAddMenuEntry("l u L' U'", 52);
     glutAddMenuEntry("U' L' u l u r U' R'", 53);
@@ -413,19 +449,22 @@ void createMenu()
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
+//Right Click Menu event Handler
 void menuHandler(int num)
 {
     if (num == 1)
         spinning = !spinning;
+    if (num == 20)
+        megaminx->rotate(currentFace, Face::CW);
     if (num == 21)
         megaminx->resetFace(currentFace);
     if (num == 22)  //rotate edge piece
         megaminx->resetFacesEdges(currentFace);
     if (num == 23)  //rotate corner piece
         megaminx->resetFacesCorners(currentFace);
-    if (num == 24)  //rotate edge piece
+    if (num == 24)  //rotate edge piece (random)
         megaminx->swapOneEdge(currentFace, std::rand() % 5);
-    if (num == 25)  //rotate corner piece
+    if (num == 25)  //rotate corner piece (random)
         megaminx->swapOneCorner(currentFace, std::rand() % 5);
     if (num == 31)  //make GRAY edges (star)
         megaminx->resetFacesEdges(GRAY);
@@ -435,8 +474,6 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(WHITE);
     if (num == 42)  //make WHITE Face
         megaminx->resetFace(WHITE);
-    if (num == 50)
-        megaminx->rotate(currentFace, Face::CW);
     if (num >= 51 && num <= 57)
         megaminx->rotateAlgo(currentFace, num - 50);
     if (num >= 61 && num <= 72)

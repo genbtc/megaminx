@@ -2,9 +2,9 @@
   "configurations": [
     {
       "name": "MingW64",
-      "inheritEnvironments": [ "clang-x64" ],
-      "intelliSenseMode": "windows-clang-x64",
-      "compilerSwitches": "-std=gnu++1z",
+      "inheritEnvironments": [ "linux-gcc-x64" ],
+      "intelliSenseMode": "linux-gcc-x64",
+      "compilerSwitches": "-std=c++1z",
       "includePath": [
         "${workspaceRoot}",
         "${env.MINGW_PREFIX}/include/c++/7.2.0",
@@ -14,7 +14,8 @@
         "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../include",
         "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed",
         "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../x86_64-w64-mingw32/include",
-        "${env.MINGW_PREFIX}/include/*"
+        "${env.MINGW_PREFIX}/include/*",
+        "${env.MINGW_PREFIX}/include"
       ],
       "defines": [
         "_DEBUG",
@@ -92,9 +93,7 @@
           "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../x86_64-w64-mingw32/include",
           "${env.MINGW_PREFIX}/include/*",
           "${env.MINGW_PREFIX}/include"
-        ],
-        "limitSymbolsToIncludedHeaders": true,
-        "databaseFilename": ""
+        ]
       }
     },
     {

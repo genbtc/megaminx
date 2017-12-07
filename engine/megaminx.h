@@ -30,6 +30,7 @@ public:
     double y;
     /* x axis */
     double x;
+    /* face rotating busy*/
     bool rotating;
     /* pointer */
     Face* g_currentFace;
@@ -38,6 +39,11 @@ public:
     static const int numCorners = 20;
     static const int numFaces = 12;
 private:
+    Face faces[numFaces];
+    Center centers[numFaces];
+    Edge edges[numEdges];
+    Corner corners[numCorners];
+
     int _rSide;
     struct numdir {
         int num;
@@ -45,11 +51,6 @@ private:
     };
     std::queue<numdir> rotateQueue;
     std::queue<numdir> undoQueue;
-
-    Face faces[numFaces];
-    Center centers[numFaces];
-    Edge edges[numEdges];
-    Corner corners[numCorners];
     void _rotate_internal(int num, int dir);
 };
 

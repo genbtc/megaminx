@@ -5,10 +5,12 @@
  *  @date March 2011
  *  @Edited by genBTC 2017
  */
-#include <cstdlib>
-#include <cmath>
-#include <iostream>
+#include <GL/gl.h>
 #include <GL/glut.h>
+#include <GL/glu.h>
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
 #include "utils.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,7 +64,7 @@ void utDrawText2D(float x, float y, void *font, char *string)
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {
     static char anglesStr[16];
-    sprintf(anglesStr, "X: %5.3f", x1);
+    snprintf(anglesStr, 16, "X: %5.3f", x1);
     utDrawText2D(x, y, anglesStr);
     sprintf(anglesStr, "Y: %5.3f", y1);
     utDrawText2D(x, y + 13, anglesStr);
@@ -77,7 +79,7 @@ void utCalculateAndPrintFps(float x, float y)
     frame++;
     const int t = glutGet(GLUT_ELAPSED_TIME);
     if (t - timeBase > 1000) {
-        sprintf(fpsStr, "FPS: %4.2f", frame * 1000.0 / (t - timeBase));
+        snprintf(fpsStr, 16, "FPS: %4.2f", frame * 1000.0 / (t - timeBase));
         timeBase = t;
         frame = 0;
     }
