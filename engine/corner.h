@@ -2,14 +2,13 @@
 #define __CORNER_H__
 #include "piece.h"
 
-class Corner : public Piece
-{
+class Corner : public Piece {
 public:
     Corner() = default;
     ~Corner() {}
-	static void createAxis(int n, double* target);
-	void init(int n, double* cornerVertexBase);
-	void init(int n, bool doAxes = true);
+    static void createAxis(int n, double* target);
+    void init(int n, double* cornerVertexBase);
+    void init(int n, bool doAxes = true);
     void render();
 };
 

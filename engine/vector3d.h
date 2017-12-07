@@ -1,7 +1,6 @@
 #pragma once
 //#include <math.h>
-class Vector3f
-{
+class Vector3f {
 public:
     float x, y, z;
 
@@ -10,8 +9,7 @@ public:
     // The original class contains many more methods...
     float vec[3];
 
-    float* get()
-    {
+    float* get() {
         vec[0] = x;
         vec[1] = y;
         vec[2] = z;
@@ -71,14 +69,12 @@ public:
         return { x,y,z };
     }
 };
-class Vector3d
-{
+class Vector3d {
 public:
     double x, y, z;
     double vec[3];
 
-    double* get()
-    {
+    double* get() {
         vec[0] = x;
         vec[1] = y;
         vec[2] = z;
@@ -145,18 +141,15 @@ public:
         return this;
     }
 };
-class PickingRay
-{
+class PickingRay {
 private:    //setters
     Vector3f clickPosInWorld;
     Vector3f direction;
 public:     //getters
-    Vector3f getClickPosInWorld() const
-    {
+    Vector3f getClickPosInWorld() const {
         return clickPosInWorld;
     }
-    Vector3f getDirection() const
-    {
+    Vector3f getDirection() const {
         return direction;
     }
 
@@ -164,8 +157,7 @@ public:     //getters
     * Computes the intersection of this ray with the X-Y Plane (where Z = 0)
     * and writes it back to the provided vector.
     */
-    void intersectionWithXyPlane(float* worldPos) const
-    {
+    void intersectionWithXyPlane(float* worldPos) const {
         float s = -clickPosInWorld.z / direction.z;
         worldPos[0] = clickPosInWorld.x + direction.x*s;
         worldPos[1] = clickPosInWorld.y + direction.y*s;
@@ -174,8 +166,7 @@ public:     //getters
 
 
 };
-class PickingRay3d
-{
+class PickingRay3d {
 private:
     Vector3d* clickPosInWorld = new Vector3d();
     Vector3d* direction = new Vector3d();
@@ -184,20 +175,17 @@ public:
     * Computes the intersection of this ray with the X-Y Plane (where Z = 0)
     * and writes it back to the provided vector->
     */
-    void intersectionWithXyPlane(double* worldPos) const
-    {
+    void intersectionWithXyPlane(double* worldPos) const {
         float s = -clickPosInWorld->z / direction->z;
         worldPos[0] = clickPosInWorld->x + direction->x*s;
         worldPos[1] = clickPosInWorld->y + direction->y*s;
         worldPos[2] = 0;
     }
 
-    Vector3d* getClickPosInWorld() const
-    {
+    Vector3d* getClickPosInWorld() const {
         return clickPosInWorld;
     }
-    Vector3d* getDirection() const
-    {
+    Vector3d* getDirection() const {
         return direction;
     }
 };

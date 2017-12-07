@@ -4,13 +4,12 @@
 #include "face.h"
 #include <queue>
 
-class Megaminx
-{
+class Megaminx {
 public:
     Megaminx();
     ~Megaminx() = default;
     void solve();
-    void initEdgeAndCornerPieces();    
+    void initEdgeAndCornerPieces();
     void initFacePieces();
     void renderAllPieces();
     void render();
@@ -28,30 +27,29 @@ public:
     int getCurrentFaceFromAngles(int x, int y) const;
     void rotateAlgo(int current_face, int i);
     /* y axis */
-	double y;
+    double y;
     /* x axis */
-	double x;
-	bool rotating;
-	/* pointer */
+    double x;
+    bool rotating;
+    /* pointer */
     Face* g_currentFace;
-	/* static numbers at compile time*/
-	static const int numEdges = 30;
-	static const int numCorners = 20;
-	static const int numFaces = 12;
+    /* static numbers at compile time*/
+    static const int numEdges = 30;
+    static const int numCorners = 20;
+    static const int numFaces = 12;
 private:
-	int _rSide;
-    struct numdir
-    {
+    int _rSide;
+    struct numdir {
         int num;
         int dir;
     };
     std::queue<numdir> rotateQueue;
     std::queue<numdir> undoQueue;
 
-	Face faces[numFaces];
-	Center centers[numFaces];
-	Edge edges[numEdges];
-	Corner corners[numCorners];
+    Face faces[numFaces];
+    Center centers[numFaces];
+    Edge edges[numEdges];
+    Corner corners[numCorners];
     void _rotate_internal(int num, int dir);
 };
 

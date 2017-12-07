@@ -4,10 +4,9 @@
 
 void Corner::createAxis(int n, double* target)
 {
-	piecepack pack = { 'z', 'x', (n * 2 % 10) };
-    switch (n + 1)
-    {
-	//no need for case1.
+    piecepack pack = { 'z', 'x', (n * 2 % 10) };
+    switch (n + 1) {
+    //no need for case1.
     case 2:
     case 3:
     case 4:
@@ -26,7 +25,7 @@ void Corner::createAxis(int n, double* target)
     case 13:
     case 14:
     case 15:
-	    pack.axis1 = 'x'; pack.axis2 = 'z';
+        pack.axis1 = 'x'; pack.axis2 = 'z';
         CornerGrp3(target, pack);
         break;
     case 16:
@@ -43,61 +42,57 @@ void Corner::createAxis(int n, double* target)
 
 void Corner::init(int n, double* cornerVertexBase)
 {
-	memcpy(&_vertex, cornerVertexBase, sizeof(_vertex));
+    memcpy(&_vertex, cornerVertexBase, sizeof(_vertex));
     init(n);
 }
 
 void Corner::init(int n, bool doAxes)
 {
-	if (doAxes)
-		for (int i = 0; i < 7; ++i)
-			createAxis(n, _vertex[i]);
-	initColor(g_cornerPiecesColors[n], true);
+    if (doAxes)
+        for (int i = 0; i < 7; ++i)
+            createAxis(n, _vertex[i]);
+    initColor(g_cornerPiecesColors[n], true);
 }
 
 void Corner::render()
 {
-	glColor3dv(data._color[0]);
-	glBegin(GL_POLYGON);
-	for (int i = 0; i < 4; ++i)
-	{
-		glVertex3dv(_vertex[i]);
-	}
-	glEnd();
-	glColor3dv(data._color[1]);
-	glBegin(GL_POLYGON);
-	for (int i = 2; i < 6; ++i)
-	{
-		glVertex3dv(_vertex[i]);
-	}
-	glEnd();
-	glColor3dv(data._color[2]);
-	glBegin(GL_POLYGON);
-	glVertex3dv(_vertex[2]);
-	glVertex3dv(_vertex[5]);
-	glVertex3dv(_vertex[6]);
-	glVertex3dv(_vertex[1]);
-	glEnd();
+    glColor3dv(data._color[0]);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 4; ++i) {
+        glVertex3dv(_vertex[i]);
+    }
+    glEnd();
+    glColor3dv(data._color[1]);
+    glBegin(GL_POLYGON);
+    for (int i = 2; i < 6; ++i) {
+        glVertex3dv(_vertex[i]);
+    }
+    glEnd();
+    glColor3dv(data._color[2]);
+    glBegin(GL_POLYGON);
+    glVertex3dv(_vertex[2]);
+    glVertex3dv(_vertex[5]);
+    glVertex3dv(_vertex[6]);
+    glVertex3dv(_vertex[1]);
+    glEnd();
 
-	glColor3d(0, 0, 0);
-	glBegin(GL_LINE_LOOP);
-	for (int i = 0; i < 4; ++i)
-	{
-		// glVertex3dv(_vertex[i]); * 1.005
-		glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
-	}
-	glEnd();
-	glBegin(GL_LINE_LOOP);
-	for (int i = 2; i < 6; ++i)
-	{
-		// glVertex3dv(_vertex[i]);
-		glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
-	}
-	glEnd();
-	glBegin(GL_LINE_LOOP);
-	glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
-	glVertex3d(_vertex[5][0] * 1.005, _vertex[5][1] * 1.005, _vertex[5][2] * 1.005);
-	glVertex3d(_vertex[6][0] * 1.005, _vertex[6][1] * 1.005, _vertex[6][2] * 1.005);
-	glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
-	glEnd();
+    glColor3d(0, 0, 0);
+    glBegin(GL_LINE_LOOP);
+    for (int i = 0; i < 4; ++i) {
+        // glVertex3dv(_vertex[i]); * 1.005
+        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
+    }
+    glEnd();
+    glBegin(GL_LINE_LOOP);
+    for (int i = 2; i < 6; ++i) {
+        // glVertex3dv(_vertex[i]);
+        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
+    }
+    glEnd();
+    glBegin(GL_LINE_LOOP);
+    glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
+    glVertex3d(_vertex[5][0] * 1.005, _vertex[5][1] * 1.005, _vertex[5][2] * 1.005);
+    glVertex3d(_vertex[6][0] * 1.005, _vertex[6][1] * 1.005, _vertex[6][2] * 1.005);
+    glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
+    glEnd();
 }

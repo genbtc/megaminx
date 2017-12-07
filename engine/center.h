@@ -2,15 +2,14 @@
 #define __CENTER_H__
 #include "piece.h"
 
-class Center : public Piece
-{
+class Center : public Piece {
 public:
     Center();
     static void createAxis(int n, double* target);
-	~Center() {}
+    ~Center() {}
 
     void init(int n);
-	void render();
+    void render();
 };
 
 #endif

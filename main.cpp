@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     gluPerspective(view_distance_view_angle, 1.0, 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    createMenu();  	//right click menu
+    createMenu();   //right click menu
     //Glut Functs:
     glutReshapeFunc(ChangeSize);
     glutMouseFunc(mousePressed);
@@ -69,13 +69,13 @@ int main(int argc, char *argv[])
     return 1;
 }
 
-//TODO Figure out how to actually limit to 60 FPS 
+//TODO Figure out how to actually limit to 60 FPS
 // (This function does nothing currently besides count time).
 void Idle()
 {
     static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
     static const double REFRESH_TIME = 1.0 / REFRESH_RATE;
-    
+
     // in milliseconds
     const int t = glutGet(GLUT_ELAPSED_TIME);
     const double newTime = (double)t * 0.001;
@@ -153,8 +153,8 @@ void GetCurrentFace()
 
 int GetDirFromSpecialKey()
 {
-    const int result = (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? 
-        (int)Face::CCW : (int)Face::CW;
+    const int result = (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ?
+                       (int)Face::CCW : (int)Face::CW;
     return result;
 }
 
@@ -169,8 +169,7 @@ void mousePressed(int button, int state, int x, int y)
     g_camera.ProcessMouse(button, state, x, y);
 
     // can we move?
-    if(g_camera.m_isLeftPressed && g_rayTest.m_hit)
-    {
+    if(g_camera.m_isLeftPressed && g_rayTest.m_hit) {
         g_draggedPointID = g_lastHitPointID;
         g_areWeDraggingPoint = true;
     }
@@ -198,8 +197,8 @@ void mousePressed(int button, int state, int x, int y)
             }
         }
     }
-    else if (state == GLUT_UP)		return; // Disregard redundant GLUT_UP events	//
-    //	Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)	//
+    else if (state == GLUT_UP)      return; // Disregard redundant GLUT_UP events   //
+    //  Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5)  //
     if(button == 3) {
         //Mouse wheel up
         g_camera.m_zoom += 2;
@@ -210,7 +209,8 @@ void mousePressed(int button, int state, int x, int y)
     }
 }
 
-void processMousePassiveMotion(int x, int y) {
+void processMousePassiveMotion(int x, int y)
+{
     // called when no mouse btn are pressed and mouse moves
     g_camera.ProcessPassiveMouseMotion(x, y);
 }
@@ -224,8 +224,7 @@ void mousePressedMove(int x, int y)
 void rotateDispatch(unsigned char key)
 {
     const int dir = GetDirFromSpecialKey();
-    switch (key)
-    {
+    switch (key) {
     case 'a':   //Left
     case 'A':
         megaminx->rotate(GLUT_KEY_F12, dir); break;
@@ -261,7 +260,7 @@ void utPrintHelpMenu(float w, float h)
     static char helpStr[255];
     snprintf(helpStr,255, "Help Menu:"); utDrawText2D(w, h, helpStr); h += 15;
     snprintf(helpStr,255, "[Right Click]  Action Menu"); utDrawText2D(w, h, helpStr); h += 15;
-//	snprintf(helpStr,255, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
+//  snprintf(helpStr,255, "Front Face is Blue"); utDrawText2D(w, h, helpStr); h += 15;
     snprintf(helpStr,255, "[Dbl Click]  Rotate Current >>"); utDrawText2D(w, h, helpStr); h += 15;
     snprintf(helpStr,255, "  /+Shift  CounterClockwise <<"); utDrawText2D(w, h, helpStr); h += 15;
     snprintf(helpStr,255, "[D/d]  Rotate Right Face <>"); utDrawText2D(w, h, helpStr); h += 15;
@@ -281,15 +280,14 @@ void onKeyboard(unsigned char key, int x, int y)
     const auto specialKey = glutGetModifiers();
     if (specialKey == GLUT_ACTIVE_CTRL) {
         switch (key) {
-        case 3:	//Ctrl+C
+        case 3: //Ctrl+C
             glutDestroyWindow(1); exit(0); break;
         case 26: //Ctrl+Z
             megaminx->undo(); break;
         default: break;
         }
     }
-    switch (key)
-    {
+    switch (key) {
     case ' ': //spacebar 32
         spinning = !spinning; break;
     case 'h':
@@ -297,7 +295,7 @@ void onKeyboard(unsigned char key, int x, int y)
         help = !help; break;
     case 8:   //backspace
         resetCameraView(); break;
-    case 13:	//enter
+    case 13:    //enter
         megaminx->resetFace(currentFace); break;
     case 127: //delete
         megaminx->scramble(); break;
@@ -312,14 +310,13 @@ void onSpecialKeyPress(int key, int x, int y)
 {
     //TODO Add Caps Lock to determine rotation direction also.
     const int dir = GetDirFromSpecialKey();
-    switch (key)
-    {
+    switch (key) {
     case GLUT_KEY_PAGE_UP:
     case GLUT_KEY_PAGE_DOWN:
     case GLUT_KEY_HOME:
     case GLUT_KEY_END:
     case GLUT_KEY_INSERT:
-            break;
+        break;
     case GLUT_KEY_F1:
     case GLUT_KEY_F2:
     case GLUT_KEY_F3:
@@ -340,7 +337,8 @@ void onSpecialKeyPress(int key, int x, int y)
     g_camera.PressSpecialKey(key, x, y);
 }
 
-void createMenu() {
+void createMenu()
+{
     //SubLevel 0 menu - Functions
     submenu0_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Edit... Undo", 91);
@@ -348,7 +346,7 @@ void createMenu() {
     glutAddMenuEntry("Reset Camera", 93);
     glutAddMenuEntry("Scramble", 100);
     glutAddMenuEntry("Quit", 102);
-    
+
     //SubLevel 1 menu - Last Layer
     submenu1_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Grey Star", 31);
@@ -356,7 +354,7 @@ void createMenu() {
     glutAddMenuEntry("Swap 1 Gray Edge", 33);
     glutAddMenuEntry("Swap 1 Gray Corner", 34);
     glutAddMenuEntry("Swap 2 Gray Corners", 35);
-    
+
     //SubLevel2 Menu - Rotations
     submenu2_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Solve/Reset Current Face (All)", 21);
@@ -364,17 +362,17 @@ void createMenu() {
     glutAddMenuEntry("Solve Current Face's Corners", 23);
     glutAddMenuEntry("Swap Face's 1st Edge", 24);
     glutAddMenuEntry("Rotate Face's 1st Corner", 25);
-     
+
     //SubLevel3 Menu - Steps
     submenu3_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("White Star", 41);
     glutAddMenuEntry("White Face", 42);
     //TODO Add the rest of these:
-//	glutAddMenuEntry("2nd Layer Edges", 43);
-//	glutAddMenuEntry("Low Y's", 44);
-//	glutAddMenuEntry("4th Layer Edges", 45);
-//	glutAddMenuEntry("High Y's", 46);
-//	glutAddMenuEntry("6th Layer Edges", 47);
+//  glutAddMenuEntry("2nd Layer Edges", 43);
+//  glutAddMenuEntry("Low Y's", 44);
+//  glutAddMenuEntry("4th Layer Edges", 45);
+//  glutAddMenuEntry("High Y's", 46);
+//  glutAddMenuEntry("6th Layer Edges", 47);
 
     //SubLevel4 Menu - Algos
     submenu4_id = glutCreateMenu(menuHandler);
@@ -400,8 +398,8 @@ void createMenu() {
     glutAddMenuEntry(" 9 ORANGE", 69);
     glutAddMenuEntry("10 LIGHT_GREEN", 70);
     glutAddMenuEntry("11 PINK", 71);
-    glutAddMenuEntry("12 BEIGE", 72);    
-        
+    glutAddMenuEntry("12 BEIGE", 72);
+
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning", 1);
@@ -415,7 +413,8 @@ void createMenu() {
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
-void menuHandler(int num) {
+void menuHandler(int num)
+{
     if (num == 1)
         spinning = !spinning;
     if (num == 21)
@@ -428,13 +427,13 @@ void menuHandler(int num) {
         megaminx->swapOneEdge(currentFace, std::rand() % 5);
     if (num == 25)  //rotate corner piece
         megaminx->swapOneCorner(currentFace, std::rand() % 5);
-    if (num == 31)	//make GRAY edges (star)
+    if (num == 31)  //make GRAY edges (star)
         megaminx->resetFacesEdges(GRAY);
-    if (num == 32)	//make GRAY corners
+    if (num == 32)  //make GRAY corners
         megaminx->resetFacesCorners(GRAY);
-    if (num == 41)	//make WHITE edges (star)
+    if (num == 41)  //make WHITE edges (star)
         megaminx->resetFacesEdges(WHITE);
-    if (num == 42)	//make WHITE Face
+    if (num == 42)  //make WHITE Face
         megaminx->resetFace(WHITE);
     if (num == 50)
         megaminx->rotate(currentFace, Face::CW);
@@ -450,8 +449,7 @@ void menuHandler(int num) {
         resetCameraView();
     if (num == 100)
         megaminx->scramble();
-    if (num == 102)
-    {
+    if (num == 102) {
         glutDestroyWindow(1);
         exit(0);
     }

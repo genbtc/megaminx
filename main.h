@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.29 - genBTC mod";
 // initial window screen size
-double REFRESH_RATE = 60.0;  	// monitor with 60 Hz
+double REFRESH_RATE = 60.0;     // monitor with 60 Hz
 int WIDTH = 700;
 int HEIGHT = 700;
 int ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
@@ -24,7 +24,7 @@ bool spinning = false;
 bool help = true;
 int currentFace = 0;
 char lastface[32];
-#define DOUBLE_CLICK_INTERVAL	400
+#define DOUBLE_CLICK_INTERVAL   400
 static int bnstate[16];
 
 // global Camera
@@ -48,4 +48,5 @@ void createMenu();
 void menuHandler(int num);
 void HitTest();
 void utPrintHelpMenu(float w, float h);
-static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id, submenu5_id;
+static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id,
+       submenu5_id;

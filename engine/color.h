@@ -17,8 +17,7 @@ typedef enum {
     COLOR_STATES
 } megaminxColor;
 
-struct colorpack
-{
+struct colorpack {
     int i;
     double r;
     double g;
@@ -27,8 +26,7 @@ struct colorpack
 };
 
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
-constexpr colorpack g_colorRGBs[COLOR_STATES] =
-{
+constexpr colorpack g_colorRGBs[COLOR_STATES] = {
     { 0, 0.0, 0.0, 0.0, L"BLACK" },
     { 1, 1.0, 1.0, 1.0, L"WHITE" },
     { 2, 0.0, 0.0, 1.0, L"DARK_BLUE" },
@@ -45,8 +43,7 @@ constexpr colorpack g_colorRGBs[COLOR_STATES] =
 };
 
 //Struct that can hold 2, 3 or 6 named Colors (member name a-f is irrelevant)
-struct colorpiece
-{
+struct colorpiece {
     megaminxColor a = BLACK;
     megaminxColor b = BLACK;
     megaminxColor c = BLACK;
@@ -56,8 +53,7 @@ struct colorpiece
 };
 
 //Defines the 30 edge pieces.
-constexpr colorpiece g_edgePiecesColors[30] =
-{
+constexpr colorpiece g_edgePiecesColors[30] = {
     { WHITE, DARK_BLUE },
     { WHITE, RED },
     { WHITE, DARK_GREEN },
@@ -91,8 +87,7 @@ constexpr colorpiece g_edgePiecesColors[30] =
 };
 
 //Defines the 20 corner Pieces.
-constexpr colorpiece g_cornerPiecesColors[20] =
-{
+constexpr colorpiece g_cornerPiecesColors[20] = {
     { WHITE, RED, DARK_BLUE },
     { WHITE, DARK_GREEN, RED },
     { WHITE, PURPLE, DARK_GREEN },
@@ -116,8 +111,7 @@ constexpr colorpiece g_cornerPiecesColors[20] =
 };
 
 //struct that holds the relational directional colors for g_faceNeighbors
-struct colordirs
-{
+struct colordirs {
     //Starting from face,then 9-oclock and going CW right around.
     megaminxColor front = BLACK;
     megaminxColor left = BLACK;

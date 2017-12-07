@@ -14,12 +14,11 @@ constexpr int FlipForwards[4] = { 1, 1, 0, 0 };
 constexpr int FlipAlternatingBackwards[4] = { 0, 1, 0, 1 };
 constexpr int FlipAlternatingForwards[4] = { 1, 0, 1, 0 };
 
-class Face : public Piece
-{
+class Face : public Piece {
 public: enum TurnDir  { Clockwise = -1, None = 0, CounterClockwise = 1 };
 public: enum TurnDir2 { CW = -1, CCW = 1 };
 public:
-	Face();
+    Face();
     ~Face() override {}
     int thisNum;
     int turnDir;
@@ -33,16 +32,16 @@ public:
     std::vector<int> edgeNativePos;
     std::vector<int> edgeColorPos;
     void makeEdgePositionArray();
-    void makeCornerPositionArray();	
+    void makeCornerPositionArray();
     std::vector<int> findPiece(Piece& pieceRef, int times) const;
     void attachEdgePieces(Edge& n, int numEdges);
     void attachCornerPieces(Corner& n, int numCorners);
     void attachCenter(Center* a, double* centerVertexBase);
-	void attachCenter(Center*);    
+    void attachCenter(Center*);
 
     void initAxis(int n);
     bool render();
-	void rotate(int direction);
+    void rotate(int direction);
     bool placeParts(int direction);
 
     void swapCorners(int, int);
@@ -54,8 +53,8 @@ private:
     void QuadSwapCorners(std::vector<int> pack);
     void QuadSwapEdges(std::vector<int> pack);
 
-	double angle;
-	double axis[3];
+    double angle;
+    double axis[3];
 };
 
 #endif
