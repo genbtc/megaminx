@@ -6,14 +6,13 @@
       "name": "MingW64",
       "generator": "Ninja",
       "configurationType": "Debug",
-      "inheritEnvironments": [ "clang-x64", "linux-x64" ],
-      "remoteCopySources": true,
-      "cmakeExecutable": "${workspaceRoot}\\${generator}",
+      "inheritEnvironments": [ "linux-x64" ],
+      "cmakeExecutable": "${workspaceRoot}\\CMakeBuilds\\${generator}",
+      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
+      "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
-      "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
       "variables": [
         {
           "name": "CMAKE_CXX_FLAGS",
