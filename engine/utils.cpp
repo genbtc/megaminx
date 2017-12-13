@@ -1,4 +1,3 @@
-//#include <math.h>
 #include <cmath>
 using namespace std;
 static const long double PI = acos(-1);

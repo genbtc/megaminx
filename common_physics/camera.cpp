@@ -3,11 +3,14 @@
  *
  *  @author Bartlomiej Filipek
  *  @date April 2011
- *  @Edited by GENBTC 2017
+ *  @Edited //by genBTC 2017 for megaminx
  */
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <GL/freeglut_std.h>
+#include <GL/glut.h>
 #include <algorithm>
 #include "utils_math.h"
 #include "camera.h"
@@ -31,7 +34,7 @@ void Camera::ChangeViewportSize(int w, int h)
 
     //Turn on forced aspect ratio of 1.0
     if (m_forced_aspect_ratio == 1) {
-        const auto minx = std::min((double)w, h*m_forced_aspect_ratio);
+        const auto minx = min((double)w, h*m_forced_aspect_ratio);
         h = w = (int)minx;
     }
     m_screenWidth = w;
@@ -49,11 +52,20 @@ void Camera::ChangeViewportSize(int w, int h)
 void Camera::PressSpecialKey(int key, int x, int y)
 {
     switch (key) {
-    case GLUT_KEY_LEFT  : m_angleX += -1.f; break;
-    case GLUT_KEY_RIGHT : m_angleX += 1.f; break;
-    case GLUT_KEY_UP    : m_angleY += 1.f; break;
-    case GLUT_KEY_DOWN  : m_angleY += -1.f; break;
-    default: break;
+    case GLUT_KEY_LEFT  :
+        m_angleX += -1.f;
+        break;
+    case GLUT_KEY_RIGHT :
+        m_angleX += 1.f;
+        break;
+    case GLUT_KEY_UP    :
+        m_angleY += 1.f;
+        break;
+    case GLUT_KEY_DOWN  :
+        m_angleY += -1.f;
+        break;
+    default:
+        break;
     }
 }
 

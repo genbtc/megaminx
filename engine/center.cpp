@@ -1,10 +1,4 @@
-#include <GL/glut.h>
 #include "center.h"
-
-Center::Center()
-{
-    this->centerInit();
-}
 
 void Center::createAxis(int n, double* target)
 {
@@ -46,17 +40,8 @@ void Center::init(int n)
 void Center::render()
 {
     glColor3dv(data._color[0]);
-    glBegin(GL_POLYGON);
-    for (int i = 0; i < 5; ++i) {
-        glVertex3dv(_vertex[i]);
-    }
-    glEnd();
+    makeGLpentagon(_vertex, 1.000, GL_POLYGON);
     glLineWidth(4);
     glColor3d(0, 0, 0);
-    glBegin(GL_LINE_LOOP);
-    for (int i = 0; i < 5; ++i) {
-        // glVertex3dv(_vertex[i]);
-        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
-    }
-    glEnd();
+    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
 }

@@ -32,6 +32,7 @@ public:
     std::vector<int> cornerColorPos;
     std::vector<int> edgeNativePos;
     std::vector<int> edgeColorPos;
+
     void makeEdgePositionArray();
     void makeCornerPositionArray();
     std::vector<int> findPiece(Piece& pieceRef, int times) const;

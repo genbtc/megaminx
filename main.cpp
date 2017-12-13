@@ -4,13 +4,15 @@
 * genBTC November 30 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
 // Headers
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 #include <GL/gl.h>
-#include <GL/glut.h>
 #include <GL/glu.h>
+#include <GL/glut.h>
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
-#include <cmath>
 #include <time.h>
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
@@ -44,7 +46,7 @@ void createMegaMinx()
 //Entire Program is 28 lines,sorta.
 int main(int argc, char *argv[])
 {
-    std::srand(time(nullptr));
+    srand(time(nullptr));
     wsprintf(lastface, "%ws", L"STARTUP");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
@@ -58,6 +60,7 @@ int main(int argc, char *argv[])
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     createMenu();   //right click menu
+    glutMenuStatusFunc(menuVisible);
     //Glut Functs:
     glutReshapeFunc(ChangeSize);
     glutMouseFunc(mousePressed);
@@ -123,8 +126,8 @@ void RenderScene()
         megaminx->render();
     }
     glPopMatrix();
-    glColor3f(0, 1, 0);
-    //Print out Text (FPS display + Angles + face Name )
+    //Print out Text (FPS display + Angles + face Name)
+    glColor3f(0, 1, 0); // ...in green.
     utSetOrthographicProjection(WIDTH, HEIGHT);
     {
         utCalculateAndPrintFps(10, 20);
@@ -145,9 +148,10 @@ void RenderScene()
 }
 
 //query Megaminx for what face we're looking at?
+int getCurrentFaceFromAngles(int x, int y); //defining extern free function in megaminx.cpp
 void GetCurrentFace()
 {
-    const auto tempFace = megaminx->getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
+    const auto tempFace = getCurrentFaceFromAngles(g_camera.m_angleX, g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
@@ -170,7 +174,11 @@ void double_click(int x, int y)
     const int dir = GetDirFromSpecialKey();
     megaminx->rotate(currentFace, dir);
 }
-
+int menuVisibleState = 0;
+void menuVisible(int status, int x, int y)
+{
+    menuVisibleState = status == GLUT_MENU_IN_USE;
+}
 void mousePressed(int button, int state, int x, int y)
 {
     g_camera.ProcessMouse(button, state, x, y);
@@ -219,52 +227,47 @@ void mousePressed(int button, int state, int x, int y)
 void processMousePassiveMotion(int x, int y)
 {
     // called when no mouse btn are pressed and mouse moves
-    g_camera.ProcessPassiveMouseMotion(x, y);
+    // does nothing but record mouse position in camera class.
+    //g_camera.ProcessPassiveMouseMotion(x, y);
 }
 
 void mousePressedMove(int x, int y)
 {
     // if we are dragging any ball we cannot use mouse for scene rotation
-    g_camera.ProcessMouseMotion(x, y, !g_areWeDraggingPoint);
+    //TODO block from happening during right click menu visible.
+    if (!menuVisibleState)
+        g_camera.ProcessMouseMotion(x, y, !menuVisibleState);
 }
 
-//Switch block for routing directional key commands to rotate.
-//TODO Currently only is valid for Blue face F8 due to early beta of program so ehhh..
+//Switch for routing directional key commands - rotate neighbors of current face
 void rotateDispatch(unsigned char key)
 {
     const int dir = GetDirFromSpecialKey();
+    const auto face = g_faceNeighbors[currentFace];
     switch (key) {
-    case 'a':   //Left
-    case 'A':
-        megaminx->rotate(GLUT_KEY_F12, dir);
-        break;
-    case 'd':   //Right
-    case 'D':
-        megaminx->rotate(GLUT_KEY_F9, dir);
-        break;
     case 'w':   //Upper(Top)
     case 'W':
-        megaminx->rotate(GLUT_KEY_F7, dir);
+        megaminx->rotate(face.up, dir);
         break;
     case 's':   //Front
     case 'S':
-        megaminx->rotate(GLUT_KEY_F8, dir);
+        megaminx->rotate(face.front, dir);
         break;
-    case 'b':   //Bottom(White)
-    case 'B':
-        megaminx->rotate(GLUT_KEY_F1, dir);
+    case 'a':   //Left
+    case 'A':
+        megaminx->rotate(face.left, dir);
         break;
-    case 'c':   //Diagonal/Corner
-    case 'C':   //alias because its close to the keyboard.
-        megaminx->rotate(GLUT_KEY_F5, dir);
+    case 'd':   //Right
+    case 'D':
+        megaminx->rotate(face.right, dir);
         break;
-    case 'z':   //Back Reverze Diag
+    case 'z':   //Diagonal/Corner Left
     case 'Z':
-        megaminx->rotate(GLUT_KEY_F3, dir);
+        megaminx->rotate(face.downl, dir);
         break;
-    case 'x':   //Semantically near on QWERTY
-    case 'X':
-        megaminx->rotate(GLUT_KEY_F4, dir);
+    case 'c':   //Diagonal/Corner Right
+    case 'C':
+        megaminx->rotate(face.downr, dir);
         break;
     default:
         break;
@@ -278,12 +281,12 @@ void utPrintHelpMenu(float w, float h)
                                            "[Right Click]  Action Menu",
                                            "[Dbl Click]  Rotate Current >>",
                                            "  /+Shift  CounterClockwise <<",
-                                           "[D/d]  Rotate Right Face <>",
-                                           "[A/a]  Rotate Left Face <>",
-                                           "[S/s]  Rotate Front Face <>",
                                            "[W/w]  Rotate Upper Face <>",
-                                           "[Zz,Xx,Cc]  Rotate Diag <>",
-                                           "[B/b]  Rotate Bottom Face <>",
+                                           "[S/s]  Rotate Front Face <>",
+                                           "[A/a]  Rotate Left Face <>",
+                                           "[D/d]  Rotate Right Face <>",
+                                           "[Z/z]  Rotate Diag-Left <>",
+                                           "[C/c]  Rotate Diag-Right <>",
                                            "[F1]-[F12]/+Shift  Face # <>",
                                            "[Space]  Toggle Auto-Spin",
                                            "[BackSpace]  Reset Camera",
@@ -463,9 +466,9 @@ void menuHandler(int num)
     if (num == 23)  //rotate corner piece
         megaminx->resetFacesCorners(currentFace);
     if (num == 24)  //rotate edge piece (random)
-        megaminx->swapOneEdge(currentFace, std::rand() % 5);
+        megaminx->swapOneEdge(currentFace, rand() % 5);
     if (num == 25)  //rotate corner piece (random)
-        megaminx->swapOneCorner(currentFace, std::rand() % 5);
+        megaminx->swapOneCorner(currentFace, rand() % 5);
     if (num == 31)  //make GRAY edges (star)
         megaminx->resetFacesEdges(GRAY);
     if (num == 32)  //make GRAY corners

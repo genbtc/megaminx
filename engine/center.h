@@ -4,7 +4,9 @@
 
 class Center : public Piece {
 public:
-    Center();
+    Center() {
+        this->centerInit();
+    };
     static void createAxis(int n, double* target);
     ~Center() {}
 

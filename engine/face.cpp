@@ -1,7 +1,5 @@
-#include <GL/glut.h>
 #include <vector>
 #include <cassert>
-#include <initializer_list>
 #include "face.h"
 
 Face::Face()
@@ -373,31 +371,24 @@ bool Face::placeParts(int dir)
  */
 bool Face::render()
 {
+    glPushMatrix();
     //4 is the current rotational turnspeed for turnDir
     constexpr int turnspeed = 4;
-    if (rotating) angle += turnDir * turnspeed;
-    if (angle >= 56 || angle <= -56) {
-        if (rotating) angle -= turnDir * (turnspeed/2);
-    }
-    glPushMatrix();
-    glRotated(angle, axis[0], axis[1], axis[2]);
-
+    if (rotating)
+        angle += turnDir * turnspeed;
+    if (rotating && angle >= 56 || angle <= -56)
+        angle -= turnDir * (turnspeed/2);
+    if (angle)
+        glRotated(angle, axis[0], axis[1], axis[2]);
     for (int i = 0; i < 5; ++i) {
         corner[i]->render();
         edge[i]->render();
-        glVertex3dv(_vertex[i]);
     }
     center->render();
     glLineWidth(4);
     glColor3d(0, 0, 0);
     glPopMatrix();
-
-    glBegin(GL_POLYGON);
-    for (int i = 0; i < 5; ++i) {
-        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
-    }
-    glEnd();
-
+    makeGLpentagon(_vertex, 1.005, GL_POLYGON);
     if (angle >= 72 || angle <= -72) {
         angle = 0;
         rotating = false;
@@ -412,7 +403,7 @@ bool Face::render()
  */
 void Face::rotate(int direction)
 {
-    assert(direction == 1 || direction == -1);
+    assert(direction == Face::Clockwise || direction == Face::CCW);
     rotating = true;
     turnDir = direction;
 }

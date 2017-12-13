@@ -5,11 +5,12 @@
  *  @date March 2011
  *  @Edited by genBTC 2017
  */
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 #include <GL/gl.h>
-#include <GL/glut.h>
 #include <GL/glu.h>
-#include <iostream>
-#include <cstdlib>
+#include <GL/glut.h>
 #include <cstdio>
 #include "utils.h"
 
@@ -66,7 +67,7 @@ void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
     static char anglesStr[16];
     snprintf(anglesStr, 16, "X: %5.3f", x1);
     utDrawText2D(x, y, anglesStr);
-    sprintf(anglesStr, "Y: %5.3f", y1);
+    snprintf(anglesStr, 16, "Y: %5.3f", y1);
     utDrawText2D(x, y + 13, anglesStr);
 }
 

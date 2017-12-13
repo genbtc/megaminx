@@ -1,4 +1,14 @@
 #pragma once
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <cmath>
 #include "vector3d.h"
 #include "color.h"
@@ -140,6 +150,7 @@ public:
         EdgeGrp2(target, pack);
     }
     static void EdgeGrp5(double* target, piecepack &pack) {
+        pack.multi += 1;
         rotateVertex(target, pack.axis1, pim(2));
         rotateVertex(target, pack.axis2, SIDE_ANGLE);
         axis1multi(target, pack);
@@ -309,3 +320,13 @@ public:
         return &_vertex[0][0];
     }
 };
+
+template <int rows, int cols>
+inline void makeGLpentagon(double(&_vertex)[rows][cols], double scale,int shape)
+{
+    glBegin(shape);
+    for (int i = 0; i < 5; ++i) {
+        glVertex3d(_vertex[i][0] * scale, _vertex[i][1] * scale, _vertex[i][2] * scale);
+    }
+    glEnd();
+}

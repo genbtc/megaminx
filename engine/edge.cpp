@@ -1,4 +1,3 @@
-#include <GL/glut.h>
 #include "edge.h"
 
 void Edge::createAxis(int n, double* target)
@@ -38,7 +37,6 @@ void Edge::createAxis(int n, double* target)
     case 23:
     case 24:
     case 25:
-        pack.multi += 1;
         EdgeGrp5(target, pack);
         break;
     case 26:

@@ -1,12 +1,9 @@
-/* MegaMinx2 - 2017 - genBTC mod
+/* MegaMinx2 v1.29 - 2017 - genBTC mod
  * Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
+ * genBTC December 2017 - fixups, tweaks.
  */
-#include <cstdlib>
 #include <cassert>
-#include <cmath>
-#include <algorithm>
-#include <initializer_list>
 #include "megaminx.h"
 
 //constructor. simple.
@@ -19,16 +16,14 @@ Megaminx::Megaminx()
 //Solve aka Reset, aka real constructor.
 void Megaminx::solve()
 {
-    y = 0;
-    x = 0;
-    _rSide = 0;
-    rotating = false;
-    initEdgeAndCornerPieces();
+    _rotatingFaceIndex = 0;
+    isRotating = false;
+    initCornerAndEdgePieces();
     initFacePieces();
 }
 
 //Init the Edge and Corner pieces.
-void Megaminx::initEdgeAndCornerPieces()
+void Megaminx::initCornerAndEdgePieces()
 {
     //store a list of the basic starting vertexes (outside the loop)
     double* edgeVertexList = edges[0].edgeInit();
@@ -71,17 +66,17 @@ void Megaminx::render()
 {
     //Process all pieces that are NOT part of a rotating face.
     for (int i=0, k=0; i < numFaces; ++i) {
-        if (&centers[i] != faces[_rSide].center)
+        if (&centers[i] != faces[_rotatingFaceIndex].center)
             centers[i].render();
     }
     for (int i=0, k=0; i < numEdges; ++i) {
-        if (&edges[i] == faces[_rSide].edge[k])
+        if (&edges[i] == faces[_rotatingFaceIndex].edge[k])
             k++;
         else
             edges[i].render();
     }
     for (int i=0, k=0; i < numCorners; ++i) {
-        if (&corners[i] == faces[_rSide].corner[k])
+        if (&corners[i] == faces[_rotatingFaceIndex].corner[k])
             k++;
         else
             corners[i].render();
@@ -89,35 +84,39 @@ void Megaminx::render()
     //Handle the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
         const auto op = rotateQueue.front();
-        rotating = true;
-        _rSide = op.num;
-        faces[_rSide].rotate(op.dir);
+        isRotating = true;
+        _rotatingFaceIndex = op.num;
+        faces[_rotatingFaceIndex].rotate(op.dir);
     }
-    const bool isRotaFullyRendered = faces[_rSide].render();
+    const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
     if (isRotaFullyRendered) {
         rotateQueue.pop();
-        rotating = false;
+        isRotating = false;
     }
 }
 
 /**
  * \brief Rotate a face. Public function (Input Validated).
  * \param num  Nth-face number color (1-12)
- * \param dir  1 CW, -1 CCW
+ * \param dir  -1 CW, 1 CCW
  */
 void Megaminx::rotate(int num, int dir)
 {
     assert(num > 0);
     assert(num <= numFaces);
-    assert(dir == 1 || dir == -1);
+    assert(dir == Face::Clockwise || dir == Face::CCW);
     num -= 1; //Convert 1-12 Faces into array [0-11]
-    _rotate_internal(num, dir);
+    _rotate_internal({ num, dir });
 }
 //The most important rotate function - with no validation.
+void Megaminx::_rotate_internal(numdir i)
+{
+    rotateQueue.push({ i.num, i.dir });
+    undoQueue.push({ i.num, i.dir });
+}
 void Megaminx::_rotate_internal(int num, int dir)
 {
-    rotateQueue.push({ num, dir });
-    undoQueue.push({ num, dir });
+    _rotate_internal({ num, dir });
 }
 
 //An unlimited undo queue based off std::queue.
@@ -137,7 +136,7 @@ void Megaminx::scramble()
     for (int q = 0; q < 50; q++) {
         //numFaces faces - turn one each, randomizing direction
         for (int i = 0; i < numFaces; i++) {
-            const int r = std::rand() % 2 * 2 - 1;
+            const int r = rand() % 2 * 2 - 1;
             faces[i].placeParts(r);
         }
     }
@@ -151,6 +150,7 @@ void Megaminx::scramble()
  */
 void Megaminx::swapOneCorner(int i, int x)
 {
+    assert(i > 0);
     assert(i < numFaces);
     assert(x < 5);
     faces[i].corner[x]->flip();
@@ -161,8 +161,9 @@ void Megaminx::swapOneCorner(int i, int x)
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
-void Megaminx::swapOneEdge(int i,int x)
+void Megaminx::swapOneEdge(int i, int x)
 {
+    assert(i > 0);
     assert(i < numFaces);
     assert(x < 5);
     faces[i].edge[x]->flip();
@@ -174,10 +175,11 @@ void Megaminx::swapOneEdge(int i,int x)
  */
 void Megaminx::setCurrentFaceActive(int i)
 {
+    assert(i > 0);
+    assert(i <= numFaces);
     i -= 1;     //Convert 1-numFaces Faces into array 0-11
-    assert(i < numFaces);
     g_currentFace = &faces[i];
-    assert(g_currentFace->thisNum == i);
+    assert(g_currentFace->thisNum == i);    //double check.
 }
 
 /**
@@ -187,6 +189,7 @@ void Megaminx::setCurrentFaceActive(int i)
  */
 void Megaminx::resetFace(int n)
 {
+    assert(n > 0);
     assert(n <= numFaces);
     resetFacesEdges(n);
     resetFacesCorners(n);
@@ -200,8 +203,9 @@ void Megaminx::resetFace(int n)
  */
 std::vector<int> Megaminx::findEdges(int i)
 {
+    assert(i > 0);
+    assert(i <= numFaces);
     i -= 1;     //Convert 1-numFaces Faces into array 0-11
-    assert(i < numFaces);
     return faces[i].findPiece(edges[0], numEdges);
 }
 
@@ -212,8 +216,9 @@ std::vector<int> Megaminx::findEdges(int i)
  */
 std::vector<int> Megaminx::findCorners(int i)
 {
+    assert(i > 0);
+    assert(i <= numFaces);
     i -= 1;     //Convert 1-numFaces Faces into array 0-11
-    assert(i < numFaces);
     return faces[i].findPiece(corners[0], numCorners);
 }
 
@@ -284,13 +289,13 @@ int Megaminx::resetFacesCorners(int color_n)
 }
 
 /**
- * \brief Takes camera position angles and tells what face is most showing.
- * Brute force way by angle detection.
+ * \brief Static Free function. Takes camera position angles and tells what face
+ * is most showing. Shortcut way of angle detection.
  * \param x camera_angleX
  * \param y camera_angleY
  * \return face # color-int (1-12) as result.
  */
-int Megaminx::getCurrentFaceFromAngles(int x, int y) const
+extern int getCurrentFaceFromAngles(int x, int y)
 {
     //Vars:
     constexpr int r = 72;       //face angles
@@ -347,6 +352,9 @@ int Megaminx::getCurrentFaceFromAngles(int x, int y) const
  */
 void Megaminx::rotateAlgo(int current_face, int i)
 {
+    assert(current_face > 0);
+    assert(current_face <= numFaces);
+    assert(i > 0 && i < 8);
     const auto loc = g_faceNeighbors[current_face];
     switch (i) {
     //("r u R' U'", 51);

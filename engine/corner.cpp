@@ -1,6 +1,4 @@
-#include <GL/glut.h>
 #include "corner.h"
-
 
 void Corner::createAxis(int n, double* target)
 {
@@ -25,7 +23,8 @@ void Corner::createAxis(int n, double* target)
     case 13:
     case 14:
     case 15:
-        pack.axis1 = 'x'; pack.axis2 = 'z';
+        pack.axis1 = 'x';
+        pack.axis2 = 'z';
         CornerGrp3(target, pack);
         break;
     case 16:

@@ -9,49 +9,45 @@ public:
     Megaminx();
     ~Megaminx() = default;
     void solve();
-    void initEdgeAndCornerPieces();
+    void initCornerAndEdgePieces();
     void initFacePieces();
     void renderAllPieces();
     void render();
     void rotate(int, int);
     void undo();
     void scramble();
+    void setCurrentFaceActive(int i);
     void swapOneCorner(int i, int x);
     void swapOneEdge(int i, int x);
-    void setCurrentFaceActive(int i);
-    void resetFace(int n);
-    std::vector<int> findEdges(int i);
     std::vector<int> findCorners(int i);
-    int resetFacesEdges(int n);
+    std::vector<int> findEdges(int i);
+    void resetFace(int n);
     int resetFacesCorners(int n);
-    int getCurrentFaceFromAngles(int x, int y) const;
-    void rotateAlgo(int current_face, int i);
-    /* y axis */
-    double y;
-    /* x axis */
-    double x;
-    /* face rotating busy*/
-    bool rotating;
-    /* pointer */
+    int resetFacesEdges(int n);    
+    void rotateAlgo(int n, int i);
+    /* face rotating when busy */
+    bool isRotating;
+    /* tracks active face, set by setCurrentFaceActive() */
     Face* g_currentFace;
     /* static numbers at compile time*/
-    static const int numEdges = 30;
-    static const int numCorners = 20;
     static const int numFaces = 12;
+    static const int numCorners = 20;
+    static const int numEdges = 30;    
+    
 private:
     Face faces[numFaces];
     Center centers[numFaces];
-    Edge edges[numEdges];
     Corner corners[numCorners];
+    Edge edges[numEdges];    
 
-    int _rSide;
+    int _rotatingFaceIndex;
     struct numdir {
         int num;
         int dir;
     };
     std::queue<numdir> rotateQueue;
     std::queue<numdir> undoQueue;
+    void _rotate_internal(numdir i);
     void _rotate_internal(int num, int dir);
 };
-
 #endif
