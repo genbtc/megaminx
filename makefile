@@ -13,28 +13,28 @@ all: megaminx
 megaminx: main.o center.o edge.o corner.o face.o utils.o megaminx.o camera.o opengl.o Res.rc.o
 	g++ main.o center.o edge.o corner.o face.o utils.o megaminx.o camera.o opengl.o Res.rc.o $(COMPILE_OPT) -o megaminx
 
-main.o: main.cpp
-	g++ -c main.cpp
-center.o: engine/center.cpp
-	g++ -c engine/center.cpp
-edge.o: engine/edge.cpp
-	g++ -c engine/edge.cpp
-corner.o: engine/corner.cpp
-	g++ -c engine/corner.cpp
-face.o: engine/face.cpp
-	g++ -c engine/face.cpp
-utils.o: engine/utils.cpp
-	g++ -c engine/utils.cpp
-megaminx.o: engine/megaminx.cpp
-	g++ -c engine/megaminx.cpp
-camera.o: common_physics/camera.cpp
-	g++ -c common_physics/camera.cpp
-opengl.o: common_physics/opengl.cpp
-	g++ -c common_physics/opengl.cpp
+main.o: src/main.cpp
+	g++ -c src/main.cpp
+center.o: src/engine/center.cpp
+	g++ -c src/engine/center.cpp
+edge.o: src/engine/edge.cpp
+	g++ -c src/engine/edge.cpp
+corner.o: src/engine/corner.cpp
+	g++ -c src/engine/corner.cpp
+face.o: src/engine/face.cpp
+	g++ -c src/engine/face.cpp
+utils.o: src/engine/utils.cpp
+	g++ -c src/engine/utils.cpp
+megaminx.o: src/engine/megaminx.cpp
+	g++ -c src/engine/megaminx.cpp
+camera.o: src/common_physics/camera.cpp
+	g++ -c src/common_physics/camera.cpp
+opengl.o: src/common_physics/opengl.cpp
+	g++ -c src/common_physics/opengl.cpp
 #Res.rc.o is a Resource file for an Icon, and windres.exe needs to be used with arguments, it needs this stuff
 # (customized to use the 32-bit windres on a MingW64 setup)
 Res.rc.o:
-	windres.exe --preprocessor=x86_64-w64-mingw32-g++.exe --preprocessor-arg=-E --preprocessor-arg=-xc-header --preprocessor-arg=-DRC_INVOKED -i Res.rc -o Res.rc.o
+	windres.exe --preprocessor=x86_64-w64-mingw32-g++.exe --preprocessor-arg=-E --preprocessor-arg=-xc-header --preprocessor-arg=-DRC_INVOKED -i src/Res.rc -o Res.rc.o
 
 clean:
 	rm -rf *.o megaminx$(EXEEXT)

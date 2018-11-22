@@ -39,7 +39,8 @@ public:
     /**
     * Returns the length of the vector, also called L2-Norm or Euclidean Norm.
     */
-    float l2Norm() {
+    float l2Norm() const
+    {
         return (float)sqrt(x*x + y*y + z*z);
     }
 
@@ -108,7 +109,8 @@ public:
     /**
     * Returns the length of the vector, also called L2-Norm or Euclidean Norm.
     */
-    double l2Norm() {
+    double l2Norm() const
+    {
         return (double)sqrt(x*x + y*y + z*z);
     }
 
@@ -176,7 +178,7 @@ public:
     * and writes it back to the provided vector->
     */
     void intersectionWithXyPlane(double* worldPos) const {
-        float s = -clickPosInWorld->z / direction->z;
+        double s = -clickPosInWorld->z / direction->z;
         worldPos[0] = clickPosInWorld->x + direction->x*s;
         worldPos[1] = clickPosInWorld->y + direction->y*s;
         worldPos[2] = 0;

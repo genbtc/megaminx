@@ -1,97 +1,39 @@
 {
   // See https://go.microsoft.com//fwlink//?linkid=834763 for more information about this file.
-  //This is the main file that is used by CMake/OpenFolder
   "configurations": [
     {
-      "name": "MingW64",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [ "linux-x64" ],
-      "cmakeExecutable": "${workspaceRoot}\\CMakeBuilds\\${generator}",
-      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
-      "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": "",
-      "variables": [
-        {
-          "name": "CMAKE_CXX_FLAGS",
-          "value": "-ggdb -Og -std=c++1z"
-        },
-        {
-          "name": "CMAKE_CXX_STANDARD",
-          "value": "17"
-        },
-        {
-          "name": "CMAKE_MAKE_PROGRAM",
-          "value": "ninja"
-        },
-        {
-          "name": "CMAKE_CXX_COMPILER",
-          "value": "c++"
-        },
-        {
-          "name": "CMAKE_C_COMPILER",
-          "value": "cc"
-        },
-        {
-          "name": "CMAKE_PREFIX_PATH",
-          "value": "C:/Software/msys64/mingw64"
-        }
-      ]
-    },
-    {
-      "name": "x86-Release",
-      "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
-      "inheritEnvironments": [ "msvc_x86" ],
-      "cmakeCommandArgs": "",
-      "ctestCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\${name}-Ninja",
-      "installRoot": "${workspaceRoot}\\Install\\${name}-Ninja"
-    },
-    {
-      "name": "x64-Debug",
-      "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": [ "msvc_x64" ],
-      "cmakeCommandArgs": "",
-      "ctestCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\${name}-Ninja",
-      "installRoot": "${workspaceRoot}\\Install\\${name}-Ninja"
+        "name": "x64-Debug",
+        "generator": "Ninja",
+        "configurationType": "Debug",
+        "inheritEnvironments": [ "msvc_x64_x64" ],
+        "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
+        "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
+        "cmakeCommandArgs": "-DCMAKE_TOOLCHAIN_FILE=\"C:/vcpkg/scripts/buildsystems/vcpkg.cmake\"",
+        "buildCommandArgs": "-v",
+        "ctestCommandArgs": ""
     },
     {
       "name": "x64-Release",
       "generator": "Ninja",
       "configurationType": "RelWithDebInfo",
-      "inheritEnvironments": [ "msvc_x64" ],
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
+      "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
       "cmakeCommandArgs": "",
-      "ctestCommandArgs": "",
       "buildCommandArgs": "-v",
-      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\${name}-Ninja",
-      "installRoot": "${workspaceRoot}\\Install\\${name}-Ninja"
+      "ctestCommandArgs": ""
     },
     {
-      "name": "Linux-Debug",
-      "generator": "Unix Makefiles",
-      "remoteMachineName": "${defaultRemoteMachineName}",
-      "configurationType": "Debug",
-      "remoteCMakeListsRoot": "/var/tmp/src/${workspaceHash}/${name}",
-      "cmakeExecutable": "/usr/local/bin/cmake",
-      "buildRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
-      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-      "remoteBuildRoot": "/var/tmp/build/${workspaceHash}/build/${name}",
-      "remoteInstallRoot": "/var/tmp/build/${workspaceHash}/install/${name}",
-      "remoteCopySources": true,
-      "remoteCopySourcesOutputVerbosity": "Normal",
-      "remoteCopySourcesConcurrentCopies": "10",
-      "remoteCopySourcesMethod": "sftp",
+      "name": "MingW64",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "linux_x64" ],
+      "cmakeExecutable": "${workspaceRoot}\\CMakeBuilds\\${generator}",
+      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
+      "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
-      "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux-x64" ]
+      "buildCommandArgs": "-v",
+      "ctestCommandArgs": ""
     }
   ]
 }

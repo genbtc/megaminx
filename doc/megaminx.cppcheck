@@ -2,8 +2,8 @@
 <project version="1">
     <root name="."/>
     <paths>
-        <dir name="common_physics"/>
-        <dir name="engine"/>
-        <dir name="."/>
+        <dir name="src/common_physics"/>
+        <dir name="src/engine"/>
+        <dir name="src/"/>
     </paths>
 </project>

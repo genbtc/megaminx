@@ -3,12 +3,7 @@
 #include <windows.h>
 #endif
 #include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <iostream>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
 #include <cmath>
 #include "vector3d.h"
 #include "color.h"

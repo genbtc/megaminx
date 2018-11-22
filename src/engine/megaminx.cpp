@@ -4,6 +4,7 @@
  * genBTC December 2017 - fixups, tweaks.
  */
 #include <cassert>
+#include <algorithm>
 #include "megaminx.h"
 
 //constructor. simple.
@@ -65,7 +66,7 @@ void Megaminx::renderAllPieces()
 void Megaminx::render()
 {
     //Process all pieces that are NOT part of a rotating face.
-    for (int i=0, k=0; i < numFaces; ++i) {
+    for (int i = 0; i < numFaces; ++i) {
         if (&centers[i] != faces[_rotatingFaceIndex].center)
             centers[i].render();
     }
@@ -236,7 +237,7 @@ int Megaminx::resetFacesEdges(int color_n)
     const auto defaultEdges = activeFace.edgeNativePos;
     auto foundEdges = findEdges(color_n);
     assert(foundEdges.size() == 5);
-    for (int j = 0; j < foundEdges.size(); ++j) {
+    for (size_t j = 0; j < foundEdges.size(); ++j) {
         if (activeFace.edge[j]->matchesColor(color_n))
             continue;
         edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
@@ -248,7 +249,7 @@ int Megaminx::resetFacesEdges(int color_n)
     assert(foundEdges2 == defaultEdges);
     assert(foundEdges2.size() == 5);
     //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
-    for (int j = 0; j < foundEdges2.size(); ++j) {
+    for (size_t j = 0; j < foundEdges2.size(); ++j) {
         while (activeFace.edge[j]->data._colorNum[epos[j]] != color_n)
             activeFace.edge[j]->flip();
     }
@@ -269,7 +270,7 @@ int Megaminx::resetFacesCorners(int color_n)
     const auto defaultCorners = activeFace.cornerNativePos;
     auto foundCorners = findCorners(color_n);
     assert(foundCorners.size() == 5);
-    for (int j = 0; j < foundCorners.size(); ++j) {
+    for (size_t j = 0; j < foundCorners.size(); ++j) {
         if (activeFace.corner[j]->matchesColor(color_n))
             continue;
         corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
@@ -281,7 +282,7 @@ int Megaminx::resetFacesCorners(int color_n)
     assert(foundCorners2 == defaultCorners);
     assert(foundCorners2.size() == 5);
     //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
-    for (int j = 0; j < foundCorners2.size(); ++j) {
+    for (size_t j = 0; j < foundCorners2.size(); ++j) {
         while (activeFace.corner[j]->data._colorNum[cpos[j]] != color_n)
             activeFace.corner[j]->flip();
     }

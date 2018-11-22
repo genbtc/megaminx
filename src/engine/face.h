@@ -58,7 +58,7 @@ private:
     double axis[3];
 };
 //Flip direction lists for PlaceParts:
-/*
+//CounterClockwise
 constexpr static int CCW0C[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
 constexpr static int CCW0E[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
 constexpr static int CCW1C[8] = { 4, 0, 4, 2, 0, 3, 0, 1 };
@@ -80,7 +80,10 @@ constexpr static int CCW8C[8] = { 0, 4, 1, 4, 1, 2, 2, 3 };
 constexpr static int CCW9E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
 constexpr static int CCW9C[8] = { 0, 4, 1, 4, 1, 2, 2, 3 };
 constexpr static int CCW10E[8] = { 0, 1, 1, 3, 3, 4, 2, 4 };
+constexpr static int CCW10C[8] = { 0, 4, 1, 4, 1, 2, 2, 3 }; 
+constexpr static int CCW11C[8] = { 0, 3, 0, 1, 0, 2, 0, 4 };
 constexpr static int CCW11E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
+//Clockwise
 constexpr static int CW0C[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
 constexpr static int CW0E[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
 constexpr static int CW1C[8] = { 0, 1, 0, 3, 4, 2, 4, 0 };
@@ -105,5 +108,5 @@ constexpr static int CW10E[8] = { 2, 4, 3, 4, 1, 3, 0, 1 };
 constexpr static int CW10C[8] = { 2, 3, 1, 2, 1, 4, 0, 4 };
 constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
 constexpr static int CW11C[8] = { 0, 4, 0, 2, 0, 1, 0, 3 };
-*/
+
 #endif

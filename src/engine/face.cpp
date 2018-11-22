@@ -164,97 +164,72 @@ bool Face::placeParts(int dir)
     assert(dir == 1 || dir == -1);
     if (dir == 1) { // 1 = CCW
         switch (thisNum) {
-
         case 0:
-            constexpr static int CCW0C[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
             QuadSwapCorners(CCW0C);
-            constexpr static int CCW0E[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
             QuadSwapEdges(CCW0E);
             break;
         case 1:
             //1,2,3,4,5
             Flip(0, 1, 2, 4, FlipBackwards);
-            constexpr static int CCW1C[8] = { 4, 0, 4, 2, 0, 3, 0, 1 };
             QuadSwapCorners(CCW1C);
-            constexpr static int CCW1E[8] = { 4, 1, 1, 3, 0, 1, 0, 2 };
             QuadSwapEdges(CCW1E);
             twoEdgesFlip(1, 2);
             break;
         case 2:
             twoEdgesFlip(0, 3);
-            constexpr static int CCW2E[8] = { 1, 0, 1, 2, 1, 3, 3, 4 };
             QuadSwapEdges(CCW2E);
             Flip(0, 1, 3, 4, FlipBackwards);
-            constexpr static int CCW2C[8] = { 0, 1, 0, 2, 2, 3, 2, 4 };
             QuadSwapCorners(CCW2C);
             break;
         case 3:
-            constexpr static int CCW3E[8] = { 3, 2, 4, 3, 0, 1, 1, 2 };
             QuadSwapEdges(CCW3E);
             twoEdgesFlip(1, 2);
-            constexpr static int CCW3C[8] = { 3, 4, 1, 3, 1, 2, 0, 1 };
             QuadSwapCorners(CCW3C);
             Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
         case 4:
-            constexpr static int CCW4E[8] = { 0, 1, 1, 2, 1, 3, 3, 4 };
             QuadSwapEdges(CCW4E);
             twoEdgesFlip(1, 2);
-            constexpr static int CCW4C[8] = { 0, 1, 0, 3, 0, 4, 0, 2 };
             QuadSwapCorners(CCW4C);
             Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
         case 5:
-            constexpr static int CCW5E[8] = { 2, 4, 2, 3, 0, 2, 0, 1 };
             QuadSwapEdges(CCW5E);
             twoEdgesFlip(1, 2);
-            constexpr static int CCW5C[8] = { 1, 3, 1, 4, 1, 2, 0, 1 };
             QuadSwapCorners(CCW5C);
             Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
         case 6:
-            constexpr static int CCW6C[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
             QuadSwapCorners(CCW6C);
-            constexpr static int CCW6E[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
             QuadSwapEdges(CCW6E);
             break;
         case 7:
-            constexpr static int CCW7E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
             QuadSwapEdges(CCW7E);
             twoEdgesFlip(3, 4);
-            constexpr static int CCW7C[8] = { 0, 4, 0, 2, 0, 1, 0, 3 };
             QuadSwapCorners(CCW7C);
             Flip(0, 1, 3, 4, FlipOutwards);
             break;
         case 8:
-            constexpr static int CCW8E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
             QuadSwapEdges(CCW8E);
             twoEdgesFlip(3, 4);
-            constexpr static int CCW8C[8] = { 0, 4, 1, 4, 1, 2, 2, 3 };
             QuadSwapCorners(CCW8C);
             Flip(0, 1, 3, 4, FlipAlternatingForwards);
             break;
         case 9:
-            constexpr static int CCW9E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
             QuadSwapEdges(CCW9E);
             twoEdgesFlip(3, 4);
-            constexpr static int CCW9C[8] = { 0, 4, 1, 4, 1, 2, 2, 3 };
             QuadSwapCorners(CCW9C);
             Flip(0, 1, 3, 4, FlipAlternatingForwards);
             break;
         case 10:
-            constexpr static int CCW10E[8] = { 0, 1, 1, 3, 3, 4, 2, 4 };
             QuadSwapEdges(CCW10E);
             twoEdgesFlip(2, 4);
-            constexpr static int CCW10C[8] = { 0, 4, 1, 4, 1, 2, 2, 3 };
             QuadSwapCorners(CCW10C);
             Flip(0, 1, 3, 4, FlipAlternatingForwards);
             break;
         case 11:
-            constexpr static int CCW11E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
             QuadSwapEdges(CCW11E);
             twoEdgesFlip(3, 4);
-            constexpr static int CCW11C[8] = { 0, 3, 0, 1, 0, 2, 0, 4 };
             QuadSwapCorners(CCW11C);
             Flip(0, 2, 3, 4, FlipAlternatingForwards);
             break;
@@ -266,94 +241,70 @@ bool Face::placeParts(int dir)
         // -1 = CW
         switch (thisNum) {
         case 0:
-            constexpr static int CW0C[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
             QuadSwapCorners(CW0C);
-            constexpr static int CW0E[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
             QuadSwapEdges(CW0E);
             break;
         case 1:
             Flip(0, 2, 3, 4, FlipForwards);
-            constexpr static int CW1C[8] = { 0, 1, 0, 3, 4, 2, 4, 0 };
             QuadSwapCorners(CW1C);
-            constexpr static int CW1E[8] = { 0, 2, 0, 1, 1, 3, 4, 1 };
             QuadSwapEdges(CW1E);
             twoEdgesFlip(0, 3);
             break;
         case 2:
             twoEdgesFlip(1, 2);
-            constexpr static int CW2E[8] = { 3, 4, 1, 3, 1, 2, 1, 0 };
             QuadSwapEdges(CW2E);
             Flip(1, 2, 3, 4, FlipAlternatingForwards);
-            constexpr static int CW2C[8] = { 2, 4, 2, 3, 0, 2, 0, 1 };
             QuadSwapCorners(CW2C);
             break;
         case 3:
-            constexpr static int CW3E[8] = { 1, 2, 0, 1, 4, 3, 3, 2 };
             QuadSwapEdges(CW3E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW3C[8] = { 0, 1, 1, 2, 1, 3, 3, 4 };
             QuadSwapCorners(CW3C);
             Flip(0, 1, 3, 4, FlipForwards);
             break;
         case 4:
-            constexpr static int CW4E[8] = { 3, 4, 1, 3, 1, 2, 0, 1 };
             QuadSwapEdges(CW4E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW4C[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };
             QuadSwapCorners(CW4C);
             Flip(0, 1, 3, 4, FlipForwards);
             break;
         case 5:
-            constexpr static int CW5E[8] = { 0, 1, 0, 2, 2, 3, 2, 4 };
             QuadSwapEdges(CW5E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW5C[8] = { 0, 1, 1, 2, 1, 4, 1, 3 };
             QuadSwapCorners(CW5C);
             Flip(0, 1, 3, 4, FlipForwards);
             break;
         case 6:
-            constexpr static int CW6C[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
             QuadSwapCorners(CW6C);
-            constexpr static int CW6E[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
             QuadSwapEdges(CW6E);
             break;
         case 7: //front CW;
-            constexpr static int CW7E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
             QuadSwapEdges(CW7E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW7C[8] = { 0, 3, 0, 1, 0, 2, 0, 4 };
             QuadSwapCorners(CW7C);
             Flip(0, 1, 2, 3, FlipInwards);
             break;
         case 8:
-            constexpr static int CW8E[8] = { 3, 4, 2, 4, 1, 2, 0, 1 };
             QuadSwapEdges(CW8E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW8C[8] = { 2, 3, 1, 2, 1, 4, 0, 4 };
             QuadSwapCorners(CW8C);
             Flip(0, 1, 2, 4, FlipInwards);
             break;
         case 9:
-            constexpr static int CW9E[8] = { 3, 4, 2, 4, 1, 2, 0, 1 };
             QuadSwapEdges(CW9E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW9C[8] = { 2, 3, 1, 2, 1, 4, 0, 4 };
             QuadSwapCorners(CW9C);
             Flip(0, 1, 2, 4, FlipInwards);
             break;
         case 10:
-            constexpr static int CW10E[8] = { 2, 4, 3, 4, 1, 3, 0, 1 };
             QuadSwapEdges(CW10E);
             twoEdgesFlip(0, 2);
-            constexpr static int CW10C[8] = { 2, 3, 1, 2, 1, 4, 0, 4 };
             QuadSwapCorners(CW10C);
             Flip(0, 1, 2, 4, FlipInwards);
             break;
         case 11:
-            constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
             QuadSwapEdges(CW11E);
             twoEdgesFlip(0, 3);
-            constexpr static int CW11C[8] = { 0, 4, 0, 2, 0, 1, 0, 3 };
             QuadSwapCorners(CW11C);
             Flip(0, 1, 2, 4, FlipInwards);
             break;

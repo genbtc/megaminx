@@ -9,7 +9,6 @@
 #pragma once
 #include <cmath>
 #include <cstdlib>
-#include <cstring>
 
 inline double DegToRad(double a) { return a*0.01745329252; };  /**< ang * M_PI / 180.0f */
 inline double RadToDeg(double a) { return a*57.29577951; };    /**< rads * 180.0f / M_PI */
@@ -52,8 +51,8 @@ public:
 
     T Length() const { return sqrt(x*x + y*y + z*z); }
     void Normalize() { T f = 1.0/Length(); x *= f; y *= f; z *=f; }
-    TVector3<T> ClosestPoint(const TVector3<T> &A, const TVector3<T> &B, const TVector3<T> &P, double *t) 
-    {
+    TVector3<T> ClosestPoint(const TVector3<T> &A, const TVector3<T> &B, const TVector3<T> &P,
+                             double *t) {
         TVector3<T>  AB = B - A;
         double ab_square = DotProduct(AB, AB);
         TVector3<T>  AP = P - A;

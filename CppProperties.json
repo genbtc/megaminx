@@ -1,87 +1,64 @@
 {
-  "configurations": [
-    {
-      "name": "MingW64",
-      "inheritEnvironments": [ "linux-x64", "linux-gcc-x64" ],
-      "intelliSenseMode": "linux-gcc-x64",
-      "compilerSwitches": "-std=c++1z",
-      "includePath": [
-        "${workspaceRoot}",
-        "${env.MINGW_PREFIX}/include/c++/7.2.0",
-        "${env.MINGW_PREFIX}/include/c++/7.2.0/x86_64-w64-mingw32",
-        "${env.MINGW_PREFIX}/include/c++/7.2.0/backward",
-        "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include",
-        "${env.MINGW_PREFIX}/include",
-        "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed",
-        "${env.MINGW_PREFIX}/x86_64-w64-mingw32/include",
-        "${env.MINGW_PREFIX}/include/*",
-        "${env.MINGW_PREFIX}/include"
-      ],
-      "browse": {
-        "path": [
-          "${env.MINGW_PREFIX}/include/c++/7.2.0",
-          "${env.MINGW_PREFIX}/include/c++/7.2.0/x86_64-w64-mingw32",
-          "${env.MINGW_PREFIX}/include/c++/7.2.0/backward",
-          "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include",
-          "${env.MINGW_PREFIX}/include",
-          "${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed",
-          "${env.MINGW_PREFIX}/x86_64-w64-mingw32/include",
-          "${env.MINGW_PREFIX}/include/*",
-          "${env.MINGW_PREFIX}/include"
-        ],
-        "limitSymbolsToIncludedHeaders": true,
-        "databaseFilename": ""
-      }
-    },
-    {
-      "name": "x64-Debug",
-      "inheritEnvironments": [ "clang-x64" ],
-      "intelliSenseMode": "windows-clang-x64",
-      "compilerSwitches": "-std=c++1z",
-      "includePath": [
-        "${env.includef}",
-        "${workspaceRoot}"
-      ],
-      "defines": [
-        "_WINDOWS",
-        "WIN32",
-        "DEBUG",
-        "_DEBUG",
-        "UNICODE",
-        "_UNICODE"
-      ]
-    },
-    {
-      "name": "x64-Release",
-      "inheritEnvironments": [ "clang-x64" ],
-      "intelliSenseMode": "windows-clang-x64",
-      "compilerSwitches": "-std=c++1z",
-      "includePath": [
-        "${env.includef}",
-        "${workspaceRoot}"
-      ],
-      "defines": [
-        "_WINDOWS",
-        "WIN32",
-        "NDEBUG",
-        "UNICODE",
-        "_UNICODE"
-      ]
-    }
-  ],
-  "environments": [
-    {
-      "MINGW_PREFIX": "C:/Software/msys64/mingw64",
-      "MINGW_CHOST ": "x86_64-w64-mingw32",
-      "MINGW_PACKAGE_PREFIX": "mingw-w64-x86_64",
-      "MSYSTEM": "MINGW64",
-      "MSYSTEM_CARCH": "x64_64",
-      "MSYSTEM_PREFIX": "${env.MINGW_PREFIX}",
-      "SHELL": "${env.MINGW_PREFIX}/../usr/bin/bash",
-      "TEMP": "${env.MINGW_PREFIX}/../tmp",
-      "TMP": "${env.TEMP}",
-      "PATH": "${env.MINGW_PREFIX}/bin;${env.MINGW_PREFIX}/../usr/local/bin;${env.MINGW_PREFIX}/../usr/bin;${env.PATH}",
-      "INCLUDE": "${env.MINGW_PREFIX}/include/c++/7.2.0;${env.MINGW_PREFIX}/include/c++/7.2.0/x86_64-w64-mingw32;${env.MINGW_PREFIX}/include/c++/7.2.0/backward;${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include;${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../include;${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/include-fixed;${env.MINGW_PREFIX}/lib/gcc/x86_64-w64-mingw32/7.2.0/../../../../x86_64-w64-mingw32/include;${env.MINGW_PREFIX}/include;${env.MINGW_PREFIX}/GL"
-    }
-  ]
+    "configurations": [
+        {
+            "inheritEnvironments": [
+                "msvc_x64",
+                "msvc_x64_x64"
+            ],
+            "name": "x64-Debug",
+            "includePath": [
+                "${env.INCLUDE}"
+            ],
+            "defines": [
+                "_WINDOWS",
+                "WIN32",
+                "DEBUG",
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "windows-msvc-x64"
+        },
+        {
+            "inheritEnvironments": [
+                "msvc_x64",
+                "msvc_x64_x64"
+            ],
+            "name": "x64-Release",
+            "includePath": [
+                "${env.INCLUDE}"
+            ],
+            "defines": [
+                "_WINDOWS",
+                "WIN32",
+                "NDEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "intelliSenseMode": "windows-msvc-x64"
+        },
+        {
+            "name": "MingW64",
+            "inheritEnvironments": [ "linux-x64", "linux_x64", "linux-gcc-x64", "mingw", "debug" ],
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerSwitches": "-std=c++17",
+            "environments": [ { "INCLUDE": "C:/msys64/mingw64/include/c++/8.2.0;C:/msys64/mingw64/include/c++/8.2.0/x86_64-w64-mingw32;C:/msys64/mingw64/include/c++/8.2.0/backward;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/8.2.0/include;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/8.2.0/../../../../include;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/8.2.0/include-fixed;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/8.2.0/../../../../x86_64-w64-mingw32/include;C:/msys64/mingw64/include;C:/msys64/mingw64/include/cairo" } ],
+            "includePath": [
+                "${env.INCLUDE}"
+            ],
+            "browse": {
+                "path": [
+                    "${env.INCLUDE}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "defines": [
+                "DEBUG",
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        }
+    ]
 }

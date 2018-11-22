@@ -20,7 +20,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // 2D and TEXT MODE
-void utSetOrthographicProjection(int scrW, int scrH);
+void utSetOrthographicProjection(float scrW, float scrH);
 void utResetPerspectiveProjection();
 void utDrawText2D(float x, float y, void *font, char *string);
 

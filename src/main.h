@@ -3,12 +3,12 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.29 - genBTC mod";
+const char *title = "Megaminx v1.30 - genBTC mod";
 // initial window screen size
 double REFRESH_RATE = 60.0;     // monitor with 60 Hz
-int WIDTH = 700;
-int HEIGHT = 700;
-int ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
+float WIDTH = 700;
+float HEIGHT = 700;
+double ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
 double START_ANGLE = 60.0f;
 double view_distance_view_angle = 20;
 ///////////////////////////////////////////////////////////////////////////////

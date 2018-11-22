@@ -15,7 +15,7 @@
 #include "utils.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-void utSetOrthographicProjection(int scrW, int scrH)
+void utSetOrthographicProjection(float scrW, float scrH)
 {
 
     // switch to projection mode
