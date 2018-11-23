@@ -114,8 +114,8 @@ constexpr colorpiece g_cornerPiecesColors[20] = {
 struct colordirs {
     //Starting from face,then 9-oclock and going CW right around.
     megaminxColor front = BLACK;
-    megaminxColor left = BLACK;
-    megaminxColor up = BLACK;
+    megaminxColor left  = BLACK;
+    megaminxColor up    = BLACK;
     megaminxColor right = BLACK;
     megaminxColor downr = BLACK;
     megaminxColor downl = BLACK;
@@ -126,17 +126,17 @@ constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
     //fill up the 0 slot
     { BLACK, BLACK, BLACK, BLACK, BLACK, BLACK },
     //bottom/white 1-6
-    { WHITE,DARK_BLUE,RED,DARK_GREEN,PURPLE, YELLOW },
-    { DARK_BLUE,RED,WHITE,YELLOW,LIGHT_GREEN,PINK },
+    { WHITE, DARK_BLUE, RED, DARK_GREEN, PURPLE, YELLOW },
+    { DARK_BLUE, RED, WHITE, YELLOW, LIGHT_GREEN, PINK },
     { RED, DARK_GREEN, WHITE, DARK_BLUE, PINK, BEIGE },
     { DARK_GREEN, PURPLE, WHITE, RED, BEIGE, LIGHT_BLUE },
     { PURPLE, YELLOW, WHITE, DARK_GREEN, LIGHT_BLUE, ORANGE },
-    { YELLOW, DARK_BLUE,WHITE, PURPLE, ORANGE,LIGHT_GREEN },
+    { YELLOW, DARK_BLUE, WHITE, PURPLE, ORANGE, LIGHT_GREEN },
     //Top/gray 7-12
-    { GRAY, LIGHT_BLUE,ORANGE,LIGHT_GREEN,PINK,BEIGE },
-    { LIGHT_BLUE,BEIGE,GRAY,ORANGE,PURPLE,DARK_GREEN },
-    { ORANGE, LIGHT_BLUE,GRAY,LIGHT_GREEN,YELLOW, PURPLE },
-    { LIGHT_GREEN,ORANGE,GRAY,PINK,DARK_BLUE,YELLOW },
-    { PINK, LIGHT_GREEN,GRAY,BEIGE,RED,DARK_BLUE },
-    { BEIGE, PINK,GRAY,LIGHT_BLUE,DARK_GREEN,RED }
+    { GRAY, LIGHT_BLUE, ORANGE, LIGHT_GREEN, PINK, BEIGE },
+    { LIGHT_BLUE, BEIGE, GRAY, ORANGE, PURPLE, DARK_GREEN },
+    { ORANGE, LIGHT_BLUE, GRAY, LIGHT_GREEN, YELLOW, PURPLE },
+    { LIGHT_GREEN, ORANGE, GRAY, PINK, DARK_BLUE, YELLOW },
+    { PINK, LIGHT_GREEN, GRAY, BEIGE, RED, DARK_BLUE },
+    { BEIGE, PINK, GRAY, LIGHT_BLUE, DARK_GREEN, RED }
 };

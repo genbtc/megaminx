@@ -1,11 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.30 October24-December12 2017 - genBTC mod
-* Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
-* genBTC December 12 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
+             - v1.3.1 Nov 22, 2018
+* Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
+* genBTC 2017 + 2018- genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
 // Headers
+int main(int argc, char *argv[]);
 #ifdef _WINDOWS
 #include <windows.h>
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #endif
 #include <cstdlib>
 #include <GL/gl.h>
@@ -68,41 +71,35 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(onKeyboard);
     glutSpecialFunc(onSpecialKeyPress);
     //Display and Loop forever
-    glutDisplayFunc(RenderScene);
     glutIdleFunc(Idle);
+    glutDisplayFunc(RenderScene);
     glutMainLoop();
     return 1;
 }
-#ifdef _WINDOWS
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-    main(0, 0);
-}
-#endif
-//TODO Figure out how to actually limit to 60 FPS
-// (This function does nothing currently besides count time).
+
+//TODO/DONE: Actually limiting the FPS to REFRESH_RATE now.
+// (This function use to did nothing besides count time).
 void Idle()
 {
     static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
     static const double REFRESH_TIME = 1.0 / REFRESH_RATE;
-
     // in milliseconds
-    const int t = glutGet(GLUT_ELAPSED_TIME);
-    const double newTime = (double)t * 0.001;
+    const int total = glutGet(GLUT_ELAPSED_TIME);
+    const double newTime = (double)total * 0.001;
 
     double deltaTime = newTime - g_appTime;
-    if (deltaTime > REFRESH_TIME) deltaTime = REFRESH_TIME;
+    if (deltaTime > REFRESH_TIME) {
+        deltaTime = REFRESH_TIME;
+        //ReRender Scene:
+        glutPostRedisplay();
+        // set global:
+        g_appTime = g_appTime + deltaTime;
+    }
 
-    // average:
-    deltaTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
+    // average?:
+    double deltaAvgTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
 
-    // set global:
-    g_appTime = g_appTime + deltaTime;
-
-    //ReRender Scene:
-    glutPostRedisplay();
-
-    // save delta:
+    // save delta?:
     lastDeltas[0] = lastDeltas[1];
     lastDeltas[1] = lastDeltas[2];
     lastDeltas[2] = deltaTime;
@@ -141,6 +138,8 @@ void RenderScene()
         //Print out Text (Help display)
         if (!help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 190.f);
+        else
+            utDrawText2D(WIDTH - 135.f, HEIGHT - 14.f, "h = help");
     }
     utResetPerspectiveProjection();
     //Clean up.
@@ -165,6 +164,7 @@ void GetCurrentFace()
 }
 
 //Shift key Directional Shortcut, Shift on = Counterclockwise.
+//CAPS LOCK cannot work.
 int GetDirFromSpecialKey()
 {
     const int result = (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ?
@@ -173,7 +173,7 @@ int GetDirFromSpecialKey()
 }
 
 //Double click Rotates Current Face with Shift Modifier.
-void double_click(int x, int y)
+void double_click(int , int )
 {
     const int dir = GetDirFromSpecialKey();
     megaminx->rotate(currentFace, dir);
@@ -349,7 +349,9 @@ void onKeyboard(unsigned char key, int x, int y)
 //Secondary Keyboard Handler (Special Keys)
 void onSpecialKeyPress(int key, int x, int y)
 {
-    //TODO Add Caps Lock to determine rotation direction also.
+    //TODO make a Lua console to input these commands
+    //TODO make a function to load in text files to set custom pieces
+    //TODO this can be re-used to serialize and save out the config and reload it.
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:

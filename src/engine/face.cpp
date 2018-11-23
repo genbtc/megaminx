@@ -14,22 +14,23 @@ Face::Face()
     axis[2] = -1;
 
 }
-/*
-w* createNextImpl(std::true_type) { return new w(); }
-n* createNextImpl(std::false_type) { return new n(); }
 
-template <typename T>
-T* createNext() {
-    return createNextImpl(std::is_same<T, w>());
-};
-*/
 //when this is run, iterate through and check to see which position the Face->center color is in
-void Face::makeEdgePositionArray()
+template <typename T>
+void Face::makePositionArray(int rows)
 {
-    for(int i = 0 ; i < 5 ; ++i)
-        for (int j = 0; j < 2; ++j)
-            if (edge[i]->data._colorNum[j] == thisNum + 1)
-                edgeColorPos.push_back(j);
+    for (int i = 0; i < 5; ++i) {
+        for (int j = 0; j < rows; ++j) {
+            if constexpr (std::is_same_v < T, Edge >) {
+                if (edge[i]->data._colorNum[j] == thisNum + 1)
+                    edgeColorPos.push_back(j);
+            }
+            else if constexpr (std::is_same_v < T, Corner >) {
+                if (corner[i]->data._colorNum[j] == thisNum + 1)
+                    cornerColorPos.push_back(j);
+            }
+        }
+    }
 }
 
 //connect the right matching Edge pieces to the face. and store the list.
@@ -40,16 +41,7 @@ void Face::attachEdgePieces(Edge& n, int numEdges)
         edge[i] = &n + pieceList[i];
     }
     edgeNativePos = pieceList;
-    makeEdgePositionArray();
-}
-
-//when this is run, iterate through and check to see which position the Face->center color is in
-void Face::makeCornerPositionArray()
-{
-    for (int i = 0; i < 5; ++i)
-        for (int j = 0; j < 3; ++j)
-            if (corner[i]->data._colorNum[j] == thisNum + 1)
-                cornerColorPos.push_back(j);
+    makePositionArray<Edge>(2);
 }
 
 //connect the right Corner Edge pieces to the face. and store the list.
@@ -60,7 +52,7 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
         corner[i] = &n + pieceList[i];
     }
     cornerNativePos = pieceList;
-    makeCornerPositionArray();
+    makePositionArray<Corner>(3);
 }
 
 /**

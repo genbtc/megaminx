@@ -1,7 +1,7 @@
 #pragma once
 #ifdef _WINDOWS
 #include <windows.h>
-#endif
+#endif //needed for the GL WINGDIAPI
 #include <GL/gl.h>
 #include <iostream>
 #include <cmath>
@@ -185,7 +185,7 @@ public:
     }
     //Deals with colors. Flip/rotate/switches colors for current piece.
     void flip() {
-        const bool isCorner = numSides == 3;
+        const bool isCorner = (numSides == 3);
         double buf[3];
         for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
         for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];

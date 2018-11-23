@@ -3,9 +3,11 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.30 - genBTC mod";
+const char *title = "Megaminx v1.31 - genBTC mod";
+//testing framerate cap on myshitmonitor
+// in future use 120 = better for monitor with > 60 Hz:
+double REFRESH_RATE = 50.0;     
 // initial window screen size
-double REFRESH_RATE = 60.0;     // monitor with 60 Hz
 float WIDTH = 700;
 float HEIGHT = 700;
 double ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
@@ -17,6 +19,8 @@ MouseRayTestData g_rayTest;
 unsigned int g_lastHitPointID;
 unsigned int g_draggedPointID;
 bool g_areWeDraggingPoint;
+constexpr int DOUBLE_CLICK_INTERVAL = 400;
+static int bnstate[16]; //mousebutton
 
 // global vars
 double g_appTime = 0.0;
@@ -24,8 +28,6 @@ bool spinning = false;
 bool help = true;
 int currentFace = 0;
 char lastface[32];
-#define DOUBLE_CLICK_INTERVAL   400
-static int bnstate[16];
 
 // global Camera
 Camera g_camera;

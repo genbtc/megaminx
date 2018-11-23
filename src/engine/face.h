@@ -33,6 +33,8 @@ public:
     std::vector<int> edgeNativePos;
     std::vector<int> edgeColorPos;
 
+    template <class T>
+    void makePositionArray(int rows);
     void makeEdgePositionArray();
     void makeCornerPositionArray();
     std::vector<int> findPiece(Piece& pieceRef, int times) const;
