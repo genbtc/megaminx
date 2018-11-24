@@ -36,22 +36,20 @@ void Face::makePositionArray(int rows)
 //connect the right matching Edge pieces to the face. and store the list.
 void Face::attachEdgePieces(Edge& n, int numEdges)
 {
-    const auto pieceList = findPiece(n, numEdges);
+    edgeNativePos = findPiece(n, numEdges);
     for (int i = 0; i < 5; ++i) {
-        edge[i] = &n + pieceList[i];
+        edge[i] = &n + edgeNativePos[i];
     }
-    edgeNativePos = pieceList;
     makePositionArray<Edge>(2);
 }
 
 //connect the right Corner Edge pieces to the face. and store the list.
 void Face::attachCornerPieces(Corner& n, int numCorners)
 {
-    const auto pieceList = findPiece(n, numCorners);
+    cornerNativePos = findPiece(n, numCorners);
     for (int i = 0; i < 5; ++i) {
-        corner[i] = &n + pieceList[i];
+        corner[i] = &n + cornerNativePos[i];
     }
-    cornerNativePos = pieceList;
     makePositionArray<Corner>(3);
 }
 
@@ -72,11 +70,6 @@ std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
             pieceList.push_back(i);
     }
     return pieceList;
-}
-
-void Face::attachCenter(Center *a)
-{
-    center = a;
 }
 
 /**

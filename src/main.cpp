@@ -77,11 +77,9 @@ int main(int argc, char *argv[])
     return 1;
 }
 
-//TODO/DONE: Actually limiting the FPS to REFRESH_RATE now.
-// (This function use to did nothing besides count time).
+//Actually limiting the FPS to REFRESH_RATE now:
 void Idle()
 {
-    static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
     static const double REFRESH_TIME = 1.0 / REFRESH_RATE;
     // in milliseconds
     const int total = glutGet(GLUT_ELAPSED_TIME);
@@ -95,14 +93,16 @@ void Idle()
         // set global:
         g_appTime = g_appTime + deltaTime;
     }
-
+    /*
     // average?:
+    static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
     double deltaAvgTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
 
     // save delta?:
     lastDeltas[0] = lastDeltas[1];
     lastDeltas[1] = lastDeltas[2];
     lastDeltas[2] = deltaTime;
+    */
 }
 
 //OpenGL Render Func
@@ -137,7 +137,7 @@ void RenderScene()
         utDrawText2D(10.f, HEIGHT - 40.f, lastface);
         //Print out Text (Help display)
         if (!help)
-            utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 190.f);
+            utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 235.f);
         else
             utDrawText2D(WIDTH - 135.f, HEIGHT - 14.f, "h = help");
     }
@@ -151,7 +151,6 @@ void RenderScene()
 }
 
 //query Megaminx for what face we're looking at?
-int getCurrentFaceFromAngles(int x, int y); //defining extern free function in megaminx.cpp
 void GetCurrentFace()
 {
     const auto tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX, (int)g_camera.m_angleY);
@@ -275,6 +274,10 @@ void rotateDispatch(unsigned char key)
     case 'C':
         megaminx->rotate(face.downr, dir);
         break;
+    case 'x':   //Bottom
+    case 'X':
+        megaminx->rotate(face.bottom, dir);
+        break;
     default:
         break;
     }
@@ -283,24 +286,26 @@ void rotateDispatch(unsigned char key)
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
 {
-    constexpr char helpStrings[14][32] = { "Help Menu:",
+    constexpr char helpStrings[16][32] = { "Help Menu:",
                                            "[Right Click]  Action Menu",
                                            "[Dbl Click]  Rotate Current >>",
-                                           "  /+Shift  CounterClockwise <<",
+                                           "[F1-F12]     Rotate Face #  >>",
+                                           "  +Shift  CounterClockwise <<",
                                            "[W/w]  Rotate Upper Face <>",
                                            "[S/s]  Rotate Front Face <>",
-                                           "[A/a]  Rotate Left Face <>",
-                                           "[D/d]  Rotate Right Face <>",
-                                           "[Z/z]  Rotate Diag-Left <>",
-                                           "[C/c]  Rotate Diag-Right <>",
-                                           "[F1]-[F12]/+Shift  Face # <>",
+                                           "[A/a]  Rotate Side/Left  <>",
+                                           "[D/d]  Rotate Side/Right <>",
+                                           "[Z/z]  Rotate Diag/Left  <>",
+                                           "[C/c]  Rotate Diag/Right <>",
+                                           "[X/x]  Rotate Bottom Face <>",
                                            "[Space]  Toggle Auto-Spin",
                                            "[BackSpace]  Reset Camera",
-                                           "[Delete]  Scramble Puzzle"
+                                           "[Delete]  Scramble Puzzle",
+                                           "[Enter] Solve Current Face"
                                          };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
-    for (int i = 0; i < 14; i++) {
+    for (int i = 0; i < 16; i++) {
         utDrawText2D(w, incrementHeight, (char *)helpStrings[i]);
         incrementHeight += 15;
     }
@@ -395,11 +400,12 @@ void createMenu()
 
     //SubLevel 1 menu - Last Layer
     submenu1_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Grey Star", 31);
-    glutAddMenuEntry("Grey Corners", 32);
-    glutAddMenuEntry("Swap 1 Gray Edge", 33);
-    glutAddMenuEntry("Swap 1 Gray Corner", 34);
-    glutAddMenuEntry("Swap 2 Gray Corners", 35);
+    glutAddMenuEntry("Solve Grey Star", 31);
+    glutAddMenuEntry("Solve Grey Corners", 32);
+    //TODO make these work
+//    glutAddMenuEntry("Swap 1 Gray Edge", 33);
+//    glutAddMenuEntry("Swap 1 Gray Corner", 34);
+//    glutAddMenuEntry("Swap 2 Gray Corners", 35);
 
     //SubLevel2 Menu - Rotations
     submenu2_id = glutCreateMenu(menuHandler);
@@ -462,42 +468,65 @@ void createMenu()
 //Right Click Menu event Handler
 void menuHandler(int num)
 {
-    if (num == 1)
-        spinning = !spinning;
-    if (num == 20)
-        megaminx->rotate(currentFace, Face::CW);
-    if (num == 21)
-        megaminx->resetFace(currentFace);
-    if (num == 22)  //rotate edge piece
-        megaminx->resetFacesEdges(currentFace);
-    if (num == 23)  //rotate corner piece
-        megaminx->resetFacesCorners(currentFace);
-    if (num == 24)  //rotate edge piece (random)
-        megaminx->swapOneEdge(currentFace, rand() % 5);
-    if (num == 25)  //rotate corner piece (random)
-        megaminx->swapOneCorner(currentFace, rand() % 5);
-    if (num == 31)  //make GRAY edges (star)
-        megaminx->resetFacesEdges(GRAY);
-    if (num == 32)  //make GRAY corners
-        megaminx->resetFacesCorners(GRAY);
-    if (num == 41)  //make WHITE edges (star)
-        megaminx->resetFacesEdges(WHITE);
-    if (num == 42)  //make WHITE Face
-        megaminx->resetFace(WHITE);
-    if (num >= 51 && num <= 57)
-        megaminx->rotateAlgo(currentFace, num - 50);
-    if (num >= 61 && num <= 72)
-        megaminx->resetFace(num - 60);
-    if (num == 91)
-        megaminx->undo();
-    if (num == 92)
-        createMegaMinx();
-    if (num == 93)
-        resetCameraView();
-    if (num == 100)
-        megaminx->scramble();
-    if (num == 102) {
+    switch (num) {
+    case 1:
+        spinning = !spinning; break;
+    case 20:
+        megaminx->rotate(currentFace, Face::CW); break;
+    case 21:
+        megaminx->resetFace(currentFace); break;
+    case 22:  //rotate edge piece
+        megaminx->resetFacesEdges(currentFace); break;
+    case 23:  //rotate corner piece
+        megaminx->resetFacesCorners(currentFace); break;
+    case 24:  //rotate edge piece (random)
+        megaminx->swapOneEdge(currentFace, rand() % 5); break;
+    case 25:  //rotate corner piece (random)
+        megaminx->swapOneCorner(currentFace, rand() % 5); break;
+    case 31:  //make GRAY edges (star)
+        megaminx->resetFacesEdges(GRAY); break;
+    case 32:  //make GRAY corners
+        megaminx->resetFacesCorners(GRAY); break;
+    case 33: ; //one gray edge
+    case 34: ; //one gray corner
+    case 35: ; //two gray corners
+    case 41:  //make WHITE edges (star)
+        megaminx->resetFacesEdges(WHITE); break;
+    case 42:  //make WHITE Face
+        megaminx->resetFace(WHITE); break;
+    case 51:
+    case 52:
+    case 53:
+    case 54:
+    case 55:
+    case 56:
+    case 57:
+        megaminx->rotateAlgo(currentFace, num - 50); break;
+    case 61:
+    case 62:
+    case 63:
+    case 64:
+    case 65:
+    case 66:
+    case 67:
+    case 68:
+    case 69:
+    case 70:
+    case 71:
+    case 72:
+        megaminx->resetFace(num - 60); break;
+    case 91:
+        megaminx->undo(); break;
+    case 92:
+        createMegaMinx(); break;
+    case 93:
+        resetCameraView(); break;
+    case 100:
+        megaminx->scramble(); break;
+    case 102: 
         glutDestroyWindow(1);
-        exit(0);
+        exit(0); break;
+    default:
+        break;
     }
 }

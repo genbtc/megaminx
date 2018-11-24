@@ -15,7 +15,7 @@ void Center::createAxis(int n, double* target)
         break;
     case 7:
         pack = { 'x', 0, 0 };
-        CenterCenter(target,pack);
+        CenterCenter(target, pack);
         break;
     case 8:
     case 9:
@@ -40,7 +40,7 @@ void Center::init(int n)
 void Center::render()
 {
     glColor3dv(data._color[0]);
-    makeGLpentagon(_vertex, 1.000, GL_POLYGON);
+    makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
     glLineWidth(4);
     glColor3d(0, 0, 0);
     makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);

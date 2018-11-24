@@ -9,7 +9,8 @@ public:
     Megaminx();
     ~Megaminx() = default;
     void solve();
-    void initCornerAndEdgePieces();
+    void initCornerPieces();
+    void initEdgePieces();
     void initFacePieces();
     void renderAllPieces();
     void render();
@@ -50,4 +51,6 @@ private:
     void _rotate_internal(numdir i);
     void _rotate_internal(int num, int dir);
 };
+
+int getCurrentFaceFromAngles(int x, int y); //defining extern free function in megaminx.cpp
 #endif

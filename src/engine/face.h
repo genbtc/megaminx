@@ -5,6 +5,8 @@
 #include "edge.h"
 #include "corner.h"
 #include <vector>
+#include <variant>
+#include <type_traits>
 
 //Named Flip Direction lists:
 constexpr int FlipInwards[4] = { 0, 1, 1, 0 };
@@ -33,15 +35,14 @@ public:
     std::vector<int> edgeNativePos;
     std::vector<int> edgeColorPos;
 
-    template <class T>
+    template <typename T>
     void makePositionArray(int rows);
-    void makeEdgePositionArray();
-    void makeCornerPositionArray();
+
     std::vector<int> findPiece(Piece& pieceRef, int times) const;
+
     void attachEdgePieces(Edge& n, int numEdges);
     void attachCornerPieces(Corner& n, int numCorners);
     void attachCenter(Center* a, double* centerVertexBase);
-    void attachCenter(Center*);
 
     void initAxis(int n);
     bool render();

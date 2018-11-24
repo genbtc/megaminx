@@ -7,30 +7,36 @@
 #include <algorithm>
 #include "megaminx.h"
 
-//constructor. simple.
+//simple constructor. 
 Megaminx::Megaminx()
 {
     solve();
     renderAllPieces();
 }
 
-//Solve aka Reset, aka real constructor.
+//Solve Puzzle, aka Reset, aka the real constructor.
 void Megaminx::solve()
 {
     _rotatingFaceIndex = 0;
     isRotating = false;
-    initCornerAndEdgePieces();
+    initEdgePieces();
+    initCornerPieces();
     initFacePieces();
 }
 
-//Init the Edge and Corner pieces.
-void Megaminx::initCornerAndEdgePieces()
+//Init the Edge pieces.
+void Megaminx::initEdgePieces()
 {
-    //store a list of the basic starting vertexes (outside the loop)
+    //store a list of the basic starting vertexes
     double* edgeVertexList = edges[0].edgeInit();
     for (int i = 0; i < numEdges; ++i) {
         edges[i].init(i, edgeVertexList);
     }
+}
+
+//Init the Corner pieces.
+void Megaminx::initCornerPieces()
+{
     double* cornerVertexList = corners[0].cornerInit();
     for (int i = 0; i < numCorners; ++i) {
         corners[i].init(i, cornerVertexList);
@@ -54,12 +60,12 @@ void Megaminx::initFacePieces()
 //Need to render all the pieces unconditionally. (once at the start)
 void Megaminx::renderAllPieces()
 {
-    for (int i = 0; i < numFaces; ++i)
-        centers[i].render();
-    for (int i = 0; i < numEdges; ++i)
-        edges[i].render();
-    for (int i = 0; i < numCorners; ++i)
-        corners[i].render();
+    for (auto& center : centers)
+        center.render();
+    for (auto& edge : edges)
+        edge.render();
+    for (auto& corner: corners)
+        corner.render();
 }
 
 //Display render function for OpenGL
@@ -266,9 +272,9 @@ int Megaminx::resetFacesCorners(int color_n)
 {
     assert(color_n > 0);
     assert(color_n <= numFaces);
-    const auto activeFace = faces[(color_n - 1)];
-    const auto defaultCorners = activeFace.cornerNativePos;
-    auto foundCorners = findCorners(color_n);
+    const auto& activeFace = faces[(color_n - 1)];
+    const auto& defaultCorners = activeFace.cornerNativePos;
+    auto& foundCorners = findCorners(color_n);
     assert(foundCorners.size() == 5);
     for (size_t j = 0; j < foundCorners.size(); ++j) {
         if (activeFace.corner[j]->matchesColor(color_n))
@@ -276,8 +282,8 @@ int Megaminx::resetFacesCorners(int color_n)
         corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
         j = -1;
     }
-    auto cpos = activeFace.cornerColorPos;
-    auto foundCorners2 = findCorners(color_n);
+    auto& cpos = activeFace.cornerColorPos;
+    auto& foundCorners2 = findCorners(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundCorners2 == defaultCorners);
     assert(foundCorners2.size() == 5);
@@ -304,13 +310,13 @@ extern int getCurrentFaceFromAngles(int x, int y)
     constexpr int s = 60;  // or match START_ANGLE in main.cpp
     int face = 0;   //color-int (1-12) as result.
     //Angle Conditions:
-    const auto y1  = y >= (s - d) && y <= (s + d);                  // 60
-    const auto y1b = y >= (s + 240 - d) && y <= (s + 240 + d);      //300 (other opposite)
-    const auto y2  = y >= (s + 180 - d) && y <= (s + 180 + d);      //240
-    const auto y2b = y >= (s +  60 - d) && y <= (s +  60 + d);      //120 (other opposite)
-    const auto y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
-    const auto y4a = y >= (0 - d)   && y <= (0 + d);                //0
-    const auto y4b = y >= (360 - d) && y <= (360 + d);              //360
+    const auto& y1  = y >= (s - d) && y <= (s + d);                  // 60
+    const auto& y1b = y >= (s + 240 - d) && y <= (s + 240 + d);      //300 (other opposite)
+    const auto& y2  = y >= (s + 180 - d) && y <= (s + 180 + d);      //240
+    const auto& y2b = y >= (s +  60 - d) && y <= (s +  60 + d);      //120 (other opposite)
+    const auto& y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
+    const auto& y4a = y >= (0 - d)   && y <= (0 + d);                //0
+    const auto& y4b = y >= (360 - d) && y <= (360 + d);              //360
     int toplist[5] = { BEIGE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };   //{12,11,10,9,8}
     int botlist[5] = { YELLOW, PURPLE, DARK_GREEN, RED, DARK_BLUE };                //{6,5,4,3,2}
     //Top half - Part 1:
@@ -356,7 +362,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
     assert(current_face > 0);
     assert(current_face <= numFaces);
     assert(i > 0 && i < 8);
-    const auto loc = g_faceNeighbors[current_face];
+    const auto& loc = g_faceNeighbors[current_face];
     switch (i) {
     //("r u R' U'", 51);
     case 1:
