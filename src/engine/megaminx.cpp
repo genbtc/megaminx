@@ -71,30 +71,33 @@ void Megaminx::renderAllPieces()
 //Display render function for OpenGL
 void Megaminx::render()
 {
-    //Process all pieces that are NOT part of a rotating face.
-    for (int i = 0; i < numFaces; ++i) {
-        if (&centers[i] != faces[_rotatingFaceIndex].center)
-            centers[i].render();
-    }
-    for (int i=0, k=0; i < numEdges; ++i) {
-        if (&edges[i] == faces[_rotatingFaceIndex].edge[k])
-            k++;
-        else
-            edges[i].render();
-    }
-    for (int i=0, k=0; i < numCorners; ++i) {
-        if (&corners[i] == faces[_rotatingFaceIndex].corner[k])
-            k++;
-        else
-            corners[i].render();
-    }
-    //Handle the face rotation Queue for multiple ops.
+    //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
         const auto op = rotateQueue.front();
         isRotating = true;
         _rotatingFaceIndex = op.num;
         faces[_rotatingFaceIndex].rotate(op.dir);
     }
+
+    //Process all pieces that are NOT part of a rotating face.
+    for (int i = 0; i < numFaces; ++i) {
+        if (&centers[i] != faces[_rotatingFaceIndex].center)
+            centers[i].render();
+    }
+    for (int i = 0, k = 0; i < numEdges; ++i) {
+        if (&edges[i] != faces[_rotatingFaceIndex].edge[k])
+            edges[i].render();
+        else
+            k++;
+    }
+    for (int i = 0, k = 0; i < numCorners; ++i) {
+        if (&corners[i] != faces[_rotatingFaceIndex].corner[k])
+            corners[i].render();
+        else
+            k++;
+    }
+
+    //Finish the rotation Queue
     const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
     if (isRotaFullyRendered) {
         rotateQueue.pop();
@@ -115,7 +118,7 @@ void Megaminx::rotate(int num, int dir)
     num -= 1; //Convert 1-12 Faces into array [0-11]
     _rotate_internal({ num, dir });
 }
-//The most important rotate function - with no validation.
+//The most important rotate function - no validation. (internal,private)
 void Megaminx::_rotate_internal(numdir i)
 {
     rotateQueue.push({ i.num, i.dir });

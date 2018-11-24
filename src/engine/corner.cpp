@@ -75,17 +75,11 @@ void Corner::render()
     glVertex3dv(_vertex[1]);
     glEnd();
 
+    glLineWidth(4);
     glColor3d(0, 0, 0);
-    glBegin(GL_LINE_LOOP);
-    for (int i = 0; i < 4; ++i) {
-        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
-    }
-    glEnd();
-    glBegin(GL_LINE_LOOP);
-    for (int i = 2; i < 6; ++i) {
-        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] * 1.005, _vertex[i][2] * 1.005);
-    }
-    glEnd();
+
+    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
+
     glBegin(GL_LINE_LOOP);
     glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
     glVertex3d(_vertex[5][0] * 1.005, _vertex[5][1] * 1.005, _vertex[5][2] * 1.005);

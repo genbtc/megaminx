@@ -1,5 +1,9 @@
 #include <cmath>
-using namespace std;
+using std::acos;
+using std::atan;
+using std::cos;
+using std::sin;
+using std::sqrt;
 static const long double PI = acos(-1);
 void rotate_vertex(double &vx, double &vy, double angle)
 {

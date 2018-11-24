@@ -52,7 +52,7 @@ public:
     void swapEdges(int, int);
 
 private:
-    void twoEdgesFlip(int a,int b);
+    void twoEdgesFlip(int a, int b);
     void Flip(int a, int b, int c, int d, const int* pack);
     void QuadSwapCorners(int const pack[8]);
     void QuadSwapEdges(int const pack[8]);

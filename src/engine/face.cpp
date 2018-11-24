@@ -99,6 +99,35 @@ void Face::initAxis(int n)
 }
 
 /**
+ * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
+ * \param direction turn direction - 1 for Right, -1 for left.
+ */
+void Face::rotate(int direction)
+{
+    assert(direction == Face::Clockwise || direction == Face::CCW);
+    rotating = true;
+    turnDir = direction;
+}
+
+/**
+ * \brief Public. Given two local indexes 0-5, swap the Corners.
+ */
+void Face::swapCorners(int a, int b)
+{
+    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
+    corner[a]->swapdata(corner[b]->data);
+}
+
+/**
+ * \brief Public. given two local indexes 0-5, swap the Edges.
+ */
+void Face::swapEdges(int a, int b)
+{
+    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
+    edge[a]->swapdata(edge[b]->data);
+}
+
+/**
  * \brief Private. Simple-Flips (inverts) one Edge-piece
  * and then the other, individually.
  */
@@ -112,9 +141,8 @@ void Face::twoEdgesFlip(int a,int b)
 //Private. Functional Generic Switch that flips
 void Face::Flip(int a, int b, int c, int d, const int* pack)
 {
-    //Feed in 4 ints abcd representing the face's five corner indexes 0-4
-    // (hint: [0-4]=5, but we only need to flip 4 at once)
-    //Feed in these vector lists like { 0, 1, 1, 0 }; telling each index how to flip
+    //Feed in 4 ints a,b,c,d representing the face's Four Corner indexes (Range 0-4)
+    //Feed in these Flip lists like { 0, 1, 1, 0 }; telling each index how to flip
     // Boolean ? 1 = Flip piece once ||  0      = Flip twice
     pack[0] ? corner[a]->flip() : corner[a]->flipTwice();
     pack[1] ? corner[b]->flip() : corner[b]->flipTwice();
@@ -154,7 +182,6 @@ bool Face::placeParts(int dir)
             QuadSwapEdges(CCW0E);
             break;
         case 1:
-            //1,2,3,4,5
             Flip(0, 1, 2, 4, FlipBackwards);
             QuadSwapCorners(CCW1C);
             QuadSwapEdges(CCW1E);
@@ -309,7 +336,7 @@ bool Face::render()
 {
     glPushMatrix();
     //4 is the current rotational turnspeed for turnDir
-    constexpr int turnspeed = 4;
+    constexpr int turnspeed = 8;
     if (rotating)
         angle += turnDir * turnspeed;
     if (rotating && angle >= 56 || angle <= -56)
@@ -321,43 +348,14 @@ bool Face::render()
         edge[i]->render();
     }
     center->render();
+    glPopMatrix();
     glLineWidth(4);
     glColor3d(0, 0, 0);
-    glPopMatrix();
-    makeGLpentagon(_vertex, 1.005, GL_POLYGON);
+    makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
     if (angle >= 72 || angle <= -72) {
         angle = 0;
         rotating = false;
         return placeParts(turnDir);
     }
     return false;
-}
-
-/**
- * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
- * \param direction turn direction - 1 for Right, -1 for left.
- */
-void Face::rotate(int direction)
-{
-    assert(direction == Face::Clockwise || direction == Face::CCW);
-    rotating = true;
-    turnDir = direction;
-}
-
-/**
- * \brief Public. Given two local indexes 0-5, swap the Corners.
- */
-void Face::swapCorners(int a, int b)
-{
-    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
-    corner[a]->swapdata(corner[b]->data);
-}
-
-/**
- * \brief Public. given two local indexes 0-5, swap the Edges.
- */
-void Face::swapEdges(int a, int b)
-{
-    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
-    edge[a]->swapdata(edge[b]->data);
 }

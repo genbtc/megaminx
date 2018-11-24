@@ -8,13 +8,19 @@
 #include "vector3d.h"
 #include "color.h"
 
+using std::acos;
+using std::atan;
+using std::cos;
+using std::sin;
+using std::sqrt;
+
 void rotateVertex(double *vertex, char axis, double angle);
 //common constants
-static const long double FI = (1 + std::sqrt(5.f)) / 2;
-static const long double PI = std::acos(-1);
-static const long double SIDE_ANGLE = 2 * std::atan(FI);
-static const long double INS_SPHERE_RAD = 100 * std::sqrt(10+22 / std::sqrt(5.f)) / 4;
-static const long double INS_CIRCLE_RAD = 100 / std::sqrt((5 - std::sqrt(5.f)) / 2);
+static const long double FI = (1 + sqrt(5.f)) / 2;
+static const long double PI = acos(-1);
+static const long double SIDE_ANGLE = 2 * atan(FI);
+static const long double INS_SPHERE_RAD = 100 * sqrt(10+22 / sqrt(5.f)) / 4;
+static const long double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5.f)) / 2);
 #define pim(x) x*PI/5
 
 struct piecepack {
@@ -221,7 +227,6 @@ public:
     }
     //Creates the common starting vertexes for all pieces that are CORNERS
     double* cornerInit() {
-        using namespace std;
         numSides = 3;
         for (int i = 0; i < 7; ++i) {
             _vertex[i][2] = -INS_SPHERE_RAD;
@@ -260,7 +265,6 @@ public:
     }
     //Creates the common starting vertexes for all pieces that are EDGES
     double* edgeInit() {
-        using namespace std;
         numSides = 2;
         for (int i = 0; i < 6; ++i) {
             _vertex[i][2] = -INS_SPHERE_RAD;
@@ -291,7 +295,6 @@ public:
     }
     //Creates the common starting vertexes for all pieces that are CENTERS
     double* centerInit() {
-        using namespace std;
         numSides = 1;
         for (int i = 0; i < 5; ++i) {
             _vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * 2 / 5;
@@ -302,15 +305,19 @@ public:
     }
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
-        using namespace std;
         numSides = 0;
         for (int i = 0; i < 5; ++i) {
+            //This puts it on the front face. (same as center but larger since not * 2 / 5)
+            //_vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)); 
+            //_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5));
+            //_vertex[i][2] = -INS_SPHERE_RAD;
+            //This puts it on the back face
             _vertex[i][0] = -INS_CIRCLE_RAD * cos(pim(1.5)) + 100 / sin(pim(2)) * 2 / 5;
             _vertex[i][1] = -INS_CIRCLE_RAD * sin(pim(1.5));
             _vertex[i][2] = -INS_SPHERE_RAD;
-            rotateVertex(_vertex[i], 'z', 2 * PI / 5);
+            rotateVertex(_vertex[i], 'z', pim(2));
             rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
-            rotateVertex(_vertex[i], 'z', 2 * i * PI / 5);
+            rotateVertex(_vertex[i], 'z', i * pim(2));
         }
         return &_vertex[0][0];
     }

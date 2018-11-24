@@ -26,7 +26,7 @@ public:
     int resetFacesCorners(int n);
     int resetFacesEdges(int n);    
     void rotateAlgo(int n, int i);
-    /* face rotating when busy */
+    /* face busy rotating when true */
     bool isRotating;
     /* tracks active face, set by setCurrentFaceActive() */
     Face* g_currentFace;
@@ -36,10 +36,10 @@ public:
     static const int numEdges = 30;    
     
 private:
-    Face faces[numFaces];
+    Face   faces[numFaces];
     Center centers[numFaces];
     Corner corners[numCorners];
-    Edge edges[numEdges];    
+    Edge   edges[numEdges];
 
     int _rotatingFaceIndex;
     struct numdir {
@@ -52,5 +52,5 @@ private:
     void _rotate_internal(int num, int dir);
 };
 
-int getCurrentFaceFromAngles(int x, int y); //defining extern free function in megaminx.cpp
+int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
 #endif

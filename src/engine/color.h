@@ -59,26 +59,31 @@ constexpr colorpiece g_edgePiecesColors[30] = {
     { WHITE, DARK_GREEN },
     { WHITE, PURPLE },
     { WHITE, YELLOW },
+
     { DARK_BLUE, RED },
     { RED, DARK_GREEN },
     { DARK_GREEN, PURPLE },
     { PURPLE, YELLOW },
     { YELLOW, DARK_BLUE },
+
     { DARK_BLUE, LIGHT_GREEN },
     { RED, PINK },
     { DARK_GREEN, BEIGE },
     { PURPLE, LIGHT_BLUE },
     { YELLOW, ORANGE },
+
     { DARK_BLUE, PINK },
     { RED, BEIGE },
     { DARK_GREEN, LIGHT_BLUE },
     { PURPLE, ORANGE },
     { YELLOW, LIGHT_GREEN },
+
     { PINK, BEIGE },
     { BEIGE, LIGHT_BLUE },
     { LIGHT_BLUE, ORANGE },
     { ORANGE, LIGHT_GREEN },
     { LIGHT_GREEN, PINK },
+
     { GRAY, LIGHT_BLUE },
     { GRAY, ORANGE },
     { GRAY, LIGHT_GREEN },
@@ -93,16 +98,19 @@ constexpr colorpiece g_cornerPiecesColors[20] = {
     { WHITE, PURPLE, DARK_GREEN },
     { WHITE, YELLOW, PURPLE },
     { WHITE, DARK_BLUE, YELLOW },
+
     { DARK_BLUE, RED, PINK },
     { RED, DARK_GREEN, BEIGE },
     { DARK_GREEN, PURPLE, LIGHT_BLUE },
     { PURPLE, YELLOW, ORANGE },
     { YELLOW, DARK_BLUE, LIGHT_GREEN },
+
     { GRAY, BEIGE, LIGHT_BLUE },
     { GRAY, LIGHT_BLUE, ORANGE },
     { GRAY, ORANGE, LIGHT_GREEN },
     { GRAY, LIGHT_GREEN, PINK },
     { GRAY, PINK, BEIGE },
+
     { LIGHT_BLUE, BEIGE, DARK_GREEN },
     { BEIGE, PINK, RED },
     { PINK, LIGHT_GREEN, DARK_BLUE },
@@ -110,7 +118,7 @@ constexpr colorpiece g_cornerPiecesColors[20] = {
     { ORANGE, LIGHT_BLUE, PURPLE }
 };
 
-//struct that holds the relational directional colors for g_faceNeighbors
+//struct that holds the relative position & direction for colors in g_faceNeighbors below
 struct colordirs {
     //Starting from face,then 9-oclock and going CW right around.
     megaminxColor front = BLACK;
