@@ -99,7 +99,7 @@ void Megaminx::render()
 
     //Finish the rotation Queue
     const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
-    if (isRotaFullyRendered) {
+    if (isRotaFullyRendered && isRotating) {
         rotateQueue.pop();
         isRotating = false;
     }
@@ -137,6 +137,14 @@ void Megaminx::undo()
     op.dir *= -1;
     rotateQueue.push({ op.num, op.dir });
     undoQueue.pop();
+}
+
+//Clear the Queue and stop any repeated rotating actions.
+void Megaminx::resetQueue()
+{
+    isRotating = false;
+    rotateQueue = std::queue<numdir>();
+    //TODO: at this point, the other Undo-Queue now has extra actions in it.
 }
 
 //Scramble 600 times (50 x 12)

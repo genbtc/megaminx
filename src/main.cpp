@@ -341,13 +341,15 @@ void onKeyboard(unsigned char key, int x, int y)
     case 13:    //enter
         megaminx->resetFace(currentFace);
         break;
+    case 27:   //escape
+        megaminx->resetQueue();
+        break;
     case 127: //delete
         megaminx->scramble();
         break;
     default:
         break;
     }
-    //(Enter is 13, escape is 27)
     //call the megaminx specific key functions (above)
     rotateDispatch(key);
 }

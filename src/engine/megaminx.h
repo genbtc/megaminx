@@ -24,10 +24,11 @@ public:
     std::vector<int> findEdges(int i);
     void resetFace(int n);
     int resetFacesCorners(int n);
-    int resetFacesEdges(int n);    
+    int resetFacesEdges(int n);
     void rotateAlgo(int n, int i);
+    void resetQueue();
     /* face busy rotating when true */
-    bool isRotating;
+    bool isRotating;    
     /* tracks active face, set by setCurrentFaceActive() */
     Face* g_currentFace;
     /* static numbers at compile time*/
