@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 {
     srand((int)time(nullptr));
     //std::random_device rd; std::mt19937 gen{rd()}; std::uniform_int_distribution<int>dis{1, 100000}; std::cout << dis(gen);
-    sprintf_s(lastface, 32, "%ws", L"STARTUP");
+    sprintf_s(lastface, 32, "%ws", L"STARTUPTITLE");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize((int)WIDTH, (int)HEIGHT);
@@ -61,7 +61,15 @@ int main(int argc, char *argv[])
     gluPerspective(view_distance_view_angle, 1.0, 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    createMenu();   //right click menu
+    //Set up GL Params in main so we dont have to recall them over and over in RenderScene()
+    glEnable(GLUT_MULTISAMPLE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glEnable(GL_ALPHA);
+    glLineWidth(4);
+    glPointSize(5);
+    //Right click menu:
+    createMenu();
     glutMenuStatusFunc(menuVisible);
     //Glut Functs:
     glutReshapeFunc(ChangeSize);
@@ -70,51 +78,24 @@ int main(int argc, char *argv[])
     glutPassiveMotionFunc(processMousePassiveMotion);
     glutKeyboardFunc(onKeyboard);
     glutSpecialFunc(onSpecialKeyPress);
-    //Display and Loop forever
-    glutIdleFunc(Idle);
+    //Idle func, tracks frame-rate
+    Idle(0);
+    //Main: Display Render and Loop forever
     glutDisplayFunc(RenderScene);
     glutMainLoop();
-    return 1;
+    return 42;
 }
 
-//Actually limiting the FPS to REFRESH_RATE now:
-void Idle()
-{
-    static const double REFRESH_TIME = 1.0 / REFRESH_RATE;
-    // in milliseconds
-    const int total = glutGet(GLUT_ELAPSED_TIME);
-    const double newTime = (double)total * 0.001;
-
-    double deltaTime = newTime - g_appTime;
-    if (deltaTime > REFRESH_TIME) {
-        deltaTime = REFRESH_TIME;
-        //ReRender Scene:
-        glutPostRedisplay();
-        // set global:
-        g_appTime = g_appTime + deltaTime;
-    }
-    /*
-    // average?:
-    static double lastDeltas[3] = { 0.0, 0.0, 0.0 };
-    double deltaAvgTime = (deltaTime + lastDeltas[0] + lastDeltas[1] + lastDeltas[2]) * 0.25;
-
-    // save delta?:
-    lastDeltas[0] = lastDeltas[1];
-    lastDeltas[1] = lastDeltas[2];
-    lastDeltas[2] = deltaTime;
-    */
+//Wait for Refresh Rate, FrameRate Cap.
+void Idle(int) {
+    glutPostRedisplay();
+    glutTimerFunc(REFRESH_WAIT - 1, Idle, 0);
 }
 
 //OpenGL Render Func
 void RenderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GLUT_MULTISAMPLE);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glEnable(GL_ALPHA);
-    glLineWidth(4);
-    glPointSize(5);
 
     glPushMatrix();
     {
@@ -139,21 +120,22 @@ void RenderScene()
         if (!help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 235.f);
         else
-            utDrawText2D(WIDTH - 135.f, HEIGHT - 14.f, "h = help");
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
     }
     utResetPerspectiveProjection();
-    //Clean up.
-    glDisable(GL_BLEND);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHT1);
-    glDisable(GLUT_MULTISAMPLE);
+    ////Clean up.
+    //glDisable(GL_BLEND);
+    //glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_LIGHT1);
+    //glDisable(GLUT_MULTISAMPLE);
     glutSwapBuffers();
+    //g_appRenderTimeTotal = (double)glutGet(GLUT_ELAPSED_TIME);
 }
 
 //query Megaminx for what face we're looking at?
 void GetCurrentFace()
 {
-    const auto tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX, (int)g_camera.m_angleY);
+    const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX, (int)g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
         wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
@@ -177,10 +159,10 @@ void double_click(int , int )
     const int dir = GetDirFromSpecialKey();
     megaminx->rotate(currentFace, dir);
 }
-int menuVisibleState = 0;
+
 void menuVisible(int status, int x, int y)
 {
-    menuVisibleState = status == GLUT_MENU_IN_USE;
+    menuVisibleState = (status == GLUT_MENU_IN_USE);
 }
 void mousePressed(int button, int state, int x, int y)
 {

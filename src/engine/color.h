@@ -42,14 +42,11 @@ constexpr colorpack g_colorRGBs[COLOR_STATES] = {
     { 12, 1.0, 0.94, 0.72, L"BEIGE" }
 };
 
-//Struct that can hold 2, 3 or 6 named Colors (member name a-f is irrelevant)
+//Struct that can hold up to 3 Colors for Center/Edge/Corner
 struct colorpiece {
     megaminxColor a = BLACK;
     megaminxColor b = BLACK;
     megaminxColor c = BLACK;
-    megaminxColor d = BLACK;
-    megaminxColor e = BLACK;
-    megaminxColor f = BLACK;
 };
 
 //Defines the 30 edge pieces.

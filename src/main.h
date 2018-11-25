@@ -4,9 +4,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.31 - genBTC mod";
-//testing framerate cap on myshitmonitor
-// in future use 120 = better for monitor with > 60 Hz:
-double REFRESH_RATE = 50.0;     
+//testing framerate cap:
+//better for monitor with 60 Hz:
+double REFRESH_RATE = 60.0;
+static const double REFRESH_TIME_MS = (1000.0 / REFRESH_RATE);
+static const unsigned int REFRESH_WAIT = REFRESH_TIME_MS;
 // initial window screen size
 float WIDTH = 700;
 float HEIGHT = 700;
@@ -21,9 +23,11 @@ unsigned int g_draggedPointID;
 bool g_areWeDraggingPoint;
 constexpr int DOUBLE_CLICK_INTERVAL = 400;
 static int bnstate[16]; //mousebutton
+int menuVisibleState = 0;
 
 // global vars
-double g_appTime = 0.0;
+double g_appRenderTimeTotal = 0.0;
+double g_appIdleTime = 0.0;
 bool spinning = false;
 bool help = true;
 int currentFace = 0;
@@ -36,8 +40,9 @@ Camera g_camera;
 Megaminx* megaminx;
 
 // Glut function callbacks' prototypes
-void Idle();
+void Idle(int);
 void RenderScene();
+
 void mousePressed(int button, int state, int x, int y);
 void processMousePassiveMotion(int x, int y);
 void mousePressedMove(int x, int y);

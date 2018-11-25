@@ -22,7 +22,7 @@ if(MINGW)
 	set(MING_INCLUDES "${CMAKE_PREFIX_PATH}/include/c++/8.2.0;${CMAKE_PREFIX_PATH}/include/c++/8.2.0/x86_64-w64-mingw32;${CMAKE_PREFIX_PATH}/include/c++/8.2.0/backward;${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include;${CMAKE_PREFIX_PATH}/include;${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include-fixed;${CMAKE_PREFIX_PATH}/x86_64-w64-mingw32/include;${CMAKE_PREFIX_PATH}/include;")
 	message("Manually specified MingW GCC System Include Dirs: " ${MING_INCLUDES})
 	include_directories(${MING_INCLUDES})
-elseif(NOT MINGW)	
+elseif(NOT MINGW AND MSVC)	
     ##If VCPKG is ON (Auto-loaded from CMakeSettings.json cmakeCommandArgs: "-DCMAKE_TOOLCHAIN_FILE=":
     if (VCPKG_TOOLCHAIN)
         message("VCPkg Enabled!")
@@ -68,6 +68,10 @@ add_executable(${PACKAGE_NAME} WIN32
     src/main.cpp 
     src/Res.rc
 )
+#//Use Perf-Profiler option in MSVC - Blocks /Incremental option.
+#if (MSVC)
+#    set_property(TARGET ${PACKAGE_NAME} APPEND_STRING PROPERTY LINK_FLAGS "/Profile")
+#endif()
 #// Use C++17 on all linkages (is this needed if we have Line 12+13?)
 target_compile_features(${PACKAGE_NAME} INTERFACE cxx_std_17)
 #// Make Exe, go!

@@ -13,20 +13,20 @@
         "ctestCommandArgs": ""
     },
     {
-      "name": "x64-Release",
-      "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
-      "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
-      "ctestCommandArgs": ""
+        "name": "x64-Release",
+        "generator": "Ninja",
+        "configurationType": "Release",
+        "inheritEnvironments": [ "msvc_x64_x64" ],
+        "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
+        "installRoot": "${workspaceRoot}\\Install\\MegaMinx",
+        "cmakeCommandArgs": "-DCMAKE_TOOLCHAIN_FILE=\"C:/vcpkg/scripts/buildsystems/vcpkg.cmake\"",
+        "buildCommandArgs": "-v",
+        "ctestCommandArgs": ""
     },
     {
       "name": "MingW64",
       "generator": "Ninja",
-      "configurationType": "Release",
+      "configurationType": "RelWithDebInfo",
       "inheritEnvironments": [ "linux_x64" ],
       "cmakeExecutable": "${workspaceRoot}\\CMakeBuilds\\${generator}",
       "buildRoot": "${workspaceRoot}\\CMakeBuilds\\MegaMinx-${name}",
