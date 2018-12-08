@@ -1,7 +1,6 @@
 #include <vector>
 #include <cassert>
 #include "face.h"
-#include "../common_physics/utils.h"
 
 Face::Face()
 {
@@ -174,72 +173,75 @@ void Face::QuadSwapEdges(int const pack[8])
  */
 bool Face::placeParts(int dir)
 {
-    assert(dir == 1 || dir == -1);
-    if (dir == 1) { // 1 = CCW
+    assert(dir == CCW || dir == CW);
+    if (dir == CounterClockwise) { // 1 = CCW = Left Turn = Counter-ClockWise
         switch (thisNum) {
-        case 0:
-            QuadSwapCorners(CCW0C);
+        case 0: //WHITE
             QuadSwapEdges(CCW0E);
+            QuadSwapCorners(CCW0C);            
             break;
-        case 1:
-            Flip(0, 1, 2, 4, FlipBackwards);
-            QuadSwapCorners(CCW1C);
+        case 1: //DARK_BLUE
             QuadSwapEdges(CCW1E);
             twoEdgesFlip(1, 2);
+            //Flip(0, 1, 2, 4, FlipBackwards);  //This can come first instead, if we skip the 3 instead of the 1.
+            QuadSwapCorners(CCW1C);
+            Flip(0, 2, 3, 4, FlipBackwards);
             break;
-        case 2:
-            twoEdgesFlip(0, 3);
+        case 2: //RED
             QuadSwapEdges(CCW2E);
-            Flip(0, 1, 3, 4, FlipBackwards);
+            twoEdgesFlip(1, 2);
+            //corner[1]->initColor(0, 0, 0); //set to black to find a piece
+            //Flip(0, 1, 3, 4, FlipBackwards);  //This can come first, instead, if we reverse the 2 and the 0
             QuadSwapCorners(CCW2C);
+            Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
-        case 3:
+        case 3: //DARK_GREEN
             QuadSwapEdges(CCW3E);
             twoEdgesFlip(1, 2);
             QuadSwapCorners(CCW3C);
             Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
-        case 4:
+        case 4: //PURPLE
             QuadSwapEdges(CCW4E);
             twoEdgesFlip(1, 2);
             QuadSwapCorners(CCW4C);
             Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
-        case 5:
+        case 5: //YELLOW
             QuadSwapEdges(CCW5E);
             twoEdgesFlip(1, 2);
             QuadSwapCorners(CCW5C);
             Flip(1, 2, 3, 4, FlipAlternatingBackwards);
             break;
-        case 6:
-            QuadSwapCorners(CCW6C);
+        case 6: //GRAY
             QuadSwapEdges(CCW6E);
+            QuadSwapCorners(CCW6C);            
             break;
-        case 7:
+        case 7: //LIGHT_BLUE Front Face, Left Turn = Counter-ClockWise;
             QuadSwapEdges(CCW7E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW7C);
             Flip(0, 1, 2, 3, FlipAlternatingForwards);
             break;
-        case 8:
+        case 8: //ORANGE
             QuadSwapEdges(CCW8E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW8C);
             Flip(0, 1, 2, 3, FlipForwards);
             break;
-        case 9:
+        case 9: //GREEN
             QuadSwapEdges(CCW9E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW9C);
             Flip(0, 1, 2, 3, FlipForwards);
             break;
-        case 10: //works
+        case 10: //PINK
             QuadSwapEdges(CCW10E);
             twoEdgesFlip(2, 4);
             QuadSwapCorners(CCW10C);
             Flip(0, 1, 2, 3, FlipForwards);
             break;
-        case 11: //works
+        case 11: //BEIGE
             QuadSwapEdges(CCW11E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW11C);
@@ -249,46 +251,45 @@ bool Face::placeParts(int dir)
             break;
         }
     }
-    else {
-        // -1 = CW = Right Turn = ClockWise;
+    else {  // -1 = CW = Right Turn = ClockWise
         switch (thisNum) {
-        case 0:
-            QuadSwapCorners(CW0C);
+        case 0: //WHITE
             QuadSwapEdges(CW0E);
+            QuadSwapCorners(CW0C);            
             break;
-        case 1:
-            Flip(0, 2, 3, 4, FlipForwards);
-            QuadSwapCorners(CW1C);
+        case 1: //DARK_BLUE
             QuadSwapEdges(CW1E);
             twoEdgesFlip(0, 3);
+            QuadSwapCorners(CW1C);
+            Flip(0, 1, 2, 4, FlipForwards);
             break;
-        case 2:
+        case 2: //RED (inverse order for fun)
             twoEdgesFlip(1, 2);
             QuadSwapEdges(CW2E);
             Flip(1, 2, 3, 4, FlipAlternatingForwards);
             QuadSwapCorners(CW2C);
             break;
-        case 3:
+        case 3: //DARK_GREEN
             QuadSwapEdges(CW3E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW3C);
             Flip(0, 1, 3, 4, FlipForwards);
             break;
-        case 4:
+        case 4: //PURPLE
             QuadSwapEdges(CW4E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW4C);
             Flip(0, 1, 3, 4, FlipForwards);
             break;
-        case 5:
+        case 5: //YELLOW
             QuadSwapEdges(CW5E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW5C);
             Flip(0, 1, 3, 4, FlipForwards);
             break;
-        case 6:
-            QuadSwapCorners(CW6C);
+        case 6: //GRAY
             QuadSwapEdges(CW6E);
+            QuadSwapCorners(CW6C);            
             break;
         case 7: //LIGHT_BLUE Front Face, Right Turn = ClockWise;
             QuadSwapEdges(CW7E);
