@@ -321,41 +321,52 @@ extern int getCurrentFaceFromAngles(int x, int y)
     constexpr int s = 60;  // or match START_ANGLE in main.cpp
     int face = 0;   //color-int (1-12) as result.
     //Angle Conditions:
-    const auto& y1  = y >= (s - d) && y <= (s + d);                  // 60
-    const auto& y1b = y >= (s + 240 - d) && y <= (s + 240 + d);      //300 (other opposite)
-    const auto& y2  = y >= (s + 180 - d) && y <= (s + 180 + d);      //240
-    const auto& y2b = y >= (s +  60 - d) && y <= (s +  60 + d);      //120 (other opposite)
-    const auto& y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
-    const auto& y4a = y >= (0 - d)   && y <= (0 + d);                //0
-    const auto& y4b = y >= (360 - d) && y <= (360 + d);              //360
-    int toplist[5] = { BEIGE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };   //{12,11,10,9,8}
-    int botlist[5] = { YELLOW, PURPLE, DARK_GREEN, RED, DARK_BLUE };                //{6,5,4,3,2}
+    const bool y1  = y >= (s - d) && y <= (s + d);                  // 60
+    const bool y1b = y >= (s + 240 - d) && y <= (s + 240 + d);      //300 (other opposite)
+    const bool y2  = y >= (s + 180 - d) && y <= (s + 180 + d);      //240
+    const bool y2b = y >= (s +  60 - d) && y <= (s +  60 + d);      //120 (other opposite)
+    const bool y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
+    const bool y4a = y >= (0 - d)   && y <= (0 + d);                //0
+    const bool y4b = y >= (360 - d) && y <= (360 + d);              //360
+    constexpr int toplist[5] = { BEIGE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };      //{12,11,10,9,8}
+    constexpr int botlist[5] = { YELLOW, PURPLE, DARK_GREEN, RED, DARK_BLUE };        //{6,5,4,3,2}
     //Top half - Part 1:
-    if(y1 && x < d + r)
+    if(y1 && x < d)
         face = LIGHT_BLUE;
     //Bottom half - Part 1:
-    else if(y2 && x < d + r)
+    else if(y2 && x < d)
         face = DARK_BLUE;
-    for (int i = 0; i < 5; ++i) {
-        if (y1 && x >= d + r * i && x < d + r * (i + 1))
-            face = toplist[i];
-        else if (y2 && x >= d + r * i && x < d + r * (i + 1))
-            face = botlist[i];
-    }
     if (face) return face;
+    else if (y1 || y2) {
+        for (int i = 0; i < 5; ++i) {
+            if (x >= d + r * i && x < d + r * (i + 1)) {
+                if (y1)
+                    face = toplist[i];
+                else if (y2)
+                    face = botlist[i];
+                if (face) return face;
+            }
+        }
+    }
     //Top half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2)
     //Bottom half - Part 2: offset by 180 Degrees, therefore the starting point is a diff color(+2).
     //std::rotate is to cyclically advance the list by +2.
-    std::rotate(std::begin(toplist), std::begin(toplist) + 2, std::end(toplist));
-    std::rotate(std::begin(botlist), std::begin(botlist) + 2, std::end(botlist));
-    for (int i = 0; i < 5; ++i) {
-        if (y1b && x >= r * i && x < r * (i + 1))
-            face = toplist[i];
-        else if (y2b && x >= r * i && x < r * (i + 1))
-            face = botlist[i];
+    else if (y1b || y2b) {
+        //std::rotate(std::begin(toplist), std::begin(toplist) + 2, std::end(toplist));
+        //std::rotate(std::begin(botlist), std::begin(botlist) + 2, std::end(botlist));
+        constexpr int toplist[5] = { 10,9,8,12,11 };
+        constexpr int botlist[5] = { 4,3,2,6,5 };
+        for (int i = 0; i < 5; ++i) {
+            if (x >= r * i && x < r * (i + 1)) {
+                if (y1b)
+                    face = toplist[i];
+                else if (y2b)
+                    face = botlist[i];
+                if (face) return face;
+            }
+        }
     }
-    if (face) return face;
-    if (y3 && !face)    //Bottom {1}
+    else if (y3 && !face)    //Bottom {1}
         face = WHITE;
     else if ((y4a || y4b) && !face) //Top {7}
         face = GRAY;

@@ -1,18 +1,18 @@
 #include <vector>
 #include <cassert>
 #include "face.h"
+#include "../common_physics/utils.h"
 
 Face::Face()
 {
     center = nullptr;
-    turnDir = 0;
-    thisNum = 0;
     rotating = false;
     angle = 0;
+    thisNum = 0;
+    turnDir = 0;        
     axis[0] = 0;
     axis[1] = 0.001;
     axis[2] = -1;
-
 }
 
 //when this is run, iterate through and check to see which position the Face->center color is in
@@ -57,7 +57,7 @@ void Face::attachCornerPieces(Corner& n, int numCorners)
  * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
  *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
  * \pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
- * \times how many times to iterate (for simplicity).
+ * \times how many times to iterate over the ref'd array
  * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
  */
 std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
@@ -219,38 +219,38 @@ bool Face::placeParts(int dir)
             QuadSwapEdges(CCW7E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW7C);
-            Flip(0, 1, 3, 4, FlipOutwards);
+            Flip(0, 1, 2, 3, FlipAlternatingForwards);
             break;
         case 8:
             QuadSwapEdges(CCW8E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW8C);
-            Flip(0, 1, 3, 4, FlipAlternatingForwards);
+            Flip(0, 1, 2, 3, FlipForwards);
             break;
         case 9:
             QuadSwapEdges(CCW9E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW9C);
-            Flip(0, 1, 3, 4, FlipAlternatingForwards);
+            Flip(0, 1, 2, 3, FlipForwards);
             break;
-        case 10:
+        case 10: //works
             QuadSwapEdges(CCW10E);
             twoEdgesFlip(2, 4);
             QuadSwapCorners(CCW10C);
-            Flip(0, 1, 3, 4, FlipAlternatingForwards);
+            Flip(0, 1, 2, 3, FlipForwards);
             break;
-        case 11:
+        case 11: //works
             QuadSwapEdges(CCW11E);
             twoEdgesFlip(3, 4);
             QuadSwapCorners(CCW11C);
-            Flip(0, 2, 3, 4, FlipAlternatingForwards);
+            Flip(0, 1, 2, 4, FlipForwards);
             break;
         default:
             break;
         }
     }
     else {
-        // -1 = CW
+        // -1 = CW = Right Turn = ClockWise;
         switch (thisNum) {
         case 0:
             QuadSwapCorners(CW0C);
@@ -290,35 +290,44 @@ bool Face::placeParts(int dir)
             QuadSwapCorners(CW6C);
             QuadSwapEdges(CW6E);
             break;
-        case 7: //front CW;
+        case 7: //LIGHT_BLUE Front Face, Right Turn = ClockWise;
             QuadSwapEdges(CW7E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW7C);
-            Flip(0, 1, 2, 3, FlipInwards);
+            Flip(0, 1, 3, 4, FlipBackwards);
             break;
-        case 8:
+        case 8: //ORANGE
             QuadSwapEdges(CW8E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW8C);
-            Flip(0, 1, 2, 4, FlipInwards);
+            Flip(0, 2, 3, 4, FlipBackwards);
             break;
-        case 9:
+        case 9: //GREEN
             QuadSwapEdges(CW9E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW9C);
-            Flip(0, 1, 2, 4, FlipInwards);
+            Flip(0, 2, 3, 4, FlipBackwards);
             break;
-        case 10:
+        case 10: //PINK (Corner Star = 0 bottom, 1 right lower, 2 left lower, 3 left upper, 4 right upper)
+//            corner[1]->initColor(0, 0, 0); //set to black to find a piece
             QuadSwapEdges(CW10E);
             twoEdgesFlip(0, 2);
             QuadSwapCorners(CW10C);
-            Flip(0, 1, 2, 4, FlipInwards);
+            Flip(0, 2, 3, 4, FlipBackwards);
+            //swapCorners(4, 1);
+            //swapCorners(4, 0);
+            //swapCorners(4, 2);
+            //swapCorners(4, 3);
+            //1 ? corner[0]->flip() : corner[0]->flipTwice();
+            //1 ? corner[1]->flip() : corner[1]->flipTwice();
+            //0 ? corner[2]->flip() : corner[2]->flipTwice();
+            //0 ? corner[3]->flip() : corner[3]->flipTwice();
             break;
-        case 11:
+        case 11: //BEIGE
             QuadSwapEdges(CW11E);
             twoEdgesFlip(0, 3);
             QuadSwapCorners(CW11C);
-            Flip(0, 1, 2, 4, FlipInwards);
+            Flip(0, 2, 3, 4, FlipBackwards);
             break;
         default:
             break;
@@ -327,7 +336,6 @@ bool Face::placeParts(int dir)
     return true;
 }
 
-
 /**
  * \brief OpenGL Display function. Calling this makes the faces rotate,the only real move.
  * \return true if we full-spun, to tell the parent function that rotating=false also.
@@ -335,7 +343,7 @@ bool Face::placeParts(int dir)
 bool Face::render()
 {
     glPushMatrix();
-    //4 is the current rotational turnspeed for turnDir
+    //8 is the current rotational turnspeed for turnDir
     constexpr int turnspeed = 8;
     if (rotating)
         angle += turnDir * turnspeed;
@@ -349,7 +357,6 @@ bool Face::render()
     }
     center->render();
     glPopMatrix();
-    glLineWidth(4);
     glColor3d(0, 0, 0);
     makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
     if (angle >= 72 || angle <= -72) {

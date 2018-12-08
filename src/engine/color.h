@@ -102,17 +102,17 @@ constexpr colorpiece g_cornerPiecesColors[20] = {
     { PURPLE, YELLOW, ORANGE },
     { YELLOW, DARK_BLUE, LIGHT_GREEN },
 
-    { GRAY, BEIGE, LIGHT_BLUE },
-    { GRAY, LIGHT_BLUE, ORANGE },
-    { GRAY, ORANGE, LIGHT_GREEN },
-    { GRAY, LIGHT_GREEN, PINK },
-    { GRAY, PINK, BEIGE },
-
     { LIGHT_BLUE, BEIGE, DARK_GREEN },
     { BEIGE, PINK, RED },
     { PINK, LIGHT_GREEN, DARK_BLUE },
     { LIGHT_GREEN, ORANGE, YELLOW },
-    { ORANGE, LIGHT_BLUE, PURPLE }
+    { ORANGE, LIGHT_BLUE, PURPLE },
+
+    { GRAY, BEIGE, LIGHT_BLUE },
+    { GRAY, LIGHT_BLUE, ORANGE },
+    { GRAY, ORANGE, LIGHT_GREEN },
+    { GRAY, LIGHT_GREEN, PINK },
+    { GRAY, PINK, BEIGE }
 };
 
 //struct that holds the relative position & direction for colors in g_faceNeighbors below

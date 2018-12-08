@@ -61,6 +61,17 @@ void utDrawText2D(float x, float y, void *font, char *string)
     }
 }
 
+void utDrawText3D(float x, float y, float z, void *font, char *string)
+{
+    char *c;
+    // set position to start drawing fonts
+    glRasterPos3f(x, y, z);
+    // loop all the characters in the string
+    for (c = string; *c != '\0'; c++) {
+        glutBitmapCharacter(font, *c);
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {

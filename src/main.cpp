@@ -15,9 +15,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <time.h>
-#include "engine/megaminx.h"
-#include "common_physics/utils.h"
-#include "common_physics/camera.h"
 #include "main.h"
 
 //Resize Window glut callBack function passthrough to the camera class
@@ -376,6 +373,7 @@ void createMenu()
 {
     //SubLevel 0 menu - Functions
     submenu0_id = glutCreateMenu(menuHandler);
+    glutAddMenuEntry("Serialize Vectors Test", 94);
     glutAddMenuEntry("Edit... Undo", 91);
     glutAddMenuEntry("Solve All/(reset)", 92);
     glutAddMenuEntry("Reset Camera", 93);
@@ -510,7 +508,53 @@ void menuHandler(int num)
     case 102: 
         glutDestroyWindow(1);
         exit(0); break;
+    case 94:
+        WriteEdgesFile();
+        WriteCornersFile();
+        break;
     default:
         break;
     }
+}
+
+void serializeVectorInt(std::vector<int> list1, std::string filename) {
+    std::ofstream file(filename);
+    file << "{ ";
+    for (auto l : list1) {
+        file << l << ", ";
+    }
+    file << " }\n";
+    file.close();
+}
+
+void WriteEdgesFile()
+{
+    std::string filename = "EdgeCurPos.dat";
+    std::ofstream file(filename);
+    for (int i = 1; i <= 12; ++i) {
+        file << "----------[ " << i << " ]----------\n";
+        auto f = megaminx->findEdges(i);
+        file << "{ ";
+        for (auto l : f) {
+            file << l << ", ";
+        }
+        file << " }\n";
+    }
+    file.close();
+}
+
+
+void WriteCornersFile()
+{
+    std::string filename = "CornerCurPos.dat";
+    std::ofstream file(filename);
+    for (int i = 1; i <= 12; ++i) {
+        file << "----------[ " << i << " ]----------\n";
+        auto f = megaminx->findCorners(i);
+        for (auto l : f) {
+            file << l << ", ";
+        }
+        file << " }\n";
+    }
+    file.close();
 }

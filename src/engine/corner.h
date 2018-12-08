@@ -6,7 +6,7 @@ class Corner : public Piece {
 public:
     Corner() = default;
     ~Corner() {}
-    static void createAxis(int n, double* target);
+    void createAxis(int n, double* target);
     void init(int n, double* cornerVertexBase);
     void init(int n, bool doAxes = true);
     void render();

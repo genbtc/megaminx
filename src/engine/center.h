@@ -7,7 +7,7 @@ public:
     Center() {
         this->centerInit();
     };
-    static void createAxis(int n, double* target);
+    void createAxis(int n, double* target);
     ~Center() {}
 
     void init(int n);

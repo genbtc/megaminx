@@ -23,11 +23,17 @@
 void utSetOrthographicProjection(float scrW, float scrH);
 void utResetPerspectiveProjection();
 void utDrawText2D(float x, float y, void *font, char *string);
+void utDrawText3D(float x, float y, float z, void * font, char * string);
 
 // simplier version for default font...
 inline void utDrawText2D(float x, float y, char *string)
 {
-    utDrawText2D(x, y, (void *)GLUT_BITMAP_8_BY_13, string);
+    utDrawText2D(x, y, (void *)0x0003, string);
+}
+// simplier version for default font...
+inline void utDrawText3D(float x, float y, float z, const char *string)
+{
+    utDrawText3D(x, y, z, (void *)0x0003, (char *)string);
 }
 
 void utCalculateAndPrintFps(float x, float y);

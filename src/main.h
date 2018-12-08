@@ -1,6 +1,9 @@
 #pragma once
 #include "engine/megaminx.h"
+#include "common_physics/utils.h"
 #include "common_physics/camera.h"
+#include <fstream>
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.31 - genBTC mod";
@@ -8,7 +11,7 @@ const char *title = "Megaminx v1.31 - genBTC mod";
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
 static const double REFRESH_TIME_MS = (1000.0 / REFRESH_RATE);
-static const unsigned int REFRESH_WAIT = REFRESH_TIME_MS;
+static const unsigned int REFRESH_WAIT = (const unsigned int)REFRESH_TIME_MS;
 // initial window screen size
 float WIDTH = 700;
 float HEIGHT = 700;
@@ -57,3 +60,8 @@ void menuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id,
        submenu5_id;
+
+
+void serializeVectorInt(std::vector<int> list1, std::string filename);
+void WriteEdgesFile();
+void WriteCornersFile();
