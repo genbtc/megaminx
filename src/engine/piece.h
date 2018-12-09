@@ -323,8 +323,7 @@ public:
     }
 };
 
-template <int rows, int cols>
-inline void makeGLpentagon(double(&_vertex)[rows][cols], double scale,int shape)
+inline void makeGLpentagon(double(&_vertex)[7][3], double scale,int shape)
 {
     glBegin(shape);
     for (int i = 0; i < 5; ++i) {

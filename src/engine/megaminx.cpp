@@ -17,7 +17,7 @@ Megaminx::Megaminx()
 //Solve Puzzle, aka Reset, aka the real constructor.
 void Megaminx::solve()
 {
-    _rotatingFaceIndex = 0;
+    _rotatingFaceIndex = -1;
     isRotating = false;
     initEdgePieces();
     initCornerPieces();
@@ -52,8 +52,8 @@ void Megaminx::initFacePieces()
         centers[i].init(i);
         faces[i].attachCenter(centers + i, centerVertexList);
         faces[i].initAxis(i);
-        faces[i].attachEdgePieces(edges[0], numEdges);
-        faces[i].attachCornerPieces(corners[0], numCorners);
+        faces[i].attachEdgePieces(edges[0]);
+        faces[i].attachCornerPieces(corners[0]);
     }
 }
 
@@ -66,6 +66,8 @@ void Megaminx::renderAllPieces()
         edge.render();
     for (auto& corner: corners)
         corner.render();
+    //for (auto& face : faces)
+    //    face.render();
 }
 
 //Display render function for OpenGL
@@ -96,8 +98,10 @@ void Megaminx::render()
         else
             k++;
     }
-
-    //Finish the rotation Queue
+//FIXED: Noticed that _rotatingFaceIndex as set to 0 on startup, means that is .rendered()
+//     : make startup not call this. Solution A), set to -1 on startup and check everytime.
+    if (_rotatingFaceIndex == -1) return;
+    //Or Finish the rotation Queue
     const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
     if (isRotaFullyRendered && isRotating) {
         rotateQueue.pop();
