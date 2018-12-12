@@ -223,45 +223,6 @@ void mousePressedMove(int x, int y)
         g_camera.ProcessMouseMotion(x, y, !menuVisibleState);
 }
 
-//Switch for routing directional key commands - rotate neighbors of current face
-void rotateDispatch(unsigned char key)
-{
-    const int dir = GetDirFromSpecialKey();
-    const auto face = g_faceNeighbors[currentFace];
-    switch (key) {
-    case 'w':   //Upper(Top)
-    case 'W':
-        megaminx->rotate(face.up, dir);
-        break;
-    case 's':   //Front
-    case 'S':
-        megaminx->rotate(face.front, dir);
-        break;
-    case 'a':   //Left
-    case 'A':
-        megaminx->rotate(face.left, dir);
-        break;
-    case 'd':   //Right
-    case 'D':
-        megaminx->rotate(face.right, dir);
-        break;
-    case 'z':   //Diagonal/Corner Left
-    case 'Z':
-        megaminx->rotate(face.downl, dir);
-        break;
-    case 'c':   //Diagonal/Corner Right
-    case 'C':
-        megaminx->rotate(face.downr, dir);
-        break;
-    case 'x':   //Bottom
-    case 'X':
-        megaminx->rotate(face.bottom, dir);
-        break;
-    default:
-        break;
-    }
-}
-
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
 {
@@ -329,8 +290,42 @@ void onKeyboard(unsigned char key, int x, int y)
     default:
         break;
     }
-    //call the megaminx specific key functions (above)
-    rotateDispatch(key);
+    //Switch for routing directional key commands - rotate neighbors of current face
+    //call the megaminx specific key functions 
+    const int dir = GetDirFromSpecialKey();
+    const auto face = g_faceNeighbors[currentFace];
+    switch (key) {
+    case 'w':   //Upper(Top)
+    case 'W':
+        megaminx->rotate(face.up, dir);
+        break;
+    case 's':   //Front
+    case 'S':
+        megaminx->rotate(face.front, dir);
+        break;
+    case 'a':   //Left
+    case 'A':
+        megaminx->rotate(face.left, dir);
+        break;
+    case 'd':   //Right
+    case 'D':
+        megaminx->rotate(face.right, dir);
+        break;
+    case 'z':   //Diagonal/Corner Left
+    case 'Z':
+        megaminx->rotate(face.downl, dir);
+        break;
+    case 'c':   //Diagonal/Corner Right
+    case 'C':
+        megaminx->rotate(face.downr, dir);
+        break;
+    case 'x':   //Bottom
+    case 'X':
+        megaminx->rotate(face.bottom, dir);
+        break;
+    default:
+        break;
+    }
 }
 //Secondary Keyboard Handler (Special Keys)
 void onSpecialKeyPress(int key, int x, int y)

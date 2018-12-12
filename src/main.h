@@ -53,7 +53,6 @@ void GetCurrentFace();
 void double_click(int x, int y);
 void onKeyboard(unsigned char key, int x, int y);
 void onSpecialKeyPress(int key, int x, int y);
-void rotateDispatch(unsigned char key);
 void createMenu();
 void menuHandler(int num);
 void menuVisible(int status, int x, int y);
