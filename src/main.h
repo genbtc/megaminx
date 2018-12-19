@@ -6,7 +6,7 @@
 #include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.31 - genBTC mod";
+const char *title = "Megaminx v1.32 - genBTC mod";
 //testing framerate cap:
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
@@ -64,3 +64,4 @@ static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, 
 void serializeVectorInt(std::vector<int> list1, std::string filename);
 void WriteEdgesFile();
 void WriteCornersFile();
+void ReadMegaMinxSavedState();

@@ -1,4 +1,4 @@
-MegaMinx - v1.29 genBTC Mod (December 2, 2017)
+MegaMinx - v1.32 genBTC Mod (December 19, 2018)
 ========
 ![Current129](https://puu.sh/yyfd7/525320ef95.png)
 <p>It's a working simulator of a Rubik's ~~cube~~ Dodecahedron puzzle called the <b>Megaminx</b>!<br />
@@ -6,8 +6,9 @@ MegaMinx - v1.29 genBTC Mod (December 2, 2017)
 <br>press H for on-screen Help (shown above): </br>
 <br>Right click for Menu</br>
 <br>Double click rotates. Hold Shift for reverse.</br>
+<br>Default Front Face is Blue</br>
 <br>Left drag changes Camera (arrow keys too). MouseWheel Zooms</br>
-<br>Full List of Keyboard commands at bottom of page</br>
+<br>Full List of Keyboard commands shown below:</br>
 <h2>Compatible out of the box with Visual Studio 2017 Open Folder w/ CMake.</h2>
 <h2>Build & run (Linux)</h2>
 You'll need the pre-requisities: `g++ make freeglut3-dev`<br />
@@ -26,21 +27,59 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 ![ClassDiagram](https://puu.sh/yycv0/5032380248.png)
 <p>
 <h2>Keyboard Commands:</h2>
-"Default Front Face is Blue"<br>
-"[Right Click]  Action Menu"<br>
-"[Dbl Click]  Rotate Current Face Clockwise >>"<br>
-"  /+Shift  Rotate Current Face CounterClockwise <<"<br>
-"[D/d]  Rotate Right Face <>"<br>
-"[A/a]  Rotate Left Face <>"<br>
-"[S/s]  Rotate Front Face <>"<br>
-"[W/w]  Rotate Upper Face <>"<br>
-"[Z/z,X/x,C/c]  Rotate Diag <>"<br>
-"[B/b]  Rotate Bottom Face <>"<br>
-"[F1]-[F12]/+Shift  Rotate Face # <>"<br>
+"[Right Click]  Actions Menu"<br>
+"[Dbl Click]  Rotate Current >>"<br>
+"[F1-F12]     Rotate Face #  >>"<br>
+"  +Shift  CounterClockwise <<"<br>
+"[W/w]  Rotate Upper Face </>"<br>
+"[S/s]  Rotate Front Face </>"<br>
+"[A/a]  Rotate Side/Left  </>"<br>
+"[D/d]  Rotate Side/Right </>"<br>
+"[Z/z]  Rotate Diag/Left  </>"<br>
+"[C/c]  Rotate Diag/Right </>"<br>
+"[X/x]  Rotate Bottom Face </>"<br>
 "[Space]  Toggle Auto-Spin"<br>
 "[BackSpace]  Reset Camera"<br>
 "[Delete]  Scramble Puzzle"<br>
-"[Enter] Try Solve Current Face" (cheating)<br>
+"[Enter] Solve Current Face"<br>
+<p>
+<h2>Possible cube manipulations</h2>
+"Rotate Current Face ClockWise"<br>
+"Solve/Reset Current Face (All)"<br>
+"Solve Current Face's Edges"<br>
+"Solve Current Face's Corners"<br>
+"Swap Face Edge 1-5<br>
+"Rotate Face Corner 1-5<br>
+<h2>Last Layer solve helpers</h2><br>
+"Solve White Star"<br>
+"Solve White Corners"<br>
+"Solve Grey Star"<br>
+"Solve Grey Corners"<br>
+//TODO These arent implemented yet.<br>
+//  "Swap 1 Gray Edge"<br>
+//  "Swap 1 Gray Corner"<br>
+//  "Swap 2 Gray Corners"<br>
+//TODO Add the rest of these:<br>
+//  "2nd Layer Edges"<br>
+//  "Low Y's (corners)"<br>
+//  "4th Layer Edges"<br>
+//  "High Y's (corners)"<br>
+//  "6th Layer Edges"<br>
+<p>
+<h2>Notation Algorithms</h2><br>
+"r u R' U'"<br>
+"l u L' U'"<br>
+"U' L' u l u r U' R'"<br>
+"r u R' u r 2U' R'"<br>
+"u l U' R' u L' U' r"<br>
+"u r 2U' L' 2u R' 2U' l u"<br>
+"R' D' R D"<br>
+//TODO: These are Not doing the right things yet for some reason.<br>
+"Edge Permutation 1":  r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5)<br>
+"Edge Permutation 2":  r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5)<br>
+"Edge Permutation 3":  r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)<br>
+"Edge Permutation 4":  r u R' u , R' U' r2 U', R' u R' u, r U2' (5 to 2, 2 to 1, 1 to 5)<br>
+"Edge Permutation 5":  l r u2, L' u R', l U' r u2, L' u2 R' (5 and 3 swap, 1 and 2 swap)<br>
 <h2> Programming Credits </h2>
-genBTC - genBTC@gmx.com - November to December 2017<br>
+genBTC - genBTC@gmx.com - November to December 2017, and 2018 (C)<br>
 Uses forked code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com<br>

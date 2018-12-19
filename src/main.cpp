@@ -1,8 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
-/* MegaMinx2 - v1.30 October24-December12 2017 - genBTC mod
-             - v1.3.1 Nov 22, 2018
-* Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
-* genBTC 2017 + 2018- genbtc@gmx.com / @genr8_ / github.com/genbtc/
+/* MegaMinx2 - v1.3 October24 - December12 2017 - genBTC mod
+             - v1.3.2 Nov 22, 2018
+             - v1.3.3 Dec 19, 2018
+* Uses some code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
+* genBTC 2017 + 2018 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
 // Headers
 int main(int argc, char *argv[]);
@@ -226,20 +227,20 @@ void mousePressedMove(int x, int y)
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
 {
-    constexpr char helpStrings[16][32] = { "Help Menu:",
-                                           "[Right Click]  Action Menu",
+    constexpr char helpStrings[16][32] = { "[H]elp Menu:",
+                                           "[Right Click]  Actions Menu",
                                            "[Dbl Click]  Rotate Current >>",
                                            "[F1-F12]     Rotate Face #  >>",
                                            "  +Shift  CounterClockwise <<",
-                                           "[W/w]  Rotate Upper Face <>",
-                                           "[S/s]  Rotate Front Face <>",
-                                           "[A/a]  Rotate Side/Left  <>",
-                                           "[D/d]  Rotate Side/Right <>",
-                                           "[Z/z]  Rotate Diag/Left  <>",
-                                           "[C/c]  Rotate Diag/Right <>",
-                                           "[X/x]  Rotate Bottom Face <>",
-                                           "[Space]  Toggle Auto-Spin",
-                                           "[BackSpace]  Reset Camera",
+                                           "[W/w]  Rotate Upper Face </>",
+                                           "[S/s]  Rotate Front Face </>",
+                                           "[A/a]  Rotate Side/Left  </>",
+                                           "[D/d]  Rotate Side/Right </>",
+                                           "[Z/z]  Rotate Diag/Left  </>",
+                                           "[C/c]  Rotate Diag/Right </>",
+                                           "[X/x]  Rotate Bottom Face </>",
+                                           "[Space]  Toggle Auto-Spinning",
+                                           "[BackSpace]  Reset Camera Pos",
                                            "[Delete]  Scramble Puzzle",
                                            "[Enter] Solve Current Face"
                                          };
@@ -368,21 +369,16 @@ void createMenu()
 {
     //SubLevel 0 menu - Functions
     submenu0_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Serialize Vectors Test", 94);
     glutAddMenuEntry("Edit... Undo", 91);
-    glutAddMenuEntry("Solve All/(reset)", 92);
-    glutAddMenuEntry("Reset Camera", 93);
-    glutAddMenuEntry("Scramble", 100);
+    glutAddMenuEntry("Solve Puzzle", 92);
+    glutAddMenuEntry("Camera Home (bksp)", 93);
+    glutAddMenuEntry("Scramble (del)", 100);
     glutAddMenuEntry("Quit", 102);
+    glutAddMenuEntry("Serialize Vectors Test", 94);
 
-    //SubLevel 1 menu - Last Layer
-    submenu1_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Solve Grey Star", 31);
-    glutAddMenuEntry("Solve Grey Corners", 32);
-    //TODO make these work
-//    glutAddMenuEntry("Swap 1 Gray Edge", 33);
-//    glutAddMenuEntry("Swap 1 Gray Corner", 34);
-//    glutAddMenuEntry("Swap 2 Gray Corners", 35);
+    ////SubLevel 1 menu - Last Layer
+    //submenu1_id = glutCreateMenu(menuHandler);
+
 
     //SubLevel2 Menu - Rotations
     submenu2_id = glutCreateMenu(menuHandler);
@@ -390,19 +386,33 @@ void createMenu()
     glutAddMenuEntry("Solve/Reset Current Face (All)", 21);
     glutAddMenuEntry("Solve Current Face's Edges", 22);
     glutAddMenuEntry("Solve Current Face's Corners", 23);
-    glutAddMenuEntry("Swap Face's 1st Edge", 24);
-    glutAddMenuEntry("Rotate Face's 1st Corner", 25);
+    glutAddMenuEntry("Swap Face Edge 1", 24);
+    glutAddMenuEntry("Swap Face Edge 2", 25);
+    glutAddMenuEntry("Swap Face Edge 3", 26);
+    glutAddMenuEntry("Swap Face Edge 4", 27);
+    glutAddMenuEntry("Swap Face Edge 5", 28);
+    glutAddMenuEntry("Rotate Face Corner 1", 29);    
+    glutAddMenuEntry("Rotate Face Corner 2", 30);    
+    glutAddMenuEntry("Rotate Face Corner 3", 31);
+    glutAddMenuEntry("Rotate Face Corner 4", 32);
+    glutAddMenuEntry("Rotate Face Corner 5", 33);
 
     //SubLevel3 Menu - Steps
     submenu3_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("White Star", 41);
-    glutAddMenuEntry("White Face", 42);
+    glutAddMenuEntry("Solve White Star", 41);
+    glutAddMenuEntry("Solve White Corners", 42);
+    glutAddMenuEntry("Solve Grey Star", 43);
+    glutAddMenuEntry("Solve Grey Corners", 44);
+    //TODO make these work
+//  glutAddMenuEntry("Swap 1 Gray Edge", 45);
+//  glutAddMenuEntry("Swap 1 Gray Corner", 46);
+//  glutAddMenuEntry("Swap 2 Gray Corners", 47);
     //TODO Add the rest of these:
-//  glutAddMenuEntry("2nd Layer Edges", 43);
-//  glutAddMenuEntry("Low Y's", 44);
-//  glutAddMenuEntry("4th Layer Edges", 45);
-//  glutAddMenuEntry("High Y's", 46);
-//  glutAddMenuEntry("6th Layer Edges", 47);
+//  glutAddMenuEntry("2nd Layer Edges", 48);
+//  glutAddMenuEntry("Low Y's", 49);
+//  glutAddMenuEntry("4th Layer Edges", 50);
+//  glutAddMenuEntry("High Y's", 151);
+//  glutAddMenuEntry("6th Layer Edges", 152);
 
     //SubLevel4 Menu - Algos
     submenu4_id = glutCreateMenu(menuHandler);
@@ -413,27 +423,32 @@ void createMenu()
     glutAddMenuEntry("u l U' R' u L' U' r", 55);
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     glutAddMenuEntry("R' D' R D", 57);
+    glutAddMenuEntry("Edge Permutation 1", 58);
+    glutAddMenuEntry("Edge Permutation 2", 59);
+    glutAddMenuEntry("Edge Permutation 3", 60);
+    glutAddMenuEntry("Edge Permutation 4", 61);
+    glutAddMenuEntry("Edge Permutation 5", 62);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry(" 1 WHITE", 61);
-    glutAddMenuEntry(" 2 DARK_BLUE", 62);
-    glutAddMenuEntry(" 3 RED", 63);
-    glutAddMenuEntry(" 4 DARK_GREEN", 64);
-    glutAddMenuEntry(" 5 PURPLE", 65);
-    glutAddMenuEntry(" 6 YELLOW", 66);
-    glutAddMenuEntry(" 7 GRAY", 67);
-    glutAddMenuEntry(" 8 LIGHT_BLUE", 68);
-    glutAddMenuEntry(" 9 ORANGE", 69);
-    glutAddMenuEntry("10 LIGHT_GREEN", 70);
-    glutAddMenuEntry("11 PINK", 71);
-    glutAddMenuEntry("12 BEIGE", 72);
+    glutAddMenuEntry(" 1 WHITE", 71);
+    glutAddMenuEntry(" 2 DARK_BLUE", 72);
+    glutAddMenuEntry(" 3 RED", 73);
+    glutAddMenuEntry(" 4 DARK_GREEN", 74);
+    glutAddMenuEntry(" 5 PURPLE", 75);
+    glutAddMenuEntry(" 6 YELLOW", 77);
+    glutAddMenuEntry(" 7 GRAY", 77);
+    glutAddMenuEntry(" 8 LIGHT_BLUE", 78);
+    glutAddMenuEntry(" 9 ORANGE", 79);
+    glutAddMenuEntry("10 LIGHT_GREEN", 80);
+    glutAddMenuEntry("11 PINK", 81);
+    glutAddMenuEntry("12 BEIGE", 82);
 
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning", 1);
     glutAddSubMenu("Function  -->", submenu0_id);
-    glutAddSubMenu("Last Layer ->", submenu1_id);
+    //glutAddSubMenu("Last Layer ->", submenu1_id);
     glutAddSubMenu("Rotations -->", submenu2_id);
     glutAddSubMenu("Steps  ----->", submenu3_id);
     glutAddSubMenu("Algos  ----->", submenu4_id);
@@ -456,21 +471,30 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(currentFace); break;
     case 23:  //rotate corner piece
         megaminx->resetFacesCorners(currentFace); break;
-    case 24:  //rotate edge piece (random)
-        megaminx->swapOneEdge(currentFace, rand() % 5); break;
-    case 25:  //rotate corner piece (random)
-        megaminx->swapOneCorner(currentFace, rand() % 5); break;
-    case 31:  //make GRAY edges (star)
-        megaminx->resetFacesEdges(GRAY); break;
-    case 32:  //make GRAY corners
-        megaminx->resetFacesCorners(GRAY); break;
-    case 33: ; //one gray edge
+    case 24:  //rotate edge piece 1
+    case 25:  //rotate edge piece 2
+    case 26:  //rotate edge piece 3
+    case 27:  //rotate edge piece 4
+    case 28:  //rotate edge piece 5
+        megaminx->swapOneEdge(currentFace, num - 23); break;
+    case 29:  //rotate corner piece 1
+    case 30:  //rotate corner piece 2
+    case 31:  //rotate corner piece 3
+    case 32:  //rotate corner piece 4
+    case 33:  //rotate corner piece 5
+        megaminx->swapOneCorner(currentFace, num - 28); break;
+    //case 33: ; //one gray edge
     case 34: ; //one gray corner
     case 35: ; //two gray corners
-    case 41:  //make WHITE edges (star)
+    case 41:  //solve WHITE edges (star)
         megaminx->resetFacesEdges(WHITE); break;
-    case 42:  //make WHITE Face
-        megaminx->resetFace(WHITE); break;
+    case 42:  //solve WHITE corners
+        megaminx->resetFacesCorners(WHITE); break;
+        //megaminx->resetFace(WHITE); break;
+    case 43:  //solve GRAY edges (star)
+        megaminx->resetFacesEdges(GRAY); break;
+    case 44:  //solve GRAY corners
+        megaminx->resetFacesCorners(GRAY); break;
     case 51:
     case 52:
     case 53:
@@ -478,20 +502,25 @@ void menuHandler(int num)
     case 55:
     case 56:
     case 57:
-        megaminx->rotateAlgo(currentFace, num - 50); break;
+    case 58:
+    case 59:
+    case 60:
     case 61:
     case 62:
-    case 63:
-    case 64:
-    case 65:
-    case 66:
-    case 67:
-    case 68:
-    case 69:
-    case 70:
+        megaminx->rotateAlgo(currentFace, num - 50); break;
     case 71:
     case 72:
-        megaminx->resetFace(num - 60); break;
+    case 73:
+    case 74:
+    case 75:
+    case 76:
+    case 77:
+    case 78:
+    case 79:
+    case 80:
+    case 81:
+    case 82:
+        megaminx->resetFace(num - 70); break;
     case 91:
         megaminx->undo(); break;
     case 92:
@@ -506,6 +535,9 @@ void menuHandler(int num)
     case 94:
         WriteEdgesFile();
         WriteCornersFile();
+        break;
+    case 95:
+        ReadMegaMinxSavedState();
         break;
     default:
         break;
@@ -550,6 +582,18 @@ void WriteCornersFile()
             file << l << ", ";
         }
         file << " }\n";
+    }
+    file.close();
+}
+
+void ReadMegaMinxSavedState()
+{
+    std::string filename = "MegaminxSave.dat";
+    std::ifstream file(filename);
+    std::vector<int> readvector;
+    int readint;
+    while (file >> readint) {
+        readvector.push_back(readint);
     }
     file.close();
 }
