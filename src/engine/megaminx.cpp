@@ -280,45 +280,6 @@ int Megaminx::resetFacesEdges(int color_n)
 int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
 {
     assert(readEdges.size() == 60);
-    std::vector<std::vector<int>> inputvector;
-    int subcount = 0;
-    int count = 0;
-    std::vector<int> five;
-    for (int all : readEdges) {
-        five.push_back(all);
-        ++count;
-        if ((count % 5) == 0) {
-            assert(five.size() == 5);
-            inputvector.push_back(five);
-            five.clear();
-        }
-    }
-    assert(inputvector.size() == 12);
-    //int color_n = 1;
-    //for (std::vector<int> five : inputvector) {
-    //    assert(five.size() == 5);
-    //    Face activeFace = faces[(color_n - 1)];
-    //    std::vector<int> foundEdges = findEdges(color_n);        
-    //    //assert(foundEdges == all);
-    //    for (int r = 0; r < 5; ++r) {
-    //        //assert(foundEdges[r] == all[r]);
-    //        edges[five[r]].swapdata(edges[foundEdges[r]].data);
-    //    }
-    //    color_n++;
-    //}
-    //color_n = 1;
-    //for (std::vector<int> five : inputvector) {
-    //    for (int r = 0; r < 5; ++r) {
-    //        Face activeFace = faces[(color_n - 1)];
-    //        auto epos = activeFace.edgeColorPos;
-    //        if (activeFace.edge[r]->matchesColor(color_n)) {
-    //            while (activeFace.edge[r]->data._colorNum[epos[r]] != color_n)
-    //                activeFace.edge[r]->flip();
-    //        }
-    //    }
-    //    color_n++;
-    //}
-
     int index = 0;
     for (int face = 1; face <= 12; ++face) {
         std::vector<int> foundEdges = findEdges(face);
@@ -343,43 +304,23 @@ int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
 int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
 {
     assert(readCorners.size() == 60);
-    std::vector<std::vector<int>> inputvector;
-    int subcount = 0;
-    int count = 0;
-    std::vector<int> five;
-    for (int all : readCorners) {
-        five.push_back(all);
-        ++count;
-        if ((count % 5) == 0) {
-            assert(five.size() == 5);
-            inputvector.push_back(five);
-            five.clear();
+    int index = 0;
+    for (int face = 1; face <= 12; ++face) {
+        std::vector<int> foundCorners = findCorners(face);
+        for (int r = 0; r < 5; ++r) {
+            corners[readCorners[index]].swapdata(corners[foundCorners[r]].data);
+            index++;
         }
     }
-    assert(inputvector.size() == 12);
-    int color_n = 1;
-    for (std::vector<int> five : inputvector) {
-        assert(five.size() == 5);
-        Face activeFace = faces[(color_n - 1)];
-        std::vector<int> foundCorners = findCorners(color_n);
-        //assert(foundCorners == all);
+    for (int face = 1; face <= 12; ++face) {
         for (int r = 0; r < 5; ++r) {
-            //assert(foundCorners[r] == all[r]);
-            corners[five[r]].swapdata(corners[foundCorners[r]].data);
-        }
-        color_n++;
-    }
-    color_n = 1;
-    for (std::vector<int> five : inputvector) {
-        for (int r = 0; r < 5; ++r) {
-            Face activeFace = faces[(color_n - 1)];
-            auto cpos = activeFace.cornerColorPos;
-            if (activeFace.corner[r]->matchesColor(color_n)) {
-                while (activeFace.corner[r]->data._colorNum[cpos[r]] != color_n)
+            Face activeFace = faces[(face - 1)];
+            auto epos = activeFace.cornerColorPos;
+            if (activeFace.corner[r]->matchesColor(face)) {
+                while (activeFace.corner[r]->data._colorNum[epos[r]] != face)
                     activeFace.corner[r]->flip();
             }
         }
-        color_n++;
     }
     return 1;
 }
