@@ -277,7 +277,7 @@ int Megaminx::resetFacesEdges(int color_n)
     return 1;
 }
 
-int Megaminx::LoadNewEdgesFromVector(std::vector<int> readEdges)
+int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
 {
     assert(readEdges.size() == 60);
     std::vector<std::vector<int>> inputvector;
@@ -294,60 +294,53 @@ int Megaminx::LoadNewEdgesFromVector(std::vector<int> readEdges)
         }
     }
     assert(inputvector.size() == 12);
-    int color_n = 1;
-    for (std::vector<int> five : inputvector) {
-        assert(five.size() == 5);
-        Face activeFace = faces[(color_n - 1)];
-        std::vector<int> foundEdges = findEdges(color_n);        
-        //assert(foundEdges == all);
+    //int color_n = 1;
+    //for (std::vector<int> five : inputvector) {
+    //    assert(five.size() == 5);
+    //    Face activeFace = faces[(color_n - 1)];
+    //    std::vector<int> foundEdges = findEdges(color_n);        
+    //    //assert(foundEdges == all);
+    //    for (int r = 0; r < 5; ++r) {
+    //        //assert(foundEdges[r] == all[r]);
+    //        edges[five[r]].swapdata(edges[foundEdges[r]].data);
+    //    }
+    //    color_n++;
+    //}
+    //color_n = 1;
+    //for (std::vector<int> five : inputvector) {
+    //    for (int r = 0; r < 5; ++r) {
+    //        Face activeFace = faces[(color_n - 1)];
+    //        auto epos = activeFace.edgeColorPos;
+    //        if (activeFace.edge[r]->matchesColor(color_n)) {
+    //            while (activeFace.edge[r]->data._colorNum[epos[r]] != color_n)
+    //                activeFace.edge[r]->flip();
+    //        }
+    //    }
+    //    color_n++;
+    //}
+
+    int index = 0;
+    for (int face = 1; face <= 12; ++face) {
+        std::vector<int> foundEdges = findEdges(face);
         for (int r = 0; r < 5; ++r) {
-            //assert(foundEdges[r] == all[r]);
-            edges[five[r]].swapdata(edges[foundEdges[r]].data);
+            edges[readEdges[index]].swapdata(edges[foundEdges[r]].data);
+            index++;
         }
-        color_n++;
     }
-    color_n = 1;
-    for (std::vector<int> five : inputvector) {
+    for (int face = 1; face <= 12; ++face) {
         for (int r = 0; r < 5; ++r) {
-            Face activeFace = faces[(color_n - 1)];
+            Face activeFace = faces[(face-1)];
             auto epos = activeFace.edgeColorPos;
-            if (activeFace.edge[r]->matchesColor(color_n)) {
-                while (activeFace.edge[r]->data._colorNum[epos[r]] != color_n)
+            if (activeFace.edge[r]->matchesColor(face)) {
+                while (activeFace.edge[r]->data._colorNum[epos[r]] != face)
                     activeFace.edge[r]->flip();
             }
         }
-        color_n++;
     }
-
-    //int color_n = 1;
-    //Face activeFace = faces[(color_n - 1)];
-    //std::vector<int> foundEdges = findEdges(color_n);
-    //int saw[30];
-    //int totco = 0;
-    //for (size_t count = 0; count < foundEdges.size(); ++count, ++subcount) {
-    //    if ((count % 5) == 0) {
-    //        if (color_n < 12)
-    //            color_n++;
-    //        activeFace = faces[(color_n - 1)];
-    //        subcount = 0;
-    //    }
-    //    if (subcount == 5)
-    //        break;
-    //    if (activeFace.edge[subcount] == &edges[foundEdges[count]])
-    //        continue;
-    //    if (saw[foundEdges[count]] != 1) {
-    //        saw[foundEdges[count]] = 1;
-    //        activeFace.edge[subcount]->swapdata(edges[foundEdges[count]].data);
-    //        //edges[foundEdges[count]].swapdata(activeFace.edge[subcount]->data);
-    //        //count = -1; subcount = -1; color_n = 1;
-    //    }
-    //    totco++;
-    //}
-    //totco--;
     return 1;
 }
 
-int Megaminx::LoadNewCornersFromVector(std::vector<int> readCorners)
+int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
 {
     assert(readCorners.size() == 60);
     std::vector<std::vector<int>> inputvector;
