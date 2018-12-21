@@ -40,7 +40,6 @@ public:
         double _color[3][3];
         int _colorNum[3];
         const wchar_t* _colorName[3];
-        Vector3d v3d[7];
     } data;
 
     //Center has 1, Edge has 2, Corner has 3

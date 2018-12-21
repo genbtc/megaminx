@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     glutReshapeFunc(ChangeSize);
     glutMouseFunc(mousePressed);
     glutMotionFunc(mousePressedMove);
-    glutPassiveMotionFunc(processMousePassiveMotion);
+    //glutPassiveMotionFunc(processMousePassiveMotion);
     glutKeyboardFunc(onKeyboard);
     glutSpecialFunc(onSpecialKeyPress);
     //Idle func, tracks frame-rate
@@ -116,18 +116,12 @@ void RenderScene()
         utDrawText2D(10.f, HEIGHT - 40.f, lastface);
         //Print out Text (Help display)
         if (!help)
-            utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 235.f);
+            utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
     }
     utResetPerspectiveProjection();
-    ////Clean up.
-    //glDisable(GL_BLEND);
-    //glDisable(GL_DEPTH_TEST);
-    //glDisable(GL_LIGHT1);
-    //glDisable(GLUT_MULTISAMPLE);
     glutSwapBuffers();
-    //g_appRenderTimeTotal = (double)glutGet(GLUT_ELAPSED_TIME);
 }
 
 //query Megaminx for what face we're looking at?
@@ -158,9 +152,12 @@ void double_click(int , int )
     megaminx->rotate(currentFace, dir);
 }
 
+static int OldmenuVisibleState = 0;
 void menuVisible(int status, int x, int y)
 {
     menuVisibleState = (status == GLUT_MENU_IN_USE);
+    if (menuVisibleState)
+        OldmenuVisibleState = 1;
 }
 void mousePressed(int button, int state, int x, int y)
 {
@@ -207,35 +204,37 @@ void mousePressed(int button, int state, int x, int y)
         //Mouse wheel down
         g_camera.m_zoom -= 5;
     }
-}
 
-void processMousePassiveMotion(int x, int y)
-{
-    // called when no mouse btn are pressed and mouse moves
-    // does nothing but record mouse position in camera class.
-    //g_camera.ProcessPassiveMouseMotion(x, y);
 }
 
 void mousePressedMove(int x, int y)
 {
-    // if we are dragging any ball we cannot use mouse for scene rotation
-    //TODO block from happening during right click menu visible.
-    if (!menuVisibleState)
-        g_camera.ProcessMouseMotion(x, y, !menuVisibleState);
+    //FIXED: FINALLY block cube rotate from happening right after we come back from right click menu visible.
+    //TODO: X/Y coords still change in the background when Menu is showing, and the first drag after will "jump to pos"
+    if (!menuVisibleState && OldmenuVisibleState) {
+        OldmenuVisibleState = 0;  //maybe wanna store old x and y here then re-kajigger it ?
+        return;
+    }
+    if (!menuVisibleState && !OldmenuVisibleState) {
+        g_camera.ProcessMouseMotion(x, y, !menuVisibleState);        
+    }
+
 }
 
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
 {
-    constexpr char helpStrings[16][32] = { "[H]elp Menu:",
+    constexpr char helpStrings[18][32] = { "[H]elp Menu:",
                                            "[Right Click]  Actions Menu",
                                            "[Dbl Click]  Rotate Current >>",
                                            "[F1-F12]     Rotate Face #  >>",
                                            "  +Shift  CounterClockwise <<",
+                                           "1,2,3,4,5 Flip Curr. Corner #",
+                                           "!,@,#,$,% Flip Curr. Edge  #",
                                            "[W/w]  Rotate Upper Face </>",
                                            "[S/s]  Rotate Front Face </>",
-                                           "[A/a]  Rotate Side/Left  </>",
-                                           "[D/d]  Rotate Side/Right </>",
+                                           "[A/a]  Rotate Left  Face </>",
+                                           "[D/d]  Rotate Right Face </>",
                                            "[Z/z]  Rotate Diag/Left  </>",
                                            "[C/c]  Rotate Diag/Right </>",
                                            "[X/x]  Rotate Bottom Face </>",
@@ -246,7 +245,7 @@ void utPrintHelpMenu(float w, float h)
                                          };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 18; i++) {
         utDrawText2D(w, incrementHeight, (char *)helpStrings[i]);
         incrementHeight += 15;
     }
@@ -324,6 +323,19 @@ void onKeyboard(unsigned char key, int x, int y)
     case 'X':
         megaminx->rotate(face.bottom, dir);
         break;
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+        megaminx->swapOneCorner(currentFace, (int)key - 48); break;
+    case '!':
+    case '#':
+    case '$':
+    case '%':
+        megaminx->swapOneEdge(currentFace, (int)key - 32); break;
+    case '@':
+        megaminx->swapOneEdge(currentFace, (int)key - 62); break;
     default:
         break;
     }
@@ -367,18 +379,18 @@ void onSpecialKeyPress(int key, int x, int y)
 //Right Click Menu structure definitions.
 void createMenu()
 {
-    //SubLevel 0 menu - Functions
+    //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Edit... Undo", 91);
-    glutAddMenuEntry("Solve Puzzle", 92);
-    glutAddMenuEntry("Camera Home (bksp)", 93);
+    glutAddMenuEntry("Edit... Undo", 91);    
+    glutAddMenuEntry("Camera Home Pos.", 93);
     glutAddMenuEntry("Scramble (del)", 100);
     glutAddMenuEntry("Quit", 102);
+
+    //Sublevel 1 meun - Admin Mode
+    submenu1_id = glutCreateMenu(menuHandler);    
+    glutAddMenuEntry("Solve Entire Puzzle", 92);
     glutAddMenuEntry("Serialize Vectors Test", 94);
-
-    ////SubLevel 1 menu - Last Layer
-    //submenu1_id = glutCreateMenu(menuHandler);
-
+    glutAddMenuEntry("Read in SaveState and WriteOut", 95);
 
     //SubLevel2 Menu - Rotations
     submenu2_id = glutCreateMenu(menuHandler);
@@ -410,6 +422,8 @@ void createMenu()
     //TODO Add the rest of these:
 //  glutAddMenuEntry("2nd Layer Edges", 48);
 //  glutAddMenuEntry("Low Y's", 49);
+    //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
+    //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
 //  glutAddMenuEntry("4th Layer Edges", 50);
 //  glutAddMenuEntry("High Y's", 151);
 //  glutAddMenuEntry("6th Layer Edges", 152);
@@ -436,7 +450,7 @@ void createMenu()
     glutAddMenuEntry(" 3 RED", 73);
     glutAddMenuEntry(" 4 DARK_GREEN", 74);
     glutAddMenuEntry(" 5 PURPLE", 75);
-    glutAddMenuEntry(" 6 YELLOW", 77);
+    glutAddMenuEntry(" 6 YELLOW", 76);
     glutAddMenuEntry(" 7 GRAY", 77);
     glutAddMenuEntry(" 8 LIGHT_BLUE", 78);
     glutAddMenuEntry(" 9 ORANGE", 79);
@@ -447,12 +461,13 @@ void createMenu()
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning", 1);
-    glutAddSubMenu("Function  -->", submenu0_id);
-    //glutAddSubMenu("Last Layer ->", submenu1_id);
-    glutAddSubMenu("Rotations -->", submenu2_id);
-    glutAddSubMenu("Steps  ----->", submenu3_id);
-    glutAddSubMenu("Algos  ----->", submenu4_id);
-    glutAddSubMenu("Reset Face: -->", submenu5_id);
+    glutAddSubMenu("Main Menu --->", submenu0_id);
+    glutAddMenuEntry("---------------", 0);
+    glutAddSubMenu("Admin Mode -->", submenu1_id);
+    glutAddSubMenu("Rotations --->", submenu2_id);
+    glutAddSubMenu("Steps     --->", submenu3_id);
+    glutAddSubMenu("Algos     --->", submenu4_id);
+    glutAddSubMenu("Reset Face -->", submenu5_id);
     glutAddMenuEntry("Exit Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -533,15 +548,22 @@ void menuHandler(int num)
         glutDestroyWindow(1);
         exit(0); break;
     case 94:
-        WriteEdgesFile();
-        WriteCornersFile();
+        WriteEdgesFile("EdgeCurPos.dat");
+        WriteCornersFile("CornerCurPos.dat");
         break;
     case 95:
-        ReadMegaMinxSavedState();
+        FromVectorFileToCube();
         break;
     default:
         break;
     }
+}
+
+void FromVectorFileToCube() {
+    const std::vector<int> &readEdgevector = ParsePiecesStateFile("EdgeCurPos.dat");
+    megaminx->LoadNewEdgesFromVector(readEdgevector);
+    const std::vector<int> &readCornervector = ParsePiecesStateFile("CornerCurPos.dat");
+    megaminx->LoadNewCornersFromVector(readCornervector);
 }
 
 void serializeVectorInt(std::vector<int> list1, std::string filename) {
@@ -554,46 +576,47 @@ void serializeVectorInt(std::vector<int> list1, std::string filename) {
     file.close();
 }
 
-void WriteEdgesFile()
+void WriteEdgesFile(std::string filename)
 {
-    std::string filename = "EdgeCurPos.dat";
     std::ofstream file(filename);
     for (int i = 1; i <= 12; ++i) {
         file << "----------[ " << i << " ]----------\n";
         auto f = megaminx->findEdges(i);
-        file << "{ ";
-        for (auto l : f) {
-            file << l << ", ";
-        }
-        file << " }\n";
+        file << f[0] << ", " << f[1] << ", " << f[2] << ", " << f[3] << ", " << f[4] << "\n";
     }
     file.close();
 }
-
-
-void WriteCornersFile()
+void WriteCornersFile(std::string filename)
 {
-    std::string filename = "CornerCurPos.dat";
     std::ofstream file(filename);
     for (int i = 1; i <= 12; ++i) {
         file << "----------[ " << i << " ]----------\n";
         auto f = megaminx->findCorners(i);
-        for (auto l : f) {
-            file << l << ", ";
-        }
-        file << " }\n";
+        file << f[0] << ", " << f[1] << ", " << f[2] << ", " << f[3] << ", " << f[4] << "\n";
     }
     file.close();
 }
 
-void ReadMegaMinxSavedState()
+const std::vector<int> ParsePiecesStateFile(std::string filename)
 {
-    std::string filename = "MegaminxSave.dat";
-    std::ifstream file(filename);
+    std::ifstream input(filename);
     std::vector<int> readvector;
-    int readint;
-    while (file >> readint) {
-        readvector.push_back(readint);
+    std::string line;                          // iterate each line
+    while (std::getline(input, line)) {        // getline returns the stream by reference, so this handles EOF
+        std::stringstream ss(line);            // create a stringstream out of each line
+        int readint = -1;                      // start a new node
+        while (ss) {                           // while the stream is good
+            std::string word;                  // get first word
+            if (ss >> word) {
+                if ((word.find("---") == 0) || (word[0] == '-'))
+                    break;
+                readint = std::stoi(word);
+                if (readint < 0)
+                    break;
+                readvector.push_back(readint);
+            }
+        }        
     }
-    file.close();
+    serializeVectorInt(readvector, "ReOutput" + filename );
+    return readvector;
 }

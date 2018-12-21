@@ -3,8 +3,6 @@
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
  */
-#include <cassert>
-#include <algorithm>
 #include "megaminx.h"
 
 //simple constructor. 
@@ -279,6 +277,119 @@ int Megaminx::resetFacesEdges(int color_n)
     return 1;
 }
 
+int Megaminx::LoadNewEdgesFromVector(std::vector<int> readEdges)
+{
+    assert(readEdges.size() == 60);
+    std::vector<std::vector<int>> inputvector;
+    int subcount = 0;
+    int count = 0;
+    std::vector<int> five;
+    for (int all : readEdges) {
+        five.push_back(all);
+        ++count;
+        if ((count % 5) == 0) {
+            assert(five.size() == 5);
+            inputvector.push_back(five);
+            five.clear();
+        }
+    }
+    assert(inputvector.size() == 12);
+    int color_n = 1;
+    for (std::vector<int> five : inputvector) {
+        assert(five.size() == 5);
+        Face activeFace = faces[(color_n - 1)];
+        std::vector<int> foundEdges = findEdges(color_n);        
+        //assert(foundEdges == all);
+        for (int r = 0; r < 5; ++r) {
+            //assert(foundEdges[r] == all[r]);
+            edges[five[r]].swapdata(edges[foundEdges[r]].data);
+        }
+        color_n++;
+    }
+    color_n = 1;
+    for (std::vector<int> five : inputvector) {
+        for (int r = 0; r < 5; ++r) {
+            Face activeFace = faces[(color_n - 1)];
+            auto epos = activeFace.edgeColorPos;
+            if (activeFace.edge[r]->matchesColor(color_n)) {
+                while (activeFace.edge[r]->data._colorNum[epos[r]] != color_n)
+                    activeFace.edge[r]->flip();
+            }
+        }
+        color_n++;
+    }
+
+    //int color_n = 1;
+    //Face activeFace = faces[(color_n - 1)];
+    //std::vector<int> foundEdges = findEdges(color_n);
+    //int saw[30];
+    //int totco = 0;
+    //for (size_t count = 0; count < foundEdges.size(); ++count, ++subcount) {
+    //    if ((count % 5) == 0) {
+    //        if (color_n < 12)
+    //            color_n++;
+    //        activeFace = faces[(color_n - 1)];
+    //        subcount = 0;
+    //    }
+    //    if (subcount == 5)
+    //        break;
+    //    if (activeFace.edge[subcount] == &edges[foundEdges[count]])
+    //        continue;
+    //    if (saw[foundEdges[count]] != 1) {
+    //        saw[foundEdges[count]] = 1;
+    //        activeFace.edge[subcount]->swapdata(edges[foundEdges[count]].data);
+    //        //edges[foundEdges[count]].swapdata(activeFace.edge[subcount]->data);
+    //        //count = -1; subcount = -1; color_n = 1;
+    //    }
+    //    totco++;
+    //}
+    //totco--;
+    return 1;
+}
+
+int Megaminx::LoadNewCornersFromVector(std::vector<int> readCorners)
+{
+    assert(readCorners.size() == 60);
+    std::vector<std::vector<int>> inputvector;
+    int subcount = 0;
+    int count = 0;
+    std::vector<int> five;
+    for (int all : readCorners) {
+        five.push_back(all);
+        ++count;
+        if ((count % 5) == 0) {
+            assert(five.size() == 5);
+            inputvector.push_back(five);
+            five.clear();
+        }
+    }
+    assert(inputvector.size() == 12);
+    int color_n = 1;
+    for (std::vector<int> five : inputvector) {
+        assert(five.size() == 5);
+        Face activeFace = faces[(color_n - 1)];
+        std::vector<int> foundCorners = findCorners(color_n);
+        //assert(foundCorners == all);
+        for (int r = 0; r < 5; ++r) {
+            //assert(foundCorners[r] == all[r]);
+            corners[five[r]].swapdata(corners[foundCorners[r]].data);
+        }
+        color_n++;
+    }
+    color_n = 1;
+    for (std::vector<int> five : inputvector) {
+        for (int r = 0; r < 5; ++r) {
+            Face activeFace = faces[(color_n - 1)];
+            auto cpos = activeFace.cornerColorPos;
+            if (activeFace.corner[r]->matchesColor(color_n)) {
+                while (activeFace.corner[r]->data._colorNum[cpos[r]] != color_n)
+                    activeFace.corner[r]->flip();
+            }
+        }
+        color_n++;
+    }
+    return 1;
+}
 /**
  * \brief Revert all the Corners pieces on the Nth colored face back to normal.
  *          To do so we must swap the pieces that are in there, OUT.
@@ -415,6 +526,10 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right,Face::CCW);
         break;
     // r u R' u r 2U' R' , 54
+        //Last Layer Step 2:
+        // Rotating the star-edge pieces into their correct positions.
+        //The pieces that will remain in the same position are the 6 and 8 o'clock ones.
+        //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correct positions.
     case 4:
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
@@ -437,6 +552,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right,Face::Clockwise);
         break;
     // u r 2U' L' 2u R' 2U' l u , 56
+        //Last Layer Step 3:
+        // Get the corner into their correct positions.
+        //The corners facing you at the 5 and 7 o'clock will stay and the other 3 corners will also rotate in an anticlockwise fashion!
     case 6:
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
@@ -452,6 +570,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up,   Face::Clockwise);
         break;
     // R' D' R D , 57
+        //Last Layer Step 4: Orientating the Corners.
+        //You repeat with all corners until they are all orientated correctly.
     case 7:
         rotate(loc.right,Face::CCW);
         rotate(loc.downr,Face::CCW);
@@ -474,6 +594,19 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
+        //rotate(loc.right, Face::CCW);
+        //rotate(loc.right, Face::CCW);
+        //rotate(loc.up, Face::Clockwise);
+        //rotate(loc.up, Face::Clockwise);
+        //rotate(loc.right, Face::Clockwise);
+        //rotate(loc.right, Face::Clockwise);
+        //rotate(loc.up, Face::Clockwise);
+        //rotate(loc.right, Face::CCW);
+        //rotate(loc.right, Face::CCW);
+        //rotate(loc.up, Face::Clockwise);
+        //rotate(loc.up, Face::Clockwise);
+        //rotate(loc.right, Face::Clockwise);
+        //rotate(loc.right, Face::Clockwise);
         break;
     case 9:
         // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5)

@@ -3,6 +3,8 @@
 
 #include "face.h"
 #include <queue>
+#include <cassert>
+#include <algorithm>
 
 class Megaminx {
 public:
@@ -25,6 +27,8 @@ public:
     void resetFace(int n);
     int resetFacesCorners(int n);
     int resetFacesEdges(int n);
+    int LoadNewEdgesFromVector(std::vector<int> readEdges);
+    int LoadNewCornersFromVector(std::vector<int> readCorners);
     void rotateAlgo(int n, int i);
     void resetQueue();
     /* face busy rotating when true */

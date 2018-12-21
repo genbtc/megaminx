@@ -2,8 +2,10 @@
 #include "engine/megaminx.h"
 #include "common_physics/utils.h"
 #include "common_physics/camera.h"
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.32 - genBTC mod";
@@ -47,7 +49,10 @@ void Idle(int);
 void RenderScene();
 
 void mousePressed(int button, int state, int x, int y);
-void processMousePassiveMotion(int x, int y);
+void processMousePassiveMotion(int x, int y); //currently unused
+    // ^ called when no mouse btn are pressed and mouse moves
+    // does nothing but record mouse position in camera class.
+    //g_camera.ProcessPassiveMouseMotion(x, y);
 void mousePressedMove(int x, int y);
 void GetCurrentFace();
 void double_click(int x, int y);
@@ -57,11 +62,12 @@ void createMenu();
 void menuHandler(int num);
 void menuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
-static int window, menu_id, submenu0_id, submenu1_id, submenu2_id, submenu3_id, submenu4_id,
-       submenu5_id;
-
+static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
+                            submenu3_id, submenu4_id, submenu5_id;
 
 void serializeVectorInt(std::vector<int> list1, std::string filename);
-void WriteEdgesFile();
-void WriteCornersFile();
-void ReadMegaMinxSavedState();
+//void SaveFacePiecesToFile(std::string filename, std::vector<int>& f);
+void WriteEdgesFile(std::string filename);
+void WriteCornersFile(std::string filename);
+const std::vector<int> ParsePiecesStateFile(std::string filename); 
+void FromVectorFileToCube();
