@@ -283,15 +283,18 @@ int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
     int index = 0;
     for (int face = 1; face <= 12; ++face) {
         std::vector<int> foundEdges = findEdges(face);
+        Face activeFace = faces[(face - 1)];
+        auto epos = activeFace.edgeColorPos;
         for (int r = 0; r < 5; ++r) {
-            edges[readEdges[index]].swapdata(edges[foundEdges[r]].data);
+            //index = ((face - 1) * 5) + r;
+            if (readEdges[index] == foundEdges[r]) {
+                //index++;
+            }
+            else {
+                edges[readEdges[index]].swapdata(edges[foundEdges[r]].data);
+            }
             index++;
-        }
-    }
-    for (int face = 1; face <= 12; ++face) {
-        for (int r = 0; r < 5; ++r) {
-            Face activeFace = faces[(face-1)];
-            auto epos = activeFace.edgeColorPos;
+
             if (activeFace.edge[r]->matchesColor(face)) {
                 while (activeFace.edge[r]->data._colorNum[epos[r]] != face)
                     activeFace.edge[r]->flip();
@@ -307,17 +310,13 @@ int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
     int index = 0;
     for (int face = 1; face <= 12; ++face) {
         std::vector<int> foundCorners = findCorners(face);
+        Face activeFace = faces[(face - 1)];
+        auto cpos = activeFace.cornerColorPos;
         for (int r = 0; r < 5; ++r) {
+            index = ((face - 1) * 5) + r;
             corners[readCorners[index]].swapdata(corners[foundCorners[r]].data);
-            index++;
-        }
-    }
-    for (int face = 1; face <= 12; ++face) {
-        for (int r = 0; r < 5; ++r) {
-            Face activeFace = faces[(face - 1)];
-            auto epos = activeFace.cornerColorPos;
             if (activeFace.corner[r]->matchesColor(face)) {
-                while (activeFace.corner[r]->data._colorNum[epos[r]] != face)
+                while (activeFace.corner[r]->data._colorNum[cpos[r]] != face)
                     activeFace.corner[r]->flip();
             }
         }
@@ -427,6 +426,7 @@ extern int getCurrentFaceFromAngles(int x, int y)
  * \param current_face from 1 - 12
  * \param i op # from 1 - 12 (coincidence)
  */
+//TODO: Make a letter/notation parser to shorten all this down.
 void Megaminx::rotateAlgo(int current_face, int i)
 {
     assert(current_face > 0 && current_face <= numFaces);

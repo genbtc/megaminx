@@ -389,8 +389,8 @@ void createMenu()
     //Sublevel 1 meun - Admin Mode
     submenu1_id = glutCreateMenu(menuHandler);    
     glutAddMenuEntry("Solve Entire Puzzle", 92);
-    glutAddMenuEntry("Serialize Vectors Test", 94);
-    glutAddMenuEntry("Read in SaveState and WriteOut", 95);
+    glutAddMenuEntry("Save Game State(Beta)", 94);
+    glutAddMenuEntry("Restore Game State(Beta)", 95);
 
     //SubLevel2 Menu - Rotations
     submenu2_id = glutCreateMenu(menuHandler);
@@ -562,7 +562,11 @@ void menuHandler(int num)
 void FromVectorFileToCube() {
     const std::vector<int> &readEdgevector = ParsePiecesStateFile("EdgeCurPos.dat");
     megaminx->LoadNewEdgesFromVector(readEdgevector);
+    megaminx->LoadNewEdgesFromVector(readEdgevector);
+    megaminx->LoadNewEdgesFromVector(readEdgevector);
     const std::vector<int> &readCornervector = ParsePiecesStateFile("CornerCurPos.dat");
+    megaminx->LoadNewCornersFromVector(readCornervector);
+    megaminx->LoadNewCornersFromVector(readCornervector);
     megaminx->LoadNewCornersFromVector(readCornervector);
 }
 

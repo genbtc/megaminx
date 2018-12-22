@@ -47,6 +47,8 @@ public:
 
     //Swaps current data with the &out_param
     void swapdata(_data &out) {
+        if (&(this->data) == &out)
+            return;
         const auto temp = data;
         data = out;
         out = temp;
