@@ -40,6 +40,7 @@ public:
         double _color[3][3];
         int _colorNum[3];
         const wchar_t* _colorName[3];
+        int pieceIndex;
     } data;
 
     //Center has 1, Edge has 2, Corner has 3
@@ -49,7 +50,7 @@ public:
     void swapdata(_data &out) {
         if (&(this->data) == &out)
             return;
-        const auto temp = data;
+        const _data temp = data;
         data = out;
         out = temp;
     }

@@ -5,6 +5,9 @@
 #include <queue>
 #include <cassert>
 #include <algorithm>
+#include <iostream>
+#include <vector>
+#include <iterator>
 
 class Megaminx {
 public:
@@ -27,6 +30,8 @@ public:
     void resetFace(int n);
     int resetFacesCorners(int n);
     int resetFacesEdges(int n);
+    std::vector<int> returnNativeCornerColorPos(int z);
+    std::vector<int> returnNativeEdgeColorPos(int z);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners);
     void rotateAlgo(int n, int i);

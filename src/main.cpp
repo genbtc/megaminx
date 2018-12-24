@@ -421,7 +421,8 @@ void createMenu()
 //  glutAddMenuEntry("Swap 2 Gray Corners", 47);
     //TODO Add the rest of these:
 //  glutAddMenuEntry("2nd Layer Edges", 48);
-//  glutAddMenuEntry("Low Y's", 49);
+  glutAddMenuEntry("Low Y's Left", 49);
+  glutAddMenuEntry("Low Y's Right", 49);
     //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
     //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
 //  glutAddMenuEntry("4th Layer Edges", 50);
@@ -498,9 +499,6 @@ void menuHandler(int num)
     case 32:  //rotate corner piece 4
     case 33:  //rotate corner piece 5
         megaminx->swapOneCorner(currentFace, num - 28); break;
-    //case 33: ; //one gray edge
-    case 34: ; //one gray corner
-    case 35: ; //two gray corners
     case 41:  //solve WHITE edges (star)
         megaminx->resetFacesEdges(WHITE); break;
     case 42:  //solve WHITE corners
@@ -510,6 +508,14 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(GRAY); break;
     case 44:  //solve GRAY corners
         megaminx->resetFacesCorners(GRAY); break;
+    case 45:; //one gray edge
+    case 46:; //one gray corner
+    case 47:; //two gray corners
+    case 48:;
+    case 49:
+        megaminx->rotateAlgo(currentFace, 13); break;
+    case 50:
+        megaminx->rotateAlgo(currentFace, 14); break;
     case 51:
     case 52:
     case 53:
@@ -548,8 +554,7 @@ void menuHandler(int num)
         glutDestroyWindow(1);
         exit(0); break;
     case 94:
-        WriteEdgesFile("EdgeCurPos.dat");
-        WriteCornersFile("CornerCurPos.dat");
+        FromCubeToVectorFile();
         break;
     case 95:
         FromVectorFileToCube();
@@ -557,6 +562,13 @@ void menuHandler(int num)
     default:
         break;
     }
+}
+
+void FromCubeToVectorFile() {
+    WriteEdgesFile("EdgeCurPos.dat");
+    WriteCornersFile("CornerCurPos.dat");
+    serializeVectorInt(megaminx->returnNativeCornerColorPos(0), "CornerColorPos.dat");
+    serializeVectorInt(megaminx->returnNativeEdgeColorPos(0), "EdgeColorPos.dat");
 }
 
 void FromVectorFileToCube() {

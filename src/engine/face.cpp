@@ -20,6 +20,7 @@ void Face::attachEdgePieces(Edge& n)
     edgeNativePos = Face::findPiece(n, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
         edge[i] = &n + edgeNativePos[i];
+//edge[i]->data.pieceIndex = edgeNativePos[i];
         for (int j = 0; j < 2; ++j) {
             if (edge[i]->data._colorNum[j] == thisNum + 1)
                 edgeColorPos.push_back(j);
@@ -33,6 +34,7 @@ void Face::attachCornerPieces(Corner& n)
     cornerNativePos = Face::findPiece(n, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
         corner[i] = &n + cornerNativePos[i];
+//corner[i]->data.pieceIndex = cornerNativePos[i];
         for (int j = 0; j < 3; ++j) {
             if (corner[i]->data._colorNum[j] == thisNum + 1)
                 cornerColorPos.push_back(j);
@@ -51,8 +53,9 @@ std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
 {
     std::vector<int> pieceList;
     const int color = center->data._colorNum[0];
-    for (int i = 0; i < times; ++i) {
+    for (int i = 0; i < times, pieceList.size() < 5; ++i) {
         const bool result = (&pieceRef)[i].matchesColor(color);
+        const bool result2 = (&pieceRef)[i].data.pieceIndex == i;
         if (result)
             pieceList.push_back(i);
     }
@@ -172,14 +175,12 @@ bool Face::placeParts(int dir)
         case 1: //DARK_BLUE
             QuadSwapEdges(CCW1E);
             TwoEdgesFlip(1, 2);
-            //FlipCorners(0, 1, 2, 4, FlipBackwards);  //This can come first instead, if we skip the 3 instead of the 1.
             QuadSwapCorners(CCW1C);
             FlipCorners(0, 2, 3, 4, FlipBackwards);
             break;
         case 2: //RED
             QuadSwapEdges(CCW2E);
             TwoEdgesFlip(1, 2);
-            //FlipCorners(0, 1, 3, 4, FlipBackwards);  //This can come first, instead, if we reverse the 2 and the 0
             QuadSwapCorners(CCW2C);
             FlipCorners(1, 2, 3, 4, FlipBackwardAlt);
             break;
@@ -297,20 +298,11 @@ bool Face::placeParts(int dir)
             QuadSwapCorners(CW9C);
             FlipCorners(0, 2, 3, 4, FlipBackwards);
             break;
-        case 10: //PINK (Corner Star = 0 bottom, 1 right lower, 2 left lower, 3 left upper, 4 right upper)
-            //corner[1]->initColor(0, 0, 0); //set to black to find a piece
+        case 10: //PINK
             QuadSwapEdges(CW10E);
             TwoEdgesFlip(0, 2);
             QuadSwapCorners(CW10C);
             FlipCorners(0, 2, 3, 4, FlipBackwards);
-            //swapCorners(4, 1);
-            //swapCorners(4, 0);
-            //swapCorners(4, 2);
-            //swapCorners(4, 3);
-            //1 ? corner[0]->flip() : corner[0]->flipTwice();
-            //1 ? corner[1]->flip() : corner[1]->flipTwice();
-            //0 ? corner[2]->flip() : corner[2]->flipTwice();
-            //0 ? corner[3]->flip() : corner[3]->flipTwice();
             break;
         case 11: //BEIGE
             QuadSwapEdges(CW11E);

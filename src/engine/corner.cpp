@@ -51,6 +51,7 @@ void Corner::init(int n, bool doAxes)
         for (int i = 0; i < 7; ++i)
             createAxis(n, _vertex[i]);
     initColor(g_cornerPiecesColors[n], true);
+    data.pieceIndex = n;
 }
 
 void Corner::render()

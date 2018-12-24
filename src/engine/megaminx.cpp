@@ -244,37 +244,25 @@ std::vector<int> Megaminx::findCorners(int i)
     return faces[i].findPiece(corners[0], numCorners);
 }
 
-/**
- * \brief Revert all the edge pieces on the Nth colored face back to normal.
- *          To do so we must swap the pieces that are in there, OUT.
- * \param color_n N'th Face/Color Number (1-12)
- * \return success (1)
- */
-int Megaminx::resetFacesEdges(int color_n)
+std::vector<int> Megaminx::returnNativeCornerColorPos(int z)
 {
-    assert(color_n > 0);
-    assert(color_n <= numFaces);
-    const auto activeFace = faces[(color_n - 1)];
-    const auto defaultEdges = activeFace.edgeNativePos;
-    auto foundEdges = findEdges(color_n);
-    assert(foundEdges.size() == 5);
-    for (size_t j = 0; j < foundEdges.size(); ++j) {
-        if (activeFace.edge[j]->matchesColor(color_n))
-            continue;
-        edges[foundEdges[j]].swapdata(activeFace.edge[j]->data);
-        j = -1;
+    std::vector<int> allCornerPos;
+    for (int face = 0; face < 12; ++face) {
+        for (int r = 0; r < 5; ++r) {
+            allCornerPos.push_back(faces[face].cornerColorPos[r]);
+        }
     }
-    auto epos = activeFace.edgeColorPos;
-    auto foundEdges2 = findEdges(color_n);
-    //assert check just double checking - we dont want to get stuck in while
-    assert(foundEdges2 == defaultEdges);
-    assert(foundEdges2.size() == 5);
-    //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
-    for (size_t j = 0; j < foundEdges2.size(); ++j) {
-        while (activeFace.edge[j]->data._colorNum[epos[j]] != color_n)
-            activeFace.edge[j]->flip();
+    return allCornerPos;
+}
+std::vector<int> Megaminx::returnNativeEdgeColorPos(int z)
+{
+    std::vector<int> allEdgePos;
+    for (int face = 0; face < 12; ++face) {
+        for (int r = 0; r < 5; ++r) {
+            allEdgePos.push_back(faces[face].edgeColorPos[r]);
+        }
     }
-    return 1;
+    return allEdgePos;
 }
 
 int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
@@ -315,6 +303,7 @@ int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
         for (int r = 0; r < 5; ++r) {
             index = ((face - 1) * 5) + r;
             corners[readCorners[index]].swapdata(corners[foundCorners[r]].data);
+            //As is, this is not restoring the unsolved status of the color-flip rotations.
             if (activeFace.corner[r]->matchesColor(face)) {
                 while (activeFace.corner[r]->data._colorNum[cpos[r]] != face)
                     activeFace.corner[r]->flip();
@@ -323,6 +312,57 @@ int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
     }
     return 1;
 }
+
+/**
+ * \brief Revert all the edge pieces on the Nth colored face back to normal.
+ *          To do so we must swap the pieces that are in there, OUT.
+ * \param color_n N'th Face/Color Number (1-12)
+ * \return success (1)
+ */
+int Megaminx::resetFacesEdges(int color_n)
+{
+    assert(color_n > 0);
+    assert(color_n <= numFaces);
+    auto activeFace = faces[(color_n - 1)];
+    const auto defaultEdges = activeFace.edgeNativePos;
+    std::vector<int> foundEdges = findEdges(color_n);
+    assert(foundEdges.size() == 5);
+    for (int j = 0; j < 5; ++j) {
+        std::vector<int> wrongEdges;
+        foundEdges = findEdges(color_n);
+        std::set_difference(foundEdges.begin(), foundEdges.end(), defaultEdges.begin(), defaultEdges.end(),
+            std::inserter(wrongEdges, wrongEdges.begin()));
+        std::vector<int> nextDefault;
+        std::set_difference(defaultEdges.begin(), defaultEdges.end(), foundEdges.begin(), foundEdges.end(),
+            std::inserter(nextDefault, nextDefault.begin()));
+        for (int k = 0; k < wrongEdges.size(); ++k) {
+            if (foundEdges[j] == wrongEdges[k]) {
+                edges[wrongEdges[k]].swapdata(edges[nextDefault[k]].data);
+                j = -1; break;
+            }
+        }
+    }
+    auto foundEdges2 = findEdges(color_n);
+    //assert check just double checking - we dont want to get stuck in while
+    assert(foundEdges2 == defaultEdges);
+    assert(foundEdges2.size() == 5);
+    //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
+    for (int j = 0; j < 5; ++j) {
+        auto &cpos = activeFace.edgeColorPos[j];
+        while (activeFace.edge[j]->data._colorNum[cpos] != color_n)
+            activeFace.edge[j]->flip();
+    }
+    //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
+    for (int j = 0; j < 5; ++j) {
+        auto &pIndex = activeFace.edge[j]->data.pieceIndex;
+        if (pIndex != defaultEdges[j]) {
+            edges[pIndex].swapdata(edges[defaultEdges[j]].data);
+            j = -1;
+        }
+    }
+    return 1;
+}
+
 /**
  * \brief Revert all the Corners pieces on the Nth colored face back to normal.
  *          To do so we must swap the pieces that are in there, OUT.
@@ -333,25 +373,42 @@ int Megaminx::resetFacesCorners(int color_n)
 {
     assert(color_n > 0);
     assert(color_n <= numFaces);
-    const auto& activeFace = faces[(color_n - 1)];
-    const auto& defaultCorners = activeFace.cornerNativePos;
-    auto& foundCorners = findCorners(color_n);
+    auto activeFace = faces[(color_n - 1)];
+    const auto defaultCorners = activeFace.cornerNativePos;
+    std::vector<int> foundCorners = findCorners(color_n);
     assert(foundCorners.size() == 5);
-    for (size_t j = 0; j < foundCorners.size(); ++j) {
-        if (activeFace.corner[j]->matchesColor(color_n))
-            continue;
-        corners[foundCorners[j]].swapdata(activeFace.corner[j]->data);
-        j = -1;
+    for (int j = 0; j < 5; ++j) {
+        std::vector<int> wrongCorners;
+        foundCorners = findCorners(color_n);
+        std::set_difference(foundCorners.begin(), foundCorners.end(), defaultCorners.begin(), defaultCorners.end(),
+            std::inserter(wrongCorners, wrongCorners.begin()));
+        std::vector<int> nextDefault;
+        std::set_difference(defaultCorners.begin(), defaultCorners.end(), foundCorners.begin(), foundCorners.end(),
+            std::inserter(nextDefault, nextDefault.begin()));
+        for (int k = 0; k < wrongCorners.size(); ++k) {
+            if (foundCorners[j] == wrongCorners[k]) {
+                corners[wrongCorners[k]].swapdata(corners[nextDefault[k]].data);
+                j = -1; break;
+            }
+        }
     }
-    auto& cpos = activeFace.cornerColorPos;
-    auto& foundCorners2 = findCorners(color_n);
+    auto foundCorners2 = findCorners(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundCorners2 == defaultCorners);
     assert(foundCorners2.size() == 5);
     //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
-    for (size_t j = 0; j < foundCorners2.size(); ++j) {
-        while (activeFace.corner[j]->data._colorNum[cpos[j]] != color_n)
+    for (int j = 0; j < 5; ++j) {
+        auto &cpos = activeFace.cornerColorPos[j];
+        while (activeFace.corner[j]->data._colorNum[cpos] != color_n)
             activeFace.corner[j]->flip();
+    }
+    //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
+    for (int j = 0; j < 5; ++j) {
+        auto &pIndex = activeFace.corner[j]->data.pieceIndex;
+        if (pIndex != defaultCorners[j]) {
+            corners[pIndex].swapdata(corners[defaultCorners[j]].data);
+            j = -1;
+        }
     }
     return 1;
 }
@@ -430,8 +487,8 @@ extern int getCurrentFaceFromAngles(int x, int y)
 void Megaminx::rotateAlgo(int current_face, int i)
 {
     assert(current_face > 0 && current_face <= numFaces);
-    assert(i > 0 && i <= 12);
-    const auto& loc = g_faceNeighbors[current_face];
+    assert(i > 0 && i <= 14);
+    const colordirs &loc = g_faceNeighbors[current_face];
     switch (i) {
     // r u R' U' , 51
     case 1:
@@ -610,6 +667,23 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
         break;
+    case 13:
+        // f l ff L' F' Low Y's 12'oclock to 5 o clock.
+        //First Y, right edge.
+        rotate(loc.front, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.front, Face::Clockwise);
+        rotate(loc.front, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.front, Face::CCW);
+    case 14:
+        //Other Y, Left Edge
+        rotate(loc.front, Face::CCW);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.front, Face::Clockwise);
     default:
         break;
     }
