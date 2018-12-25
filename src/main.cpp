@@ -98,8 +98,8 @@ void RenderScene()
     glPushMatrix();
     {
         // spinning can be toggled w/ spacebar
-        if(spinning)
-            g_camera.m_angleX++;
+        if (spinning)
+            g_camera.m_angleX += 0.5;
         //Rotate the Cube into View
         g_camera.RotateGLCameraView();
         //Render it.
@@ -421,8 +421,8 @@ void createMenu()
 //  glutAddMenuEntry("Swap 2 Gray Corners", 47);
     //TODO Add the rest of these:
 //  glutAddMenuEntry("2nd Layer Edges", 48);
-  glutAddMenuEntry("Low Y's Left", 49);
-  glutAddMenuEntry("Low Y's Right", 49);
+    glutAddMenuEntry("Low Y's Left", 49);
+    glutAddMenuEntry("Low Y's Right", 50);
     //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
     //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
 //  glutAddMenuEntry("4th Layer Edges", 50);
@@ -433,13 +433,14 @@ void createMenu()
     submenu4_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("r u R' U'", 51);
     glutAddMenuEntry("l u L' U'", 52);
-    glutAddMenuEntry("U' L' u l u r U' R'", 53);
+    glutAddMenuEntry("U' L' u l", 53);
+    glutAddMenuEntry("u r U' R'", 541);
     glutAddMenuEntry("r u R' u r 2U' R'", 54);
     glutAddMenuEntry("u l U' R' u L' U' r", 55);
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     glutAddMenuEntry("R' D' R D", 57);
-    glutAddMenuEntry("Edge Permutation 1", 58);
-    glutAddMenuEntry("Edge Permutation 2", 59);
+    glutAddMenuEntry("Edge Permutation 1 x5", 58);
+    glutAddMenuEntry("Edge Permutation 2 x5", 59);
     glutAddMenuEntry("Edge Permutation 3", 60);
     glutAddMenuEntry("Edge Permutation 4", 61);
     glutAddMenuEntry("Edge Permutation 5", 62);
@@ -513,9 +514,8 @@ void menuHandler(int num)
     case 47:; //two gray corners
     case 48:;
     case 49:
-        megaminx->rotateAlgo(currentFace, 13); break;
     case 50:
-        megaminx->rotateAlgo(currentFace, 14); break;
+        megaminx->rotateAlgo(currentFace, num - 36); break;
     case 51:
     case 52:
     case 53:
@@ -523,12 +523,17 @@ void menuHandler(int num)
     case 55:
     case 56:
     case 57:
-    case 58:
-    case 59:
     case 60:
     case 61:
     case 62:
         megaminx->rotateAlgo(currentFace, num - 50); break;
+    case 58:
+    case 59:
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50); break;    
     case 71:
     case 72:
     case 73:
@@ -567,8 +572,8 @@ void menuHandler(int num)
 void FromCubeToVectorFile() {
     WriteEdgesFile("EdgeCurPos.dat");
     WriteCornersFile("CornerCurPos.dat");
-    serializeVectorInt(megaminx->returnNativeCornerColorPos(0), "CornerColorPos.dat");
-    serializeVectorInt(megaminx->returnNativeEdgeColorPos(0), "EdgeColorPos.dat");
+    serializeVectorInt(megaminx->returnNativeCornerColorPos(), "CornerColorPos.dat");
+    serializeVectorInt(megaminx->returnNativeEdgeColorPos(), "EdgeColorPos.dat");
 }
 
 void FromVectorFileToCube() {

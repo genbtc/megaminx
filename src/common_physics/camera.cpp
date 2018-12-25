@@ -52,16 +52,16 @@ void Camera::PressSpecialKey(int key, int x, int y)
 {
     switch (key) {
     case GLUT_KEY_LEFT  :
-        m_angleX += -1.f;
+        m_angleX += -1.0f;
         break;
     case GLUT_KEY_RIGHT :
-        m_angleX += 1.f;
+        m_angleX += 1.0f;
         break;
     case GLUT_KEY_UP    :
-        m_angleY += 1.f;
+        m_angleY += 1.0f;
         break;
     case GLUT_KEY_DOWN  :
-        m_angleY += -1.f;
+        m_angleY += -1.0f;
         break;
     default:
         break;

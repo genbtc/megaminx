@@ -23,16 +23,14 @@ public:
 public:
     Face();
     virtual ~Face() = default;
-    int thisNum;
-    int turnDir;
-    bool rotating;
+
     Center *center;
     Corner *corner[5];
     Edge   *edge[5];
 
-    std::vector<int> cornerNativePos;
+    std::vector<int> defaultCorners;
     std::vector<int> cornerColorPos;
-    std::vector<int> edgeNativePos;
+    std::vector<int> defaultEdges;
     std::vector<int> edgeColorPos;
 
     std::vector<int> findPiece(Piece& pieceRef, int times) const;
@@ -41,12 +39,13 @@ public:
     void attachCornerPieces(Corner& n);
     void attachCenter(Center* a, double* centerVertexBase);
 
-    void initAxis(int n);
+    int Face::getNum() const { return thisNum; }
+    void initAxis(int n);    
     bool render();
     void rotate(int direction);
     bool placeParts(int direction);
-    void swapCorners(int, int);
-    void swapEdges(int, int);
+    void swapCorners(int a, int b);
+    void swapEdges(int a, int b);
 
 private:
     void TwoEdgesFlip(int a, int b);
@@ -54,6 +53,9 @@ private:
     void QuadSwapCorners(int const pack[8]);
     void QuadSwapEdges(int const pack[8]);
 
+    int thisNum;
+    int turnDir;
+    bool rotating;
     double angle;
     double axis[3];
 };

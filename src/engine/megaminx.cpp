@@ -197,11 +197,10 @@ void Megaminx::swapOneEdge(int i, int x)
  */
 void Megaminx::setCurrentFaceActive(int i)
 {
-    assert(i > 0);
-    assert(i <= numFaces);
+    assert(i > 0 && i <= numFaces);
     i -= 1;     //Convert 1-numFaces Faces into array 0-11
     g_currentFace = &faces[i];
-    assert(g_currentFace->thisNum == i);    //double check.
+    assert(g_currentFace->getNum() == i);    //double check.
 }
 
 /**
@@ -211,8 +210,7 @@ void Megaminx::setCurrentFaceActive(int i)
  */
 void Megaminx::resetFace(int n)
 {
-    assert(n > 0);
-    assert(n <= numFaces);
+    assert(n > 0 && n <= numFaces);
     resetFacesEdges(n);
     resetFacesCorners(n);
     setCurrentFaceActive(n);
@@ -225,10 +223,9 @@ void Megaminx::resetFace(int n)
  */
 std::vector<int> Megaminx::findEdges(int i)
 {
-    assert(i > 0);
-    assert(i <= numFaces);
-    i -= 1;     //Convert 1-numFaces Faces into array 0-11
-    return faces[i].findPiece(edges[0], numEdges);
+    assert(i > 0 && i <= numFaces);
+    //Convert 1-numFaces Faces into array 0-11
+    return faces[i-1].findPiece(edges[0], numEdges);
 }
 
 /**
@@ -238,13 +235,12 @@ std::vector<int> Megaminx::findEdges(int i)
  */
 std::vector<int> Megaminx::findCorners(int i)
 {
-    assert(i > 0);
-    assert(i <= numFaces);
-    i -= 1;     //Convert 1-numFaces Faces into array 0-11
-    return faces[i].findPiece(corners[0], numCorners);
+    assert(i > 0 && i <= numFaces);
+    //Convert 1-numFaces Faces into array 0-11
+    return faces[i-1].findPiece(corners[0], numCorners);
 }
 
-std::vector<int> Megaminx::returnNativeCornerColorPos(int z)
+std::vector<int> Megaminx::returnNativeCornerColorPos()
 {
     std::vector<int> allCornerPos;
     for (int face = 0; face < 12; ++face) {
@@ -254,7 +250,7 @@ std::vector<int> Megaminx::returnNativeCornerColorPos(int z)
     }
     return allCornerPos;
 }
-std::vector<int> Megaminx::returnNativeEdgeColorPos(int z)
+std::vector<int> Megaminx::returnNativeEdgeColorPos()
 {
     std::vector<int> allEdgePos;
     for (int face = 0; face < 12; ++face) {
@@ -268,26 +264,10 @@ std::vector<int> Megaminx::returnNativeEdgeColorPos(int z)
 int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
 {
     assert(readEdges.size() == 60);
-    int index = 0;
     for (int face = 1; face <= 12; ++face) {
-        std::vector<int> foundEdges = findEdges(face);
-        Face activeFace = faces[(face - 1)];
-        auto epos = activeFace.edgeColorPos;
-        for (int r = 0; r < 5; ++r) {
-            //index = ((face - 1) * 5) + r;
-            if (readEdges[index] == foundEdges[r]) {
-                //index++;
-            }
-            else {
-                edges[readEdges[index]].swapdata(edges[foundEdges[r]].data);
-            }
-            index++;
-
-            if (activeFace.edge[r]->matchesColor(face)) {
-                while (activeFace.edge[r]->data._colorNum[epos[r]] != face)
-                    activeFace.edge[r]->flip();
-            }
-        }
+        int f = ((face - 1) * 5);
+        std::vector<int> loadEdges = { readEdges[f + 0],readEdges[f + 1],readEdges[f + 2],readEdges[f + 3],readEdges[f + 4] };
+        resetFacesEdges(face, loadEdges, false);
     }
     return 1;
 }
@@ -295,20 +275,10 @@ int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
 int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
 {
     assert(readCorners.size() == 60);
-    int index = 0;
     for (int face = 1; face <= 12; ++face) {
-        std::vector<int> foundCorners = findCorners(face);
-        Face activeFace = faces[(face - 1)];
-        auto cpos = activeFace.cornerColorPos;
-        for (int r = 0; r < 5; ++r) {
-            index = ((face - 1) * 5) + r;
-            corners[readCorners[index]].swapdata(corners[foundCorners[r]].data);
-            //As is, this is not restoring the unsolved status of the color-flip rotations.
-            if (activeFace.corner[r]->matchesColor(face)) {
-                while (activeFace.corner[r]->data._colorNum[cpos[r]] != face)
-                    activeFace.corner[r]->flip();
-            }
-        }
+        int f = ((face - 1) * 5);
+        std::vector<int> loadCorners = { readCorners[f + 0],readCorners[f + 1],readCorners[f + 2],readCorners[f + 3],readCorners[f + 4] };
+        resetFacesCorners(face, loadCorners, false);
     }
     return 1;
 }
@@ -319,29 +289,31 @@ int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
  * \param color_n N'th Face/Color Number (1-12)
  * \return success (1)
  */
-int Megaminx::resetFacesEdges(int color_n)
+int Megaminx::resetFacesEdges(int color_n) {
+    assert(color_n > 0 && color_n <= numFaces);
+    const auto& defaultEdges = faces[(color_n - 1)].defaultEdges;
+    return resetFacesEdges(color_n, defaultEdges);
+}
+
+int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges, bool solve)
 {
-    assert(color_n > 0);
-    assert(color_n <= numFaces);
+    assert(color_n > 0 && color_n <= numFaces);
     auto activeFace = faces[(color_n - 1)];
-    const auto defaultEdges = activeFace.edgeNativePos;
-    std::vector<int> foundEdges = findEdges(color_n);
-    assert(foundEdges.size() == 5);
+    //const auto defaultEdges = activeFace.defaultEdges;
     for (int j = 0; j < 5; ++j) {
-        std::vector<int> wrongEdges;
-        foundEdges = findEdges(color_n);
+        std::vector<int> foundEdges = findEdges(color_n);
+        std::vector<int> wrongEdges;        
         std::set_difference(foundEdges.begin(), foundEdges.end(), defaultEdges.begin(), defaultEdges.end(),
             std::inserter(wrongEdges, wrongEdges.begin()));
         std::vector<int> nextDefault;
         std::set_difference(defaultEdges.begin(), defaultEdges.end(), foundEdges.begin(), foundEdges.end(),
             std::inserter(nextDefault, nextDefault.begin()));
-        for (int k = 0; k < wrongEdges.size(); ++k) {
-            if (foundEdges[j] == wrongEdges[k]) {
-                edges[wrongEdges[k]].swapdata(edges[nextDefault[k]].data);
-                j = -1; break;
-            }
+        for (int k = 0; k < wrongEdges.size(), k < nextDefault.size(); ++k) {
+            edges[wrongEdges[k]].swapdata(edges[nextDefault[k]].data);
         }
     }
+    if (!solve)
+        return 0;
     auto foundEdges2 = findEdges(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundEdges2 == defaultEdges);
@@ -369,29 +341,30 @@ int Megaminx::resetFacesEdges(int color_n)
  * \param color_n N'th Face/Color Number (1-12)
  * \return success (1)
  */
-int Megaminx::resetFacesCorners(int color_n)
+int Megaminx::resetFacesCorners(int color_n) {
+    assert(color_n > 0 && color_n <= numFaces);
+    const auto& defaultCorners = faces[(color_n - 1)].defaultCorners;
+    return resetFacesCorners(color_n, defaultCorners);
+}
+int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorners, bool solve)
 {
-    assert(color_n > 0);
-    assert(color_n <= numFaces);
+    assert(color_n > 0 && color_n <= numFaces);
     auto activeFace = faces[(color_n - 1)];
-    const auto defaultCorners = activeFace.cornerNativePos;
-    std::vector<int> foundCorners = findCorners(color_n);
-    assert(foundCorners.size() == 5);
+    //const auto defaultCorners = activeFace.defaultCorners;
     for (int j = 0; j < 5; ++j) {
-        std::vector<int> wrongCorners;
-        foundCorners = findCorners(color_n);
+        std::vector<int> foundCorners = findCorners(color_n);
+        std::vector<int> wrongCorners;        
         std::set_difference(foundCorners.begin(), foundCorners.end(), defaultCorners.begin(), defaultCorners.end(),
             std::inserter(wrongCorners, wrongCorners.begin()));
         std::vector<int> nextDefault;
         std::set_difference(defaultCorners.begin(), defaultCorners.end(), foundCorners.begin(), foundCorners.end(),
             std::inserter(nextDefault, nextDefault.begin()));
-        for (int k = 0; k < wrongCorners.size(); ++k) {
-            if (foundCorners[j] == wrongCorners[k]) {
-                corners[wrongCorners[k]].swapdata(corners[nextDefault[k]].data);
-                j = -1; break;
-            }
+        for (int k = 0; k < wrongCorners.size(), k < nextDefault.size(); ++k) {
+            corners[wrongCorners[k]].swapdata(corners[nextDefault[k]].data);
         }
     }
+    if (!solve)
+        return 0;
     auto foundCorners2 = findCorners(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundCorners2 == defaultCorners);
@@ -487,7 +460,7 @@ extern int getCurrentFaceFromAngles(int x, int y)
 void Megaminx::rotateAlgo(int current_face, int i)
 {
     assert(current_face > 0 && current_face <= numFaces);
-    assert(i > 0 && i <= 14);
+    //assert(i > 0 && i <= 14);
     const colordirs &loc = g_faceNeighbors[current_face];
     switch (i) {
     // r u R' U' , 51
@@ -505,12 +478,13 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up,   Face::CCW);
         break;
     // U' L' u l , 53
-    // u r U' R' , 53
     case 3:
         rotate(loc.up,   Face::CCW);
         rotate(loc.left, Face::CCW);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
+    case 41:
+    // u r U' R' , 53
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::CCW);
@@ -518,9 +492,10 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     // r u R' u r 2U' R' , 54
         //Last Layer Step 2:
-        // Rotating the star-edge pieces into their correct positions.
+        // Rotating the star/Edge pieces into their correct positions.
         //The pieces that will remain in the same position are the 6 and 8 o'clock ones.
         //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correct positions.
+        //NOTE: Affects corners too.
     case 4:
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
@@ -531,7 +506,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up,   Face::CCW);
         rotate(loc.right,Face::CCW);
         break;
-    // u l U' R' u L' U' r , 55 orient bottom corners
+    // u l U' R' u L' U' r , 55 orient bottom Corners // 1,3,2
+        //3, 5 and 7 o clock. will rotate with each other 
+    //repeat 3x = undo
     case 5:
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
@@ -544,7 +521,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     // u r 2U' L' 2u R' 2U' l u , 56
         //Last Layer Step 3:
-        // Get the corner into their correct positions.
+        // Get the corner into their correct positions. // 3,5,4
         //The corners facing you at the 5 and 7 o'clock will stay and the other 3 corners will also rotate in an anticlockwise fashion!
     case 6:
         rotate(loc.up,   Face::Clockwise);
@@ -569,9 +546,10 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right,Face::Clockwise);
         rotate(loc.downr,Face::Clockwise);
         break;
-    //Edge Permutations:
+    //Edge Permutation 1:
     case 8:
-        // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5)
+        // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //4 to 1, 1 to 3, 3 to 4
+        //needs 5 executions;
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
@@ -585,22 +563,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
-        //rotate(loc.right, Face::CCW);
-        //rotate(loc.right, Face::CCW);
-        //rotate(loc.up, Face::Clockwise);
-        //rotate(loc.up, Face::Clockwise);
-        //rotate(loc.right, Face::Clockwise);
-        //rotate(loc.right, Face::Clockwise);
-        //rotate(loc.up, Face::Clockwise);
-        //rotate(loc.right, Face::CCW);
-        //rotate(loc.right, Face::CCW);
-        //rotate(loc.up, Face::Clockwise);
-        //rotate(loc.up, Face::Clockwise);
-        //rotate(loc.right, Face::Clockwise);
-        //rotate(loc.right, Face::Clockwise);
         break;
+    //Edge Permutation 2:
     case 9:
-        // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5)
+        // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) //3 to 1, 1 to 4, 4 to 3 (opposite of last one)
+        //needs 5 executions;
+        //all the "up"s get reversed. nothing else changes from 1st one.
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -615,8 +583,11 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
         break;
+    //Edge Permutation 3:
     case 10:
         // r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)
+        //NOTE: corners are also affected
+        // 3 repeats = undo
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
@@ -632,36 +603,45 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::CCW);
         break;
+    //Edge Permutation 4:
     case 11:
-        // r u R' u , R' U' r2 U', R' u R' u, r U2' (5 to 2, 2 to 1, 1 to 5)
+        // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
+        //Perfect Edges Swap, only needs one run.
+        //opposite of the Edges one above , but corners aren't affected.?
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
-        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise); //, 
         rotate(loc.right, Face::CCW);
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
-        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW); //, 
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::Clockwise); //, 
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
-        rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
         break;
+    //Edge Permutation 5:
     case 12:
-        // l r u2, L' u R', l U' r u2, L' u2 R' (5 and 3 swap, 1 and 2 swap)
+        // l r u2,  L' u R',  l U' r u2,  L' u2 R' (5 and 3 swap, 1 and 2 swap) //1 and 5, 4 and 2
+        //corners are also affected
+        //repeating it again is Equalivalent to Undo
         rotate(loc.left, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
-        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise); //, 
         rotate(loc.left, Face::CCW);
         rotate(loc.up, Face::Clockwise);
-        rotate(loc.right, Face::CCW);
+        rotate(loc.right, Face::CCW);    //, 
         rotate(loc.left, Face::Clockwise);
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
-        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);  //, 
         rotate(loc.left, Face::CCW);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);

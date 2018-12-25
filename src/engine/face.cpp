@@ -17,10 +17,10 @@ Face::Face()
 //connect the right matching Edge pieces to the face. and store the list.
 void Face::attachEdgePieces(Edge& n)
 {
-    edgeNativePos = Face::findPiece(n, Megaminx::numEdges);
+    defaultEdges = Face::findPiece(n, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
-        edge[i] = &n + edgeNativePos[i];
-//edge[i]->data.pieceIndex = edgeNativePos[i];
+        edge[i] = &n + defaultEdges[i];
+        assert(edge[i]->data.pieceIndex == defaultEdges[i]);
         for (int j = 0; j < 2; ++j) {
             if (edge[i]->data._colorNum[j] == thisNum + 1)
                 edgeColorPos.push_back(j);
@@ -31,10 +31,10 @@ void Face::attachEdgePieces(Edge& n)
 //connect the right matching Corner pieces to the face. and store the list.
 void Face::attachCornerPieces(Corner& n)
 {
-    cornerNativePos = Face::findPiece(n, Megaminx::numCorners);
+    defaultCorners = Face::findPiece(n, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
-        corner[i] = &n + cornerNativePos[i];
-//corner[i]->data.pieceIndex = cornerNativePos[i];
+        corner[i] = &n + defaultCorners[i];
+        assert(corner[i]->data.pieceIndex == defaultCorners[i]);
         for (int j = 0; j < 3; ++j) {
             if (corner[i]->data._colorNum[j] == thisNum + 1)
                 cornerColorPos.push_back(j);

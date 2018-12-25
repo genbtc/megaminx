@@ -28,12 +28,14 @@ public:
     std::vector<int> findCorners(int i);
     std::vector<int> findEdges(int i);
     void resetFace(int n);
-    int resetFacesCorners(int n);
-    int resetFacesEdges(int n);
-    std::vector<int> returnNativeCornerColorPos(int z);
-    std::vector<int> returnNativeEdgeColorPos(int z);
-    int LoadNewEdgesFromVector(const std::vector<int> &readEdges);
+    int resetFacesCorners(int color_n);
+    int resetFacesEdges(int color_n);
+    int resetFacesCorners(int color_n, const std::vector<int> &loadNewCorners, bool solve=true);
+    int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve=true);
+    std::vector<int> returnNativeCornerColorPos();
+    std::vector<int> returnNativeEdgeColorPos();
     int LoadNewCornersFromVector(const std::vector<int> &readCorners);
+    int LoadNewEdgesFromVector(const std::vector<int> &readEdges);
     void rotateAlgo(int n, int i);
     void resetQueue();
     /* face busy rotating when true */
