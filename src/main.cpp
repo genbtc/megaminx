@@ -420,21 +420,24 @@ void createMenu()
 //  glutAddMenuEntry("Swap 1 Gray Corner", 46);
 //  glutAddMenuEntry("Swap 2 Gray Corners", 47);
     //TODO Add the rest of these:
-//  glutAddMenuEntry("2nd Layer Edges", 48);
+    glutAddMenuEntry("2nd Layer Edges", 48); // Left & Right
+    //Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
+    //Star drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
+    //this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
     glutAddMenuEntry("Low Y's Left", 49);
     glutAddMenuEntry("Low Y's Right", 50);
     //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
     //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
 //  glutAddMenuEntry("4th Layer Edges", 50);
 //  glutAddMenuEntry("High Y's", 151);
-//  glutAddMenuEntry("6th Layer Edges", 152);
+    glutAddMenuEntry("6th Layer Edges", 152);
 
     //SubLevel4 Menu - Algos
     submenu4_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("r u R' U'", 51);
     glutAddMenuEntry("l u L' U'", 52);
     glutAddMenuEntry("U' L' u l", 53);
-    glutAddMenuEntry("u r U' R'", 541);
+    glutAddMenuEntry("u r U' R'", 150);
     glutAddMenuEntry("r u R' u r 2U' R'", 54);
     glutAddMenuEntry("u l U' R' u L' U' r", 55);
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
@@ -512,13 +515,17 @@ void menuHandler(int num)
     case 45:; //one gray edge
     case 46:; //one gray corner
     case 47:; //two gray corners
-    case 48:;
+    case 48:
+        megaminx->secondLayerEdges(); break;
     case 49:
     case 50:
         megaminx->rotateAlgo(currentFace, num - 36); break;
+    case 152:
+        megaminx->sixthLayerEdges(); break;
     case 51:
     case 52:
     case 53:
+    case 150:
     case 54:
     case 55:
     case 56:

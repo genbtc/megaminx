@@ -143,18 +143,14 @@ void Face::FlipCorners(int a, int b, int c, int d, const int* pack)
 //Private. Swap 4 Corners, given a list of 8 indexes
 void Face::QuadSwapCorners(int const pack[8])
 {
-    swapCorners(pack[0], pack[1]);
-    swapCorners(pack[2], pack[3]);
-    swapCorners(pack[4], pack[5]);
-    swapCorners(pack[6], pack[7]);
+    for (int i = 0; i < 8; ++i)
+        swapCorners(pack[i], pack[i++]);
 }
 //Private. Swap 4 Edges, given a list of 8 indexes
 void Face::QuadSwapEdges(int const pack[8])
 {
-    swapEdges(pack[0], pack[1]);
-    swapEdges(pack[2], pack[3]);
-    swapEdges(pack[4], pack[5]);
-    swapEdges(pack[6], pack[7]);
+    for (int i = 0; i < 8; ++i)
+        swapEdges(pack[i], pack[i++]);
 }
 
 /**
@@ -333,8 +329,6 @@ bool Face::render()
     if (angle)
         glRotated(angle, axis[0], axis[1], axis[2]);
     for (int i = 0; i < 5; ++i) {
-        //temp diagnose:
-        //corner[i]->initColor(i, i); //set to solid colors to find order of pieces
         corner[i]->render();
         edge[i]->render();
     }

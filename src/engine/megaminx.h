@@ -37,6 +37,13 @@ public:
     int LoadNewCornersFromVector(const std::vector<int> &readCorners);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges);
     void rotateAlgo(int n, int i);
+    std::vector<int> findEdgeByPieceNum(const int indexes[5]);
+    std::vector<int> findEdgeByPieceNum(std::vector<int> &v);
+    std::vector<int> findPieceByEdgeNumTest();
+    void resetFiveEdges(const int indexes[5]);
+    void resetFiveEdges(std::vector<int> &v);
+    void secondLayerEdges();
+    void sixthLayerEdges();
     void resetQueue();
     /* face busy rotating when true */
     bool isRotating;    

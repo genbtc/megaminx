@@ -298,8 +298,6 @@ int Megaminx::resetFacesEdges(int color_n) {
 int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges, bool solve)
 {
     assert(color_n > 0 && color_n <= numFaces);
-    auto activeFace = faces[(color_n - 1)];
-    //const auto defaultEdges = activeFace.defaultEdges;
     for (int j = 0; j < 5; ++j) {
         std::vector<int> foundEdges = findEdges(color_n);
         std::vector<int> wrongEdges;        
@@ -314,6 +312,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
     }
     if (!solve)
         return 0;
+    auto activeFace = faces[(color_n - 1)];
     auto foundEdges2 = findEdges(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundEdges2 == defaultEdges);
@@ -349,8 +348,6 @@ int Megaminx::resetFacesCorners(int color_n) {
 int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorners, bool solve)
 {
     assert(color_n > 0 && color_n <= numFaces);
-    auto activeFace = faces[(color_n - 1)];
-    //const auto defaultCorners = activeFace.defaultCorners;
     for (int j = 0; j < 5; ++j) {
         std::vector<int> foundCorners = findCorners(color_n);
         std::vector<int> wrongCorners;        
@@ -365,6 +362,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
     }
     if (!solve)
         return 0;
+    auto activeFace = faces[(color_n - 1)];
     auto foundCorners2 = findCorners(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundCorners2 == defaultCorners);
@@ -483,7 +481,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.left, Face::CCW);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
-    case 41:
+        break;
+    case 100:
     // u r U' R' , 53
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
@@ -667,4 +666,60 @@ void Megaminx::rotateAlgo(int current_face, int i)
     default:
         break;
     }
+}
+
+std::vector<int> Megaminx::findEdgeByPieceNum(const int indexes[5])
+{
+    std::vector<int> pieceList;
+    for (int i = 0; i < 30, pieceList.size() < 5; i++) {
+        if (edges[i].data.pieceIndex == indexes[pieceList.size()]) {
+            pieceList.push_back(i);
+            i = -1;
+        }
+    }
+    return pieceList;
+}
+std::vector<int> Megaminx::findEdgeByPieceNum(std::vector<int> &v)
+{
+    const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
+    return findEdgeByPieceNum(indexedVector);
+}
+
+std::vector<int> Megaminx::findPieceByEdgeNumTest() {
+    constexpr int bottomFaces[5] = { DARK_BLUE, RED, DARK_GREEN, PURPLE, YELLOW };
+    constexpr int loc[5] = { 2, 3, 3, 3, 3 };
+    std::vector<int> foundEdges;
+    for (int i = 0; i < 5; ++i) {
+        foundEdges.push_back(faces[bottomFaces[i] - 1].edge[loc[i] - 1]->data.pieceIndex);
+    }
+    return foundEdges;
+}
+
+void Megaminx::resetFiveEdges(const int indexes[5]) {
+    for (int i = 0; i < 5; ++i) {
+        std::vector<int> whereAreTheyNow = findEdgeByPieceNum(indexes);
+        if (edges[indexes[i]].data.pieceIndex != indexes[i]) {
+            edges[indexes[i]].swapdata(edges[whereAreTheyNow[i]].data);
+            i = -1;
+        }
+    }
+    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
+    for (int j = 0; j < 5; ++j) {
+        while (edges[indexes[j]].data.flipStatus != 0)
+            edges[indexes[j]].flip();
+    }
+}
+void Megaminx::resetFiveEdges(std::vector<int> &v) {
+    const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
+    resetFiveEdges(indexedVector);
+}
+
+void Megaminx::secondLayerEdges() {
+    std::vector<int> secondLayerEdges = { 5, 6, 7, 8, 9 };
+    resetFiveEdges(secondLayerEdges);
+}
+
+void Megaminx::sixthLayerEdges() {
+    constexpr int sixthLayerEdges[5] = { 20, 21, 22, 23, 24 };
+    resetFiveEdges(sixthLayerEdges);
 }

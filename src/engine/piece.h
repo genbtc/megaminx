@@ -41,6 +41,7 @@ public:
         int _colorNum[3];
         const wchar_t* _colorName[3];
         int pieceIndex;
+        int flipStatus;
     } data;
 
     //Center has 1, Edge has 2, Corner has 3
@@ -65,6 +66,7 @@ public:
         data._color[i][2] = c.b;
         data._colorName[i] = c.name;
         data._colorNum[i] = c.i;
+        data.flipStatus = 0;
     }
     //interface function for setter
     void initColorIndex(int idx, int k) {
@@ -221,6 +223,10 @@ public:
             data._colorNum[1] = data._colorNum[2];
             data._colorNum[2] = numbuff;
         }
+        if (isCorner && data.flipStatus < 2 || !isCorner && data.flipStatus == 0)
+            data.flipStatus++;
+        else
+            data.flipStatus = 0;
     }
     //Does two flips. Thats it.
     void flipTwice() {

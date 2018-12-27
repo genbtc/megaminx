@@ -67,7 +67,6 @@ static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
                             submenu3_id, submenu4_id, submenu5_id;
 
 void serializeVectorInt(std::vector<int> list1, std::string filename);
-//void SaveFacePiecesToFile(std::string filename, std::vector<int>& f);
 void WriteEdgesFile(std::string filename);
 void WriteCornersFile(std::string filename);
 const std::vector<int> ParsePiecesStateFile(std::string filename); 
