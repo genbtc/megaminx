@@ -681,6 +681,7 @@ std::vector<int> Megaminx::findEdgeByPieceNum(const int indexes[5])
 }
 std::vector<int> Megaminx::findEdgeByPieceNum(std::vector<int> &v)
 {
+    assert(v.size() == 5);
     const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
     return findEdgeByPieceNum(indexedVector);
 }
@@ -700,16 +701,15 @@ void Megaminx::resetFiveEdges(const int indexes[5]) {
         std::vector<int> whereAreTheyNow = findEdgeByPieceNum(indexes);
         if (edges[indexes[i]].data.pieceIndex != indexes[i]) {
             edges[indexes[i]].swapdata(edges[whereAreTheyNow[i]].data);
+            //Pieces are in the right place but maybe wrong orientation, so flip the colors:
+            while (edges[indexes[i]].data.flipStatus != 0)
+                edges[indexes[i]].flip();
             i = -1;
         }
     }
-    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
-    for (int j = 0; j < 5; ++j) {
-        while (edges[indexes[j]].data.flipStatus != 0)
-            edges[indexes[j]].flip();
-    }
 }
 void Megaminx::resetFiveEdges(std::vector<int> &v) {
+    assert(v.size() == 5);
     const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
     resetFiveEdges(indexedVector);
 }
@@ -717,6 +717,13 @@ void Megaminx::resetFiveEdges(std::vector<int> &v) {
 void Megaminx::secondLayerEdges() {
     std::vector<int> secondLayerEdges = { 5, 6, 7, 8, 9 };
     resetFiveEdges(secondLayerEdges);
+}
+
+void Megaminx::fourthLayerEdges() {
+    std::vector<int> fourthLayerEdgesA = { 10, 11, 12, 13, 14 };
+    resetFiveEdges(fourthLayerEdgesA);
+    std::vector<int> fourthLayerEdgesB = { 15, 16, 17, 18, 19 };
+    resetFiveEdges(fourthLayerEdgesB);
 }
 
 void Megaminx::sixthLayerEdges() {

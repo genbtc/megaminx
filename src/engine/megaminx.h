@@ -43,6 +43,7 @@ public:
     void resetFiveEdges(const int indexes[5]);
     void resetFiveEdges(std::vector<int> &v);
     void secondLayerEdges();
+    void fourthLayerEdges();
     void sixthLayerEdges();
     void resetQueue();
     /* face busy rotating when true */

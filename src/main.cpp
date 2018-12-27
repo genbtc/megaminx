@@ -392,33 +392,32 @@ void createMenu()
     glutAddMenuEntry("Save Game State(Beta)", 94);
     glutAddMenuEntry("Restore Game State(Beta)", 95);
 
-    //SubLevel2 Menu - Rotations
+    //SubLevel2 Menu - Current Face
     submenu2_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Rotate Current Face CW", 50);
-    glutAddMenuEntry("Solve/Reset Current Face (All)", 21);
-    glutAddMenuEntry("Solve Current Face's Edges", 22);
-    glutAddMenuEntry("Solve Current Face's Corners", 23);
-    glutAddMenuEntry("Swap Face Edge 1", 24);
-    glutAddMenuEntry("Swap Face Edge 2", 25);
-    glutAddMenuEntry("Swap Face Edge 3", 26);
-    glutAddMenuEntry("Swap Face Edge 4", 27);
-    glutAddMenuEntry("Swap Face Edge 5", 28);
-    glutAddMenuEntry("Rotate Face Corner 1", 29);    
-    glutAddMenuEntry("Rotate Face Corner 2", 30);    
-    glutAddMenuEntry("Rotate Face Corner 3", 31);
-    glutAddMenuEntry("Rotate Face Corner 4", 32);
-    glutAddMenuEntry("Rotate Face Corner 5", 33);
+    glutAddMenuEntry("Actions on Current Face", 0);
+    glutAddMenuEntry("-----------------------", 0);
+    glutAddMenuEntry("Rotate CCW", 19);
+    glutAddMenuEntry("Rotate CW", 20);
+    glutAddMenuEntry("-----------------------", 0);
+    glutAddMenuEntry("Solve Entire Face", 21);
+    glutAddMenuEntry("Solve All 5 Edges", 22);
+    glutAddMenuEntry("Solve All 5 Corners", 23);
+    glutAddMenuEntry("-----------------------", 0);
+    glutAddMenuEntry("FlipColors Edge 1", 24);
+    glutAddMenuEntry("FlipColors Edge 2", 25);
+    glutAddMenuEntry("FlipColors Edge 3", 26);
+    glutAddMenuEntry("FlipColors Edge 4", 27);
+    glutAddMenuEntry("FlipColors Edge 5", 28);
+    glutAddMenuEntry("FlipColors Corner 1", 29);    
+    glutAddMenuEntry("FlipColors Corner 2", 30);    
+    glutAddMenuEntry("FlipColors Corner 3", 31);
+    glutAddMenuEntry("FlipColors Corner 4", 32);
+    glutAddMenuEntry("FlipColors Corner 5", 33);
 
     //SubLevel3 Menu - Steps
     submenu3_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Solve White Star", 41);
     glutAddMenuEntry("Solve White Corners", 42);
-    glutAddMenuEntry("Solve Grey Star", 43);
-    glutAddMenuEntry("Solve Grey Corners", 44);
-    //TODO make these work
-//  glutAddMenuEntry("Swap 1 Gray Edge", 45);
-//  glutAddMenuEntry("Swap 1 Gray Corner", 46);
-//  glutAddMenuEntry("Swap 2 Gray Corners", 47);
     //TODO Add the rest of these:
     glutAddMenuEntry("2nd Layer Edges", 48); // Left & Right
     //Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
@@ -428,9 +427,15 @@ void createMenu()
     glutAddMenuEntry("Low Y's Right", 50);
     //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
     //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
-//  glutAddMenuEntry("4th Layer Edges", 50);
+    glutAddMenuEntry("4th Layer Edges", 152);
 //  glutAddMenuEntry("High Y's", 151);
-    glutAddMenuEntry("6th Layer Edges", 152);
+    glutAddMenuEntry("6th Layer Edges", 153);
+    //TODO make these work
+//  glutAddMenuEntry("Swap 1 Gray Edge", 45);
+//  glutAddMenuEntry("Swap 1 Gray Corner", 46);
+//  glutAddMenuEntry("Swap 2 Gray Corners", 47);
+    glutAddMenuEntry("Solve Grey Star", 43);
+    glutAddMenuEntry("Solve Grey Corners", 44);
 
     //SubLevel4 Menu - Algos
     submenu4_id = glutCreateMenu(menuHandler);
@@ -466,13 +471,13 @@ void createMenu()
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning", 1);
-    glutAddSubMenu("Main Menu --->", submenu0_id);
+    glutAddSubMenu("Main Menu ---->", submenu0_id);
     glutAddMenuEntry("---------------", 0);
-    glutAddSubMenu("Admin Mode -->", submenu1_id);
-    glutAddSubMenu("Rotations --->", submenu2_id);
-    glutAddSubMenu("Steps     --->", submenu3_id);
-    glutAddSubMenu("Algos     --->", submenu4_id);
-    glutAddSubMenu("Reset Face -->", submenu5_id);
+    glutAddSubMenu("Admin Mode --->", submenu1_id);
+    glutAddSubMenu("Current Face ->", submenu2_id);
+    glutAddSubMenu("Solve Steps -->", submenu3_id);
+    glutAddSubMenu("Algorithms --->", submenu4_id);
+    glutAddSubMenu("Solve Face --->", submenu5_id);
     glutAddMenuEntry("Exit Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -483,6 +488,8 @@ void menuHandler(int num)
     switch (num) {
     case 1:
         spinning = !spinning; break;
+    case 19:
+        megaminx->rotate(currentFace, Face::CCW); break;
     case 20:
         megaminx->rotate(currentFace, Face::CW); break;
     case 21:
@@ -521,6 +528,8 @@ void menuHandler(int num)
     case 50:
         megaminx->rotateAlgo(currentFace, num - 36); break;
     case 152:
+        megaminx->fourthLayerEdges(); break;
+    case 153:
         megaminx->sixthLayerEdges(); break;
     case 51:
     case 52:
