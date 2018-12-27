@@ -413,6 +413,16 @@ void createMenu()
     glutAddMenuEntry("FlipColors Corner 3", 31);
     glutAddMenuEntry("FlipColors Corner 4", 32);
     glutAddMenuEntry("FlipColors Corner 5", 33);
+    //submenu6_id = glutCreateMenu(menuHandler);
+    glutAddMenuEntry("-----------------------", 0);
+    glutAddMenuEntry("Swap Edges 1&2", 125);
+    glutAddMenuEntry("Swap Edges 1&3", 126);
+    glutAddMenuEntry("Swap Edges 1&4", 127);
+    glutAddMenuEntry("Swap Edges 1&5", 128);
+    glutAddMenuEntry("Swap Corners 1&2", 129);
+    glutAddMenuEntry("Swap Corners 1&3", 130);
+    glutAddMenuEntry("Swap Corners 1&4", 131);
+    glutAddMenuEntry("Swap Corners 1&5", 132);
 
     //SubLevel3 Menu - Steps
     submenu3_id = glutCreateMenu(menuHandler);
@@ -429,6 +439,7 @@ void createMenu()
     //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
     glutAddMenuEntry("4th Layer Edges", 152);
 //  glutAddMenuEntry("High Y's", 151);
+    glutAddMenuEntry("Middle W's", 154);
     glutAddMenuEntry("6th Layer Edges", 153);
     //TODO make these work
 //  glutAddMenuEntry("Swap 1 Gray Edge", 45);
@@ -446,7 +457,7 @@ void createMenu()
     glutAddMenuEntry("r u R' u r 2U' R'", 54);
     glutAddMenuEntry("u l U' R' u L' U' r", 55);
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
-    glutAddMenuEntry("R' D' R D", 57);
+    glutAddMenuEntry("R' D' R D x4", 57);
     glutAddMenuEntry("Edge Permutation 1 x5", 58);
     glutAddMenuEntry("Edge Permutation 2 x5", 59);
     glutAddMenuEntry("Edge Permutation 3", 60);
@@ -475,9 +486,10 @@ void createMenu()
     glutAddMenuEntry("---------------", 0);
     glutAddSubMenu("Admin Mode --->", submenu1_id);
     glutAddSubMenu("Current Face ->", submenu2_id);
+    //glutAddSubMenu("Piece Swaps -->", submenu6_id);
     glutAddSubMenu("Solve Steps -->", submenu3_id);
     glutAddSubMenu("Algorithms --->", submenu4_id);
-    glutAddSubMenu("Solve Face --->", submenu5_id);
+    glutAddSubMenu("Solve Face --->", submenu5_id);    
     glutAddMenuEntry("Exit Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -531,6 +543,8 @@ void menuHandler(int num)
         megaminx->fourthLayerEdges(); break;
     case 153:
         megaminx->sixthLayerEdges(); break;
+    case 154:
+        megaminx->lowYhighYmiddleW(); break;
     case 51:
     case 52:
     case 53:
@@ -538,10 +552,14 @@ void menuHandler(int num)
     case 54:
     case 55:
     case 56:
-    case 57:
     case 60:
     case 61:
     case 62:
+        megaminx->rotateAlgo(currentFace, num - 50); break;
+    case 57:
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50);
         megaminx->rotateAlgo(currentFace, num - 50); break;
     case 58:
     case 59:
@@ -574,6 +592,22 @@ void menuHandler(int num)
     case 102: 
         glutDestroyWindow(1);
         exit(0); break;
+    case 125:
+        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[1]->data); break;
+    case 126:
+        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[2]->data); break;
+    case 127:
+        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
+    case 128:
+        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+    case 129:
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[1]->data); break;
+    case 130:
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[2]->data); break;
+    case 131:
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+    case 132:
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
     case 94:
         FromCubeToVectorFile();
         break;

@@ -42,9 +42,15 @@ public:
     std::vector<int> findPieceByEdgeNumTest();
     void resetFiveEdges(const int indexes[5]);
     void resetFiveEdges(std::vector<int> &v);
+    std::vector<int> findCornerByPieceNum(const int indexes[5]);
+    std::vector<int> findCornerByPieceNum(std::vector<int>& v);
+    void resetFiveCorners(const int indexes[5]);
+    void resetFiveCorners(std::vector<int>& v);
     void secondLayerEdges();
     void fourthLayerEdges();
     void sixthLayerEdges();
+    void findCornerByNumTest();
+    void lowYhighYmiddleW();
     void resetQueue();
     /* face busy rotating when true */
     bool isRotating;    
