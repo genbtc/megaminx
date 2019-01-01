@@ -141,6 +141,15 @@ void Megaminx::undo()
     rotateQueue.push({ op.num, op.dir });
     undoQueue.pop();
 }
+void Megaminx::undoDouble() {
+    if (undoQueue.size() < 2) return;
+    auto op1 = undoQueue.front();
+    undoQueue.pop();
+    auto op2 = undoQueue.front();
+    undoQueue.pop();
+    rotateQueue.push({ op2.num, op2.dir });
+    rotateQueue.push({ op1.num, op1.dir });
+}
 
 //Clear the Queue and stop any repeated rotating actions.
 void Megaminx::resetQueue()
@@ -240,45 +249,63 @@ std::vector<int> Megaminx::findCorners(int i)
     return faces[i-1].findPiece(corners[0], numCorners);
 }
 
-std::vector<int> Megaminx::returnNativeCornerColorPos()
+std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()
 {
     std::vector<int> allCornerPos;
     for (int face = 0; face < 12; ++face) {
         for (int r = 0; r < 5; ++r) {
-            allCornerPos.push_back(faces[face].cornerColorPos[r]);
+            allCornerPos.push_back(faces[face].corner[r]->data.flipStatus);
         }
     }
     return allCornerPos;
 }
-std::vector<int> Megaminx::returnNativeEdgeColorPos()
+std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()
 {
     std::vector<int> allEdgePos;
     for (int face = 0; face < 12; ++face) {
         for (int r = 0; r < 5; ++r) {
-            allEdgePos.push_back(faces[face].edgeColorPos[r]);
+            allEdgePos.push_back(faces[face].edge[r]->data.flipStatus);
         }
     }
     return allEdgePos;
 }
 
-int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges)
+int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors)
 {
     assert(readEdges.size() == 60);
+    assert(readEdgeColors.size() == 60);
     for (int face = 1; face <= 12; ++face) {
         int f = ((face - 1) * 5);
         std::vector<int> loadEdges = { readEdges[f + 0],readEdges[f + 1],readEdges[f + 2],readEdges[f + 3],readEdges[f + 4] };
         resetFacesEdges(face, loadEdges, false);
     }
+    for (int face = 0; face < 12; ++face) {
+        int f = face * 5;
+        for (int i = 0; i < 5; ++i) {
+            //Pieces are in the right place but maybe wrong orientation, so flip the colors:
+            while (faces[face].edge[i]->data.flipStatus != readEdgeColors[f+i])
+                faces[face].edge[i]->flip();
+        }
+    }
     return 1;
 }
 
-int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners)
+int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors)
 {
     assert(readCorners.size() == 60);
+    assert(readCornerColors.size() == 60);
     for (int face = 1; face <= 12; ++face) {
         int f = ((face - 1) * 5);
         std::vector<int> loadCorners = { readCorners[f + 0],readCorners[f + 1],readCorners[f + 2],readCorners[f + 3],readCorners[f + 4] };
         resetFacesCorners(face, loadCorners, false);
+    }
+    for (int face = 0; face < 12; ++face) {
+        int f = face * 5;
+        for (int i = 0; i < 5; ++i) {
+            //Pieces are in the right place but maybe wrong orientation, so flip the colors:
+            while (faces[face].corner[i]->data.flipStatus != readCornerColors[f + i])
+                faces[face].corner[i]->flip();
+        }
     }
     return 1;
 }
@@ -461,6 +488,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
     //assert(i > 0 && i <= 14);
     const colordirs &loc = g_faceNeighbors[current_face];
     switch (i) {
+    //most common one, suitable for white corners or any.
     // r u R' U' , 51
     case 1:
         rotate(loc.right,Face::Clockwise);
@@ -475,7 +503,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.left, Face::CCW);
         rotate(loc.up,   Face::CCW);
         break;
-    // U' L' u l , 53
+    // U' L' u l , 53 //(opposite is case#2)
+    //Second layer edges, Insert to Left = This First, then next.
     case 3:
         rotate(loc.up,   Face::CCW);
         rotate(loc.left, Face::CCW);
@@ -483,7 +512,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.left, Face::Clockwise);
         break;
     case 100:
-    // u r U' R' , 53
+    // u r U' R' , 53 (opposite is case#1)
+    //Second layer edges, Insert to Right = This first, then previous.
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::CCW);
@@ -491,10 +521,13 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     // r u R' u r 2U' R' , 54
         //Last Layer Step 2:
-        // Rotating the star/Edge pieces into their correct positions.
-        //The pieces that will remain in the same position are the 6 and 8 o'clock ones.
-        //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correct positions.
+        // Rotating the Star/Edge pieces into their correct position:
         //NOTE: Affects corners too. //only 1 corner and 2 edges remain untouched: Corner 1 and Edge 1/5
+        //The pieces that will remain in the same position are the 6 and 8 o'clock ones.
+        //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correctly positioned.
+        //2. Two Edges : (Solved edge in the front and to the lower left)  : R, U, R’, U, R, U2’, R’ // r u,  R' u, r U'2, R'
+        //1. Two Edges : (Solved edge in the front and to the upper right) : R, U2, R’, U, R, U2, R’ // r u2, R' u, r u2, R'
+        //3. One Edge is Permuted : (Permuted edge in the front) :           R, U2, R’, U, R, U2, R’ // r u2, R' u, r u2, R' //((then solve the #2 - edge case))
     case 4:
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
@@ -545,6 +578,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         //You repeat with all corners until they are all orientated correctly.
         //repeat by executions of 4x. It will dis-align the R and D pieces temporarily.
         //NOTE: This may result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved. Not sure what then.
+        //This is also done in the White Corners stage by repetitions of 3
     case 7:
         rotate(loc.right,Face::CCW);
         rotate(loc.downr,Face::CCW);
@@ -553,8 +587,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     //Edge Permutation 1:
     case 8:
-        // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //4 to 1, 1 to 3, 3 to 4 //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
-        //Only affects Edges & needs 5 executions;
+        // r2 U2' R2' U' r2 U2' R2' frontface=light_blue,ChangesGray=(5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+        //6 o clock and 2 o clock STAY the same
+        //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
@@ -571,8 +606,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     //Edge Permutation 2:
     case 9:
-        // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) //3 to 1, 1 to 4, 4 to 3 (opposite of last one - all the "up"s get reversed)
-        //Only affects Edges & needs 5 executions;
+        // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
+        //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -590,7 +625,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
     //Edge Permutation 3:
     case 10:
         // r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)
-        //NOTE: CORNERS ARE AFFECTED by this edge algo
+        // front face is untouched. (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
+        //NOTE: CORNERS ARE AFFECTED by this too
         // 3 repeats = undo
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -609,9 +645,10 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     //Edge Permutation 4:
     case 11:
-        // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5) //11 o clock to 4 o clock, 4 o clock to 1 o clock, 1 o clock to 11 o clock
+        // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
+        //11 o clock to 4 o clock, 4 o clock to 1 o clock, 1 o clock to 11 o clock
         //Only affects Edges, only needs one run.
-        //opposite of the Edges one above , but corners aren't affected...
+        //opposite of the previous one above , but corners aren't affected...
         //TODO (find out how to reverse the first one so we can have it without corners.)
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -653,22 +690,52 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right, Face::CCW);
         break;
     case 13:
-        // f l ff L' F' Low Y's 12'oclock to 5 o clock.
-        //First Y, right edge.
+        //Cube must have gray side up and rest of puzzle above layer 1+2 (white face+2nd layer edges) Unsolved
+        //First Edge RIGHT, 12'oclock to 5 o clock.
+        // f l, f f, L' F'
+        // #1 Fourth layer edges, (inside the middle W), fourthLayerEdgesA()        
         rotate(loc.front, Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
         rotate(loc.front, Face::Clockwise);
         rotate(loc.front, Face::Clockwise);
         rotate(loc.left, Face::CCW);
         rotate(loc.front, Face::CCW);
+        break;
     case 14:
-        //Other Y, Left Edge
+        //Second Edge LEFT, 12'oclock to 7 o clock
+        // F' R', F' F', r f
+        // #2 Fourth layer edges, (inside the middle W), fourthLayerEdgesB()
         rotate(loc.front, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.front, Face::CCW);
         rotate(loc.front, Face::CCW);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.front, Face::Clockwise);
+        break;
+    case 15:
+        //https://www.youtube.com/watch?v=j4x61L5Onzk
+        //6-th Layer Edges(left) = U' L' u l u f U' F'  //7th layer is affected.
+        // swap edge from face's star at 12 o'clock to flop in (pinned to center) to the 9'oc or 3'oc edge.
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.front, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.front, Face::CCW);
+        break;
+    case 16:
+        //6-th Layer Edges(right) = u r U' R' U' F' u f //opposite of previous
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.front, Face::Clockwise);
+        break;
     default:
         break;
     }
@@ -750,16 +817,6 @@ void Megaminx::resetFiveCorners(std::vector<int> &v) {
     resetFiveCorners(indexedVector);
 }
 
-std::vector<int> Megaminx::findPieceByEdgeNumTest() {
-    constexpr int bottomFaces[5] = { DARK_BLUE, RED, DARK_GREEN, PURPLE, YELLOW };
-    constexpr int loc[5] = { 2, 3, 3, 3, 3 };
-    std::vector<int> foundEdges;
-    for (int i = 0; i < 5; ++i) {
-        foundEdges.push_back(faces[bottomFaces[i] - 1].edge[loc[i] - 1]->data.pieceIndex);
-    }
-    return foundEdges;
-}
-
 void Megaminx::secondLayerEdges() {
     std::vector<int> secondLayerEdges = { 5, 6, 7, 8, 9 };
     resetFiveEdges(secondLayerEdges);
@@ -775,21 +832,12 @@ void Megaminx::sixthLayerEdges() {
     resetFiveEdges(sixthLayerEdges);
 }
 
-void Megaminx::findCornerByNumTest() {
-    constexpr int faceList[5] = { 8, 9, 10, 11, 12 };
-    std::vector<int> found;
-    for (int i = 0; i < 5; ++i) {
-        found.push_back(faces[faceList[i] - 1].corner[0]->data.pieceIndex);
-        found.push_back(faces[faceList[i] - 1].corner[1]->data.pieceIndex);
-        found.push_back(faces[faceList[i] - 1].corner[2]->data.pieceIndex);
-    }
-    std::sort(found.begin(), found.end());
-}
-
-void Megaminx::lowYhighYmiddleW() {
+void Megaminx::lowYmiddleW() {
     constexpr int pieceListA[5] = { 5, 6, 7, 8, 9 };
     resetFiveCorners(pieceListA);
+}
+
+void Megaminx::highYmiddleW() {
     constexpr int pieceListB[5] = { 10, 11, 12, 13, 14 };
     resetFiveCorners(pieceListB);
-    return;
 }

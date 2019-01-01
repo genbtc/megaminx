@@ -21,6 +21,7 @@ public:
     void render();
     void rotate(int, int);
     void undo();
+    void undoDouble();
     void scramble();
     void setCurrentFaceActive(int i);
     void swapOneCorner(int i, int x);
@@ -32,14 +33,13 @@ public:
     int resetFacesEdges(int color_n);
     int resetFacesCorners(int color_n, const std::vector<int> &loadNewCorners, bool solve=true);
     int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve=true);
-    std::vector<int> returnNativeCornerColorPos();
-    std::vector<int> returnNativeEdgeColorPos();
-    int LoadNewCornersFromVector(const std::vector<int> &readCorners);
-    int LoadNewEdgesFromVector(const std::vector<int> &readEdges);
+    std::vector<int> getAllCornerPiecesColorFlipStatus();
+    std::vector<int> getAllEdgePiecesColorFlipStatus();
+    int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
+    int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
     void rotateAlgo(int n, int i);
     std::vector<int> findEdgeByPieceNum(const int indexes[5]);
     std::vector<int> findEdgeByPieceNum(std::vector<int> &v);
-    std::vector<int> findPieceByEdgeNumTest();
     void resetFiveEdges(const int indexes[5]);
     void resetFiveEdges(std::vector<int> &v);
     std::vector<int> findCornerByPieceNum(const int indexes[5]);
@@ -49,8 +49,8 @@ public:
     void secondLayerEdges();
     void fourthLayerEdges();
     void sixthLayerEdges();
-    void findCornerByNumTest();
-    void lowYhighYmiddleW();
+    void lowYmiddleW();
+    void highYmiddleW();
     void resetQueue();
     /* face busy rotating when true */
     bool isRotating;    
