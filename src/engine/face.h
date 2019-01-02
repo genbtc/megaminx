@@ -29,9 +29,7 @@ public:
     Edge   *edge[5];
 
     std::vector<int> defaultCorners;
-    std::vector<int> cornerColorPos;
     std::vector<int> defaultEdges;
-    std::vector<int> edgeColorPos;
 
     std::vector<int> findPiece(Piece& pieceRef, int times) const;
 
@@ -50,7 +48,6 @@ public:
 private:
     void TwoEdgesFlip(int a, int b);
     void FlipCorners(int a, int b, int c, int d, const int* pack);
-    void FlipCorners(int const c[4], const int * pack);
     void QuadSwapCorners(int const pack[8]);
     void QuadSwapEdges(int const pack[8]);
 

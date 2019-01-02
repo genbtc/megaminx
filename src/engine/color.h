@@ -51,36 +51,37 @@ struct colorpiece {
 
 //Defines the 30 edge pieces.
 constexpr colorpiece g_edgePiecesColors[30] = {
+    // 0 - 4
     { WHITE, DARK_BLUE },
     { WHITE, RED },
     { WHITE, DARK_GREEN },
     { WHITE, PURPLE },
     { WHITE, YELLOW },
-
+    // 5 - 9
     { DARK_BLUE, RED },
     { RED, DARK_GREEN },
     { DARK_GREEN, PURPLE },
     { PURPLE, YELLOW },
     { YELLOW, DARK_BLUE },
-
+    // 10 - 14
     { DARK_BLUE, LIGHT_GREEN },
     { RED, PINK },
     { DARK_GREEN, BEIGE },
     { PURPLE, LIGHT_BLUE },
     { YELLOW, ORANGE },
-
+    // 15 - 19
     { DARK_BLUE, PINK },
     { RED, BEIGE },
     { DARK_GREEN, LIGHT_BLUE },
     { PURPLE, ORANGE },
     { YELLOW, LIGHT_GREEN },
-
+    // 20 - 24
     { PINK, BEIGE },
     { BEIGE, LIGHT_BLUE },
     { LIGHT_BLUE, ORANGE },
     { ORANGE, LIGHT_GREEN },
     { LIGHT_GREEN, PINK },
-
+    // 25 - 29
     { GRAY, LIGHT_BLUE },
     { GRAY, ORANGE },
     { GRAY, LIGHT_GREEN },
@@ -90,24 +91,25 @@ constexpr colorpiece g_edgePiecesColors[30] = {
 
 //Defines the 20 corner Pieces.
 constexpr colorpiece g_cornerPiecesColors[20] = {
+    // 0 - 4
     { WHITE, RED, DARK_BLUE },
     { WHITE, DARK_GREEN, RED },
     { WHITE, PURPLE, DARK_GREEN },
     { WHITE, YELLOW, PURPLE },
     { WHITE, DARK_BLUE, YELLOW },
-
+    // 5 - 9
     { DARK_BLUE, RED, PINK },
     { RED, DARK_GREEN, BEIGE },
     { DARK_GREEN, PURPLE, LIGHT_BLUE },
     { PURPLE, YELLOW, ORANGE },
     { YELLOW, DARK_BLUE, LIGHT_GREEN },
-
+    // 10 - 14
     { LIGHT_BLUE, BEIGE, DARK_GREEN },
     { BEIGE, PINK, RED },
     { PINK, LIGHT_GREEN, DARK_BLUE },
     { LIGHT_GREEN, ORANGE, YELLOW },
     { ORANGE, LIGHT_BLUE, PURPLE },
-
+    // 15 - 19
     { GRAY, BEIGE, LIGHT_BLUE },
     { GRAY, LIGHT_BLUE, ORANGE },
     { GRAY, ORANGE, LIGHT_GREEN },

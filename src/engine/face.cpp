@@ -21,10 +21,6 @@ void Face::attachEdgePieces(Edge& n)
     for (int i = 0; i < 5; ++i) {
         edge[i] = &n + defaultEdges[i];
         assert(edge[i]->data.pieceIndex == defaultEdges[i]);
-        for (int j = 0; j < 2; ++j) {
-            if (edge[i]->data._colorNum[j] == thisNum + 1)
-                edgeColorPos.push_back(j);
-        }
     }
 }
 
@@ -35,10 +31,6 @@ void Face::attachCornerPieces(Corner& n)
     for (int i = 0; i < 5; ++i) {
         corner[i] = &n + defaultCorners[i];
         assert(corner[i]->data.pieceIndex == defaultCorners[i]);
-        for (int j = 0; j < 3; ++j) {
-            if (corner[i]->data._colorNum[j] == thisNum + 1)
-                cornerColorPos.push_back(j);
-        }
     }
 }
 

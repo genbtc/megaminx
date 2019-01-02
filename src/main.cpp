@@ -459,12 +459,19 @@ void createMenu()
     glutAddMenuEntry("Edge Permutation 1 x5", 58);
     glutAddMenuEntry("Edge Permutation 2 x5", 59);
     glutAddMenuEntry("Edge Permutation 3", 60);
-    glutAddMenuEntry("Edge Permutation 4", 61);
+    glutAddMenuEntry("Edge Permutation 4a", 61);
+    glutAddMenuEntry("Edge Permutation 4b", 251);
+    glutAddMenuEntry("Edge Permutation 4c", 252);
     glutAddMenuEntry("Edge Permutation 5", 62);
+    glutAddMenuEntry("2nd Layer Star Left", 68);
+    glutAddMenuEntry("2nd Layer Star Right", 67);
     glutAddMenuEntry("4th Layer Star Left", 64);
     glutAddMenuEntry("4th Layer Star Right", 63);
     glutAddMenuEntry("6th Layer Star Left", 65);
     glutAddMenuEntry("6th Layer Star Right", 66);
+
+    
+
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -554,11 +561,17 @@ void menuHandler(int num)
     case 56:
     case 60:
     case 61:
+    case 251:
+    case 252:
     case 62:
     case 63:
     case 64:
     case 65:
     case 66:
+    case 67:
+    case 68:
+    case 69:
+    case 70:
         megaminx->rotateAlgo(currentFace, num - 50); break;
     case 57:
         megaminx->rotateAlgo(currentFace, num - 50);
@@ -624,21 +637,26 @@ void menuHandler(int num)
     }
 }
 
+#define EDGEFILE "EdgeCurPos.dat"
+#define CORNERFILE "CornerCurPos.dat"
+#define EDGEFILECOLORS "EdgeColorPos.dat"
+#define CORNERFILECOLORS "CornerColorPos.dat"
+
 void FromCubeToVectorFile() {
-    WriteEdgesFile("EdgeCurPos.dat");
-    WriteCornersFile("CornerCurPos.dat");
-    serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), "CornerColorPos.dat");
-    serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), "EdgeColorPos.dat");
+    WriteEdgesFile(EDGEFILE);
+    WriteCornersFile(CORNERFILE);
+    serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
+    serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
 
 void FromVectorFileToCube() {
-    const std::vector<int> &readEdgevector = ParsePiecesStateFile("EdgeCurPos.dat");
-    const std::vector<int> &readEdgeColorvector = ParsePiecesStateFile("EdgeColorPos.dat");
+    const std::vector<int> &readEdgevector = ParsePiecesStateFile(EDGEFILE);
+    const std::vector<int> &readEdgeColorvector = ParsePiecesStateFile(EDGEFILECOLORS);
     megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
     //megaminx->LoadNewEdgesFromVector(readEdgevector);
     //megaminx->LoadNewEdgesFromVector(readEdgevector);
-    const std::vector<int> &readCornervector = ParsePiecesStateFile("CornerCurPos.dat");
-    const std::vector<int> &readCornerColorvector = ParsePiecesStateFile("CornerColorPos.dat");
+    const std::vector<int> &readCornervector = ParsePiecesStateFile(CORNERFILE);
+    const std::vector<int> &readCornerColorvector = ParsePiecesStateFile(CORNERFILECOLORS);
     megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
     //megaminx->LoadNewCornersFromVector(readCornervector);
     //megaminx->LoadNewCornersFromVector(readCornervector);
@@ -697,6 +715,7 @@ const std::vector<int> ParsePiecesStateFile(std::string filename)
             }
         }        
     }
-    serializeVectorInt(readvector, "ReOutput" + filename );
+    //TEST:
+    //serializeVectorInt(readvector, "ReOutput" + filename );
     return readvector;
 }
