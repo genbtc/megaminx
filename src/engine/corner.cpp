@@ -23,7 +23,7 @@ void Corner::createAxis(int n, double* target)
     case 13:
     case 14:
     case 15:
-        CornerGrp4(target, pack);
+        CornerGrp3(target, pack);
         break;
     case 16:
     case 17:
@@ -32,7 +32,7 @@ void Corner::createAxis(int n, double* target)
     case 20:
         pack.axis1 = 'x';
         pack.axis2 = 'z';
-        CornerGrp3(target, pack);
+        CornerGrp4(target, pack);
         break;
     default:
         break;

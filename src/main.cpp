@@ -328,14 +328,14 @@ void onKeyboard(unsigned char key, int x, int y)
     case '3':
     case '4':
     case '5':
-        megaminx->swapOneCorner(currentFace, (int)key - 48); break;
+        megaminx->flipCornerColor(currentFace, (int)key - 48); break;
     case '!':
     case '#':
     case '$':
     case '%':
-        megaminx->swapOneEdge(currentFace, (int)key - 32); break;
+        megaminx->flipEdgeColor(currentFace, (int)key - 32); break;
     case '@':
-        megaminx->swapOneEdge(currentFace, (int)key - 62); break;
+        megaminx->flipEdgeColor(currentFace, (int)key - 62); break;
     default:
         break;
     }
@@ -413,29 +413,40 @@ void createMenu()
     glutAddMenuEntry("FlipColors Corner 3", 31);
     glutAddMenuEntry("FlipColors Corner 4", 32);
     glutAddMenuEntry("FlipColors Corner 5", 33);
-    //submenu6_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("-----------------------", 0);
+
+    submenu6_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Swap Edges 1&2", 125);
     glutAddMenuEntry("Swap Edges 1&3", 126);
     glutAddMenuEntry("Swap Edges 1&4", 127);
     glutAddMenuEntry("Swap Edges 1&5", 128);
-    glutAddMenuEntry("Swap Corners 1&2", 129);
-    glutAddMenuEntry("Swap Corners 1&3", 130);
-    glutAddMenuEntry("Swap Corners 1&4", 131);
-    glutAddMenuEntry("Swap Corners 1&5", 132);
+    glutAddMenuEntry("Swap Edges 2&3", 129);
+    glutAddMenuEntry("Swap Edges 2&4", 130);
+    glutAddMenuEntry("Swap Edges 2&5", 131);
+    glutAddMenuEntry("Swap Edges 3&4", 132);
+    glutAddMenuEntry("Swap Edges 3&5", 133);
+    glutAddMenuEntry("Swap Edges 4&5", 134);
+    glutAddMenuEntry("Swap Corners 1&2", 135);
+    glutAddMenuEntry("Swap Corners 1&3", 136);
+    glutAddMenuEntry("Swap Corners 1&4", 137);
+    glutAddMenuEntry("Swap Corners 1&5", 138);
+    glutAddMenuEntry("Swap Corners 2&3", 139);
+    glutAddMenuEntry("Swap Corners 2&4", 140);
+    glutAddMenuEntry("Swap Corners 2&5", 141);
+    glutAddMenuEntry("Swap Corners 3&4", 142);
+    glutAddMenuEntry("Swap Corners 3&5", 143);
+    glutAddMenuEntry("Swap Corners 4&5", 144);
 
     //SubLevel3 Menu - Auto Solve Steps
     submenu3_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("1st Layer White Star", 41);
     glutAddMenuEntry("1st Layer White Corners", 42);
-    //TODO Add the rest of these:
-    glutAddMenuEntry("2nd Layer Edges", 151); // Left & Right
+    glutAddMenuEntry("2nd Layer Edges", 151);
     //Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
-    //Star drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
+    //Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
     //this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
     glutAddMenuEntry("3rd Layer Low Y's", 152);
     //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
-    //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can work.
+    //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
     glutAddMenuEntry("4th Layer Edges", 153);
     glutAddMenuEntry("5th Layer High Y's", 154);
     glutAddMenuEntry("6th Layer Edges", 155);
@@ -455,23 +466,25 @@ void createMenu()
     glutAddMenuEntry("r u R' u r 2U' R'", 54);
     glutAddMenuEntry("u l U' R' u L' U' r", 55);
     glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
-    glutAddMenuEntry("R' D' R D x4", 57);
-    glutAddMenuEntry("Edge Permutation 1 x5", 58);
-    glutAddMenuEntry("Edge Permutation 2 x5", 59);
-    glutAddMenuEntry("Edge Permutation 3", 60);
-    glutAddMenuEntry("Edge Permutation 4a", 61);
-    glutAddMenuEntry("Edge Permutation 4b", 251);
-    glutAddMenuEntry("Edge Permutation 4c", 252);
-    glutAddMenuEntry("Edge Permutation 5", 62);
+    glutAddMenuEntry("R' D' R D", 57);
+    glutAddMenuEntry("R' D' R D x4", 257);
+    glutAddMenuEntry("Edge Permu 1+ x5", 58);
+    glutAddMenuEntry("Edge Permu 2- x5", 59);
+    glutAddMenuEntry("Edge Permu 3+CORNERS Front=Safe", 60);
+    glutAddMenuEntry("Edge Permu 4a+ Front/Left=Safe", 61);
+    glutAddMenuEntry("Edge Permu 4b- Both/Back=Safe", 251);
+    glutAddMenuEntry("Edge Permu 4c- Right/Back=Safe", 252);
+    glutAddMenuEntry("Edge Permu 5+CORNERS", 62);
+    glutAddMenuEntry("Edge Permu LL #203", 253);
+    glutAddMenuEntry("Edge Permu LL #204", 254);
+    glutAddMenuEntry("Edge Permu LL #205", 255);
+    glutAddMenuEntry("Edge Permu LL #206", 256);
     glutAddMenuEntry("2nd Layer Star Left", 68);
     glutAddMenuEntry("2nd Layer Star Right", 67);
     glutAddMenuEntry("4th Layer Star Left", 64);
     glutAddMenuEntry("4th Layer Star Right", 63);
     glutAddMenuEntry("6th Layer Star Left", 65);
     glutAddMenuEntry("6th Layer Star Right", 66);
-
-    
-
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -495,7 +508,7 @@ void createMenu()
     glutAddMenuEntry("---------------", 0);
     glutAddSubMenu("Admin Mode --->", submenu1_id);
     glutAddSubMenu("Current Face ->", submenu2_id);
-    //glutAddSubMenu("Piece Swaps -->", submenu6_id);
+    glutAddSubMenu("Piece Swaps -->", submenu6_id);
     glutAddSubMenu("Auto Solve  -->", submenu3_id);
     glutAddSubMenu("Algorithms --->", submenu4_id);
     glutAddSubMenu("Solve Face --->", submenu5_id);    
@@ -524,13 +537,13 @@ void menuHandler(int num)
     case 26:  //rotate edge piece 3
     case 27:  //rotate edge piece 4
     case 28:  //rotate edge piece 5
-        megaminx->swapOneEdge(currentFace, num - 23); break;
+        megaminx->flipEdgeColor(currentFace, num - 23); break;
     case 29:  //rotate corner piece 1
     case 30:  //rotate corner piece 2
     case 31:  //rotate corner piece 3
     case 32:  //rotate corner piece 4
     case 33:  //rotate corner piece 5
-        megaminx->swapOneCorner(currentFace, num - 28); break;
+        megaminx->flipCornerColor(currentFace, num - 28); break;
     case 41:  //1st Layer = WHITE Edges
         megaminx->resetFacesEdges(WHITE); break;
     case 42:  //1st Layer = WHITE Corners
@@ -559,10 +572,14 @@ void menuHandler(int num)
     case 54:
     case 55:
     case 56:
+    case 57:
     case 60:
     case 61:
     case 251:
     case 252:
+    case 254:
+    case 255:
+    case 256:
     case 62:
     case 63:
     case 64:
@@ -573,7 +590,14 @@ void menuHandler(int num)
     case 69:
     case 70:
         megaminx->rotateAlgo(currentFace, num - 50); break;
-    case 57:
+    case 257:
+        megaminx->rotateAlgo(currentFace, num - 250);
+        megaminx->rotateAlgo(currentFace, num - 250);
+        megaminx->rotateAlgo(currentFace, num - 250);
+        megaminx->rotateAlgo(currentFace, num - 250); break;
+    case 253:
+        megaminx->rotateAlgo(currentFace, num - 50);
+        megaminx->rotateAlgo(currentFace, num - 50);
         megaminx->rotateAlgo(currentFace, num - 50);
         megaminx->rotateAlgo(currentFace, num - 50);
         megaminx->rotateAlgo(currentFace, num - 50);
@@ -610,7 +634,7 @@ void menuHandler(int num)
     case 102: 
         glutDestroyWindow(1);
         exit(0); break;
-    case 125: //Edge Color Flips
+    case 125: //Edge Piece Swaps
         megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[1]->data); break;
     case 126:
         megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[2]->data); break;
@@ -618,14 +642,38 @@ void menuHandler(int num)
         megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
     case 128:
         megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
-    case 129: //Corner Color Flips
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[1]->data); break;
+    case 129:
+        megaminx->g_currentFace->edge[1]->swapdata(megaminx->g_currentFace->edge[2]->data); break;
     case 130:
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[2]->data); break;
+        megaminx->g_currentFace->edge[1]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
     case 131:
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+        megaminx->g_currentFace->edge[1]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
     case 132:
+        megaminx->g_currentFace->edge[2]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
+    case 133:
+        megaminx->g_currentFace->edge[2]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+    case 134:
+        megaminx->g_currentFace->edge[3]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+    case 135: //Corner Piece Swaps
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[1]->data); break;
+    case 136:
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[2]->data); break;
+    case 137:
+        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+    case 138:
         megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+    case 139:
+        megaminx->g_currentFace->corner[1]->swapdata(megaminx->g_currentFace->corner[2]->data); break;
+    case 140:
+        megaminx->g_currentFace->corner[1]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+    case 141:
+        megaminx->g_currentFace->corner[1]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+    case 142:
+        megaminx->g_currentFace->corner[2]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+    case 143:
+        megaminx->g_currentFace->corner[2]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+    case 144:
+        megaminx->g_currentFace->corner[3]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
     case 94: //Save Game State
         FromCubeToVectorFile();
         break;
@@ -637,26 +685,27 @@ void menuHandler(int num)
     }
 }
 
+//Save State filenames
 #define EDGEFILE "EdgeCurPos.dat"
 #define CORNERFILE "CornerCurPos.dat"
 #define EDGEFILECOLORS "EdgeColorPos.dat"
 #define CORNERFILECOLORS "CornerColorPos.dat"
-
+//Store (Write)
 void FromCubeToVectorFile() {
-    WriteEdgesFile(EDGEFILE);
-    WriteCornersFile(CORNERFILE);
+    WritePiecesFile(EDGEFILE,false);
+    WritePiecesFile(CORNERFILE,true);
     serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
     serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
-
+//Load (Read)
 void FromVectorFileToCube() {
-    const std::vector<int> &readEdgevector = ParsePiecesStateFile(EDGEFILE);
-    const std::vector<int> &readEdgeColorvector = ParsePiecesStateFile(EDGEFILECOLORS);
+    const std::vector<int> &readEdgevector = ReadPiecesFileVector(EDGEFILE);
+    const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(EDGEFILECOLORS);
     megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
     //megaminx->LoadNewEdgesFromVector(readEdgevector);
     //megaminx->LoadNewEdgesFromVector(readEdgevector);
-    const std::vector<int> &readCornervector = ParsePiecesStateFile(CORNERFILE);
-    const std::vector<int> &readCornerColorvector = ParsePiecesStateFile(CORNERFILECOLORS);
+    const std::vector<int> &readCornervector = ReadPiecesFileVector(CORNERFILE);
+    const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(CORNERFILECOLORS);
     megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
     //megaminx->LoadNewCornersFromVector(readCornervector);
     //megaminx->LoadNewCornersFromVector(readCornervector);
@@ -672,28 +721,18 @@ void serializeVectorInt(std::vector<int> list1, std::string filename) {
     file.close();
 }
 
-void WriteEdgesFile(std::string filename)
+void WritePiecesFile(std::string filename, bool corner)
 {
     std::ofstream file(filename);
     for (int i = 1; i <= 12; ++i) {
         file << "----------[ " << i << " ]----------\n";
-        auto f = megaminx->findEdges(i);
-        file << f[0] << ", " << f[1] << ", " << f[2] << ", " << f[3] << ", " << f[4] << "\n";
-    }
-    file.close();
-}
-void WriteCornersFile(std::string filename)
-{
-    std::ofstream file(filename);
-    for (int i = 1; i <= 12; ++i) {
-        file << "----------[ " << i << " ]----------\n";
-        auto f = megaminx->findCorners(i);
+        std::vector<int> f = corner ? megaminx->findCorners(i) : megaminx->findEdges(i);
         file << f[0] << ", " << f[1] << ", " << f[2] << ", " << f[3] << ", " << f[4] << "\n";
     }
     file.close();
 }
 
-const std::vector<int> ParsePiecesStateFile(std::string filename)
+const std::vector<int> ReadPiecesFileVector(std::string filename)
 {
     std::ifstream input(filename);
     std::vector<int> readvector;
@@ -708,7 +747,7 @@ const std::vector<int> ParsePiecesStateFile(std::string filename)
                     continue;
                 if ((word.find("---") == 0) || (word[0] == '-'))
                     break;
-                readint = std::stoi(word);
+                readint = std::stoi(word); //convert to int
                 if (readint < 0)
                     break;
                 readvector.push_back(readint);

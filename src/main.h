@@ -8,7 +8,7 @@
 #include <sstream>
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.32 - genBTC mod";
+const char *title = "Megaminx v1.33 - genBTC mod";
 //testing framerate cap:
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
@@ -60,15 +60,13 @@ void onKeyboard(unsigned char key, int x, int y);
 void onSpecialKeyPress(int key, int x, int y);
 void createMenu();
 void menuHandler(int num);
-
 void menuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
                             submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 
 void serializeVectorInt(std::vector<int> list1, std::string filename);
-void WriteEdgesFile(std::string filename);
-void WriteCornersFile(std::string filename);
-const std::vector<int> ParsePiecesStateFile(std::string filename); 
+void WritePiecesFile(std::string filename, bool corner);
+const std::vector<int> ReadPiecesFileVector(std::string filename); 
 void FromCubeToVectorFile();
 void FromVectorFileToCube();

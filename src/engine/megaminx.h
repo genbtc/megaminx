@@ -24,8 +24,8 @@ public:
     void undoDouble();
     void scramble();
     void setCurrentFaceActive(int i);
-    void swapOneCorner(int i, int x);
-    void swapOneEdge(int i, int x);
+    void flipCornerColor(int i, int x);
+    void flipEdgeColor(int i, int x);
     std::vector<int> findCorners(int i);
     std::vector<int> findEdges(int i);
     void resetFace(int n);
@@ -76,6 +76,7 @@ private:
     std::queue<numdir> undoQueue;
     void _rotate_internal(numdir i);
     void _rotate_internal(int num, int dir);
+    void rotateBulk(std::queue<numdir> &bulkQueue);
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp

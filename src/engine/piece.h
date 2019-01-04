@@ -15,9 +15,9 @@ using std::sin;
 using std::sqrt;
 
 void rotateVertex(double *vertex, char axis, double angle);
-//common constants
+//common geometric constants
 static const long double FI = (1 + sqrt(5.f)) / 2;
-static const long double PI = acos(-1);
+static const long double PI = acos(-1.f);
 static const long double SIDE_ANGLE = 2 * atan(FI);
 static const long double INS_SPHERE_RAD = 100 * sqrt(10+22 / sqrt(5.f)) / 4;
 static const long double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5.f)) / 2);
@@ -134,12 +134,12 @@ public:
         //is re-used by face, where it is Z.
     }
     static void CornerGrp3(double* target, piecepack &pack) {
-        CenterCenter(target, pack);
-        rotateVertex(target, pack.axis2, pim(pack.multi));
-    }
-    static void CornerGrp4(double* target, piecepack &pack) {
         CenterSide1(target, pack);
         rotateVertex(target, pack.axis2, PI);
+    }
+    static void CornerGrp4(double* target, piecepack &pack) {
+        CenterCenter(target, pack);
+        rotateVertex(target, pack.axis2, pim(pack.multi));
     }
     static void EdgeGrp2(double* target, piecepack &pack) {
         rotateVertex(target, pack.axis1, pim(3));

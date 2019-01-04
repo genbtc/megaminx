@@ -1,4 +1,4 @@
-/* MegaMinx2 v1.32 - 2017+2018 - genBTC mod
+/* MegaMinx2 v1.33 - 2017+2018 - genBTC mod
  * Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
@@ -96,11 +96,12 @@ void Megaminx::render()
         else
             k++;
     }
-//FIXED: Noticed that _rotatingFaceIndex as set to 0 on startup, means that is .rendered()
-//     : make startup not call this. Solution A), set to -1 on startup and check everytime.
+//FIXED: Noticed that when _rotatingFaceIndex was set to 0 on startup, means that is .rendered()
+//Solution A), set to -1 on startup and check everytime.
     if (_rotatingFaceIndex == -1) return;
-    //Or Finish the rotation Queue
+    //call .RENDER() and find out if successful
     const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
+    //If yes, then Finish the Rotation & advance the Queue
     if (isRotaFullyRendered && isRotating) {
         rotateQueue.pop();
         isRotating = false;
@@ -114,8 +115,7 @@ void Megaminx::render()
  */
 void Megaminx::rotate(int num, int dir)
 {
-    assert(num > 0);
-    assert(num <= numFaces);
+    assert(num > 0 && num <= numFaces);
     assert(dir == Face::Clockwise || dir == Face::CCW);
     num -= 1; //Convert 1-12 Faces into array [0-11]
     _rotate_internal({ num, dir });
@@ -125,20 +125,20 @@ void Megaminx::_rotate_internal(numdir i)
 {
     rotateQueue.push({ i.num, i.dir });
     undoQueue.push({ i.num, i.dir });
-    //TODO: use undoQueue as written log.
+    //TODO: use undoQueue as the written log history.
 }
 void Megaminx::_rotate_internal(int num, int dir)
 {
     _rotate_internal({ num, dir });
 }
 
-//An unlimited undo queue based off std::queue.
+//An unlimited Undo FIFO queue
 void Megaminx::undo()
 {
     if (undoQueue.empty()) return;
     auto op = undoQueue.front();
     op.dir *= -1;
-    rotateQueue.push({ op.num, op.dir });
+    rotateQueue.push(op);
     undoQueue.pop();
 }
 void Megaminx::undoDouble() {
@@ -147,8 +147,8 @@ void Megaminx::undoDouble() {
     undoQueue.pop();
     auto op2 = undoQueue.front();
     undoQueue.pop();
-    rotateQueue.push({ op2.num, op2.dir });
-    rotateQueue.push({ op1.num, op1.dir });
+    rotateQueue.push({ op2.num, -1 * op2.dir });
+    rotateQueue.push({ op1.num, -1 * op1.dir });
 }
 
 //Clear the Queue and stop any repeated rotating actions.
@@ -181,7 +181,7 @@ void Megaminx::scramble()
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
-void Megaminx::swapOneCorner(int i, int x)
+void Megaminx::flipCornerColor(int i, int x)
 {
     assert(i > 0 && i <= numFaces);
     assert(x > 0 && x <= 5);
@@ -193,7 +193,7 @@ void Megaminx::swapOneCorner(int i, int x)
  * \param i Nth-face's number (color) [0-11]
  * \param x Nth-Corner's index 0-4
  */
-void Megaminx::swapOneEdge(int i, int x)
+void Megaminx::flipEdgeColor(int i, int x)
 {
     assert(i > 0 && i <= numFaces);
     assert(x > 0 && x <= 5);
@@ -498,7 +498,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up,   Face::CCW);
         break;
     // U' L' u l , 53 //(opposite is case#2)
-    //L#2-Edges, Insert to Left = This First, then next.
+    //https://youtu.be/PWTISbs0AAs?t=493 og video. //L#2-Edges, Insert to Left = This First, then next.
     case 3:
         rotate(loc.up,   Face::CCW);
         rotate(loc.left, Face::CCW);
@@ -506,8 +506,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.left, Face::Clockwise);
         break;
     case 100:
-    // u r U' R' , 53 (opposite is case#1)
-    //L#2-Edges, Insert to Right = This first, then previous.
+    // u r U' R' , 53 (opposite is case#1) re video: //L#2-Edges, Insert to Right = This first, then previous.
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::CCW);
@@ -582,7 +581,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
     //Edge Permutation 1:
     case 8:
         // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
-        //6 o clock and 1 o clock STAY the same
+        //6 o clock and 1 o clock STAY the same. Right Star Arrow -> rotate others CCW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
@@ -597,11 +596,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
+        //call 4 more times
         break;
     //Edge Permutation 2:
     case 9:
         // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
-        //6 o clock and 1 o clock STAY the same
+        //6 o clock and 1 o clock STAY the same. Right Star Arrow -> rotate others CW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
@@ -616,6 +616,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
+        //call 4 more times
         break;
     //Edge Permutation 3:
     case 10:
@@ -643,8 +644,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
         //11 o clock to 4 o clock, 4 o clock to 1 o clock, 1 o clock to 11 o clock
         //Only affects Edges, only needs one run.
+        //unaffected stays in front/left side
         //opposite of the previous one above , but corners aren't affected...
-        //TODO (find out how to reverse the first one so we can have it without corners.)
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
@@ -664,9 +665,10 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
         //Edge Permutation 4b:
     case 201:
-        //Logical sister to EdgePermutation4. Reverses #4A only when 3 edges are positioned in the front row, 2 unaffecteds stay in back
-        // cycles edges in the opposite rotation.
-        //manually reverse engineered from 4, to be like 3 but without corners.
+        //Logical sister to EdgePermutation4. Reverses #4A only when 3 edges are positioned in the front row,
+        // 2 unaffecteds stay on both/back sides. Cycles edges in the opposite rotation.
+        //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
+        //Reverses 4a if cube is rotated 2 turns CW.
         rotate(loc.right, Face::CCW);
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::Clockwise);
@@ -686,7 +688,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
         //Edge Permutation 4c:
     case 202:
-        //TEMP: like 4b but Rotates the front face instead of right, 2 unaffecteds = right side untouched. edges cycle rotate = clockwise
+        //Reverses 4a if cube is rotated 2 turns CCW.
+        //TEMP: like 4b but Rotates the front face instead of right, 2 unaffecteds = right/back side untouched. edges cycle rotate = clockwise
         rotate(loc.front, Face::CCW);
         rotate(loc.up, Face::CCW);
         rotate(loc.front, Face::Clockwise);
@@ -752,7 +755,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 14:
         //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-        // #4th-Layer Edges(LEFT), (inside the middle W), fourthLayerEdgesA()
+        // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
         // F' R', F' F', r f    // 12'oclock to 7 o clock
         rotate(loc.front, Face::CCW);
         rotate(loc.right, Face::CCW);
@@ -762,7 +765,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.front, Face::Clockwise);
         break;
     case 13:        
-        // #4th-Layer Edges(RIGHT), (inside the middle W), fourthLayerEdgesB()        
+        // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()        
         // f l, f f, L' F'      //12'oclock to 5 o clock.        
         rotate(loc.front, Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
@@ -794,6 +797,181 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.front, Face::CCW);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.front, Face::Clockwise);
+        break;
+    case 203:
+        // #7Last-Layer 5-way-star, Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 (aka 1,3,5,2,4)
+        //#last layer Star, copied from cube manual (turned upside down)
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::CCW);
+        //call 5 more times (6 total) //Repeat 5x to undo (30)
+        break;
+    case 204:
+        // #7Last-Layer 5-way star, copied from cube manual, Two halves //2,1,3,4,5
+        // 53 moves. Gray Face must be on top. Non invasive overall but very invasive temporarily
+        //Repeat 1/7
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        //Repeat 2/7 + double up
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        //Repeat 3/7 + double up
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        //Repeat 4/7 + double up
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        //Repeat 5/7 + double up
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        //Repeat 6/7 + double up
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        //Repeat 7/7 + double up
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        // + 5 more moves
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        break;
+    case 205:
+        // #7Last-Layer Edge swaps - have 1 edge solved remains in front, then swap 2&3 and 4&5
+        //copied from manual. 44 moves total. Gray Face must be on top. Non invasive overall but very invasive temporarily
+        //Line 1:
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        //Line2
+        rotate(loc.left, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        //Line3
+        rotate(loc.left, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);//double up
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise); //changes direction
+        break;
+    case 206:
+        //#7Last-Layer-Edge-Permu Copied from manual, 30 moves total... have 1 edge solved, then swap 2&4 and 3&5/INVERTED.
+        //Solved piece remains in front, right/backR swap and and left/backL swap, with INVERTS @ 8'oclock and 1'oclock. Gray Face on Top.
+        //Line 1
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        //Line 2
+        rotate(loc.front, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        //Line 3
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.left, Face::Clockwise);
+        rotate(loc.front, Face::CCW);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.left, Face::CCW);
+        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);
         break;
     default:
         break;
