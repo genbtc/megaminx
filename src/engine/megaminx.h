@@ -5,9 +5,13 @@
 #include <queue>
 #include <cassert>
 #include <algorithm>
-#include <iostream>
 #include <vector>
 #include <iterator>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <locale>
 
 class Megaminx {
 public:
@@ -38,6 +42,7 @@ public:
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
     void rotateAlgo(int n, int i);
+    const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
     std::vector<int> findEdgeByPieceNum(const int indexes[5]);
     std::vector<int> findEdgeByPieceNum(std::vector<int> &v);
     void resetFiveEdges(const int indexes[5]);
@@ -68,15 +73,13 @@ private:
     Edge   edges[numEdges];
 
     int _rotatingFaceIndex;
-    struct numdir {
-        int num;
-        int dir;
-    };
+
     std::queue<numdir> rotateQueue;
     std::queue<numdir> undoQueue;
     void _rotate_internal(numdir i);
     void _rotate_internal(int num, int dir);
     void rotateBulk(std::queue<numdir> &bulkQueue);
+    
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
