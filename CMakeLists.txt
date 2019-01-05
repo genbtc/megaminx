@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 # Also compiles natively on Windows with MSVC as long as you MSVC build freeglut and set the GLUT_ROOT_PATH on Line 33.
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 set(PACKAGE_NAME "Megaminx")
-set(PACKAGE_VERSION "1.3.1")
+set(PACKAGE_VERSION "1.3.3")
 project(${PACKAGE_NAME})
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME ${PACKAGE_NAME})
@@ -19,7 +19,15 @@ if(MINGW)
 	set(CMAKE_C_COMPILER   "gcc")
 	set(CMAKE_CXX_COMPILER "g++")
 	message("MingW Platform detected, using G++/GCC/Ninja from: " ${CMAKE_PREFIX_PATH})
-	set(MING_INCLUDES "${CMAKE_PREFIX_PATH}/include/c++/8.2.0;${CMAKE_PREFIX_PATH}/include/c++/8.2.0/x86_64-w64-mingw32;${CMAKE_PREFIX_PATH}/include/c++/8.2.0/backward;${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include;${CMAKE_PREFIX_PATH}/include;${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include-fixed;${CMAKE_PREFIX_PATH}/x86_64-w64-mingw32/include;${CMAKE_PREFIX_PATH}/include;")
+	set(MING_INCLUDES "
+    ${CMAKE_PREFIX_PATH}/include/c++/8.2.0;
+    ${CMAKE_PREFIX_PATH}/include/c++/8.2.0/x86_64-w64-mingw32;
+    ${CMAKE_PREFIX_PATH}/include/c++/8.2.0/backward;
+    ${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include;
+    ${CMAKE_PREFIX_PATH}/include;    
+    ${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include-fixed;
+    ${CMAKE_PREFIX_PATH}/x86_64-w64-mingw32/include;
+    ")
 	message("Manually specified MingW GCC System Include Dirs: " ${MING_INCLUDES})
 	include_directories(${MING_INCLUDES})
 elseif(NOT MINGW AND MSVC)	
@@ -58,14 +66,14 @@ endif()
 #// Prepare EXE - by listing all source files (explicitly is safer), and the Res.rc (icon resource)
 add_executable(${PACKAGE_NAME} WIN32 
     src/common_physics/camera.cpp
-    src/common_physics/opengl.cpp 
-    src/engine/center.cpp 
-    src/engine/corner.cpp 
-    src/engine/edge.cpp 
-    src/engine/face.cpp 
-    src/engine/megaminx.cpp 
-    src/engine/utils.cpp 
-    src/main.cpp 
+    src/common_physics/opengl.cpp
+    src/engine/center.cpp
+    src/engine/corner.cpp
+    src/engine/edge.cpp
+    src/engine/face.cpp
+    src/engine/utils.cpp
+    src/engine/megaminx.cpp
+    src/main.cpp
     src/Res.rc
 )
 #//Use Perf-Profiler option in MSVC - Blocks /Incremental option.

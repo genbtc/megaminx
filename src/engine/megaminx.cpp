@@ -141,7 +141,8 @@ void Megaminx::undo()
     rotateQueue.push(op);
     undoQueue.pop();
 }
-void Megaminx::undoDouble() {
+void Megaminx::undoDouble()
+{
     if (undoQueue.size() < 2) return;
     auto op1 = undoQueue.front();
     undoQueue.pop();
@@ -467,31 +468,33 @@ extern int getCurrentFaceFromAngles(int x, int y)
  * \param current_face from 1 - 12
  * \param i op # from 1 - 18
  */
-//TODO: Make a letter/notation parser to shorten all this down.
 void Megaminx::rotateAlgo(int current_face, int i)
 {
     assert(current_face > 0 && current_face <= numFaces);
     //assert(i > 0 && i <= 14);
     const colordirs &loc = g_faceNeighbors[current_face];
+    std::vector<numdir> bulk;
     switch (i) {
-    //most common one, suitable for white corners or any.
-    // r u R' U' , 51
     case 1:
+    // r u R' U' , 51 - most common one, suitable for white corners or any.
+        bulk = ParseAlgorithmString("r u R' U'", loc);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::CCW);
         rotate(loc.up,   Face::CCW);
-        break;
-    // l u L' U' , 52
+        break;    
     case 2:
+    // l u L' U' , 52 - brother to #1
+        bulk = ParseAlgorithmString("l u L' U'", loc);
         rotate(loc.left, Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.left, Face::CCW);
         rotate(loc.up,   Face::CCW);
         break;
-    // U' L' u l , 53 //(opposite is case#2)
-    //https://youtu.be/PWTISbs0AAs?t=493 og video. //L#2-Edges, Insert to Left = This First, then next.
     case 3:
+    // U' L' u l , 53 //(opposite is case#2)
+        //https://youtu.be/PWTISbs0AAs?t=493 og video. //L#2-Edges, Insert to Left = This First, then next.
+        bulk = ParseAlgorithmString("U' L' u l", loc);
         rotate(loc.up,   Face::CCW);
         rotate(loc.left, Face::CCW);
         rotate(loc.up,   Face::Clockwise);
@@ -499,11 +502,13 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 100:
     // u r U' R' , 53 (opposite is case#1) re video: //L#2-Edges, Insert to Right = This first, then previous.
+        bulk = ParseAlgorithmString("u r U' R'", loc);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::CCW);
         rotate(loc.right,Face::CCW);
         break;
+    case 4:
     // r u R' u r 2U' R' , 54
         //Last Layer Step 2:
         // Rotating the Star/Edge pieces into their correct position:
@@ -511,7 +516,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         //The 6 and 8 o'clock pieces will remain unaffected and in their same position.
         //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correctly positioned.
         //#2. Two Edges Solved: (Solved edge in the front & lower left) : // r u,  R' u, r U'2, R'
-    case 4:
+        bulk = ParseAlgorithmString("r u R' u r 2U' R'", loc);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::CCW);
@@ -522,9 +527,11 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right,Face::CCW);
         break;
     case 41:
-        ////Last Layer Step 2: continued
-        //#1. Two Edges Solved : (Solved edge in the front & upper right) :// r u2, R' u, r u2, R'
-        //#3. One Edge is Permuted : (Permuted edge in the front) :        // r u2, R' u, r u2, R' + (then do the #2-edge case)
+    // r u2, R' u, r u2, R'
+        //Last Layer Step 2: continued
+        //#1. Two Edges Solved : (Solved edge in the front & upper right) :
+        //#3. One Edge is Permuted : (Permuted edge in the front) this algo + then go back do the previous algo)
+        bulk = ParseAlgorithmString("r u2, R' u, r u2, R'", loc);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -535,11 +542,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
         break;
-    // u l U' R' u L' U' r , 55 orient bottom Corners // 1,2,3
-    //Only affects corners. //repeat 3x = undo 
-    //the 3, 5 and 7 o clock corners will rotate with each other  //moves Corners from #1to2,2to3,3to1
-    //left-side (8:00 to 2:00) and diag-left-back 2corner+3edges will stay the SAME.
     case 5:
+    // u l U' R' u L' U' r , 55 orient bottom Corners // 1,2,3
+        //Only affects corners. //repeat 3x = undo 
+        //the 3, 5 and 7 o clock corners will rotate with each other  //moves Corners from #1to2,2to3,3to1
+        //left-side (8:00 to 2:00) and diag-left-back 2corner+3edges will stay the SAME.
+        bulk = ParseAlgorithmString("u l U' R' u L' U' r", loc);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
         rotate(loc.up,   Face::CCW);
@@ -549,14 +557,15 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up,   Face::CCW);
         rotate(loc.right,Face::Clockwise);
         break;
+    case 6:
     // u r 2U' L' 2u R' 2U' l u , 56
-    //Only affects corners. //repeat 3x = undo 
+        //Only affects corners. //repeat 3x = undo 
         //Last Layer Step 3:
         // Get the corner into their correct positions. // 3,5,4
         // The front face corners (1&2) at the 5 and 7 o'clock will stay same,
         // and the three surrounding front edges(1,2,5) stay the SAME.
         // The 3 affected corners will cycle rotate around counter-clockwise.
-    case 6:
+        bulk = ParseAlgorithmString("u l U' R' u L' U' r", loc);
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::CCW);
@@ -570,23 +579,25 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.left, Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
         break;
+    case 7:
     // R' D' R D , 57
         //Last Layer Step 4: Orientating the Corners.
         //You repeat with all corners until they are all orientated correctly.
         //repeat by executions of 4x. It will dis-align the R and D pieces temporarily.
         //NOTE: This may result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved. Not sure what then.
         //This is also done in the White Corners stage by repetitions of 3
-    case 7:
+        bulk = ParseAlgorithmString("R' D' R D", loc);
         rotate(loc.right,Face::CCW);
         rotate(loc.downr,Face::CCW);
         rotate(loc.right,Face::Clockwise);
         rotate(loc.downr,Face::Clockwise);
         break;
-    //Edge Permutation 1:
     case 8:
-        // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+    // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+        //Edge Permutation 1:
         //6 o'clock and 1 o'clock STAY the same. Right Star Arrow -> rotate others CCW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
+        bulk = ParseAlgorithmString("r2 U2' R2' U' r2 U2' R2'", loc);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
@@ -602,11 +613,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right, Face::CCW);
         //13 moves. must call 4 more times. Total 65 moves.
         break;
-    //Edge Permutation 2:
     case 9:
-        // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
+    // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
+        //Edge Permutation 2:
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others CW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
+        bulk = ParseAlgorithmString("r2 u2 R2' u r2 u2 R2'", loc);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -622,12 +634,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right, Face::CCW);
         //13 moves. must call 4 more times. Total 65 moves.
         break;
-    //Edge Permutation 3:
     case 10:
-        // r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)
-        // front face is untouched. (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
-        //NOTE: CORNERS ARE AFFECTED by this too
-        // 3 repeats = undo
+    // r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)
+        //Edge Permutation 3:
+        // Front face is untouched. (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
+        //NOTE: CORNERS ARE AFFECTED by this too.  // 3 repeats = undo
+        bulk = ParseAlgorithmString("r u R' F', r  u  R' U', R' f r2 U' R'", loc);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
@@ -643,13 +655,14 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::CCW);
         break;
-    //Edge Permutation 4a:
     case 11:
-        // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
+    // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
+        //Edge Permutation 4a:
         //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock
         //Only affects Edges, only needs one run.
         // 2 unaffecteds stay on front/left sides
         //opposite of the previous one above , but corners aren't affected...
+        bulk = ParseAlgorithmString("r u R' u ,  R' U' r2 U',  R' u R' u,  r U2'", loc);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
@@ -667,8 +680,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.up, Face::CCW);
         break;
-        //Edge Permutation 4b:
     case 201:
+        //Edge Permutation 4b:
         //Opposite of EdgePermutation4a. Reverses #4A only when 3 edges are positioned in the front row,
         // 2 unaffecteds stay on both/back sides. Cycles edges in the opposite rotation.
         //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
@@ -690,8 +703,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         break;
-        //Edge Permutation 4c:
     case 202:
+        //Edge Permutation 4c:
         //2 unaffecteds = right/back side untouched. edges cycle rotate = clockwise
         //Reverses 4a if cube is rotated 2 turns CCW.
         //Identical Twin to 4b but Rotates the front face instead of right
@@ -712,11 +725,11 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
         break;
-    //Edge Permutation 5:
     case 12:
+        //Edge Permutation 5:
         // l r u2,  L' u R',  l U' r u2,  L' u2 R' (5 and 3 swap, 1 and 2 swap) //1 and 5, 4 and 2
-        //NOTE: CORNERS ARE AFFECTED by this edge algo
-        //1 Repeat = Undo
+        //NOTE: CORNERS ARE AFFECTED by this edge algo,   //1 Repeat = Undo
+        bulk = ParseAlgorithmString("l r u2,  L' u R',  l U' r u2,  L' u2 R'", loc);
         rotate(loc.left, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -759,9 +772,10 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.front, Face::CCW);
         break;
     case 14:
-        //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-        // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
         // F' R', F' F', r f    // 12 o'clock to 7 o'clock
+        // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
+        //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+        bulk = ParseAlgorithmString("F' R', F' F', r f", loc);
         rotate(loc.front, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.front, Face::CCW);
@@ -770,8 +784,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.front, Face::Clockwise);
         break;
     case 13:        
-        // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()        
         // f l, f f, L' F'      //12 o'clock to 5 o'clock.        
+        // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()
+        bulk = ParseAlgorithmString("f l, f f, L' F'", loc);
         rotate(loc.front, Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
         rotate(loc.front, Face::Clockwise);
@@ -783,6 +798,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         // #6th-Layer Edges(LEFT) = U' L' u l u f U' F'  //Must have Layers 1-5 solved, and 7th layer is affected.
         // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
         //https://www.youtube.com/watch?v=j4x61L5Onzk
+        bulk = ParseAlgorithmString("U' L' u l u f U' F'", loc);
         rotate(loc.up, Face::CCW);
         rotate(loc.left, Face::CCW);
         rotate(loc.up, Face::Clockwise);
@@ -794,6 +810,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 16:
         // #6th-Layer Edges(RIGHT) = u r U' R' U' F' u f //opposite of previous, To the edge @ 3 o'clock
+        bulk = ParseAlgorithmString("u r U' R' U' F' u f", loc);
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
@@ -977,12 +994,55 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right, Face::Clockwise);
         rotate(loc.left, Face::CCW);
         rotate(loc.up, Face::CCW);
-        rotate(loc.up, Face::CCW);
+        rotate(loc.up, Face::CCW);        
         break;
     default:
         break;
     }
 }
+
+//TODO: Make a letter/notation parser to shorten all this down.
+//FIXED: Done, so far. Testing.
+const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString,colordirs loc)
+{
+    std::vector<numdir> readVector;
+    std::stringstream ss(algorithmString); // create a stringstream to iterate over
+    while (ss) {                           // while the stream is good
+        std::string word;                  // parse first word
+        bool doTwice = false;
+        numdir op = { -1, Face::Clockwise };
+        if (ss >> word) {
+            if (word.find("'") != std::string::npos)
+                op.dir *= -1;
+            if ((word.find("r") != std::string::npos) ||
+                (word.find("R") != std::string::npos))
+                op.num = loc.right - 1;
+            else if ((word.find("f") != std::string::npos) ||
+                     (word.find("F") != std::string::npos))
+                op.num = loc.front - 1;
+            else if ((word.find("l") != std::string::npos) ||
+                     (word.find("L") != std::string::npos))
+                op.num = loc.left - 1;
+            else if ((word.find("u") != std::string::npos) ||
+                     (word.find("U") != std::string::npos))
+                op.num = loc.up - 1;
+            else if ((word.find("dr") != std::string::npos) ||
+                     (word.find("DR") != std::string::npos))
+                op.num = loc.downr - 1;
+            else if ((word.find("dl") != std::string::npos) ||
+                     (word.find("DL") != std::string::npos))
+                op.num = loc.downl - 1;
+            if (op.num > -1)
+                readVector.push_back(op);
+            if (word.find("2") != std::string::npos) {
+                assert(readVector.size() > 0);
+                readVector.push_back(readVector.back());
+            }
+        }
+    }
+    return readVector;
+}
+
 
 std::vector<int> Megaminx::findEdgeByPieceNum(const int indexes[5])
 {

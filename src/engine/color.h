@@ -148,3 +148,8 @@ constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
     { PINK, LIGHT_GREEN, GRAY, BEIGE, RED, DARK_BLUE, WHITE },
     { BEIGE, PINK, GRAY, LIGHT_BLUE, DARK_GREEN, RED, WHITE }
 };
+
+struct numdir {
+    int num;
+    int dir;
+};

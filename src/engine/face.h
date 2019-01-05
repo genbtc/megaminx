@@ -37,7 +37,7 @@ public:
     void attachCornerPieces(Corner& n);
     void attachCenter(Center* a, double* centerVertexBase);
 
-    int Face::getNum() const { return thisNum; }
+    int getNum() const { return thisNum; }
     void initAxis(int n);    
     bool render();
     void rotate(int direction);
