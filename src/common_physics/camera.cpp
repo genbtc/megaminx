@@ -120,8 +120,15 @@ void Camera::RotateGLCameraView()
     if (m_angleY < 0) m_angleY += 360;
     //These must be transformed in this order for mouse to work right.
     glTranslated(0, 0, m_zoom);
-    glRotated(m_angleY, -1, 0, 0);
-    glRotated(m_angleX, 0, 0, 1);
+    //vertical
+    glRotated(m_angleY, -1, 0, 0); 
+    //horizontal wants to act in reverse when cube is flipped upside down.
+    //this fix is crude, works, but causes a visible and disorienting glitch across the transition. 
+    if (m_angleY > 180) {
+        glRotated(-m_angleX, 0, 0, 1); //seems to be rotating the faces CW face around the white when <180+1 transition.
+    }
+    else //default:
+        glRotated(m_angleX, 0, 0, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -427,42 +427,34 @@ extern int getCurrentFaceFromAngles(int x, int y)
     const bool y3  = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
     const bool y4a = y >= (0 - d)   && y <= (0 + d);                //0
     const bool y4b = y >= (360 - d) && y <= (360 + d);              //360
-    constexpr int toplist[5] = { BEIGE, PINK, LIGHT_GREEN, ORANGE, LIGHT_BLUE };      //{12,11,10,9,8}
-    constexpr int botlist[5] = { YELLOW, PURPLE, DARK_GREEN, RED, DARK_BLUE };        // { 6,5,4,3,2 }
-    //Top half - Part 1:
-    if(y1 && x < d)
+    constexpr int toplistA[5] = { 12,11,10,9,8 };
+    constexpr int toplistB[5] = { 3,4,5,6,2 };
+    constexpr int botlistA[5] = { 11,12,8,9,10 };
+    constexpr int botlistB[5] = { 4,3,2,6,5 };
+    if (y1 && x < d)
         face = LIGHT_BLUE;
-    //Bottom half - Part 1:
-    else if(y2 && x < d)
+    else if (y2 && x < d)
         face = DARK_BLUE;
     if (face) return face;
-    else if (y1 || y2) {
-        for (int i = 0; i < 5; ++i) {
-            if (x >= d + r * i && x < d + r * (i + 1)) {
-                if (y1)
-                    face = toplist[i];
-                else if (y2)
-                    face = botlist[i];
-                if (face) return face;
-            }
+    for (int i = 0; i < 5; ++i) {
+        if (x >= d + r * i && x < d + r * (i + 1)) {
+            if (y1)
+                face = toplistA[i];
+            else if (y2)
+                face = toplistB[i];
+            if (face) return face;
         }
     }
-    //Part 2: offset by 180 Degrees, therefore the starting point is a diff color
-    //equivalent to std::rotate cyclically advancing the list by + 2
-    else if (y1b || y2b) {
-        constexpr int toplist[5] = { LIGHT_GREEN, ORANGE, LIGHT_BLUE, BEIGE, PINK }; //{ 10,9,8,12,11}
-        constexpr int botlist[5] = { DARK_GREEN, RED, DARK_BLUE, YELLOW, PURPLE };   // { 4,3,2,6,5 }
-        for (int i = 0; i < 5; ++i) {
-            if (x >= r * i && x < r * (i + 1)) {
-                if (y1b)
-                    face = toplist[i];
-                else if (y2b)
-                    face = botlist[i];
-                if (face) return face;
-            }
+    for (int i = 0; i < 5; ++i) {
+        if (x >= r * i && x < r * (i + 1)) {
+            if (y1b)
+                face = botlistA[i];
+            else if (y2b)
+                face = botlistB[i];
+            if (face) return face;
         }
     }
-    else if (y3 && !face)    //Bottom {1}
+    if (y3 && !face)    //Bottom {1}
         face = WHITE;
     else if ((y4a || y4b) && !face) //Top {7}
         face = GRAY;
@@ -516,11 +508,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         //Last Layer Step 2:
         // Rotating the Star/Edge pieces into their correct position:
         //NOTE: Affects corners too. //only 1 corner and 2 edges remain untouched: Corner 1 and Edge 1/5
-        //The pieces that will remain in the same position are the 6 and 8 o'clock ones.
+        //The 6 and 8 o'clock pieces will remain unaffected and in their same position.
         //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correctly positioned.
-        //2. Two Edges : (Solved edge in the front and to the lower left)  : R, U, R’, U, R, U2’, R’ // r u,  R' u, r U'2, R'
-        //1. Two Edges : (Solved edge in the front and to the upper right) : R, U2, R’, U, R, U2, R’ // r u2, R' u, r u2, R'
-        //3. One Edge is Permuted : (Permuted edge in the front) :           R, U2, R’, U, R, U2, R’ // r u2, R' u, r u2, R' //((then solve the #2 - edge case))
+        //#2. Two Edges Solved: (Solved edge in the front & lower left) : // r u,  R' u, r U'2, R'
     case 4:
         rotate(loc.right,Face::Clockwise);
         rotate(loc.up,   Face::Clockwise);
@@ -530,6 +520,20 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up,   Face::CCW);
         rotate(loc.up,   Face::CCW);
         rotate(loc.right,Face::CCW);
+        break;
+    case 41:
+        ////Last Layer Step 2: continued
+        //#1. Two Edges Solved : (Solved edge in the front & upper right) :// r u2, R' u, r u2, R'
+        //#3. One Edge is Permuted : (Permuted edge in the front) :        // r u2, R' u, r u2, R' + (then do the #2-edge case)
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::CCW);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.up, Face::Clockwise);
+        rotate(loc.right, Face::CCW);
         break;
     // u l U' R' u L' U' r , 55 orient bottom Corners // 1,2,3
     //Only affects corners. //repeat 3x = undo 
@@ -546,12 +550,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right,Face::Clockwise);
         break;
     // u r 2U' L' 2u R' 2U' l u , 56
-        //Only affects corners. //repeat 3x = undo 
+    //Only affects corners. //repeat 3x = undo 
         //Last Layer Step 3:
         // Get the corner into their correct positions. // 3,5,4
-        // The front face corners (1&2) and the three surrounding front edges(1,2,5) stay the SAME.
-        // (The corners facing you at the 5 and 7 o'clock will stay same)
-        // and the other 3 corners will also rotate around in an anticlockwise fashion!
+        // The front face corners (1&2) at the 5 and 7 o'clock will stay same,
+        // and the three surrounding front edges(1,2,5) stay the SAME.
+        // The 3 affected corners will cycle rotate around counter-clockwise.
     case 6:
         rotate(loc.up,   Face::Clockwise);
         rotate(loc.right,Face::Clockwise);
@@ -581,7 +585,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
     //Edge Permutation 1:
     case 8:
         // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
-        //6 o clock and 1 o clock STAY the same. Right Star Arrow -> rotate others CCW
+        //6 o'clock and 1 o'clock STAY the same. Right Star Arrow -> rotate others CCW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
@@ -596,12 +600,12 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
-        //call 4 more times
+        //13 moves. must call 4 more times. Total 65 moves.
         break;
     //Edge Permutation 2:
     case 9:
         // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
-        //6 o clock and 1 o clock STAY the same. Right Star Arrow -> rotate others CW
+        //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others CW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
         rotate(loc.right, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
@@ -616,7 +620,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::CCW);
         rotate(loc.right, Face::CCW);
-        //call 4 more times
+        //13 moves. must call 4 more times. Total 65 moves.
         break;
     //Edge Permutation 3:
     case 10:
@@ -642,9 +646,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
     //Edge Permutation 4a:
     case 11:
         // r u R' u ,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
-        //11 o clock to 4 o clock, 4 o clock to 1 o clock, 1 o clock to 11 o clock
+        //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock
         //Only affects Edges, only needs one run.
-        //unaffected stays in front/left side
+        // 2 unaffecteds stay on front/left sides
         //opposite of the previous one above , but corners aren't affected...
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::Clockwise);
@@ -665,7 +669,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
         //Edge Permutation 4b:
     case 201:
-        //Logical sister to EdgePermutation4. Reverses #4A only when 3 edges are positioned in the front row,
+        //Opposite of EdgePermutation4a. Reverses #4A only when 3 edges are positioned in the front row,
         // 2 unaffecteds stay on both/back sides. Cycles edges in the opposite rotation.
         //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
         //Reverses 4a if cube is rotated 2 turns CW.
@@ -688,8 +692,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
         //Edge Permutation 4c:
     case 202:
+        //2 unaffecteds = right/back side untouched. edges cycle rotate = clockwise
         //Reverses 4a if cube is rotated 2 turns CCW.
-        //TEMP: like 4b but Rotates the front face instead of right, 2 unaffecteds = right/back side untouched. edges cycle rotate = clockwise
+        //Identical Twin to 4b but Rotates the front face instead of right
         rotate(loc.front, Face::CCW);
         rotate(loc.up, Face::CCW);
         rotate(loc.front, Face::Clockwise);
@@ -730,7 +735,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.right, Face::CCW);
         break;
     case 18:
-        // #2nd-Layer Edges/Star(LEFT) =  7 o clock to 9 o clock:
+        // #2nd-Layer Edges/Star(LEFT) =  7 o'clock to 9 o'clock:
         //reverse engineered from #17 myself (Exact opposite), manual is lacking.
         rotate(loc.downl, Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
@@ -742,7 +747,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.front, Face::Clockwise);
         break;
     case 17:
-        // #2nd-Layer Edges/Star(RIGHT) =  5 o clock to 3 o clock:
+        // #2nd-Layer Edges/Star(RIGHT) =  5 o'clock to 3 o'clock:
         //Algo from QJ cube manual & (White face on top)
         rotate(loc.downr, Face::CCW);
         rotate(loc.right, Face::CCW);
@@ -756,7 +761,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
     case 14:
         //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
         // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
-        // F' R', F' F', r f    // 12'oclock to 7 o clock
+        // F' R', F' F', r f    // 12 o'clock to 7 o'clock
         rotate(loc.front, Face::CCW);
         rotate(loc.right, Face::CCW);
         rotate(loc.front, Face::CCW);
@@ -766,7 +771,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 13:        
         // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()        
-        // f l, f f, L' F'      //12'oclock to 5 o clock.        
+        // f l, f f, L' F'      //12 o'clock to 5 o'clock.        
         rotate(loc.front, Face::Clockwise);
         rotate(loc.left, Face::Clockwise);
         rotate(loc.front, Face::Clockwise);
@@ -776,7 +781,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 15:
         // #6th-Layer Edges(LEFT) = U' L' u l u f U' F'  //Must have Layers 1-5 solved, and 7th layer is affected.
-        // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9'oclock
+        // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
         //https://www.youtube.com/watch?v=j4x61L5Onzk
         rotate(loc.up, Face::CCW);
         rotate(loc.left, Face::CCW);
@@ -788,7 +793,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotate(loc.front, Face::CCW);
         break;
     case 16:
-        // #6th-Layer Edges(RIGHT) = u r U' R' U' F' u f //opposite of previous, To the edge @ 3'oclock
+        // #6th-Layer Edges(RIGHT) = u r U' R' U' F' u f //opposite of previous, To the edge @ 3 o'clock
         rotate(loc.up, Face::Clockwise);
         rotate(loc.right, Face::Clockwise);
         rotate(loc.up, Face::CCW);
@@ -938,7 +943,8 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 206:
         //#7Last-Layer-Edge-Permu Copied from manual, 30 moves total... have 1 edge solved, then swap 2&4 and 3&5/INVERTED.
-        //Solved piece remains in front, right/backR swap and and left/backL swap, with INVERTS @ 8'oclock and 1'oclock. Gray Face on Top.
+        //Solved piece remains in front, right/backRight swap and left/backLeft swap
+        // with INVERTS @ 8 o'clock and 1 o'clock. Gray Face must be on top.
         //Line 1
         rotate(loc.right, Face::CCW);
         rotate(loc.left, Face::Clockwise);
