@@ -140,25 +140,16 @@ void GetCurrentFace()
 //CAPS LOCK cannot work.
 int GetDirFromSpecialKey()
 {
-    const int result = (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ?
-                       (int)Face::CCW : (int)Face::CW;
-    return result;
+    return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ?
+            (int)Face::CCW : (int)Face::CW;
 }
 
 //Double click Rotates Current Face with Shift Modifier.
 void double_click(int , int )
 {
-    const int dir = GetDirFromSpecialKey();
-    megaminx->rotate(currentFace, dir);
+    megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
 
-static int OldmenuVisibleState = 0;
-void menuVisible(int status, int x, int y)
-{
-    menuVisibleState = (status == GLUT_MENU_IN_USE);
-    if (menuVisibleState)
-        OldmenuVisibleState = 1;
-}
 void mousePressed(int button, int state, int x, int y)
 {
     g_camera.ProcessMouse(button, state, x, y);
@@ -204,21 +195,25 @@ void mousePressed(int button, int state, int x, int y)
         //Mouse wheel down
         g_camera.m_zoom -= 5;
     }
-
 }
 
+//FIXED: FINALLY block cube rotate from happening right after we come back from right click menu visible:
+static int OldmenuVisibleState = 0;
+void menuVisible(int status, int x, int y)
+{
+    menuVisibleState = (status == GLUT_MENU_IN_USE);
+    if (menuVisibleState)
+        OldmenuVisibleState = 1;
+}
 void mousePressedMove(int x, int y)
 {
-    //FIXED: FINALLY block cube rotate from happening right after we come back from right click menu visible.
     //TODO: X/Y coords still change in the background when Menu is showing, and the first drag after will "jump to pos"
     if (!menuVisibleState && OldmenuVisibleState) {
         OldmenuVisibleState = 0;  //maybe wanna store old x and y here then re-kajigger it ?
         return;
     }
-    if (!menuVisibleState && !OldmenuVisibleState) {
+    if (!menuVisibleState && !OldmenuVisibleState)
         g_camera.ProcessMouseMotion(x, y, !menuVisibleState);        
-    }
-
 }
 
 //Help menu with Glut commands and line by line iteration built in.
@@ -344,8 +339,6 @@ void onKeyboard(unsigned char key, int x, int y)
 void onSpecialKeyPress(int key, int x, int y)
 {
     //TODO make a Lua console to input these commands
-    //TODO make a function to load in text files to set custom pieces
-    //TODO this can be re-used to serialize and save out the config and reload it.
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
@@ -381,79 +374,69 @@ void createMenu()
 {
     //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Edit... Undo", 91);    
     glutAddMenuEntry("Camera Home Pos.", 93);
-    glutAddMenuEntry("Scramble (del)", 100);
-    glutAddMenuEntry("Quit", 102);
-
+    glutAddMenuEntry("Edit... Undo", 91);
+    glutAddMenuEntry("Edit... Undo By Two", 94);
+    glutAddMenuEntry("Edit... Undo Quad", 95);
+    glutAddMenuEntry("Scramble [Del]", 100);
     //Sublevel 1 meun - Admin Mode
-    submenu1_id = glutCreateMenu(menuHandler);    
-    glutAddMenuEntry("Solve Entire Puzzle", 92);
-    glutAddMenuEntry("Save Game State(Beta)", 94);
-    glutAddMenuEntry("Restore Game State(Beta)", 95);
+    //submenu1_id = glutCreateMenu(menuHandler);    
+    glutAddMenuEntry("Save Cube State", 98);
+    glutAddMenuEntry("Restore Cube State", 99);
+    glutAddMenuEntry("Exit!", 102);
 
     //SubLevel2 Menu - Current Face
     submenu2_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Actions on Current Face", 0);
-    glutAddMenuEntry("-----------------------", 0);
-    glutAddMenuEntry("Rotate CCW", 19);
-    glutAddMenuEntry("Rotate CW", 20);
-    glutAddMenuEntry("-----------------------", 0);
-    glutAddMenuEntry("Solve Entire Face", 21);
-    glutAddMenuEntry("Solve All 5 Edges", 22);
-    glutAddMenuEntry("Solve All 5 Corners", 23);
-    glutAddMenuEntry("-----------------------", 0);
-    glutAddMenuEntry("FlipColors Edge 1", 24);
-    glutAddMenuEntry("FlipColors Edge 2", 25);
-    glutAddMenuEntry("FlipColors Edge 3", 26);
-    glutAddMenuEntry("FlipColors Edge 4", 27);
-    glutAddMenuEntry("FlipColors Edge 5", 28);
-    glutAddMenuEntry("FlipColors Corner 1", 29);    
-    glutAddMenuEntry("FlipColors Corner 2", 30);    
-    glutAddMenuEntry("FlipColors Corner 3", 31);
-    glutAddMenuEntry("FlipColors Corner 4", 32);
-    glutAddMenuEntry("FlipColors Corner 5", 33);
+    glutAddMenuEntry("Rotate CCW <<", 19);
+    glutAddMenuEntry("Rotate  CW >>", 20);
+    //glutAddMenuEntry("-----------------------", 0);
+    glutAddMenuEntry("Place/Solve Entire Face", 21);
+    glutAddMenuEntry("Place/Solve Five Edges", 22);
+    glutAddMenuEntry("Place/Solve Five Corners", 23);
+    //glutAddMenuEntry("-----------------------", 0);
+    glutAddMenuEntry("Flip Colors Edge 1", 24);
+    glutAddMenuEntry("Flip Colors Edge 2", 25);
+    glutAddMenuEntry("Flip Colors Edge 3", 26);
+    glutAddMenuEntry("Flip Colors Edge 4", 27);
+    glutAddMenuEntry("Flip Colors Edge 5", 28);
+    glutAddMenuEntry("Flip Colors Corner 1", 29);    
+    glutAddMenuEntry("Flip Colors Corner 2", 30);    
+    glutAddMenuEntry("Flip Colors Corner 3", 31);
+    glutAddMenuEntry("Flip Colors Corner 4", 32);
+    glutAddMenuEntry("Flip Colors Corner 5", 33);
 
     submenu6_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Swap Edges 1&2", 125);
-    glutAddMenuEntry("Swap Edges 1&3", 126);
-    glutAddMenuEntry("Swap Edges 1&4", 127);
-    glutAddMenuEntry("Swap Edges 1&5", 128);
-    glutAddMenuEntry("Swap Edges 2&3", 129);
-    glutAddMenuEntry("Swap Edges 2&4", 130);
-    glutAddMenuEntry("Swap Edges 2&5", 131);
-    glutAddMenuEntry("Swap Edges 3&4", 132);
-    glutAddMenuEntry("Swap Edges 3&5", 133);
-    glutAddMenuEntry("Swap Edges 4&5", 134);
-    glutAddMenuEntry("Swap Corners 1&2", 135);
-    glutAddMenuEntry("Swap Corners 1&3", 136);
-    glutAddMenuEntry("Swap Corners 1&4", 137);
-    glutAddMenuEntry("Swap Corners 1&5", 138);
-    glutAddMenuEntry("Swap Corners 2&3", 139);
-    glutAddMenuEntry("Swap Corners 2&4", 140);
-    glutAddMenuEntry("Swap Corners 2&5", 141);
-    glutAddMenuEntry("Swap Corners 3&4", 142);
-    glutAddMenuEntry("Swap Corners 3&5", 143);
-    glutAddMenuEntry("Swap Corners 4&5", 144);
+    glutAddMenuEntry("Swap Edges 1 & 2", 125);
+    glutAddMenuEntry("Swap Edges 1 & 3", 126);
+    glutAddMenuEntry("Swap Edges 1 & 4", 127);
+    glutAddMenuEntry("Swap Edges 1 & 5", 128);
+    glutAddMenuEntry("Swap Edges 2 & 3", 129);
+    glutAddMenuEntry("Swap Edges 2 & 4", 130);
+    glutAddMenuEntry("Swap Edges 2 & 5", 131);
+    glutAddMenuEntry("Swap Edges 3 & 4", 132);
+    glutAddMenuEntry("Swap Edges 3 & 5", 133);
+    glutAddMenuEntry("Swap Edges 4 & 5", 134);
+    glutAddMenuEntry("Swap Corners 1 & 2", 135);
+    glutAddMenuEntry("Swap Corners 1 & 3", 136);
+    glutAddMenuEntry("Swap Corners 1 & 4", 137);
+    glutAddMenuEntry("Swap Corners 1 & 5", 138);
+    glutAddMenuEntry("Swap Corners 2 & 3", 139);
+    glutAddMenuEntry("Swap Corners 2 & 4", 140);
+    glutAddMenuEntry("Swap Corners 2 & 5", 141);
+    glutAddMenuEntry("Swap Corners 3 & 4", 142);
+    glutAddMenuEntry("Swap Corners 3 & 5", 143);
+    glutAddMenuEntry("Swap Corners 4 & 5", 144);
 
     //SubLevel3 Menu - Auto Solve Steps
     submenu3_id = glutCreateMenu(menuHandler);
+    glutAddMenuEntry("* Solve Entire Puzzle *", 92);
     glutAddMenuEntry("1st Layer White Star", 41);
     glutAddMenuEntry("1st Layer White Corners", 42);
     glutAddMenuEntry("2nd Layer Edges", 151);
-    //Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
-    //Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
-    //this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
     glutAddMenuEntry("3rd Layer Low Y's", 152);
-    //Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
-    //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
     glutAddMenuEntry("4th Layer Edges", 153);
     glutAddMenuEntry("5th Layer High Y's", 154);
     glutAddMenuEntry("6th Layer Edges", 155);
-    //TODO make these work
-//  glutAddMenuEntry("Swap 1 Gray Edge", 45);
-//  glutAddMenuEntry("Swap 1 Gray Corner", 46);
-//  glutAddMenuEntry("Swap 2 Gray Corners", 47);
     glutAddMenuEntry("Last Layer Grey Star", 156);
     glutAddMenuEntry("Last Layer Grey Corners", 157);
 
@@ -481,6 +464,11 @@ void createMenu()
     glutAddMenuEntry("Edge Permu LL #206", 256);
     glutAddMenuEntry("2nd Layer Star Left", 68);
     glutAddMenuEntry("2nd Layer Star Right", 67);
+    //Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
+    //Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
+    //this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
+    //3rd layer Corners = Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
+    //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
     glutAddMenuEntry("4th Layer Star Left", 64);
     glutAddMenuEntry("4th Layer Star Right", 63);
     glutAddMenuEntry("6th Layer Star Left", 65);
@@ -505,14 +493,14 @@ void createMenu()
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning", 1);
     glutAddSubMenu("Main Menu ---->", submenu0_id);
-    glutAddMenuEntry("---------------", 0);
-    glutAddSubMenu("Admin Mode --->", submenu1_id);
+    //glutAddMenuEntry("---------------", 0);
+    //glutAddSubMenu("Admin Mode --->", submenu1_id);
     glutAddSubMenu("Current Face ->", submenu2_id);
     glutAddSubMenu("Piece Swaps -->", submenu6_id);
-    glutAddSubMenu("Auto Solve  -->", submenu3_id);
     glutAddSubMenu("Algorithms --->", submenu4_id);
+    glutAddSubMenu("Auto Solve --->", submenu3_id);
     glutAddSubMenu("Solve Face --->", submenu5_id);    
-    glutAddMenuEntry("Exit Menu...", 9999);
+    glutAddMenuEntry("Close Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -528,21 +516,21 @@ void menuHandler(int num)
         megaminx->rotate(currentFace, Face::CW); break;
     case 21:
         megaminx->resetFace(currentFace); break;
-    case 22:  //rotate edge piece
+    case 22:  //place/solve all 5 edges
         megaminx->resetFacesEdges(currentFace); break;
-    case 23:  //rotate corner piece
+    case 23:  //place/solve all 5 corners
         megaminx->resetFacesCorners(currentFace); break;
-    case 24:  //rotate edge piece 1
-    case 25:  //rotate edge piece 2
-    case 26:  //rotate edge piece 3
-    case 27:  //rotate edge piece 4
-    case 28:  //rotate edge piece 5
+    case 24:  //color flip edge piece 1
+    case 25:  //color flip edge piece 2
+    case 26:  //color flip edge piece 3
+    case 27:  //color flip edge piece 4
+    case 28:  //color flip edge piece 5
         megaminx->flipEdgeColor(currentFace, num - 23); break;
-    case 29:  //rotate corner piece 1
-    case 30:  //rotate corner piece 2
-    case 31:  //rotate corner piece 3
-    case 32:  //rotate corner piece 4
-    case 33:  //rotate corner piece 5
+    case 29:  //color flip corner piece 1
+    case 30:  //color flip corner piece 2
+    case 31:  //color flip corner piece 3
+    case 32:  //color flip corner piece 4
+    case 33:  //color flip corner piece 5
         megaminx->flipCornerColor(currentFace, num - 28); break;
     case 41:  //1st Layer = WHITE Edges
         megaminx->resetFacesEdges(WHITE); break;
@@ -562,9 +550,6 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(GRAY); break;
     case 157:  //Last Layer GRAY Corners
         megaminx->resetFacesCorners(GRAY); break;
-    //case 45:; //one gray edge
-    //case 46:; //one gray corner
-    //case 47:; //two gray corners
     case 51:
     case 52:
     case 53:
@@ -573,10 +558,14 @@ void menuHandler(int num)
     case 55:
     case 56:
     case 57:
+    case 257:
+    case 58:
+    case 59:
     case 60:
     case 61:
     case 251:
     case 252:
+    case 253:
     case 254:
     case 255:
     case 256:
@@ -589,25 +578,6 @@ void menuHandler(int num)
     case 68:
     case 69:
     case 70:
-        megaminx->rotateAlgo(currentFace, num - 50); break;
-    case 257:
-        megaminx->rotateAlgo(currentFace, num - 250);
-        megaminx->rotateAlgo(currentFace, num - 250);
-        megaminx->rotateAlgo(currentFace, num - 250);
-        megaminx->rotateAlgo(currentFace, num - 250); break;
-    case 253:
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50); break;
-    case 58:
-    case 59:
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
-        megaminx->rotateAlgo(currentFace, num - 50);
         megaminx->rotateAlgo(currentFace, num - 50); break;
     //Solve Faces (Reset) 1-12:
     case 71:
@@ -629,6 +599,10 @@ void menuHandler(int num)
         createMegaMinx(); break;
     case 93:
         resetCameraView(); break;
+    case 94:
+        megaminx->undoDouble(); break;
+    case 95:
+        megaminx->undoQuad(); break;
     case 100:
         megaminx->scramble(); break;
     case 102: 
@@ -674,10 +648,10 @@ void menuHandler(int num)
         megaminx->g_currentFace->corner[2]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
     case 144:
         megaminx->g_currentFace->corner[3]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
-    case 94: //Save Game State
+    case 98: //Save Game State
         FromCubeToVectorFile();
         break;
-    case 95: //Restore Game State
+    case 99: //Restore Game State
         FromVectorFileToCube();
         break;
     default:

@@ -3,6 +3,7 @@
 
 #include "face.h"
 #include <queue>
+#include <stack>
 #include <cassert>
 #include <algorithm>
 #include <vector>
@@ -26,6 +27,7 @@ public:
     void rotate(int, int);
     void undo();
     void undoDouble();
+    void undoQuad();
     void scramble();
     void setCurrentFaceActive(int i);
     void flipCornerColor(int i, int x);
@@ -42,6 +44,8 @@ public:
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
     void rotateAlgo(int n, int i);
+    void rotateBulkAlgoVector(std::vector<numdir> &bulk);
+    void rotateBulkAlgoString(std::string algoString);
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
     std::vector<int> findEdgeByPieceNum(const int indexes[5]);
     std::vector<int> findEdgeByPieceNum(std::vector<int> &v);
@@ -75,11 +79,8 @@ private:
     int _rotatingFaceIndex;
 
     std::queue<numdir> rotateQueue;
-    std::queue<numdir> undoQueue;
+    std::stack<numdir> undoStack;
     void _rotate_internal(numdir i);
-    void _rotate_internal(int num, int dir);
-    void rotateBulk(std::queue<numdir> &bulkQueue);
-    
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
