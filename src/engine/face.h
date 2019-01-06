@@ -57,6 +57,11 @@ private:
     double angle;
     double axis[3];
 };
+
+struct numdir {
+    int num;
+    int dir;
+};
 //These are invoked when Face::placeParts() is ran, when it's rotating.
 //Called from Face::render() only, not on startup.
 //Flip direction lists for PlaceParts: //CounterClockwise CORNERS
@@ -72,12 +77,12 @@ constexpr static int  CCW7C[8] = { 1, 3, 3, 4, 4, 2, 2, 0 };
 constexpr static int  CCW8C[8] = { 4, 3, 4, 2, 4, 0, 4, 1 };
 constexpr static int  CCW9C[8] = { 4, 3, 4, 2, 4, 0, 4, 1 };
 constexpr static int CCW10C[8] = { 4, 3, 4, 2, 4, 0, 4, 1 };
-constexpr static int CCW11C[8] = { 2, 4, 3, 4, 0, 1, 0, 3 };
+constexpr static int CCW11C[8] = { 4, 2, 4, 3, 3, 1, 1, 0 };
 //Flip direction lists for PlaceParts: //Clockwise CORNERS
 //CW Corners
 constexpr static int  CW0C[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
 constexpr static int  CW1C[8] = { 0, 1, 0, 3, 0, 4, 0, 2 };
-constexpr static int  CW2C[8] = { 2, 4, 2, 3, 0, 2, 0, 1 };
+constexpr static int  CW2C[8] = { 0, 1, 1, 2, 1, 3, 3, 4 };
 constexpr static int  CW3C[8] = { 0, 1, 1, 2, 1, 3, 3, 4 };
 constexpr static int  CW4C[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };
 constexpr static int  CW5C[8] = { 0, 1, 1, 2, 1, 4, 1, 3 };
@@ -99,7 +104,7 @@ constexpr static int  CCW6E[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
 constexpr static int  CCW7E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
 constexpr static int  CCW8E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
 constexpr static int  CCW9E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
-constexpr static int CCW10E[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };
+constexpr static int CCW10E[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };//54213, 54231, 14235,  24135, 42135
 constexpr static int CCW11E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
 //Flip direction lists for PlaceParts: //Clockwise Edges
 //CW Edges

@@ -5,13 +5,7 @@
  *  @date April 2011
  *  @Edited //by genBTC 2017 for megaminx
  */
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-#include "utils_math.h"
+#include "opengl.h"
 #include "camera.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -134,7 +128,7 @@ void Camera::RotateGLCameraView()
 //////////////////////////////////////////////////////////////////////////
 // MouseRayTestData
 //////////////////////////////////////////////////////////////////////////
-
+/*
 MouseRayTestData::MouseRayTestData()
     : m_start(0.0)
     , m_end(0.0)
@@ -167,3 +161,4 @@ void MouseRayTestData::CalculateRay(const Camera &cam)
     m_dir = m_end - m_start;
     m_dir.Normalize();
 }
+*/

@@ -5,19 +5,12 @@
  *  @date March 2011
  *  @Edited by genBTC 2017
  */
-#ifdef _WINDOWS
-#include <windows.h>
-#endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <cstdio>
-#include "utils.h"
+#include "opengl.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 void utSetOrthographicProjection(float scrW, float scrH)
 {
-
     // switch to projection mode
     glMatrixMode(GL_PROJECTION);
     // save previous matrix which contains the
@@ -96,4 +89,14 @@ void utCalculateAndPrintFps(float x, float y)
         frame = 0;
     }
     utDrawText2D(x, y, fpsStr);
+}
+
+
+void makeGLpentagon(double(&_vertex)[7][3], double scale, int shape)
+{
+    glBegin(shape);
+    for (int i = 0; i < 5; ++i) {
+        glVertex3d(_vertex[i][0] * scale, _vertex[i][1] * scale, _vertex[i][2] * scale);
+    }
+    glEnd();
 }

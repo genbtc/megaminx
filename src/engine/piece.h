@@ -1,12 +1,9 @@
 #pragma once
-#ifdef _WINDOWS
-#include <windows.h>
-#endif //needed for the GL WINGDIAPI
-#include <GL/gl.h>
-#include <iostream>
 #include <cmath>
-#include "vector3d.h"
+#include <iostream>
+#include <string>
 #include "color.h"
+#include "../common_physics/opengl.h"
 
 using std::acos;
 using std::atan;
@@ -30,7 +27,7 @@ struct piecepack {
 class Piece {
 public:
     //virtual destructor
-    virtual ~Piece() {}
+    virtual ~Piece() = default;
 
     //Coords for GL vertex (up to 7, not all used)
     double _vertex[7][3];
@@ -331,11 +328,28 @@ public:
     }
 };
 
-inline void makeGLpentagon(double(&_vertex)[7][3], double scale,int shape)
+static void rotateVertex(double &vx, double &vy, double angle)
 {
-    glBegin(shape);
-    for (int i = 0; i < 5; ++i) {
-        glVertex3d(_vertex[i][0] * scale, _vertex[i][1] * scale, _vertex[i][2] * scale);
+    const double r = sqrt(vx * vx + vy * vy);
+    double a = vy > 0 ? acos(vx / r) : 2 * PI - acos(vx / r);
+    a += angle;
+    vx = r * cos(a);
+    vy = r * sin(a);
+}
+
+static void rotateVertex(double *vertex, char axis, double angle)
+{
+    switch (axis) {
+    case 'x':
+        rotateVertex(vertex[1], vertex[2], angle);
+        break;
+    case 'y':
+        rotateVertex(vertex[0], vertex[2], angle);
+        break;
+    case 'z':
+        rotateVertex(vertex[0], vertex[1], angle);
+        break;
+    default:
+        break;
     }
-    glEnd();
 }

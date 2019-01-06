@@ -240,11 +240,11 @@ bool Face::placeParts(int dir)
             QuadSwapCorners(CW1C);
             FlipCorners(0, 1, 2, 4, FlipForwards);
             break;
-        case 2: //RED (inverse order for fun)
-            TwoEdgesFlip(1, 2);
+        case 2: //RED
             QuadSwapEdges(CW2E);
-            FlipCorners(1, 2, 3, 4, FlipForwardAlt);
+            TwoEdgesFlip(0, 3);
             QuadSwapCorners(CW2C);
+            FlipCorners(0, 1, 3, 4, FlipForwards);
             break;
         case 3: //DARK_GREEN
             QuadSwapEdges(CW3E);

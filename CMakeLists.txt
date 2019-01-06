@@ -71,7 +71,6 @@ add_executable(${PACKAGE_NAME} WIN32
     src/engine/corner.cpp
     src/engine/edge.cpp
     src/engine/face.cpp
-    src/engine/utils.cpp
     src/engine/megaminx.cpp
     src/main.cpp
     src/Res.rc

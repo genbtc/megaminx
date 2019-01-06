@@ -7,6 +7,12 @@
  */
 
 #pragma once
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
 
 /** logging will be by using simple "printf" function */
 #define UT_LOG_WITH_PRINTF
@@ -38,3 +44,5 @@ inline void utDrawText3D(float x, float y, float z, const char *string)
 
 void utCalculateAndPrintFps(float x, float y);
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1);
+
+extern inline void makeGLpentagon(double(&_vertex)[7][3], double scale, int shape);

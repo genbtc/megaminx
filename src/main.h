@@ -1,11 +1,6 @@
 #pragma once
 #include "engine/megaminx.h"
-#include "common_physics/utils.h"
 #include "common_physics/camera.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.33 - genBTC mod";
@@ -22,7 +17,7 @@ double START_ANGLE = 60.0f;
 double view_distance_view_angle = 20;
 ///////////////////////////////////////////////////////////////////////////////
 // data for mouse selection
-MouseRayTestData g_rayTest;
+//MouseRayTestData g_rayTest;
 unsigned int g_lastHitPointID;
 unsigned int g_draggedPointID;
 bool g_areWeDraggingPoint;

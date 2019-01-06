@@ -5,9 +5,7 @@
  *  @date April 2011
  *  //edited by genBTC November 2017
  */
-
 #pragma once
-#include "utils_math.h"
 
 class Camera {
 public:
@@ -34,29 +32,29 @@ public:
     void RotateGLCameraView();
 };
 
-/** simple class that can calculate ray into scene from mouse position
- * it can be used to perform picking/selection */
+//#include "utils_math.h"
+/*
+** simple class that can calculate ray into scene from mouse position
+** it can be used to perform picking/selection
 class MouseRayTestData {
 public:
     MouseRayTestData();
 
-    /** start pos of the ray - usually located in the near plane */
+    // start pos of the ray - usually located in the near plane
     Vec3d m_start;
-    /** end pos of the ray - usually located in the far plane */
+    // end pos of the ray - usually located in the far plane 
     Vec3d m_end;
-    /** normalized direction from start to end */
+    // normalized direction from start to end 
     Vec3d m_dir;
-    /** mouse point in 3D scene, based on lastT */
+    // mouse point in 3D scene, based on lastT
     Vec3d m_point;
-    /** scalar that means position on the ray where mouse hit something */
+    // scalar that means position on the ray where mouse hit something
     double m_lastT;
-    /** did we hit something */
+    // did we hit something ?
     bool m_hit;
 
-    /** calculates ray for the mouse, that ray can be used to perform picking
-      * when hit is found the remember to set m_lastT param */
+    // calculates ray for the mouse, that ray can be used to perform picking
+    // when hit is found the remember to set m_lastT param 
     void CalculateRay(const Camera &cam);
 };
-
-
-
+*/

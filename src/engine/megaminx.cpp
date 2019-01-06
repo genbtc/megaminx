@@ -548,13 +548,17 @@ void Megaminx::rotateAlgo(int current_face, int i)
         rotateBulkAlgoString("R' DR' R DR");
         break;
     case 207: //four times
-        rotateBulkAlgoString("R' DR' R DR, R' DR' R DR, R' DR' R DR, R' DR' R DR"); break;
+        for (int i = 0; i < 4; ++i)
+            rotateBulkAlgoString("R' DR' R DR");
+        break;
     case 8:
     // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //Edge Permutation 1:
         //6 o'clock and 1 o'clock STAY the same. Right Star Arrow -> rotate others CCW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
-        rotateBulkAlgoString("r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2'");
+        //rotateBulkAlgoString("r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2'");
+        for (int i = 0; i < 5; ++i)
+            rotateBulkAlgoString("r2 U2' R2' U' r2 U2' R2'");
         //13 moves * Repeated 5 times = Total 65 moves.
         break;
     case 9:
@@ -562,7 +566,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         //Edge Permutation 2:
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others CW
         //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
-        rotateBulkAlgoString("r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2'");
+        //rotateBulkAlgoString("r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2'");
+        for (int i = 0; i < 5; ++i)
+            rotateBulkAlgoString("r2 u2 R2' u r2 u2 R2'");
         //13 moves * Repeated 5 times = Total 65 moves.
         break;
     case 10:
@@ -635,23 +641,35 @@ void Megaminx::rotateAlgo(int current_face, int i)
     case 203:
         // #7Last-Layer 5-way-star, Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 (aka 1,3,5,2,4)
         //#last layer Star, copied from cube manual (turned upside down)
-        rotateBulkAlgoString("l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r'");
+        //rotateBulkAlgoString("l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r'");
+        for (int i = 0; i < 6; ++i)
+            rotateBulkAlgoString("l' u2 r u2' l u2 r'");
         break;
     case 204:
         // #7Last-Layer 5-way star, copied from cube manual, Two halves //2,1,3,4,5
         // 60 moves. Gray Face must be on top. Non invasive overall but very invasive temporarily
-        rotateBulkAlgoString("r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'");
+        //rotateBulkAlgoString("r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'");
+        rotateBulkAlgoString("r' l u' r l' u2");
+        for (int i = 0; i < 6; ++i)
+            rotateBulkAlgoString("r' l u2' r l' u2");
+        rotateBulkAlgoString("r' l u' r l'");
         break;
     case 205:
         // #7Last-Layer Edge swaps - have 1 edge solved remains in front, then swap 2&3 and 4&5
         //copied from manual. 44 moves total. Gray Face must be on top. Non invasive overall but very invasive temporarily
-        rotateBulkAlgoString("u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u");
+        //rotateBulkAlgoString("u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u");
+        rotateBulkAlgoString("u2' l2' u2' l2 u' l2' u2' l2 u'");
+        rotateBulkAlgoString("    l2' u2' l2 u' l2' u2' l2 u'");
+        rotateBulkAlgoString("    l2' u2' l2 u' l2' u2' l2 u ");
         break;
     case 206:
         //#7Last-Layer-Edge-Permu Copied from manual, 30 moves total... have 1 edge solved, then swap 2&4 and 3&5/INVERTED.
         //Solved piece remains in front, right/backRight swap and left/backLeft swap
         // with INVERTS @ 8 o'clock and 1 o'clock. Gray Face must be on top.
-        rotateBulkAlgoString("r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'");
+        //rotateBulkAlgoString("r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'");
+        rotateBulkAlgoString("r' l f2' r l' u2 r' l");
+        rotateBulkAlgoString("f' r l' u2' r' l f2' r");
+        rotateBulkAlgoString("l' u2 r' l f' r l' u2'");
         break;
     default:
         break;

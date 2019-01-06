@@ -155,7 +155,7 @@ void mousePressed(int button, int state, int x, int y)
     g_camera.ProcessMouse(button, state, x, y);
 
     // can we move?
-    if(g_camera.m_isLeftPressed && g_rayTest.m_hit) {
+    if(g_camera.m_isLeftPressed){// && g_rayTest.m_hit) {
         g_draggedPointID = g_lastHitPointID;
         g_areWeDraggingPoint = true;
     }

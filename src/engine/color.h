@@ -58,7 +58,7 @@ constexpr colorpiece g_edgePiecesColors[30] = {
     { WHITE, PURPLE },
     { WHITE, YELLOW },
     // 5 - 9
-    { DARK_BLUE, RED },
+    { DARK_BLUE, RED }, //D_blue and red faces share Edge #2
     { RED, DARK_GREEN },
     { DARK_GREEN, PURPLE },
     { PURPLE, YELLOW },
@@ -76,7 +76,7 @@ constexpr colorpiece g_edgePiecesColors[30] = {
     { PURPLE, ORANGE },
     { YELLOW, LIGHT_GREEN },
     // 20 - 24
-    { PINK, BEIGE },
+    { PINK, BEIGE },    //pink and beige faces share edge #3
     { BEIGE, LIGHT_BLUE },
     { LIGHT_BLUE, ORANGE },
     { ORANGE, LIGHT_GREEN },
@@ -98,13 +98,13 @@ constexpr colorpiece g_cornerPiecesColors[20] = {
     { WHITE, YELLOW, PURPLE },
     { WHITE, DARK_BLUE, YELLOW },
     // 5 - 9
-    { DARK_BLUE, RED, PINK },
+    { DARK_BLUE, RED, PINK },   //D_blue and red faces share corner #3
     { RED, DARK_GREEN, BEIGE },
     { DARK_GREEN, PURPLE, LIGHT_BLUE },
     { PURPLE, YELLOW, ORANGE },
     { YELLOW, DARK_BLUE, LIGHT_GREEN },
     // 10 - 14
-    { LIGHT_BLUE, BEIGE, DARK_GREEN },
+    { LIGHT_BLUE, BEIGE, DARK_GREEN },  //L_blue and beige faces share corner #2
     { BEIGE, PINK, RED },
     { PINK, LIGHT_GREEN, DARK_BLUE },
     { LIGHT_GREEN, ORANGE, YELLOW },
@@ -147,9 +147,4 @@ constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
     { LIGHT_GREEN, ORANGE, GRAY, PINK, DARK_BLUE, YELLOW, WHITE },
     { PINK, LIGHT_GREEN, GRAY, BEIGE, RED, DARK_BLUE, WHITE },
     { BEIGE, PINK, GRAY, LIGHT_BLUE, DARK_GREEN, RED, WHITE }
-};
-
-struct numdir {
-    int num;
-    int dir;
 };

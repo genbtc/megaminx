@@ -87,4 +87,6 @@ void Corner::render()
     glVertex3d(_vertex[6][0] * 1.005, _vertex[6][1] * 1.005, _vertex[6][2] * 1.005);
     glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
     glEnd();
+    //std::string c = std::to_string(data.pieceIndex);
+    //utDrawText3D(_vertex[2][0], _vertex[2][1], _vertex[2][2] + 5, c.c_str());
 }

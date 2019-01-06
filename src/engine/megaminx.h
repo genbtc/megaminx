@@ -2,17 +2,16 @@
 #define __MEGAMINX_H__
 
 #include "face.h"
-#include <queue>
+#include <vector>
 #include <stack>
+#include <queue>
 #include <cassert>
 #include <algorithm>
-#include <vector>
 #include <iterator>
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <sstream>
-#include <locale>
+#include <string>
 
 class Megaminx {
 public:
@@ -24,7 +23,6 @@ public:
     void initFacePieces();
     void renderAllPieces();
     void render();
-    void rotate(int, int);
     void undo();
     void undoDouble();
     void undoQuad();
@@ -34,6 +32,11 @@ public:
     void flipEdgeColor(int i, int x);
     std::vector<int> findCorners(int i);
     std::vector<int> findEdges(int i);
+    void rotate(int, int);
+    bool isRotating;
+    void rotateAlgo(int n, int i);
+    void rotateBulkAlgoVector(std::vector<numdir> &bulk);
+    void rotateBulkAlgoString(std::string algoString);
     void resetFace(int n);
     int resetFacesCorners(int color_n);
     int resetFacesEdges(int color_n);
@@ -43,9 +46,6 @@ public:
     std::vector<int> getAllEdgePiecesColorFlipStatus();
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
-    void rotateAlgo(int n, int i);
-    void rotateBulkAlgoVector(std::vector<numdir> &bulk);
-    void rotateBulkAlgoString(std::string algoString);
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
     std::vector<int> findEdgeByPieceNum(const int indexes[5]);
     std::vector<int> findEdgeByPieceNum(std::vector<int> &v);
@@ -61,11 +61,7 @@ public:
     void lowYmiddleW();
     void highYmiddleW();
     void resetQueue();
-    /* face busy rotating when true */
-    bool isRotating;    
-    /* tracks active face, set by setCurrentFaceActive() */
-    Face* g_currentFace;
-    /* static numbers at compile time*/
+    Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     static const int numFaces = 12;
     static const int numCorners = 20;
     static const int numEdges = 30;    
@@ -84,4 +80,5 @@ private:
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
+
 #endif
