@@ -47,7 +47,6 @@ std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
     const int color = center->data._colorNum[0];
     for (int i = 0; i < times, pieceList.size() < 5; ++i) {
         const bool result = (&pieceRef)[i].matchesColor(color);
-        //const bool result2 = (&pieceRef)[i].data.pieceIndex == i;
         if (result)
             pieceList.push_back(i);
     }
@@ -69,7 +68,6 @@ int Face::findCornerByPieceNum(int index)
     return -1;
 }
 
-
 /**
  * \brief Pre-initialize center with a re-usable list
  * \param a The center to attach
@@ -88,12 +86,11 @@ void Face::attachCenter(Center *a, double* centerVertexBase)
  */
 void Face::initAxis(int n)
 {
-    assert(n < 12);
+    assert(n >= 0 && n <= 11);
     thisNum = n;
-    center->createAxis(n,axis);
-    for (int i = 0; i < 5; ++i) {
-        center->createAxis(n,_vertex[i]);
-    }
+    center->createAxis(n, axis);
+    for (int i = 0; i < 5; ++i)
+        center->createAxis(n, _vertex[i]);
 }
 
 /**
@@ -168,7 +165,6 @@ void Face::QuadSwapEdges(int const pack[8])
  */
 bool Face::placeParts(int dir)
 {
-
     assert(dir == Face::CCW || dir == Face::CW);
     if (dir == Face::CounterClockwise) { // 1 = CCW = Left Turn = Counter-ClockWise
         switch (thisNum) {

@@ -87,6 +87,7 @@ private:
     std::stack<numdir> undoStack;
     void _rotate_internal(numdir i);
     void shadowRotate(int num, int dir);
+    std::queue<numdir> shadowRotateQueue;
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp

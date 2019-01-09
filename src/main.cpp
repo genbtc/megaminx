@@ -346,14 +346,15 @@ void onSpecialKeyPress(int key, int x, int y)
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
+        break;
     case GLUT_KEY_PAGE_DOWN:
+        menuHandler(302); break; //Rotate_white_edges
     case GLUT_KEY_HOME:
         break;
-        //Unused ^^
     case GLUT_KEY_END:
-        megaminx->toggleInvisibility(); break;
+        megaminx->toggleInvisibility(); break; //just hide orig cube
     case GLUT_KEY_INSERT:
-        menuHandler(301); break;
+        menuHandler(301); break; //Instanciate shadow dom
     case GLUT_KEY_F1:
     case GLUT_KEY_F2:
     case GLUT_KEY_F3:

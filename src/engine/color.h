@@ -162,5 +162,23 @@ constexpr int DirToWhiteFace[12][5] =
     { -1, 1, 1, -1, -1 },
     { -1, 1, 1, -1, -1 },
     { -1, 1, -1, 1, -1 },
-    { -1, 1, 1, -1, -1 },
+    { -1, 1, 1, -1, -1 }
+};
+
+//BlackEdgesNumber2[12][5] lists the pattern of edges that have their solved-Face-Color
+// in the color[1] index (marked by 1's), instead of the color[0] index. (marked by 0's)
+constexpr int BlackEdgesNumber2[12][5] =
+{
+    { 0, 0, 0, 0, 0 },
+    { 1, 0, 1, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 0, 0 },
+    { 1, 1, 1, 0, 1 },
+    { 1, 1, 1, 0, 1 },
+    { 1, 1, 1, 0, 1 },
+    { 1, 1, 0, 1, 1 },
+    { 1, 1, 1, 0, 1 }
 };

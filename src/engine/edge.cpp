@@ -80,6 +80,7 @@ void Edge::render()
     }
     glEnd();
     glColor3dv(data._color[1]);
+    //glColor3d(0.0, 0.0, 0.0); //turn it black to test.
     glBegin(GL_POLYGON);
     for (int i = 2; i < 6; ++i) {
         glVertex3dv(_vertex[i]);
