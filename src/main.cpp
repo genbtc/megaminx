@@ -104,6 +104,8 @@ void RenderScene()
         g_camera.RotateGLCameraView();
         //Render it.
         megaminx->render();
+        if (megaminx->isInvisible() && shadowDom)
+            shadowDom->render();
     }
     glPopMatrix();
     //Print out Text (FPS display + Angles + face Name)
@@ -119,6 +121,8 @@ void RenderScene()
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
+        if (megaminx->isInvisible() && shadowDom)
+            utDrawText2D((WIDTH / 2) - 40, HEIGHT - 12.f, "SHADOW DOM");
     }
     utResetPerspectiveProjection();
     glutSwapBuffers();
@@ -344,10 +348,12 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_PAGE_UP:
     case GLUT_KEY_PAGE_DOWN:
     case GLUT_KEY_HOME:
-    case GLUT_KEY_END:
-    case GLUT_KEY_INSERT:
-        //Unused ^^
         break;
+        //Unused ^^
+    case GLUT_KEY_END:
+        megaminx->toggleInvisibility(); break;
+    case GLUT_KEY_INSERT:
+        menuHandler(301); break;
     case GLUT_KEY_F1:
     case GLUT_KEY_F2:
     case GLUT_KEY_F3:
@@ -360,8 +366,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
     case GLUT_KEY_F12:
-        megaminx->rotate(key, dir);
-        break;
+        megaminx->rotate(key, dir); break;
     default:
         break;
     }
@@ -473,6 +478,8 @@ void createMenu()
     glutAddMenuEntry("4th Layer Star Right", 63);
     glutAddMenuEntry("6th Layer Star Left", 65);
     glutAddMenuEntry("6th Layer Star Right", 66);
+    //Human Rotate + Auto-Solve algos.
+    glutAddMenuEntry("1st Layer White Edges", 302);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -609,50 +616,61 @@ void menuHandler(int num)
         glutDestroyWindow(1);
         exit(0); break;
     case 125: //Edge Piece Swaps
-        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[1]->data); break;
+        megaminx->g_currentFace->swapEdges(0, 1); break;
     case 126:
-        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[2]->data); break;
+        megaminx->g_currentFace->swapEdges(0, 2); break;
     case 127:
-        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
+        megaminx->g_currentFace->swapEdges(0, 3); break;
     case 128:
-        megaminx->g_currentFace->edge[0]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+        megaminx->g_currentFace->swapEdges(0, 4); break;
     case 129:
-        megaminx->g_currentFace->edge[1]->swapdata(megaminx->g_currentFace->edge[2]->data); break;
+        megaminx->g_currentFace->swapEdges(1, 2); break;
     case 130:
-        megaminx->g_currentFace->edge[1]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
+        megaminx->g_currentFace->swapEdges(1, 3); break;
     case 131:
-        megaminx->g_currentFace->edge[1]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+        megaminx->g_currentFace->swapEdges(1, 4); break;
     case 132:
-        megaminx->g_currentFace->edge[2]->swapdata(megaminx->g_currentFace->edge[3]->data); break;
+        megaminx->g_currentFace->swapEdges(2, 3); break;
     case 133:
-        megaminx->g_currentFace->edge[2]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+        megaminx->g_currentFace->swapEdges(2, 4); break;
     case 134:
-        megaminx->g_currentFace->edge[3]->swapdata(megaminx->g_currentFace->edge[4]->data); break;
+        megaminx->g_currentFace->swapEdges(3, 4); break;
     case 135: //Corner Piece Swaps
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[1]->data); break;
+        megaminx->g_currentFace->swapCorners(0, 1); break;
     case 136:
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[2]->data); break;
+        megaminx->g_currentFace->swapCorners(0, 2); break;
     case 137:
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+        megaminx->g_currentFace->swapCorners(0, 3); break;
     case 138:
-        megaminx->g_currentFace->corner[0]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+        megaminx->g_currentFace->swapCorners(0, 4); break;
     case 139:
-        megaminx->g_currentFace->corner[1]->swapdata(megaminx->g_currentFace->corner[2]->data); break;
+        megaminx->g_currentFace->swapCorners(1, 2); break;
     case 140:
-        megaminx->g_currentFace->corner[1]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+        megaminx->g_currentFace->swapCorners(1, 3); break;
     case 141:
-        megaminx->g_currentFace->corner[1]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+        megaminx->g_currentFace->swapCorners(1, 4); break;
     case 142:
-        megaminx->g_currentFace->corner[2]->swapdata(megaminx->g_currentFace->corner[3]->data); break;
+        megaminx->g_currentFace->swapCorners(2, 3); break;
     case 143:
-        megaminx->g_currentFace->corner[2]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+        megaminx->g_currentFace->swapCorners(2, 4); break;
     case 144:
-        megaminx->g_currentFace->corner[3]->swapdata(megaminx->g_currentFace->corner[4]->data); break;
+        megaminx->g_currentFace->swapCorners(3, 4); break;
     case 98: //Save Game State
         FromCubeToVectorFile();
         break;
     case 99: //Restore Game State
         FromVectorFileToCube();
+        break;
+    case 301:
+        if (!shadowDom)
+            //    delete shadowDom;
+            shadowDom = new Megaminx();
+        //FromCubeToShadowCube();
+        shadowDom->LoadNewEdgesFromOtherCube(megaminx);
+        shadowDom->LoadNewCornersFromOtherCube(megaminx);
+        break;
+    case 302:
+        megaminx->rotateSolveWhiteEdges(shadowDom);
         break;
     default:
         break;
@@ -661,9 +679,13 @@ void menuHandler(int num)
 
 //Save State filenames
 #define EDGEFILE "EdgeCurPos.dat"
-#define CORNERFILE "CornerCurPos.dat"
+#define CORNERFILE "CornerCurPos.dat" 
 #define EDGEFILECOLORS "EdgeColorPos.dat"
 #define CORNERFILECOLORS "CornerColorPos.dat"
+//#define ShadowEDGEFILE "ShadowEdgeCurPos.dat"
+//#define ShadowCORNERFILE "ShadowCornerCurPos.dat" 
+//#define ShadowEDGEFILECOLORS "ShadowEdgeColorPos.dat"
+//#define ShadowCORNERFILECOLORS "ShadowCornerColorPos.dat"
 //Store (Write)
 void FromCubeToVectorFile() {
     WritePiecesFile(EDGEFILE,false);
@@ -675,17 +697,29 @@ void FromCubeToVectorFile() {
 void FromVectorFileToCube() {
     const std::vector<int> &readEdgevector = ReadPiecesFileVector(EDGEFILE);
     const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(EDGEFILECOLORS);
-    megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
-    //megaminx->LoadNewEdgesFromVector(readEdgevector);
-    //megaminx->LoadNewEdgesFromVector(readEdgevector);
     const std::vector<int> &readCornervector = ReadPiecesFileVector(CORNERFILE);
     const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(CORNERFILECOLORS);
-    megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
-    //megaminx->LoadNewCornersFromVector(readCornervector);
-    //megaminx->LoadNewCornersFromVector(readCornervector);
+    for (int i = 0; i < 12; ++i) {
+        megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
+        megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
+    }
 }
+//void FromCubeToShadowCube() {
+//    WritePiecesFile(ShadowEDGEFILE, false);
+//    WritePiecesFile(ShadowCORNERFILE, true);
+//    serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), ShadowEDGEFILECOLORS);
+//    serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), ShadowCORNERFILECOLORS);
+//    const std::vector<int> &readEdgevector = ReadPiecesFileVector(ShadowEDGEFILE);
+//    const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(ShadowEDGEFILECOLORS);
+//    const std::vector<int> &readCornervector = ReadPiecesFileVector(ShadowCORNERFILE);
+//    const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(ShadowCORNERFILECOLORS);
+//    for (int i = 0; i < 12; ++i) {
+//        shadowDom->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
+//        shadowDom->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
+//    }
+//}
 
-void serializeVectorInt(std::vector<int> list1, std::string filename) {
+extern void serializeVectorInt(std::vector<int> list1, std::string filename) {
     std::ofstream file(filename);
     file << "{ ";
     for (auto l : list1) {

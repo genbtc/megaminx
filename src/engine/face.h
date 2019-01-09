@@ -35,6 +35,8 @@ public:
 
     void attachEdgePieces(Edge& n);
     void attachCornerPieces(Corner& n);
+    int findEdgeByPieceNum(int index);
+    int findCornerByPieceNum(int index);
     void attachCenter(Center* a, double* centerVertexBase);
 
     int getNum() const { return thisNum; }

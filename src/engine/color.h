@@ -39,7 +39,7 @@ constexpr colorpack g_colorRGBs[COLOR_STATES] = {
     { 9, 1.0, 0.4, 0.1, L"ORANGE" },
     { 10, 0.3, 1.0, 0.3, L"LIGHT_GREEN" },
     { 11, 0.9, 0.4, 1.0, L"PINK" },
-    { 12, 1.0, 0.94, 0.72, L"BEIGE" }
+    { 12, 1.0, 0.9, 0.65, L"BEIGE" }
 };
 
 //Struct that can hold up to 3 Colors for Center/Edge/Corner
@@ -147,4 +147,20 @@ constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
     { LIGHT_GREEN, ORANGE, GRAY, PINK, DARK_BLUE, YELLOW, WHITE },
     { PINK, LIGHT_GREEN, GRAY, BEIGE, RED, DARK_BLUE, WHITE },
     { BEIGE, PINK, GRAY, LIGHT_BLUE, DARK_GREEN, RED, WHITE }
+};
+
+constexpr int DirToWhiteFace[12][5] =
+{
+    { 0, 0, 0, 0, 0 },
+    { -1, -1, 1, 1, -1 },
+    { -1, 1, -1, 1, -1 },
+    { -1, 1, -1, 1, -1 },
+    { -1, 1, -1, 1, -1 },
+    { -1, 1, -1, 1, -1 },
+    { 0, 0, 0, 0, 0 },
+    { -1, 1, 1, -1, -1 },
+    { -1, 1, 1, -1, -1 },
+    { -1, 1, 1, -1, -1 },
+    { -1, 1, -1, 1, -1 },
+    { -1, 1, 1, -1, -1 },
 };

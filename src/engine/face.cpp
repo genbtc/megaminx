@@ -47,12 +47,28 @@ std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
     const int color = center->data._colorNum[0];
     for (int i = 0; i < times, pieceList.size() < 5; ++i) {
         const bool result = (&pieceRef)[i].matchesColor(color);
-        const bool result2 = (&pieceRef)[i].data.pieceIndex == i;
+        //const bool result2 = (&pieceRef)[i].data.pieceIndex == i;
         if (result)
             pieceList.push_back(i);
     }
     return pieceList;
 }
+
+int Face::findEdgeByPieceNum(int index)
+{
+    for (int i = 0; i < 5; ++i)
+        if (edge[i]->data.pieceIndex == index)
+            return i;
+    return -1;
+}
+int Face::findCornerByPieceNum(int index)
+{
+    for (int i = 0; i < 5; ++i)
+        if (corner[i]->data.pieceIndex == index)
+            return i;
+    return -1;
+}
+
 
 /**
  * \brief Pre-initialize center with a re-usable list

@@ -22,6 +22,8 @@ public:
     void initEdgePieces();
     void initFacePieces();
     void renderAllPieces();
+    void toggleInvisibility() {  invisible = !invisible;  };
+    bool isInvisible() { return invisible; };
     void render();
     void undo();
     void undoDouble();
@@ -37,6 +39,7 @@ public:
     void rotateAlgo(int n, int i);
     void rotateBulkAlgoVector(std::vector<numdir> &bulk);
     void rotateBulkAlgoString(std::string algoString);
+    void resetQueue();
     void resetFace(int n);
     int resetFacesCorners(int color_n);
     int resetFacesEdges(int color_n);
@@ -46,21 +49,27 @@ public:
     std::vector<int> getAllEdgePiecesColorFlipStatus();
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
+    void LoadNewCornersFromOtherCube(Megaminx* source);
+    void LoadNewEdgesFromOtherCube(Megaminx* source);
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
+    int findEdgeByPieceNum(int index);
     std::vector<int> findEdgeByPieceNum(const int indexes[5]);
     std::vector<int> findEdgeByPieceNum(std::vector<int> &v);
     void resetFiveEdges(const int indexes[5]);
     void resetFiveEdges(std::vector<int> &v);
+    int findCornerByPieceNum(int index);
     std::vector<int> findCornerByPieceNum(const int indexes[5]);
-    std::vector<int> findCornerByPieceNum(std::vector<int>& v);
+    std::vector<int> findCornerByPieceNum(std::vector<int> &v);
     void resetFiveCorners(const int indexes[5]);
-    void resetFiveCorners(std::vector<int>& v);
+    void resetFiveCorners(std::vector<int> &v);
     void secondLayerEdges();
     void fourthLayerEdges();
     void sixthLayerEdges();
     void lowYmiddleW();
     void highYmiddleW();
-    void resetQueue();
+    void rotateSolveWhiteEdges(Megaminx* shadowDom);
+    void movePieceByRotatingIt(int source, int dest, bool corner=false);
+    
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     static const int numFaces = 12;
     static const int numCorners = 20;
@@ -73,12 +82,17 @@ private:
     Edge   edges[numEdges];
 
     int _rotatingFaceIndex;
-
+    bool invisible = false;
     std::queue<numdir> rotateQueue;
     std::stack<numdir> undoStack;
     void _rotate_internal(numdir i);
+    void shadowRotate(int num, int dir);
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
-
+static int seenEdges[30] = { 0 };
+static int seenCorners[20] = { 0 };
+static int EdgeSwapCount = 0;
+static int CornerSwapCount = 0;
+void serializeVectorInt(std::vector<int> list1, std::string filename);
 #endif
