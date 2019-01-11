@@ -31,12 +31,12 @@ public:
     std::vector<int> defaultCorners;
     std::vector<int> defaultEdges;
 
-    std::vector<int> findPiece(Piece& pieceRef, int times) const;
+    std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;
 
     void attachEdgePieces(Edge& n);
     void attachCornerPieces(Corner& n);
-    int findEdgeByPieceNum(int index);
-    int findCornerByPieceNum(int index);
+    int find5EdgeLoc(int pieceNum);
+    int find5CornerLoc(int pieceNum);
     void attachCenter(Center* a, double* centerVertexBase);
 
     int getNum() const { return thisNum; }

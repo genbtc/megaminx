@@ -17,7 +17,7 @@ Face::Face()
 //connect the right matching Edge pieces to the face. and store the list.
 void Face::attachEdgePieces(Edge& n)
 {
-    defaultEdges = Face::findPiece(n, Megaminx::numEdges);
+    defaultEdges = Face::findPiecesOfFace(n, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
         edge[i] = &n + defaultEdges[i];
         assert(edge[i]->data.pieceIndex == defaultEdges[i]);
@@ -27,7 +27,7 @@ void Face::attachEdgePieces(Edge& n)
 //connect the right matching Corner pieces to the face. and store the list.
 void Face::attachCornerPieces(Corner& n)
 {
-    defaultCorners = Face::findPiece(n, Megaminx::numCorners);
+    defaultCorners = Face::findPiecesOfFace(n, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
         corner[i] = &n + defaultCorners[i];
         assert(corner[i]->data.pieceIndex == defaultCorners[i]);
@@ -41,7 +41,7 @@ void Face::attachCornerPieces(Corner& n)
  * \times how many times to iterate over the ref'd array
  * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
  */
-std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
+std::vector<int> Face::findPiecesOfFace(Piece& pieceRef, int times) const
 {
     std::vector<int> pieceList;
     const int color = center->data._colorNum[0];
@@ -53,17 +53,17 @@ std::vector<int> Face::findPiece(Piece& pieceRef, int times) const
     return pieceList;
 }
 
-int Face::findEdgeByPieceNum(int index)
+int Face::find5EdgeLoc(int pieceNum)
 {
     for (int i = 0; i < 5; ++i)
-        if (edge[i]->data.pieceIndex == index)
+        if (edge[i]->data.pieceIndex == pieceNum)
             return i;
     return -1;
 }
-int Face::findCornerByPieceNum(int index)
+int Face::find5CornerLoc(int pieceNum)
 {
     for (int i = 0; i < 5; ++i)
-        if (corner[i]->data.pieceIndex == index)
+        if (corner[i]->data.pieceIndex == pieceNum)
             return i;
     return -1;
 }

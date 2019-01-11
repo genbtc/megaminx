@@ -257,7 +257,7 @@ std::vector<int> Megaminx::findEdges(int i)
 {
     assert(i > 0 && i <= numFaces);
     //Convert 1-numFaces Faces into array 0-11
-    return faces[i-1].findPiece(this->edges[0], numEdges);
+    return faces[i-1].findPiecesOfFace(this->edges[0], numEdges);
 }
 
 /**
@@ -269,7 +269,7 @@ std::vector<int> Megaminx::findCorners(int i)
 {
     assert(i > 0 && i <= numFaces);
     //Convert 1-numFaces Faces into array 0-11
-    return faces[i-1].findPiece(this->corners[0], numCorners);
+    return faces[i-1].findPiecesOfFace(this->corners[0], numCorners);
 }
 
 std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()
@@ -731,86 +731,86 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
     return readVector;
 }
 
-int Megaminx::findEdgeByPieceNum(int index)
+int Megaminx::findEdge(int pieceNum)
 {
     for (int i = 0; i < numEdges; ++i)
-        if (edges[i].data.pieceIndex == index)
+        if (edges[i].data.pieceIndex == pieceNum)
             return i;
     return -1;
 }
-std::vector<int> Megaminx::findEdgeByPieceNum(const int indexes[5])
+std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5])
 {
     std::vector<int> pieceList;
     for (int i = 0; i < 5; i++)
-        pieceList.push_back(findEdgeByPieceNum(indexes[i]));
+        pieceList.push_back(findEdge(pieceNums[i]));
     return pieceList;
 }
-std::vector<int> Megaminx::findEdgeByPieceNum(std::vector<int> &v)
+std::vector<int> Megaminx::findEdgePieces(std::vector<int> &v)
 {
     assert(v.size() == 5);
-    const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
-    return findEdgeByPieceNum(indexedVector);
+    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
+    return findEdgePieces(vecPieceNums);
 }
 
 void Megaminx::resetFiveEdges(const int indexes[5]) {
     for (int i = 0; i < 5; ++i) {
-        std::vector<int> whereAreTheyNow = findEdgeByPieceNum(indexes);
+        std::vector<int> whereAreTheyNow = findEdgePieces(indexes);
         if (edges[indexes[i]].data.pieceIndex != indexes[i]) {
             edges[indexes[i]].swapdata(edges[whereAreTheyNow[i]].data);
             i = -1;
         }
     }
+    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
     for (int i = 0; i < 5; ++i) {
-        //Pieces are in the right place but maybe wrong orientation, so flip the colors:
         while (edges[indexes[i]].data.flipStatus != 0)
             edges[indexes[i]].flip();
     }
 }
 void Megaminx::resetFiveEdges(std::vector<int> &v) {
     assert(v.size() == 5);
-    const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
-    resetFiveEdges(indexedVector);
+    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
+    resetFiveEdges(vecPieceNums);
 }
 
-int Megaminx::findCornerByPieceNum(int index)
+int Megaminx::findCorner(int pieceNum)
 {
     for (int i = 0; i < numCorners; ++i)
-        if (corners[i].data.pieceIndex == index)
+        if (corners[i].data.pieceIndex == pieceNum)
             return i;
     return -1;
 }
-std::vector<int> Megaminx::findCornerByPieceNum(const int indexes[5])
+std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5])
 {
     std::vector<int> pieceList;
     for (int i = 0; i < 5; i++)
-        pieceList.push_back(findCornerByPieceNum(indexes[i]));
+        pieceList.push_back(findCorner(pieceNums[i]));
     return pieceList;
 }
-std::vector<int> Megaminx::findCornerByPieceNum(std::vector<int> &v)
+std::vector<int> Megaminx::findCornerPieces(std::vector<int> &v)
 {
     assert(v.size() == 5);
-    const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
-    return findCornerByPieceNum(indexedVector);
+    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
+    return findCornerPieces(vecPieceNums);
 }
 
 void Megaminx::resetFiveCorners(const int indexes[5]) {
     for (int i = 0; i < 5; ++i) {
-        std::vector<int> whereAreTheyNow = findCornerByPieceNum(indexes);
+        std::vector<int> whereAreTheyNow = findCornerPieces(indexes);
         if (corners[indexes[i]].data.pieceIndex != indexes[i]) {
             corners[indexes[i]].swapdata(corners[whereAreTheyNow[i]].data);
             i = -1;
         }
     }
+    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
     for (int i = 0; i < 5; ++i) {
-        //Pieces are in the right place but maybe wrong orientation, so flip the colors:
         while (corners[indexes[i]].data.flipStatus != 0)
             corners[indexes[i]].flip();
     }
 }
 void Megaminx::resetFiveCorners(std::vector<int> &v) {
     assert(v.size() == 5);
-    const int indexedVector[5] = { v[0], v[1], v[2], v[3], v[4] };
-    resetFiveCorners(indexedVector);
+    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
+    resetFiveCorners(vecPieceNums);
 }
 
 void Megaminx::secondLayerEdges() {
@@ -843,27 +843,75 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     shadowDom->LoadNewEdgesFromOtherCube(this);
     shadowDom->LoadNewCornersFromOtherCube(this);
     //Find everything and get it moved over to its drop-in point.
-    bool solved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
+    bool facesSolved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
+    bool allSolved = false;
     //trying for 3:
-    //going from 3-4 with BLUE/RED solved and GREEN/YELLOW on the PURPLE face, it just CW/CCW PURPLE over and over since it moves from i=2 to i=4 and undoes itself.
-    //PURPLE i==3 is skipped because its on the RED face which is solved/locked, and it doesnt want to go the other direction cause it would invert.
-    for (int i = 0; i < 5; ++i) {
+    //going from 3-4 with BLUE/RED facesSolved and GREEN/YELLOW on the PURPLE face, it just CW/CCW PURPLE over and over since it moves from i=2 to i=4 and undoes itself.
+    //PURPLE i==3 is skipped because its on the RED face which is facesSolved/locked, and it doesnt want to go the other direction cause it would invert.
+    int loopcount = 0;
+    int i = 0;
+    do {        
+        //temp overflow protection:
+        loopcount++;
+        if (loopcount > 21)
+            break;
+        bool piecesSolved[5] = { false, false, false, false, false };
+        std::vector<int> piecesSeenOnTop;
+        std::vector<int> piecesOrderedOnTop;
+        //populate piecesSolved
+        int numSolved = 0;
+        //Find out if any applicable 0-4 pieces in the 0-4 slots:
+        for (int p = 0; p < 5; ++p) {            
+            int pIndex = shadowDom->findEdge(p);
+            if (pIndex >= 0 && pIndex <= 4)
+                piecesSeenOnTop.push_back(p);
+        }
+        if (piecesSeenOnTop.size() > 1) {
+            //Check the ordering blue red green etc ... even if its twisted around
+            for (int p = 0; p < 5; ++p) {
+                int pNext = (p != 4) ? p + 1 : 0;
+                int pIndex = shadowDom->findEdge(p);
+                int pNextIndex = shadowDom->findEdge(pNext);
+                if (pIndex >= 0 && pIndex <= 4) {
+                    if ((pNextIndex == pIndex + 1) || (pIndex == 4 && pNextIndex == 0)) {
+                        piecesOrderedOnTop.push_back(p);
+                        piecesSolved[p] = true;
+                        numSolved++;
+                        //piecesOrderedOnTop.push_back(pNext);
+                        //piecesSolved[pNext] = true;
+                        //numSolved++;
+                    }
+                }
+            }
+        }
+        else if (piecesSeenOnTop.size() == 1) {
+            piecesSolved[piecesSeenOnTop[0]] = true;
+            numSolved++;
+        }
+        if (numSolved == 0) {}
+        while (i < 5 && piecesSolved[i] == true)
+            i++;
+        if (piecesOrderedOnTop.size() == 5)
+            allSolved = true;
+        if (i >= 5)
+            break;
         //Works to repeat the first piece in. Shouldnt need to be more than 5 move loop-cycles per piece (keypresses).
         //Second piece gets inserted now too, but if solved first, it has to unsolve itself for 1st piece to solve then solve the 2nd,
         //       But then the white face is correctly ordered but spun partially-rotated on the cube
         //for (int k = 0; k < 6; ++k) {
-/*VOLATILE*/int sourceEdgeIndex = shadowDom->findEdgeByPieceNum(i);
+/*VOLATILE*/int sourceEdgeIndex = shadowDom->findEdge(i);
             //Determine which two faces the edge belongs to
             colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
             //If we found the correct piece solved in the correct spot, skip this and Continue with next
             if (i == sourceEdgeIndex) {
-                solved[1+i] = true; //1+ because 0 is white and 1 is blue
+                piecesSolved[i] = true;
+                i++;
                 continue;
             }
             //Determine where on those faces the edges are positioned, 0-4
-/*VOLATILE*/int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].findEdgeByPieceNum(i);
+/*VOLATILE*/int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].find5EdgeLoc(i);
             assert(edgeFaceLocA != -1); //(-1 for fail, not found)
-/*VOLATILE*/int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].findEdgeByPieceNum(i);
+/*VOLATILE*/int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].find5EdgeLoc(i);
             assert(edgeFaceLocB != -1);
             //Determine which direction those faces need to rotate to land the Edge on the white
             int dirA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
@@ -883,10 +931,10 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             assert(colormatchA != colormatchB);
             //Line up things that are solved on the top face.
             if (i != 0 && !isReadyToDropIn) {
-                // test maybenot- (not right, rotates a ton if i=1 isnt solved yet but 2 is.)
-                //if the 2nd piece solves first, it doesnt re-align. then it pushes it down, and the next few moves bring it back up to right spot but the white face is left twisted.
-                //What this amounts to is that any 5-9 edge needs to know how to get into any 0-4 slot even when its not solved. or we would be wasting moves partial-solving the top every time.
-/*VOLATILE*/    int findIfPieceSolved = shadowDom->findEdgeByPieceNum(0);
+                // test/maybenot? = not right, rotates a ton if i=1 isnt solved yet but 2 is?
+                //BUG: if the 2nd piece solves first, it doesnt re-align. then it pushes it down, and the next few moves bring it back up to right spot but the white face is left twisted.
+                //TODO: What this amounts to is that any 5-9 edge needs to know how to get into any 0-4 slot even when its not solved. or we would be wasting moves partial-solving the top every time.
+/*VOLATILE*/    int findIfPieceSolved = shadowDom->findEdge(0);
                 if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
                     for (int j = 0; j < findIfPieceSolved; ++j)
 /*REFRESH*/               shadowDom->shadowRotate(WHITE, Face::CCW);
@@ -905,33 +953,28 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             }
             //NO BREAK;
             //This inserts the 5-9 edges into the 1-4 slots, picking the face to spin that leaves it white side up.
-            if (isReadyToDropIn && colormatchA && !solved[edgeFaceNeighbors.a - 1]) {
+            if (isReadyToDropIn && colormatchA && !facesSolved[edgeFaceNeighbors.a - 1]) {
 /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
-                solved[faceAcolor-1] = true;
+                facesSolved[faceAcolor-1] = true;
             }
-            else if (isReadyToDropIn && colormatchB && !solved[edgeFaceNeighbors.b - 1]) {
+            else if (isReadyToDropIn && colormatchB && !facesSolved[edgeFaceNeighbors.b - 1]) {
 /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
-                solved[faceBcolor-1] = true;
+                facesSolved[faceBcolor-1] = true;
             }
-            //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by solved pieces
-            // (if it is, we will have to use algos to return move it in and return it back)
-            else if (!isReadyToDropIn && edgeFaceNeighbors.a != WHITE && dirA != 0 && ((edgeFaceNeighbors.a < GRAY && !solved[edgeFaceNeighbors.a - 1]) || edgeFaceNeighbors.a >= GRAY)) {
+            //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by facesSolved pieces
+            //TODO: (if it is, we will have to use algos to return move it in and return it back)
+            //BUG: These can still trigger if the top pieces are in the top row in the right order but on the wrong slot... need a better detection 
+            else if (!isReadyToDropIn && edgeFaceNeighbors.a != WHITE && dirA != 0 && ((edgeFaceNeighbors.a < GRAY && !facesSolved[edgeFaceNeighbors.a - 1]) || edgeFaceNeighbors.a >= GRAY)) {
 /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
-                i--;
+                //i--;
             }
-            else if (!isReadyToDropIn && edgeFaceNeighbors.b != WHITE && dirB != 0 && ((edgeFaceNeighbors.b < GRAY && !solved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY)) {
+            else if (!isReadyToDropIn && edgeFaceNeighbors.b != WHITE && dirB != 0 && ((edgeFaceNeighbors.b < GRAY && !facesSolved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY)) {
 /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
-                i--;
+                //i--;
             }
-//            //Rotate the White Top Face to pre-Orient the first solved edge piece with the 1st side face (blue).
-///*VOLATILE*/int findIfPieceSolved = shadowDom->findEdgeByPieceNum(i);
-//            if (isReadyToDropIn &&  findIfPieceSolved > i) {
-//                for (int j = 0; j < findIfPieceSolved; ++j)
-///*REFRESH*/           shadowDom->shadowRotate(WHITE, Face::CCW);
-//            }
      //}
-            //Solves up to piece 2 but leaves the top rotated.
-    }
+            //INFO: low B high B top, low b high b middle
+    } while (!allSolved);
     //After both loops, load the shadow Queue into the real queue
     //FIXED: this code is unsafe as we just swap without checking and there could be stuff in the orig rotation queue...
     if (shadowDom->shadowRotateQueue.size() > 0) {
@@ -965,15 +1008,15 @@ void Megaminx::movePieceByRotatingIt(int source, int dest, bool corner)
     //Level 3 corners can be flipped color easily, follow this, they use the bottom side layers and level 5 corners to temp-hold them in 3 moves - 5 moves.
     //Pathways will be defined as the 5 Z-lines going from white to gray corner Line covers 3 edges. 5 lines * 3 = 15. Plus the top/bottom lines = 5 * 2 = 10, + 15, = 25 the 5 extra edges to make 30 happen in the 10-wide 4th layer and need not be worried about.
     if (!corner) {
-        int sourceEdgeIndex = findEdgeByPieceNum(source);
-        int destEdgeIndex   = findEdgeByPieceNum(dest);
+        int sourceEdgeIndex = findEdge(source);
+        int destEdgeIndex   = findEdge(dest);
         colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
         colorpiece edgeFacesDest = g_edgePiecesColors[destEdgeIndex];
         int check = 0;
     }
     if (corner) {
-        int sourceCornerIndex = findCornerByPieceNum(source);
-        int destCornerIndex = findCornerByPieceNum(dest);
+        int sourceCornerIndex = findCorner(source);
+        int destCornerIndex = findCorner(dest);
         colorpiece cornerFacesSource = g_cornerPiecesColors[sourceCornerIndex];
         colorpiece cornerFacesDest = g_cornerPiecesColors[destCornerIndex];
         int check = 0;
