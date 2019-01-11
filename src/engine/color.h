@@ -47,6 +47,12 @@ struct colorpiece {
     megaminxColor a = BLACK;
     megaminxColor b = BLACK;
     megaminxColor c = BLACK;
+    //To convert the 1-12 colors into 0-11 colors:
+    void subtract() {
+        a = (megaminxColor)((int)a - 1);
+        b = (megaminxColor)((int)b - 1);
+        c = (megaminxColor)((int)c - 1);
+    }
 };
 
 //Defines the 30 edge pieces.

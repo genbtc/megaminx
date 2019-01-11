@@ -837,7 +837,7 @@ void Megaminx::highYmiddleW() {
     resetFiveCorners(pieceListB);
 }
 void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
-{
+{   //White Face on Top:
     if (!shadowDom)
         shadowDom = new Megaminx();
     shadowDom->LoadNewEdgesFromOtherCube(this);
@@ -845,60 +845,89 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     //Find everything and get it moved over to its drop-in point.
     constexpr int pieceListA[5] = { 0, 1, 2, 3, 4 };
     bool solved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
-    for (int i = 0; i < 1; ++i) {
-        int sourceEdgeIndex = shadowDom->findEdgeByPieceNum(pieceListA[i]);
-        colorpiece edgeFacesSource = g_edgePiecesColors[sourceEdgeIndex];
-        if (pieceListA[i] == sourceEdgeIndex) {
-            solved[i] = true;
-            continue;
-        }
-        //Determine which two faces the edge belongs to
-        int faceLocA = shadowDom->faces[edgeFacesSource.a - 1].findEdgeByPieceNum(pieceListA[i]);
-        int faceLocB = shadowDom->faces[edgeFacesSource.b - 1].findEdgeByPieceNum(pieceListA[i]);
-        //Determine which direction those faces need to rotate to land the Edge on the white
-        int dirA = DirToWhiteFace[edgeFacesSource.a - 1][faceLocA];
-        int dirB = DirToWhiteFace[edgeFacesSource.b - 1][faceLocB];
-        //Determine which color half-edge is on each face
-        int whichcolorEdgeA = BlackEdgesNumber2[edgeFacesSource.a - 1][faceLocA];
-        int whichcolorEdgeB = BlackEdgesNumber2[edgeFacesSource.b - 1][faceLocB];
-        assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.
-        Edge* EdgeItself = shadowDom->faces[edgeFacesSource.a - 1].edge[faceLocA];
-        Edge* EdgeItselfB = shadowDom->faces[edgeFacesSource.b - 1].edge[faceLocB];
-        assert(EdgeItself == EdgeItselfB);
-        bool isReadyToDropIn = (sourceEdgeIndex > 4 && sourceEdgeIndex < 10 && solved[i] == false);
-        bool color0match = EdgeItself->data._colorNum[whichcolorEdgeA] != WHITE;
-        bool color1match = EdgeItself->data._colorNum[whichcolorEdgeB] != WHITE;
-        assert(color0match != color1match);
-        //This works to get white pieces up to the top but thats about it. Not intelligent enough.
-        if (isReadyToDropIn && color0match)
-            shadowDom->shadowRotate(edgeFacesSource.a, dirA);
-        else if (isReadyToDropIn && color1match)
-            shadowDom->shadowRotate(edgeFacesSource.b, dirB);
-        else if (edgeFacesSource.a != WHITE && dirA != 0 && ((edgeFacesSource.a < GRAY && !solved[edgeFacesSource.a - 1]) || edgeFacesSource.a >= GRAY))
-            shadowDom->shadowRotate(edgeFacesSource.a, dirA);
-        else if (edgeFacesSource.b != WHITE && dirB != 0 && ((edgeFacesSource.b < GRAY && !solved[edgeFacesSource.b - 1]) || edgeFacesSource.b >= GRAY))
-            shadowDom->shadowRotate(edgeFacesSource.b, dirB);
-        if (isReadyToDropIn) {
-            int offby = sourceEdgeIndex - 5;
-            //Needs to be reversed when offby is 0, when it was rotated left instead of right to reach the white top.
-            int whiteDir = color0match ? dirA * -1 : dirB * -1;
-            if (whiteDir == Face::CW)
-                offby++;
-            for (int j = 0; j < offby; ++j)
-                shadowDom->shadowRotate(WHITE, Face::CCW);
-            
-         //   solved[i] = true;
-        }
+    for (int i = 0; i < 2; ++i) {
+        //Works to repeat the first piece in. Shouldnt need to be more than 5 move loop-cycles.
+        //Second piece gets inserted but can be color-flipped
+        //for (int k = 0; k < 6; ++k) {
+            int sourceEdgeIndex = shadowDom->findEdgeByPieceNum(pieceListA[i]);
+            colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
+            //If we found the correct piece solved in the correct spot, skip this and Continue with next
+            if (pieceListA[i] == sourceEdgeIndex) {
+                solved[1+i] = true; //1+ because 0 is white and 1 is blue
+                continue;
+            }
+
+            //Determine which two faces the edge belongs to
+            int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].findEdgeByPieceNum(pieceListA[i]);
+            assert(edgeFaceLocA != -1);
+            int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].findEdgeByPieceNum(pieceListA[i]);
+            assert(edgeFaceLocB != -1);
+            //Determine which direction those faces need to rotate to land the Edge on the white
+            int dirA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
+            int dirB = DirToWhiteFace[edgeFaceNeighbors.b - 1][edgeFaceLocB];
+            //Determine which color half-edge is on each face
+            int whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a - 1][edgeFaceLocA];
+            int whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b - 1][edgeFaceLocB];
+            assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.
+            Edge* EdgeItself = shadowDom->faces[edgeFaceNeighbors.a - 1].edge[edgeFaceLocA];
+            Edge* EdgeItselfB = shadowDom->faces[edgeFaceNeighbors.b - 1].edge[edgeFaceLocB];
+            assert(EdgeItself == EdgeItselfB);
+            bool isReadyToDropIn = (sourceEdgeIndex > 4 && sourceEdgeIndex < 10);
+            int faceAcolor = EdgeItself->data._colorNum[whichcolorEdgeA];
+            int faceBcolor = EdgeItself->data._colorNum[whichcolorEdgeB];
+            bool colormatchA = faceAcolor != WHITE;
+            bool colormatchB = faceBcolor != WHITE;
+            assert(colormatchA != colormatchB);
+            if (i != 0 && isReadyToDropIn) {
+                int offby = sourceEdgeIndex - 5 - i ;
+                //Needs to be reversed when offby is 0, when it was rotated left instead of right to reach the white top.
+                int whiteDir = colormatchA ? dirA * -1 : dirB * -1;
+                if (whiteDir == Face::CW)
+                    offby++;
+                for (int j = 0; j < offby; ++j)
+                    shadowDom->shadowRotate(WHITE, whiteDir);
+            }
+            else if (i != 0 && !isReadyToDropIn) {
+                //Line up things that are solved on the top face.// test maybenot- (not right, rotates a ton if i=1 isnt solved yet but 2 is.)
+                //if the 2nd piece solves first, it doesnt re-align. then it pushes it down, and the next few moves bring it back up to right spot but the white face is left twisted.
+                //What this amounts to is that any 5-9 edge needs to know how to get into any 0-4 slot even when its not solved. or we would be wasting moves partial-solving the top every time.
+                int findIfPieceSolved = shadowDom->findEdgeByPieceNum(0);
+                if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
+                    for (int j = 0; j < findIfPieceSolved; ++j)
+                        shadowDom->shadowRotate(WHITE, Face::CCW);
+                }
+            }
+            //This inserts the 5-9 edges into the 1-4 slots - Not very intelligently though
+            if (isReadyToDropIn && colormatchA && !solved[edgeFaceNeighbors.a - 1]) {
+                shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
+                solved[faceAcolor] = true;
+            }
+            else if (isReadyToDropIn && colormatchB && !solved[edgeFaceNeighbors.b - 1]) {
+                shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
+                solved[faceBcolor] = true;
+            }
+            //This works to get white pieces up to the top - Not very intelligently though
+            else if (!isReadyToDropIn && edgeFaceNeighbors.a != WHITE && dirA != 0 && ((edgeFaceNeighbors.a < GRAY && !solved[edgeFaceNeighbors.a - 1]) || edgeFaceNeighbors.a >= GRAY))
+                shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
+            else if (!isReadyToDropIn && edgeFaceNeighbors.b != WHITE && dirB != 0 && ((edgeFaceNeighbors.b < GRAY && !solved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY))
+                shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
+            //Rotate the White Top Face to pre-Orient the first solved edge piece with the 1st side face (blue).
+            int findIfPieceSolved = shadowDom->findEdgeByPieceNum(i);
+            if (isReadyToDropIn &&  findIfPieceSolved > i) {
+                for (int j = 0; j < findIfPieceSolved; ++j)
+                    shadowDom->shadowRotate(WHITE, Face::CCW);
+            }
+     //   }
+            //Solves up to 2 but leaves the top rotated.
+
     }
+    //After both loops, load the shadow Queue into the real queue
+    //TODO/FIX: this code is unsafe as we just swap without checking and there could be stuff in the orig rotation queue...
     if (shadowDom->shadowRotateQueue.size() > 0)
         rotateQueue.swap(shadowDom->shadowRotateQueue);
     //FIXED: since we can't wait for any .rotate() op's to complete to re-read the result. We need a pseudo-rotate that can compute the cube status in the meantime, and just queue the moves.
     //Like a shadow-DOM of the "megaminx->" object that we can call a dry run of placeParts() on and have swap() and flip() instantly work and be able to query the resutls back.
-    //NOTE: the .render() command and the .rotate() command are not instant, and this function blocks. we need to set up a proc to keep this moving.
-        // //NEED A MUTEX WAIT OR LOCK HERE, its not working.
-        //while (sourceEdgeIndexMoved1 == sourceEdgeIndex);
-        //if (sourceEdgeIndexMoved1 < sourceEdgeIndex)
-    //White on Top:
+    // Why? the .render() command and the .rotate() command are not instant, and this function blocks. we need to set up a proc to keep this moving.
 }
 
 
@@ -918,7 +947,7 @@ void Megaminx::movePieceByRotatingIt(int source, int dest, bool corner)
     if (!corner) {
         int sourceEdgeIndex = findEdgeByPieceNum(source);
         int destEdgeIndex   = findEdgeByPieceNum(dest);
-        colorpiece edgeFacesSource = g_edgePiecesColors[sourceEdgeIndex];
+        colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
         colorpiece edgeFacesDest = g_edgePiecesColors[destEdgeIndex];
         int check = 0;
     }

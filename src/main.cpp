@@ -662,7 +662,7 @@ void menuHandler(int num)
     case 99: //Restore Game State
         FromVectorFileToCube();
         break;
-    case 301:
+    case 301: //GLUT_KEY_INSERT
         if (!shadowDom)
             //    delete shadowDom;
             shadowDom = new Megaminx();
@@ -670,7 +670,7 @@ void menuHandler(int num)
         shadowDom->LoadNewEdgesFromOtherCube(megaminx);
         shadowDom->LoadNewCornersFromOtherCube(megaminx);
         break;
-    case 302:
+    case 302: //GLUT_KEY_PAGE_DOWN
         megaminx->rotateSolveWhiteEdges(shadowDom);
         break;
     default:
