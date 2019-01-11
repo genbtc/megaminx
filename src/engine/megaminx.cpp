@@ -843,26 +843,27 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     shadowDom->LoadNewEdgesFromOtherCube(this);
     shadowDom->LoadNewCornersFromOtherCube(this);
     //Find everything and get it moved over to its drop-in point.
-    constexpr int pieceListA[5] = { 0, 1, 2, 3, 4 };
     bool solved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
     //trying for 3:
-    for (int i = 0; i < 3; ++i) {
+    //going from 3-4 with BLUE/RED solved and GREEN/YELLOW on the PURPLE face, it just CW/CCW PURPLE over and over since it moves from i=2 to i=4 and undoes itself.
+    //PURPLE i==3 is skipped because its on the RED face which is solved/locked, and it doesnt want to go the other direction cause it would invert.
+    for (int i = 0; i < 5; ++i) {
         //Works to repeat the first piece in. Shouldnt need to be more than 5 move loop-cycles per piece (keypresses).
         //Second piece gets inserted now too, but if solved first, it has to unsolve itself for 1st piece to solve then solve the 2nd,
         //       But then the white face is correctly ordered but spun partially-rotated on the cube
         //for (int k = 0; k < 6; ++k) {
-/*VOLATILE*/int sourceEdgeIndex = shadowDom->findEdgeByPieceNum(pieceListA[i]);
+/*VOLATILE*/int sourceEdgeIndex = shadowDom->findEdgeByPieceNum(i);
             //Determine which two faces the edge belongs to
             colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
             //If we found the correct piece solved in the correct spot, skip this and Continue with next
-            if (pieceListA[i] == sourceEdgeIndex) {
+            if (i == sourceEdgeIndex) {
                 solved[1+i] = true; //1+ because 0 is white and 1 is blue
                 continue;
             }
             //Determine where on those faces the edges are positioned, 0-4
-/*VOLATILE*/int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].findEdgeByPieceNum(pieceListA[i]);
+/*VOLATILE*/int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].findEdgeByPieceNum(i);
             assert(edgeFaceLocA != -1); //(-1 for fail, not found)
-/*VOLATILE*/int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].findEdgeByPieceNum(pieceListA[i]);
+/*VOLATILE*/int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].findEdgeByPieceNum(i);
             assert(edgeFaceLocB != -1);
             //Determine which direction those faces need to rotate to land the Edge on the white
             int dirA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
@@ -888,7 +889,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
 /*VOLATILE*/    int findIfPieceSolved = shadowDom->findEdgeByPieceNum(0);
                 if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
                     for (int j = 0; j < findIfPieceSolved; ++j)
-/*FLUSH*/               shadowDom->shadowRotate(WHITE, Face::CCW);
+/*REFRESH*/               shadowDom->shadowRotate(WHITE, Face::CCW);
                 }
             }
             //Prepare top face for insertion, based on location 5-9 correct any offset
@@ -900,30 +901,34 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 if (whiteDir == Face::CW)
                     offby++;
                 for (int j = 0; j < offby; ++j)
-/*FLUSH*/           shadowDom->shadowRotate(WHITE, whiteDir);
+/*REFRESH*/           shadowDom->shadowRotate(WHITE, whiteDir);
             }
             //NO BREAK;
             //This inserts the 5-9 edges into the 1-4 slots, picking the face to spin that leaves it white side up.
             if (isReadyToDropIn && colormatchA && !solved[edgeFaceNeighbors.a - 1]) {
-/*FLUSH*/       shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
-                solved[faceAcolor] = true;
+/*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
+                solved[faceAcolor-1] = true;
             }
             else if (isReadyToDropIn && colormatchB && !solved[edgeFaceNeighbors.b - 1]) {
-/*FLUSH*/       shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
-                solved[faceBcolor] = true;
+/*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
+                solved[faceBcolor-1] = true;
             }
             //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by solved pieces
             // (if it is, we will have to use algos to return move it in and return it back)
-            else if (!isReadyToDropIn && edgeFaceNeighbors.a != WHITE && dirA != 0 && ((edgeFaceNeighbors.a < GRAY && !solved[edgeFaceNeighbors.a - 1]) || edgeFaceNeighbors.a >= GRAY))
-/*FLUSH*/       shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
-            else if (!isReadyToDropIn && edgeFaceNeighbors.b != WHITE && dirB != 0 && ((edgeFaceNeighbors.b < GRAY && !solved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY))
-/*FLUSH*/       shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
-            //Rotate the White Top Face to pre-Orient the first solved edge piece with the 1st side face (blue).
-/*VOLATILE*/int findIfPieceSolved = shadowDom->findEdgeByPieceNum(i);
-            if (isReadyToDropIn &&  findIfPieceSolved > i) {
-                for (int j = 0; j < findIfPieceSolved; ++j)
-/*FLUSH*/           shadowDom->shadowRotate(WHITE, Face::CCW);
+            else if (!isReadyToDropIn && edgeFaceNeighbors.a != WHITE && dirA != 0 && ((edgeFaceNeighbors.a < GRAY && !solved[edgeFaceNeighbors.a - 1]) || edgeFaceNeighbors.a >= GRAY)) {
+/*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.a, dirA);
+                i--;
             }
+            else if (!isReadyToDropIn && edgeFaceNeighbors.b != WHITE && dirB != 0 && ((edgeFaceNeighbors.b < GRAY && !solved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY)) {
+/*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirB);
+                i--;
+            }
+//            //Rotate the White Top Face to pre-Orient the first solved edge piece with the 1st side face (blue).
+///*VOLATILE*/int findIfPieceSolved = shadowDom->findEdgeByPieceNum(i);
+//            if (isReadyToDropIn &&  findIfPieceSolved > i) {
+//                for (int j = 0; j < findIfPieceSolved; ++j)
+///*REFRESH*/           shadowDom->shadowRotate(WHITE, Face::CCW);
+//            }
      //}
             //Solves up to piece 2 but leaves the top rotated.
     }
