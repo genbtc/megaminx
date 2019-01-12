@@ -52,13 +52,13 @@ public:
     void LoadNewCornersFromOtherCube(Megaminx* source);
     void LoadNewEdgesFromOtherCube(Megaminx* source);
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
-    int findEdge(int index);
-    std::vector<int> findEdgePieces(const int indexes[5]);
+    int findEdge(int pieceNum);
+    std::vector<int> findEdgePieces(const int pieceNums[5]);
     std::vector<int> findEdgePieces(std::vector<int> &v);
     void resetFiveEdges(const int indexes[5]);
     void resetFiveEdges(std::vector<int> &v);
-    int findCorner(int index);
-    std::vector<int> findCornerPieces(const int indexes[5]);
+    int findCorner(int pieceNum);
+    std::vector<int> findCornerPieces(const int pieceNums[5]);
     std::vector<int> findCornerPieces(std::vector<int> &v);
     void resetFiveCorners(const int indexes[5]);
     void resetFiveCorners(std::vector<int> &v);
@@ -67,6 +67,7 @@ public:
     void sixthLayerEdges();
     void lowYmiddleW();
     void highYmiddleW();
+    void DetectSolvedWhitePiecesUnOrdered(bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void movePieceByRotatingIt(int source, int dest, bool corner=false);
     
