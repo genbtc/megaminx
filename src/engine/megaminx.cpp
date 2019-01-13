@@ -848,6 +848,11 @@ void Megaminx::DetectSolvedWhitePiecesUnOrdered(bool piecesSolved[5])
         int pIndex = findEdge(p);
         if (pIndex >= 0 && pIndex <= 4)
             piecesSeenOnTop.push_back(p);
+        //If we found the correct piece solved in the correct spot
+        if (p == pIndex) {
+            piecesSolved[p] = true;
+            numSolved++;
+        }
     }
     if (piecesSeenOnTop.size() > 1) {
         //Check if the ordering blue->red,red->green is correct,etc... even if the top is twisted vs the sides
@@ -898,19 +903,11 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             allSolved = true;
             continue;
         }
-        //Works to repeat the first piece in. Shouldnt need to be more than 5 move loop-cycles per piece (keypresses).
-        //Second piece gets inserted now too, but if solved first, it has to unsolve itself for 1st piece to solve then solve the 2nd,
-        //       But then the white face is correctly ordered but spun partially-rotated on the cube
-        //for (int k = 0; k < 6; ++k) {
+        //BUG?:Second piece gets inserted now too, but if solved first, it has to unsolve itself for 1st piece to solve then solve the 2nd,
+        //     But then the white face is correctly ordered but spun partially-rotated on the cube
 /*VOLATILE*/int sourceEdgeIndex = shadowDom->findEdge(i);
             //Determine which two faces the edge belongs to
             colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
-            //If we found the correct piece solved in the correct spot, skip this and Continue with next
-            if (i == sourceEdgeIndex) {
-                piecesSolved[i] = true;
-                i++;
-                continue;
-            }
             //Find everything and get it moved over to its drop-in point:
             //Determine where on those faces the edges are positioned, 0-4
 /*VOLATILE*/int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].find5EdgeLoc(i);
@@ -969,6 +966,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 facesSolved[edgeHalfColorA-1] = true;
 allSolved = true;//temp
             }
+            //BUG: If there is a blocked face, it doesnt want to insert.
             else if (isOnRow2 && colormatchB && !facesSolved[edgeFaceNeighbors.b - 1]) {
 /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
                 facesSolved[edgeHalfColorB-1] = true;
@@ -976,11 +974,11 @@ allSolved = true;//temp
             }
             //FIXED: we need to make it traverse row 4 until it gets to where it needs.
             //Moves a piece from Row 4 to Row 6. (then it gets brought back to the next 4) and so on, to move it around the cube.
-            //BUG: this eventually ends up bringing this around to a side where it will want to go in inverted.
+            //BUG: this eventually ends up bringing this around to a side where it will want to go in inverted. (skipping by 2 inverts it. it needs to try skipping by 1 before it agrees to skip by 2)
             else if (isOnRow4 && edgeFaceNeighbors.a < GRAY && facesSolved[edgeFaceNeighbors.a - 1] && edgeFaceNeighbors.b > GRAY && !facesSolved[edgeFaceNeighbors.b - 1]) {
-                /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
-                /*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
-                allSolved = true;//temp
+                shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+/*REFRESH*/     shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+allSolved = true;//temp
             }
             //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by facesSolved pieces
             //TODO: (if it is, we will have to use algos to return move it in and return it back)
