@@ -941,29 +941,45 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         bool isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
         bool isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
 
-        if (i != 0) {// && !isOnRow2) { //OR isreadytodropin and somethingISblockingit and weneedtorotatethetop
+        if (facesSolved[1] == true) {
+        //if (i != 0) {// && !isOnRow2) { //OR isreadytodropin and somethingISblockingit and weneedtorotatethetop
             // test/maybenot? = not right, rotates a ton if i=1 isnt solved yet but 2 is?
             //BUG: if the 2nd piece solves first, it doesnt re-align. then it pushes it down, and the next few moves bring it back up to right spot but the white face is left twisted.
             //TODO: What this amounts to is that any 5-9 edge needs to know how to get into any 0-4 slot even when its not solved. or we would be wasting moves partial-solving the top every time.
             int findIfPieceSolved = shadowDom->findEdge(0);
             if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
-                for (int j = 0; j < findIfPieceSolved; ++j)
-                    shadowDom->shadowRotate(WHITE, Face::CCW);
+                int offby = findIfPieceSolved;
+                int defaultDir = Face::CCW;
+                if (offby == 4) {
+                    offby = 1;
+                    defaultDir *= -1;
+                }
+                if (offby == 3) {
+                    offby = 2;
+                    defaultDir *= -1;
+                }
+                for (int j = 0; j < offby; ++j)
+                    shadowDom->shadowRotate(WHITE, defaultDir);
                 continue;
             }
         }
         //Prepare top face for insertion, based on location 5-9 correct any offset
-        /*else*/ if (i != 0 && isOnRow2) {
+        if (i != 0 && isOnRow2) {
             //bug: this NEEDS to be pre-empted if the 5th piece wants to come in inverted.
             //for piece 0, 5 - 5 - 0 = 0, so no correction.
             int offby = sourceEdgeIndex - 5 - i;
-            //Needs to be reversed when offby is 0, when it was rotated left instead of right to reach the white top.
-            //This means we are going 1 further than the nearst FRU intersection
-            int whiteDir = colormatchA ? dirToWhiteA * -1 : dirToWhiteB * -1;
-            if (whiteDir == Face::CW)
-                offby++;
+            int defaultDir = Face::CW;
+            if (offby == 4) {
+                offby = 1;
+                defaultDir *= -1;
+            }
+            if (offby == 3) {
+                offby = 2;
+                defaultDir *= -1;
+            }
             for (int j = 0; j < offby; ++j)
-                shadowDom->shadowRotate(WHITE, whiteDir);
+                shadowDom->shadowRotate(WHITE, defaultDir);
+            //keep processing:
         }
         //New breakthrough idea, any matching pieces that end up on its matching face can be spun in 2 moves or 1.
         bool ontopA = (edgeFaceNeighbors.a > 1 && edgeFaceNeighbors.a < 7);
@@ -1023,10 +1039,12 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 //Determine which direction those faces need to rotate to land the Edge on the white
                 int dirToWhiteNextA = DirToWhiteFace[edgeFaceNeighborsNext.a - 1][edgeFaceLocA];
                 int dirToWhiteNextB = DirToWhiteFace[edgeFaceNeighborsNext.b - 1][edgeFaceLocB];
+                //make sure we rotate the other face that we didnt touch before
                 if (edgeFaceNeighborsNext.b == edgeFaceNeighbors.b)
                     shadowDom->shadowRotate(edgeFaceNeighborsNext.a, -1 * dirToWhiteNextA);
                 else
                     shadowDom->shadowRotate(edgeFaceNeighborsNext.b, -1 * dirToWhiteNextB);
+                //then put the orig face back to where it was.
                 shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
                 allSolved = true;//temporary
             }
@@ -1035,19 +1053,18 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
             allSolved = true;//temporary
         }
-        ////FIXED: we need to make it traverse row 4 until it gets to where it needs.
-        ////Moves a piece from Row 4 to Row 6. (then it gets brought back to the next 4) and so on, to move it around the cube.
-        ////BUG: this eventually ends up bringing this around to a side where it will want to go in inverted. (skipping by 2 inverts it. it needs to try skipping by 1 before it agrees to skip by 2)
-        //else if (isOnRow4 && edgeFaceNeighbors.a < GRAY && facesSolved[edgeFaceNeighbors.a - 1]) {
-        //    shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
-        //    shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
-        //    allSolved = true;//temporary
-        //}
         else if (isOnRow4 && dirToWhiteB != 0 && ((edgeFaceNeighbors.b < GRAY && !facesSolved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY)) {
             shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
-            //Moves a piece from Row 4 to Row 6. (also seems to be going in reverse but it works)
-            if (facesSolved[edgeFaceNeighbors.a - 1])
-                shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+            //REFRESH
+            int sourceEdgeIndexNext = shadowDom->findEdge(i);
+            //Moves a piece again from Row 4 to Row 6. (if the face it lands on is locked).
+            //Determine which two faces the edge belongs to
+            colorpiece edgeFaceNeighborsNext = g_edgePiecesColors[sourceEdgeIndexNext];
+            //Determine which direction those faces need to rotate to land the Edge on the white
+            int dirToWhiteNextB = DirToWhiteFace[edgeFaceNeighborsNext.b - 1][edgeFaceLocB];
+            if (edgeFaceNeighborsNext.b == edgeFaceNeighbors.b)
+                if (facesSolved[edgeFaceNeighborsNext.a - 1])
+                    shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
             allSolved = true;//temporary
         }
         //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by facesSolved pieces
