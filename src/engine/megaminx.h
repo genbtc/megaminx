@@ -67,7 +67,7 @@ public:
     void sixthLayerEdges();
     void lowYmiddleW();
     void highYmiddleW();
-    void DetectSolvedWhitePiecesUnOrdered(bool piecesSolved[5]);
+    void DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void movePieceByRotatingIt(int source, int dest, bool corner=false);
     
