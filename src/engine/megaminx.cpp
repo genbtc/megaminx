@@ -862,6 +862,7 @@ void Megaminx::DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5])
             int pIndex = findEdge(p);
             int pNextIndex = findEdge(pNext);
             if (((pIndex >= 0 && pIndex <= 4) && (pNextIndex >= 0 && pNextIndex <= 4)) &&
+                edges[pNextIndex].data.flipStatus == 0 && edges[pIndex].data.flipStatus == 0 &&
                 ((pNextIndex == pIndex + 1) || (pIndex == 4 && pNextIndex == 0))) {
                 piecesOrderedOnTop.push_back(p);
                 piecesSolved[p] = true;
@@ -891,7 +892,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     do {        
         //temporary overflow protection:
         loopcount++;
-        if (loopcount > 20)
+        if (loopcount > 22)
             break;
         bool facesSolved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
         bool piecesSolved[5] = { false, false, false, false, false };
@@ -985,11 +986,11 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         if (isOnRow2) {
             //Prepare top face for insertion, based on location 5-9 correct any offset
             int offby = sourceEdgeIndex - 5 - i;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
+            //Sometimes the A face will be blocked, we need to +1 it (hard to explain)
+            if (!colormatchA)
+                offby++;
             if (i != 0 && isOnRow2 && offby > 0) {
                 int defaultDir = Face::CW;
-                //Sometimes the A face will be blocked, we need to +1 it (hard to explain)
-                if (!colormatchA)
-                    offby++;
                 //Saves moves by going the opposite direction:
                 if (offby == 4) {
                     offby = 1;
