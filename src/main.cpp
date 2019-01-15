@@ -672,6 +672,7 @@ void menuHandler(int num)
         break;
     case 302: //GLUT_KEY_PAGE_DOWN
         megaminx->rotateSolveWhiteEdges(shadowDom);
+        megaminx->rotateSolveWhiteCorners(shadowDom);
         break;
     default:
         break;

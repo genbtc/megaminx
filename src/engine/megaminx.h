@@ -39,6 +39,7 @@ public:
     void rotateAlgo(int n, int i);
     void rotateBulkAlgoVector(std::vector<numdir> &bulk);
     void rotateBulkAlgoString(std::string algoString);
+    void rotateBulkAlgoString(std::string algoString, const colordirs & loc);
     void resetQueue();
     void resetFace(int n);
     int resetFacesCorners(int color_n);
@@ -68,8 +69,10 @@ public:
     void lowYmiddleW();
     void highYmiddleW();
     void DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5]);
+    void DetectSolvedWhiteCornersUnOrdered(bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
-    void movePieceByRotatingIt(int source, int dest, bool corner=false);
+    void rotateSolveWhiteCorners(Megaminx * shadowDom);
+    void movePieceByRotatingIt(int source, int dest, bool corner=false);    
     
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     static const int numFaces = 12;

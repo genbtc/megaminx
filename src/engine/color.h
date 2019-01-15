@@ -31,13 +31,13 @@ constexpr colorpack g_colorRGBs[COLOR_STATES] = {
     { 1, 1.0, 1.0, 1.0, L"WHITE" },
     { 2, 0.0, 0.0, 1.0, L"DARK_BLUE" },
     { 3, 1.0, 0.0, 0.0, L"RED" },
-    { 4, 0.0, 0.5, 0.0, L"DARK_GREEN" },
+    { 4, 0.0, 0.4, 0.0, L"DARK_GREEN" },
     { 5, 0.5, 0.0, 1.0, L"PURPLE" },
     { 6, 1.0, 1.0, 0.0, L"YELLOW" },
     { 7, 0.5, 0.5, 0.5, L"GRAY" },
     { 8, 0.2, 0.5, 1.0, L"LIGHT_BLUE" },
     { 9, 1.0, 0.4, 0.1, L"ORANGE" },
-    { 10, 0.3, 1.0, 0.3, L"LIGHT_GREEN" },
+    { 10, 0.4, 1.0, 0.4, L"LIGHT_GREEN" },
     { 11, 0.9, 0.4, 1.0, L"PINK" },
     { 12, 1.0, 0.9, 0.65, L"BEIGE" }
 };
@@ -174,6 +174,22 @@ constexpr int DirToWhiteFace[12][5] =
 //BlackEdgesNumber2[12][5] lists the pattern of edges that have their solved-Face-Color
 // in the color[1] index (marked by 1's), instead of the color[0] index. (marked by 0's)
 constexpr int BlackEdgesNumber2[12][5] =
+{
+    { 0, 0, 0, 0, 0 },
+    { 1, 0, 1, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 1, 1, 0, 0, 0 },
+    { 0, 0, 0, 0, 0 },
+    { 1, 1, 1, 0, 1 },
+    { 1, 1, 1, 0, 1 },
+    { 1, 1, 1, 0, 1 },
+    { 1, 1, 0, 1, 1 },
+    { 1, 1, 1, 0, 1 }
+};
+//TEMPORARY - DOESNT WORK:
+constexpr int BlackCornersNumber2[12][5] =
 {
     { 0, 0, 0, 0, 0 },
     { 1, 0, 1, 0, 0 },
