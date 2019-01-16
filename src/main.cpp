@@ -346,7 +346,7 @@ void onSpecialKeyPress(int key, int x, int y)
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
-        break;
+        menuHandler(303); break; //Rotate_white_corners
     case GLUT_KEY_PAGE_DOWN:
         menuHandler(302); break; //Rotate_white_edges
     case GLUT_KEY_HOME:
@@ -400,16 +400,16 @@ void createMenu()
     glutAddMenuEntry("Place/Solve Five Edges", 22);
     glutAddMenuEntry("Place/Solve Five Corners", 23);
     //glutAddMenuEntry("-----------------------", 0);
-    glutAddMenuEntry("Flip Colors Edge 1", 24);
-    glutAddMenuEntry("Flip Colors Edge 2", 25);
-    glutAddMenuEntry("Flip Colors Edge 3", 26);
-    glutAddMenuEntry("Flip Colors Edge 4", 27);
-    glutAddMenuEntry("Flip Colors Edge 5", 28);
-    glutAddMenuEntry("Flip Colors Corner 1", 29);    
-    glutAddMenuEntry("Flip Colors Corner 2", 30);    
-    glutAddMenuEntry("Flip Colors Corner 3", 31);
-    glutAddMenuEntry("Flip Colors Corner 4", 32);
-    glutAddMenuEntry("Flip Colors Corner 5", 33);
+    glutAddMenuEntry("Flip Colors Edge [1+Shift]", 24);
+    glutAddMenuEntry("Flip Colors Edge [2+Shift]", 25);
+    glutAddMenuEntry("Flip Colors Edge [3+Shift]", 26);
+    glutAddMenuEntry("Flip Colors Edge [4+Shift]", 27);
+    glutAddMenuEntry("Flip Colors Edge [5+Shift]", 28);
+    glutAddMenuEntry("Flip Colors Corner [1]", 29);    
+    glutAddMenuEntry("Flip Colors Corner [2]", 30);    
+    glutAddMenuEntry("Flip Colors Corner [3]", 31);
+    glutAddMenuEntry("Flip Colors Corner [4]", 32);
+    glutAddMenuEntry("Flip Colors Corner [5]", 33);
 
     submenu6_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Swap Edges 1 & 2", 125);
@@ -433,9 +433,9 @@ void createMenu()
     glutAddMenuEntry("Swap Corners 3 & 5", 143);
     glutAddMenuEntry("Swap Corners 4 & 5", 144);
 
-    //SubLevel3 Menu - Auto Solve Steps
+    //SubLevel3 Menu - Auto Solve Steps (internal fast solve)
     submenu3_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("* Solve Entire Puzzle *", 92);
+    glutAddMenuEntry("**Solve Entire Puzzle**", 92);
     glutAddMenuEntry("1st Layer White Star", 41);
     glutAddMenuEntry("1st Layer White Corners", 42);
     glutAddMenuEntry("2nd Layer Edges", 151);
@@ -470,17 +470,14 @@ void createMenu()
     glutAddMenuEntry("Edge Permu LL #206", 256);
     glutAddMenuEntry("2nd Layer Star Left", 68);
     glutAddMenuEntry("2nd Layer Star Right", 67);
-    //Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
-    //Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
-    //this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
-    //3rd layer Corners = Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
-    //and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
     glutAddMenuEntry("4th Layer Star Left", 64);
     glutAddMenuEntry("4th Layer Star Right", 63);
     glutAddMenuEntry("6th Layer Star Left", 65);
     glutAddMenuEntry("6th Layer Star Right", 66);
-    //Human Rotate + Auto-Solve algos.
+
+    //Sublevel X = Human Rotate Auto-Solve algos.
     glutAddMenuEntry("1st Layer White Edges", 302);
+    glutAddMenuEntry("1st Layer White Corners", 303);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -503,11 +500,11 @@ void createMenu()
     glutAddSubMenu("Main Menu ---->", submenu0_id);
     //glutAddMenuEntry("---------------", 0);
     //glutAddSubMenu("Admin Mode --->", submenu1_id);
-    glutAddSubMenu("Current Face ->", submenu2_id);
-    glutAddSubMenu("Piece Swaps -->", submenu6_id);
     glutAddSubMenu("Algorithms --->", submenu4_id);
     glutAddSubMenu("Auto Solve --->", submenu3_id);
-    glutAddSubMenu("Solve Face --->", submenu5_id);    
+    glutAddSubMenu("Solve Face --->", submenu5_id);
+    glutAddSubMenu("Current Face ->", submenu2_id);
+    glutAddSubMenu("Piece Swaps -->", submenu6_id);
     glutAddMenuEntry("Close Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -663,15 +660,12 @@ void menuHandler(int num)
         FromVectorFileToCube();
         break;
     case 301: //GLUT_KEY_INSERT
-        if (!shadowDom)
-            //    delete shadowDom;
-            shadowDom = new Megaminx();
-        //FromCubeToShadowCube();
-        shadowDom->LoadNewEdgesFromOtherCube(megaminx);
-        shadowDom->LoadNewCornersFromOtherCube(megaminx);
+        FromCubeToShadowCube();
         break;
     case 302: //GLUT_KEY_PAGE_DOWN
         megaminx->rotateSolveWhiteEdges(shadowDom);
+        break;
+    case 303: //GLUT_KEY_PAGE_UP
         megaminx->rotateSolveWhiteCorners(shadowDom);
         break;
     default:
@@ -684,10 +678,7 @@ void menuHandler(int num)
 #define CORNERFILE "CornerCurPos.dat" 
 #define EDGEFILECOLORS "EdgeColorPos.dat"
 #define CORNERFILECOLORS "CornerColorPos.dat"
-//#define ShadowEDGEFILE "ShadowEdgeCurPos.dat"
-//#define ShadowCORNERFILE "ShadowCornerCurPos.dat" 
-//#define ShadowEDGEFILECOLORS "ShadowEdgeColorPos.dat"
-//#define ShadowCORNERFILECOLORS "ShadowCornerColorPos.dat"
+
 //Store (Write)
 void FromCubeToVectorFile() {
     WritePiecesFile(EDGEFILE,false);
@@ -706,20 +697,14 @@ void FromVectorFileToCube() {
         megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
     }
 }
-//void FromCubeToShadowCube() {
-//    WritePiecesFile(ShadowEDGEFILE, false);
-//    WritePiecesFile(ShadowCORNERFILE, true);
-//    serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), ShadowEDGEFILECOLORS);
-//    serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), ShadowCORNERFILECOLORS);
-//    const std::vector<int> &readEdgevector = ReadPiecesFileVector(ShadowEDGEFILE);
-//    const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(ShadowEDGEFILECOLORS);
-//    const std::vector<int> &readCornervector = ReadPiecesFileVector(ShadowCORNERFILE);
-//    const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(ShadowCORNERFILECOLORS);
-//    for (int i = 0; i < 12; ++i) {
-//        shadowDom->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
-//        shadowDom->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
-//    }
-//}
+//Load Source Cube and store into Shadow Cube
+void FromCubeToShadowCube() {
+    if (shadowDom)
+        delete shadowDom;
+    shadowDom = new Megaminx();
+    shadowDom->LoadNewEdgesFromOtherCube(megaminx);
+    shadowDom->LoadNewCornersFromOtherCube(megaminx);
+}
 
 extern void serializeVectorInt(std::vector<int> list1, std::string filename) {
     std::ofstream file(filename);

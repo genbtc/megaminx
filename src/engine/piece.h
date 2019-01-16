@@ -13,12 +13,21 @@ using std::sqrt;
 
 void rotateVertex(double *vertex, char axis, double angle);
 //common geometric constants
-static const long double FI = (1 + sqrt(5.f)) / 2;
-static const long double PI = acos(-1.f);
-static const long double SIDE_ANGLE = 2 * atan(FI);
-static const long double INS_SPHERE_RAD = 100 * sqrt(10+22 / sqrt(5.f)) / 4;
-static const long double INS_CIRCLE_RAD = 100 / sqrt((5 - sqrt(5.f)) / 2);
+static const long double DODESIZE = 100;
+static const long double FI = (1 + sqrt(5.f)) / 2;  //1.6180340051651001
+static const long double PI = acos(-1.f);           //3.1415927410125732
+static const long double SIDE_ANGLE = 2 * atan(FI); //2.0344439448698051
+static const long double INS_SPHERE_RAD = DODESIZE * sqrt(10+22 / sqrt(5.f)) / 4;   //111.35163307189941
+static const long double INS_CIRCLE_RAD = DODESIZE / sqrt((5 - sqrt(5.f)) / 2);     // 85.065082037033278
 #define pim(x) x*PI/5
+//megaminx vertex shortcuts
+static const long double TWOFIFTHS = (double)2/5;
+static const long double EDGEFIFTH = DODESIZE / sin(pim(2)); //corner inside edge
+static const long double COSPIM35 = INS_CIRCLE_RAD * cos(pim(3.5));     //-50.000004917867173
+static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
+static const long double COSPIM15 = INS_CIRCLE_RAD * cos(pim(1.5));     //49.999998901510480
+static const long double SINPIM15 = INS_CIRCLE_RAD * sin(pim(1.5));     //68.819098307200690
+
 
 struct piecepack {
     char axis1, axis2;
@@ -237,33 +246,33 @@ public:
             _vertex[i][2] = -INS_SPHERE_RAD;
         }
 
-        _vertex[0][0] = INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5;
-        _vertex[0][1] = INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5;
+        _vertex[0][0] = COSPIM35 * TWOFIFTHS; //inside corner (aka outside center)
+        _vertex[0][1] = SINPIM35 * TWOFIFTHS;
 
-        _vertex[1][0] = INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5;
-        _vertex[1][1] = INS_CIRCLE_RAD * sin(pim(3.5));
+        _vertex[1][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS; //corner inside edge a
+        _vertex[1][1] = SINPIM35;
 
-        _vertex[2][0] = INS_CIRCLE_RAD * cos(pim(3.5));
-        _vertex[2][1] = INS_CIRCLE_RAD * sin(pim(3.5));
+        _vertex[2][0] = COSPIM35;     //outside corner
+        _vertex[2][1] = SINPIM35;
 
-        _vertex[3][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
-        _vertex[3][1] = INS_CIRCLE_RAD * sin(pim(1.5));
+        _vertex[3][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //corner inside edge b
+        _vertex[3][1] = SINPIM15;
         rotateVertex(_vertex[3], 'z', pim(2));
 
-        _vertex[4][0] = INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5;
-        _vertex[4][1] = INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5;
+        _vertex[4][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 6
+        _vertex[4][1] = SINPIM15 * TWOFIFTHS;
         rotateVertex(_vertex[4], 'z', pim(-3));
         rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
         rotateVertex(_vertex[4], 'z', pim(2));
 
-        _vertex[5][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
-        _vertex[5][1] = INS_CIRCLE_RAD * sin(pim(1.5));
+        _vertex[5][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //brother = 3 or 1
+        _vertex[5][1] = SINPIM15;
         rotateVertex(_vertex[5], 'z', pim(-3));
         rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
         rotateVertex(_vertex[5], 'z', pim(2));
 
-        _vertex[6][0] = INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5;
-        _vertex[6][1] = INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5;
+        _vertex[6][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 4
+        _vertex[6][1] = SINPIM15 * TWOFIFTHS;
         rotateVertex(_vertex[6], 'z', pim(-5));
         rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
         return &_vertex[0][0];
@@ -275,17 +284,17 @@ public:
             _vertex[i][2] = -INS_SPHERE_RAD;
         }
 
-        _vertex[0][0] = INS_CIRCLE_RAD * cos(pim(3.5)) * 2 / 5;
-        _vertex[0][1] = INS_CIRCLE_RAD * sin(pim(3.5)) * 2 / 5;
+        _vertex[0][0] = COSPIM35 * TWOFIFTHS;
+        _vertex[0][1] = SINPIM35 * TWOFIFTHS;
 
-        _vertex[1][0] = INS_CIRCLE_RAD * cos(pim(1.5)) * 2 / 5;
-        _vertex[1][1] = INS_CIRCLE_RAD * sin(pim(1.5)) * 2 / 5;
+        _vertex[1][0] = COSPIM15 * TWOFIFTHS;
+        _vertex[1][1] = SINPIM15 * TWOFIFTHS;
 
-        _vertex[2][0] = INS_CIRCLE_RAD * cos(pim(1.5)) - 100 / sin(pim(2)) * 2 / 5;
-        _vertex[2][1] = INS_CIRCLE_RAD * sin(pim(1.5));
+        _vertex[2][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS;
+        _vertex[2][1] = SINPIM15;
 
-        _vertex[3][0] = INS_CIRCLE_RAD * cos(pim(3.5)) + 100 / sin(pim(2)) * 2 / 5;
-        _vertex[3][1] = INS_CIRCLE_RAD * sin(pim(3.5));
+        _vertex[3][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS;
+        _vertex[3][1] = SINPIM35;
 
         _vertex[4][0] = _vertex[1][0];
         _vertex[4][1] = _vertex[1][1];
@@ -302,8 +311,8 @@ public:
     double* centerInit() {
         numSides = 1;
         for (int i = 0; i < 5; ++i) {
-            _vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * 2 / 5;
-            _vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5)) * 2 / 5;
+            _vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * TWOFIFTHS;
+            _vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5)) * TWOFIFTHS;
             _vertex[i][2] = -INS_SPHERE_RAD;
         }
         return &_vertex[0][0];
@@ -317,8 +326,8 @@ public:
             //_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5));
             //_vertex[i][2] = -INS_SPHERE_RAD;
             //This puts it on the back face
-            _vertex[i][0] = -INS_CIRCLE_RAD * cos(pim(1.5)) + 100 / sin(pim(2)) * 2 / 5;
-            _vertex[i][1] = -INS_CIRCLE_RAD * sin(pim(1.5));
+            _vertex[i][0] = -COSPIM15 + EDGEFIFTH * TWOFIFTHS;
+            _vertex[i][1] = -SINPIM15;
             _vertex[i][2] = -INS_SPHERE_RAD;
             rotateVertex(_vertex[i], 'z', pim(2));
             rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);
