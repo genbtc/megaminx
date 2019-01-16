@@ -22,12 +22,11 @@ static const long double INS_CIRCLE_RAD = DODESIZE / sqrt((5 - sqrt(5.f)) / 2); 
 #define pim(x) x*PI/5
 //megaminx vertex shortcuts
 static const long double TWOFIFTHS = (double)2/5;
-static const long double EDGEFIFTH = DODESIZE / sin(pim(2)); //corner inside edge
+static const long double EDGEFIFTH = DODESIZE / sin(pim(2));            //105.14622122913930
 static const long double COSPIM35 = INS_CIRCLE_RAD * cos(pim(3.5));     //-50.000004917867173
 static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
 static const long double COSPIM15 = INS_CIRCLE_RAD * cos(pim(1.5));     //49.999998901510480
 static const long double SINPIM15 = INS_CIRCLE_RAD * sin(pim(1.5));     //68.819098307200690
-
 
 struct piecepack {
     char axis1, axis2;
@@ -35,19 +34,10 @@ struct piecepack {
 };
 class Piece {
 public:
-    //default constructor
-    Piece() {
-        defaultedgeInit();
-        defaultcornerInit();        
-        defaultcenterInit();
-    }
     //virtual destructor
     virtual ~Piece() = default;
 
     //Coords for GL vertex (up to 7, not all used)
-    double _vertexEdge[7][3];
-    double _vertexCorner[7][3];
-    double _vertexCenter[7][3];
     double _vertex[7][3];
 
     //data-members we can swap out
@@ -249,90 +239,81 @@ public:
         flip();
     }
     //Creates the common starting vertexes for all pieces that are CORNERS
-    void defaultcornerInit() {
-        for (int i = 0; i < 7; ++i) {
-            _vertexCorner[i][2] = -INS_SPHERE_RAD;
-        }
-
-        _vertexCorner[0][0] = COSPIM35 * TWOFIFTHS; //inside corner (aka outside center)
-        _vertexCorner[0][1] = SINPIM35 * TWOFIFTHS;
-
-        _vertexCorner[1][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS; //corner inside edge a
-        _vertexCorner[1][1] = SINPIM35;
-
-        _vertexCorner[2][0] = COSPIM35;     //outside corner
-        _vertexCorner[2][1] = SINPIM35;
-
-        _vertexCorner[3][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //corner inside edge b
-        _vertexCorner[3][1] = SINPIM15;
-        rotateVertex(_vertexCorner[3], 'z', pim(2));
-
-        _vertexCorner[4][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 6
-        _vertexCorner[4][1] = SINPIM15 * TWOFIFTHS;
-        rotateVertex(_vertexCorner[4], 'z', pim(-3));
-        rotateVertex(_vertexCorner[4], 'x', PI - SIDE_ANGLE);
-        rotateVertex(_vertexCorner[4], 'z', pim(2));
-
-        _vertexCorner[5][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //brother = 3 or 1
-        _vertexCorner[5][1] = SINPIM15;
-        rotateVertex(_vertexCorner[5], 'z', pim(-3));
-        rotateVertex(_vertexCorner[5], 'x', PI - SIDE_ANGLE);
-        rotateVertex(_vertexCorner[5], 'z', pim(2));
-
-        _vertexCorner[6][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 4
-        _vertexCorner[6][1] = SINPIM15 * TWOFIFTHS;
-        rotateVertex(_vertexCorner[6], 'z', pim(-5));
-        rotateVertex(_vertexCorner[6], 'x', PI - SIDE_ANGLE);
-    }
     double* cornerInit() {
         numSides = 3;
-        memcpy(&_vertex, _vertexCorner, sizeof(_vertex));
+        for (int i = 0; i < 7; ++i) {
+            _vertex[i][2] = -INS_SPHERE_RAD;
+        }
+
+        _vertex[0][0] = COSPIM35 * TWOFIFTHS; //inside corner (aka outside center)
+        _vertex[0][1] = SINPIM35 * TWOFIFTHS;
+
+        _vertex[1][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS; //corner inside edge a
+        _vertex[1][1] = SINPIM35;
+
+        _vertex[2][0] = COSPIM35;     //outside corner
+        _vertex[2][1] = SINPIM35;
+
+        _vertex[3][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //corner inside edge b
+        _vertex[3][1] = SINPIM15;
+        rotateVertex(_vertex[3], 'z', pim(2));
+
+        _vertex[4][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 6
+        _vertex[4][1] = SINPIM15 * TWOFIFTHS;
+        rotateVertex(_vertex[4], 'z', pim(-3));
+        rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
+        rotateVertex(_vertex[4], 'z', pim(2));
+
+        _vertex[5][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //brother = 3 or 1
+        _vertex[5][1] = SINPIM15;
+        rotateVertex(_vertex[5], 'z', pim(-3));
+        rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
+        rotateVertex(_vertex[5], 'z', pim(2));
+
+        _vertex[6][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 4
+        _vertex[6][1] = SINPIM15 * TWOFIFTHS;
+        rotateVertex(_vertex[6], 'z', pim(-5));
+        rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
         return &_vertex[0][0];
     }
     //Creates the common starting vertexes for all pieces that are EDGES
-    void defaultedgeInit() {
-        for (int i = 0; i < 6; ++i) {
-            _vertexEdge[i][2] = -INS_SPHERE_RAD;
-        }
-
-        _vertexEdge[0][0] = COSPIM35 * TWOFIFTHS;
-        _vertexEdge[0][1] = SINPIM35 * TWOFIFTHS;
-
-        _vertexEdge[1][0] = COSPIM15 * TWOFIFTHS;
-        _vertexEdge[1][1] = SINPIM15 * TWOFIFTHS;
-
-        _vertexEdge[2][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS;
-        _vertexEdge[2][1] = SINPIM15;
-
-        _vertexEdge[3][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS;
-        _vertexEdge[3][1] = SINPIM35;
-
-        _vertexEdge[4][0] = _vertexEdge[1][0];
-        _vertexEdge[4][1] = _vertexEdge[1][1];
-        rotateVertex(_vertexEdge[4], 'z', PI);
-        rotateVertex(_vertexEdge[4], 'x', PI - SIDE_ANGLE);
-
-        _vertexEdge[5][0] = _vertexEdge[0][0];
-        _vertexEdge[5][1] = _vertexEdge[0][1];
-        rotateVertex(_vertexEdge[5], 'z', PI);
-        rotateVertex(_vertexEdge[5], 'x', PI - SIDE_ANGLE);
-    }
     double* edgeInit() {
         numSides = 2;
-        memcpy(&_vertex, _vertexEdge, sizeof(_vertex));
+        for (int i = 0; i < 6; ++i) {
+            _vertex[i][2] = -INS_SPHERE_RAD;
+        }
+
+        _vertex[0][0] = COSPIM35 * TWOFIFTHS;
+        _vertex[0][1] = SINPIM35 * TWOFIFTHS;
+
+        _vertex[1][0] = COSPIM15 * TWOFIFTHS;
+        _vertex[1][1] = SINPIM15 * TWOFIFTHS;
+
+        _vertex[2][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS;
+        _vertex[2][1] = SINPIM15;
+
+        _vertex[3][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS;
+        _vertex[3][1] = SINPIM35;
+
+        _vertex[4][0] = _vertex[1][0];
+        _vertex[4][1] = _vertex[1][1];
+        rotateVertex(_vertex[4], 'z', PI);
+        rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
+
+        _vertex[5][0] = _vertex[0][0];
+        _vertex[5][1] = _vertex[0][1];
+        rotateVertex(_vertex[5], 'z', PI);
+        rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
         return &_vertex[0][0];
     }
     //Creates the common starting vertexes for all pieces that are CENTERS
-    void defaultcenterInit() {        
-        for (int i = 0; i < 5; ++i) {
-            _vertexCenter[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * TWOFIFTHS;
-            _vertexCenter[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5)) * TWOFIFTHS;
-            _vertexCenter[i][2] = -INS_SPHERE_RAD;
-        }
-    }
     double* centerInit() {
         numSides = 1;
-        memcpy(&_vertex, _vertexCenter, sizeof(_vertex));
+        for (int i = 0; i < 5; ++i) {
+            _vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)) * TWOFIFTHS;
+            _vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5)) * TWOFIFTHS;
+            _vertex[i][2] = -INS_SPHERE_RAD;
+        }
         return &_vertex[0][0];
     }
     //Creates the common starting vertexes for all pieces that are FACES
