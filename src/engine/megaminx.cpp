@@ -1139,7 +1139,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     }
 }
 
-void Megaminx::shadowMultiRotate(int face,int &offby, Megaminx* shadowDom)
+bool Megaminx::shadowMultiRotate(int face,int &offby, Megaminx* shadowDom)
 {
     int defaultDir = Face::CW;
     if (offby < 0) {    //negative reverses direction
@@ -1147,6 +1147,9 @@ void Megaminx::shadowMultiRotate(int face,int &offby, Megaminx* shadowDom)
         defaultDir *= -1;
     }
     if (offby > 0) {
+        //Save moves by never going past 5
+        while (offby >= 5)
+            offby -= 5;
         //Saves moves by going the opposite direction:
         if (offby == 4) {
             offby = 1;
@@ -1160,6 +1163,7 @@ void Megaminx::shadowMultiRotate(int face,int &offby, Megaminx* shadowDom)
             shadowDom->shadowRotate(face, defaultDir);
         //do not reset the loop, keep executing,
     }
+    return (offby > 0);
 }
 
 
@@ -1472,6 +1476,8 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         shadowDom = new Megaminx();
     shadowDom->LoadNewEdgesFromOtherCube(this);
     shadowDom->LoadNewCornersFromOtherCube(this);
+    bool piecesSolved[5] = { false, false, false, false, false };
+    int firstSolvedPiece = -1;
     bool allSolved = false;
     int loopcount = 0;
     //Loop management:
@@ -1479,15 +1485,13 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
     do {
         //temporary overflow protection:
         loopcount++;
-        if (loopcount > 1)
-            break;
-        bool piecesSolved[5] = { false, false, false, false, false };
-        int firstSolvedPiece = -1;
+        if (loopcount >5)
+            break;        
         for (int a = 0; a < 5; ++a) {
             if (firstSolvedPiece == -1 && piecesSolved[a] == true)
-                firstSolvedPiece = a+5;
+                firstSolvedPiece = a + 5;
         }
-        while (i < 10 && piecesSolved[i-5] == true)
+        while (i < 10 && piecesSolved[i - 5] == true)
             i++;
         if (i >= 10) {
             allSolved = true;
@@ -1495,7 +1499,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         }
         int sourceEdgeIndex = shadowDom->findEdge(i);
         if (sourceEdgeIndex == i) {
-            piecesSolved[i-5] = true;
+            piecesSolved[i - 5] = true;
             continue;
         }
         //Determine which two faces the edge belongs to:
@@ -1521,9 +1525,11 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         //Determine which color half-edge is on each face
         int edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
         int edgeHalfColorB = EdgeItselfB->data._colorNum[whichcolorEdgeB];
-        bool colormatchA = edgeHalfColorA != WHITE;
-        bool colormatchB = edgeHalfColorB != WHITE;
-        assert(colormatchA != colormatchB); //sanity check.
+        //bool colormatchA = edgeHalfColorA != WHITE;
+        //bool colormatchB = edgeHalfColorB != WHITE;
+        //assert(colormatchA != colormatchB); //sanity check.
+        bool ontopA = (edgeFaceNeighbors.a > 1 && edgeFaceNeighbors.a < 7);
+        bool ontopB = (edgeFaceNeighbors.b > 1 && edgeFaceNeighbors.b < 7);
         //Line up things that are solved on the top face.
         bool isOnRow1 = (sourceEdgeIndex >= 0 && sourceEdgeIndex < 5);
         bool isOnRow2 = (sourceEdgeIndex >= 5 && sourceEdgeIndex < 10);
@@ -1540,17 +1546,63 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
             edgesOffBy *= -1;
             shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
         }
-        else if (isOnRow34 && offby < 0) { // left
-            const colordirs &loc = g_faceNeighbors[offby];
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("dl l dl l' dl' f' dl' f", loc);
+        else if ((isOnRow2 && sourceEdgeIndex != i) || (isOnRow34 && ontopA && edgeFaceLocA == 4 && edgeFaceNeighbors.a == edgeHalfColorA)) {
+            const colordirs &loc = g_faceNeighbors[edgeFaceNeighbors.a];
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("dl l dl l' dl' f' dl' f", loc); // left
             for (auto op : bulk)    //returns raw faces
                 shadowDom->shadowRotate(op.num + 1, op.dir);
         }
-        else if (isOnRow34 && offby > 0) { // right
-            const colordirs &loc = g_faceNeighbors[offby];
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("dr' r' dr' r dr f dr f'", loc);
+        else if ((isOnRow2 && sourceEdgeIndex != i) || (isOnRow34 && ontopA && edgeFaceLocA == 3 && edgeFaceNeighbors.a == edgeHalfColorA)) {
+            const colordirs &loc = g_faceNeighbors[edgeFaceNeighbors.a];
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("dr' r' dr' r dr f dr f'", loc); // right
             for (auto op : bulk)    //returns raw faces
                 shadowDom->shadowRotate(op.num + 1, op.dir);
+        }
+        //Locates any straggler pieces on the bottom and bubbles them up to the top layers
+        else if (isOnRow34 && dirToWhiteA != 0 && edgeFaceNeighbors.a >= GRAY) {
+            shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
+        }
+        else if (isOnRow34 && dirToWhiteB != 0 && edgeFaceNeighbors.b >= GRAY) {
+            shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+            //REFRESH
+            int sourceEdgeIndexNext = shadowDom->findEdge(i);
+            //Moves a piece again from Row 4 to Row 6. (if the face it lands on is locked).
+            //Determine which two faces the edge belongs to
+            colorpiece edgeFaceNeighborsNext = g_edgePiecesColors[sourceEdgeIndexNext];
+            //Determine which direction those faces need to rotate to land the Edge on the white
+            int dirToWhiteNextB = DirToWhiteFace[edgeFaceNeighborsNext.b - 1][edgeFaceLocB];
+            //we know the next piece has the same neighbor
+            if (edgeFaceNeighborsNext.b == edgeFaceNeighbors.b)
+                //check the solved for the next neighbor (vs what if we just check the original, face.loc.right) ?
+                //make sure its the move going to the right
+                if (edgeFaceNeighborsNext.a == g_faceNeighbors[edgeFaceNeighbors.a].right)
+                    shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+        }
+        else if (isOnRow6 && dirToWhiteA != 0) {
+            shadowDom->shadowRotate(edgeFaceNeighbors.a, -1 * dirToWhiteA);
+        }
+        else if (isOnRow6 && dirToWhiteB != 0) {
+            shadowDom->shadowRotate(edgeFaceNeighbors.b, -1 * dirToWhiteB);
+        }
+        else if (isOnRow7) {
+            int offby = 0;
+            int row7 = sourceEdgeIndex - 28 - i;
+            if (edgeFaceNeighbors.a == GRAY)
+                offby = 3 + edgeFaceLocA + 1 + i;
+            else if (edgeFaceNeighbors.b == GRAY)
+                offby = 3 + edgeFaceLocB + 1 + i;
+            //if ((offby == row7) && (offby != 0)) {
+            bool moved = shadowMultiRotate(GRAY, row7, shadowDom);
+            if (moved == false) {
+                if (dirToWhiteA != 0) {
+                    shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
+                    shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
+                }
+                else if (dirToWhiteB != 0) {
+                    shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+                    shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+                }
+            }
         }
         
     } while (!allSolved);
