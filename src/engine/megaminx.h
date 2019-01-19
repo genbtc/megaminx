@@ -70,12 +70,12 @@ public:
     void highYmiddleW();
     void DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5]);
     void DetectSolvedWhiteCornersUnOrdered(bool piecesSolved[5]);
+    void DetectSolvedSecondLayerEdges(bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
+    void rotateSolveWhiteCorners(Megaminx* shadowDom);
+    void rotateSolveLayer2Edges(Megaminx* shadowDom);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
-    void rotateSolveWhiteCorners(Megaminx * shadowDom);
-    void rotateSolveLayer2Edges(Megaminx * shadowDom);
-    void movePieceByRotatingIt(int source, int dest, bool corner=false);    
-    
+
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     static const int numFaces = 12;
     static const int numCorners = 20;
