@@ -888,7 +888,7 @@ void Megaminx::DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5])
         numSolved++;
     }
 }
-void Megaminx::DetectSolvedWhiteCornersUnOrdered(bool piecesSolved[5])
+void Megaminx::DetectSolvedWhiteCorners(bool piecesSolved[5])
 {
     //Find out if any applicable 0-4 corner pieces are exactly in their slots.
     for (int p = 0; p < 5; ++p) {
@@ -898,13 +898,23 @@ void Megaminx::DetectSolvedWhiteCornersUnOrdered(bool piecesSolved[5])
             piecesSolved[p] = true;
     }
 }
-void Megaminx::DetectSolvedSecondLayerEdges(bool piecesSolved[5])
+void Megaminx::DetectSolved2ndLayerEdges(bool piecesSolved[5])
 {
     //Find out if any applicable 5-9 edge pieces are exactly in their slots.
     for (int p = 5; p < 10; ++p) {
         int pIndex = findEdge(p);
         //make sure its 5-9 and make sure the colors arent flipped
         if (pIndex >= 5 && pIndex <= 9 && p == pIndex && edges[pIndex].data.flipStatus == 0)
+            piecesSolved[p-5] = true;
+    }
+}
+void Megaminx::DetectSolved3rdLayerCorners(bool piecesSolved[5])
+{
+    //Find out if any applicable 5-9 corner pieces are exactly in their slots.
+    for (int p = 5; p < 10; ++p) {
+        int pIndex = findCorner(p);
+        //make sure its 5-9 and make sure the colors arent flipped
+        if (pIndex >= 5 && pIndex <= 9 && p == pIndex && corners[pIndex].data.flipStatus == 0)
             piecesSolved[p-5] = true;
     }
 }
@@ -1173,7 +1183,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         bool facesSolved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
         bool piecesSolved[5] = { false, false, false, false, false };
         int firstSolvedPiece = -1;
-        shadowDom->DetectSolvedWhiteCornersUnOrdered(piecesSolved);
+        shadowDom->DetectSolvedWhiteCorners(piecesSolved);
         for (int a = 0; a < 5; ++a) {
             facesSolved[1 + a] = piecesSolved[a];
             if (firstSolvedPiece == -1 && piecesSolved[a] == true)
@@ -1318,7 +1328,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
-        shadowDom->DetectSolvedSecondLayerEdges(piecesSolved);
+        shadowDom->DetectSolved2ndLayerEdges(piecesSolved);
         int i = 5; //the piece
         while (i < 10 && piecesSolved[i - 5] == true)
             i++;
@@ -1429,6 +1439,152 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
     } while (!allSolved);
     
     //After all loops, load the shadow Queue into the real queue    
+    if (shadowDom->shadowRotateQueue.size() > 0) {
+        if (rotateQueue.size() == 0)
+            rotateQueue.swap(shadowDom->shadowRotateQueue);
+        else {
+            size_t numsize = shadowDom->shadowRotateQueue.size();
+            for (int q = 0; q < numsize; ++q) {
+                rotateQueue.push(shadowDom->shadowRotateQueue.front());
+                shadowDom->shadowRotateQueue.pop();
+            }
+        }
+    }
+}
+
+
+void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
+{   //White Face on Top:
+    if (!shadowDom)
+        shadowDom = new Megaminx();
+    shadowDom->LoadNewEdgesFromOtherCube(this);
+    shadowDom->LoadNewCornersFromOtherCube(this);
+    bool allSolved = false;
+    //Loop management:
+    int loopcount = 0;
+    int unknownloop = 0;
+    do {
+        assert(unknownloop == 0);
+        if (loopcount == 1)
+            break;
+        bool piecesSolved[5] = { false, false, false, false, false };
+        bool facesLocked[13] = { false, false, false, false, false, false, false, false, false, false, false, false, false };
+        shadowDom->DetectSolved3rdLayerCorners(piecesSolved);
+        for (int a = 0; a < 5; ++a) {
+            int x = PINK + a;
+            if (x > BEIGE)
+                x -= 5;
+            facesLocked[x] = piecesSolved[a];
+        }
+        int i = 5; //the piece
+        while (i < 10 && piecesSolved[i - 5] == true)
+            i++;
+        if (i >= 10) {
+            allSolved = true;
+            break;
+        }
+        int sourceCornerIndex = shadowDom->findCorner(i);
+        //Determine which two faces the corner belongs to:
+        colorpiece cornerFaceNeighbors = g_cornerPiecesColors[sourceCornerIndex];
+        //Find everything and get it moved over to its drop-in point:
+        //Determine where on those faces the corners are positioned, 0-4
+        int cornerFaceLocA = shadowDom->faces[cornerFaceNeighbors.a - 1].find5CornerLoc(i);
+        assert(cornerFaceLocA != -1); //(-1 for fail, not found)
+        int cornerFaceLocB = shadowDom->faces[cornerFaceNeighbors.b - 1].find5CornerLoc(i);
+        assert(cornerFaceLocB != -1); //should not happen
+        int cornerFaceLocC = shadowDom->faces[cornerFaceNeighbors.c - 1].find5CornerLoc(i);
+        assert(cornerFaceLocC != -1); //should not happen
+        Corner* CornerItselfA = shadowDom->faces[cornerFaceNeighbors.a - 1].corner[cornerFaceLocA];
+        //Line up things that are solved on the top face.
+        bool isOnRow1 = (sourceCornerIndex >= 0 && sourceCornerIndex < 5);
+        bool isOnRow2 = (sourceCornerIndex >= 5 && sourceCornerIndex < 10);
+        bool isOnRow3 = (sourceCornerIndex >= 10 && sourceCornerIndex < 15);
+        bool isOnRow4 = (sourceCornerIndex >= 15 && sourceCornerIndex < 20);
+        //New breakthrough idea, any matching pieces that end up on its matching face can be spun in 2 moves or 1.
+        bool ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
+        bool ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
+        bool ontopC = (cornerFaceNeighbors.c > 1 && cornerFaceNeighbors.c < 7);
+        //    //RE-NOTE: Doing this over and over is wasting moves solving the partial-solved top every time.
+        //    //RE-TODO: This means we need a plan for any 5-9 corner to get moved into any 0-4 slot even when top isn't solved.
+        //Rotates the white face to its solved position, first solved EDGE matches up to its face.
+        //Edges should already be solved, if not, get top white face spun oriented back to normal
+        int edgesOffBy = shadowDom->findEdge(0); //always piece 0
+        if (edgesOffBy > 0 && edgesOffBy < 5) {
+            edgesOffBy *= -1;
+            shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
+        }
+        else if (sourceCornerIndex == i && CornerItselfA->data.flipStatus == 0) {
+            piecesSolved[i - 5] = true;
+            continue;
+        }
+        //(ends up on --- row4)
+        else if (isOnRow2) {
+            int defaultDir = Face::CW;
+            int offby = sourceCornerIndex - i - 5;
+            megaminxColor turnface;
+            //2nd rotation puts them on the gray face.
+            if (ontopA && ontopB)
+                turnface = cornerFaceNeighbors.c;
+            else if (ontopA && ontopC)
+                turnface = cornerFaceNeighbors.b;
+            else if (ontopB && ontopC)
+                turnface = cornerFaceNeighbors.a;
+            //If the piece is solved positioned but color flipped wrong:
+            // turn opposite direction row2->row3->row4 to use gray face then repeat till solved.
+            if (sourceCornerIndex == i) {
+                shadowDom->shadowRotate(turnface, -1 * defaultDir);
+                shadowDom->shadowRotate(turnface, -1 * defaultDir);
+            }
+            else {
+                shadowDom->shadowRotate(turnface, defaultDir);
+                shadowDom->shadowRotate(turnface, defaultDir);
+            }
+
+        }
+        //IDEA: go to gray for temporary for every piece.(ends up on --- row4)
+        else if (isOnRow3) {
+            int defaultDir = Face::CCW;
+            int offby = sourceCornerIndex - i - 10;
+            megaminxColor maxABC;
+            int x, y;
+            if (ontopA) {
+                x = cornerFaceNeighbors.b;
+                y = cornerFaceNeighbors.c;
+            }
+            else if (ontopB) {
+                x = cornerFaceNeighbors.a;
+                y = cornerFaceNeighbors.c;
+            }
+            else if (ontopC) {
+                x = cornerFaceNeighbors.a;
+                y = cornerFaceNeighbors.b;
+            }
+            if (x < PINK)
+                x += 5;
+            if (y < PINK)
+                y += 5;
+            int result = max(x, y);
+            if (result > BEIGE)
+                result -= 5;
+            maxABC = (megaminxColor)result;
+            shadowDom->shadowRotate(maxABC, defaultDir);
+        }
+        //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved
+        else if (isOnRow4) {
+            int offby = sourceCornerIndex - (i - 5) - 18;
+            shadowMultiRotate(GRAY, offby, shadowDom);
+            int x = PINK + (i - 5);
+            if (x > BEIGE)
+                x -= 5;
+            int defaultDir = Face::CCW;
+            shadowDom->shadowRotate(x, defaultDir);
+            shadowDom->shadowRotate(x, defaultDir);
+        }
+        else //if this happens we are undefined behavior.
+            unknownloop++;
+        loopcount++;
+    } while (!allSolved);
+    //After both loops, load the shadow Queue into the real queue    
     if (shadowDom->shadowRotateQueue.size() > 0) {
         if (rotateQueue.size() == 0)
             rotateQueue.swap(shadowDom->shadowRotateQueue);

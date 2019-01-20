@@ -352,7 +352,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_HOME:
         menuHandler(304); break; //rotate_2nd-layer-edges
     case GLUT_KEY_END:
-        megaminx->toggleInvisibility(); break; //just hide orig cube
+        menuHandler(305); break; //rotate_3rd_layer-corners
     case GLUT_KEY_INSERT:
         menuHandler(301); break; //Instanciate shadow dom
     case GLUT_KEY_F1:
@@ -479,6 +479,7 @@ void createMenu()
     glutAddMenuEntry("1st Layer White Edges", 302);
     glutAddMenuEntry("1st Layer White Corners", 303);
     glutAddMenuEntry("2nd Layer Edges", 304);
+    glutAddMenuEntry("3rd Layer Corners", 305);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -671,6 +672,9 @@ void menuHandler(int num)
         break;
     case 304: //layer 2 rotate+autosolve GLUT_KEY_HOME
         megaminx->rotateSolveLayer2Edges(shadowDom);
+        break;
+    case 305: //layer 3 rotate+autosolve GLUT_KEY_END
+        megaminx->rotateSolve3rdLayerCorners(shadowDom);
         break;
     default:
         break;
