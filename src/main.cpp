@@ -346,21 +346,27 @@ void onSpecialKeyPress(int key, int x, int y)
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
-        menuHandler(303); break; //Rotate_white_corners
+        break;
     case GLUT_KEY_PAGE_DOWN:
-        menuHandler(302); break; //Rotate_white_edges
+        break;
     case GLUT_KEY_HOME:
-        menuHandler(304); break; //rotate_2nd-layer-edges
+        break;
     case GLUT_KEY_END:
-        menuHandler(305); break; //rotate_3rd_layer-corners
+        break;
     case GLUT_KEY_INSERT:
         menuHandler(301); break; //Instanciate shadow dom
     case GLUT_KEY_F1:
+        menuHandler(302); break; //Rotate_white_edges
     case GLUT_KEY_F2:
+        menuHandler(303); break; //Rotate_white_corners
     case GLUT_KEY_F3:
+        menuHandler(304); break; //rotate_2nd-layer-edges
     case GLUT_KEY_F4:
+        menuHandler(305); break; //rotate_3rd_layer-corners
     case GLUT_KEY_F5:
+        menuHandler(306); break; //rotate_4th_layer-edges
     case GLUT_KEY_F6:
+        break;
     case GLUT_KEY_F7:
     case GLUT_KEY_F8:
     case GLUT_KEY_F9:
@@ -480,6 +486,7 @@ void createMenu()
     glutAddMenuEntry("1st Layer White Corners", 303);
     glutAddMenuEntry("2nd Layer Edges", 304);
     glutAddMenuEntry("3rd Layer Corners", 305);
+    glutAddMenuEntry("4th Layer Edges", 306);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -675,6 +682,9 @@ void menuHandler(int num)
         break;
     case 305: //layer 3 rotate+autosolve GLUT_KEY_END
         megaminx->rotateSolve3rdLayerCorners(shadowDom);
+        break;
+    case 306: //layer 4 rotate+autosolve
+        megaminx->rotateSolveLayer4Edges(shadowDom);
         break;
     default:
         break;

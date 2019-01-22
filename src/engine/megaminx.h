@@ -72,10 +72,12 @@ public:
     void DetectSolvedWhiteCorners(bool piecesSolved[5]);
     void DetectSolved2ndLayerEdges(bool piecesSolved[5]);
     void DetectSolved3rdLayerCorners(bool piecesSolved[5]);
+    void DetectSolved4thLayerEdges(bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
     void rotateSolveLayer2Edges(Megaminx* shadowDom);
     void rotateSolve3rdLayerCorners(Megaminx* shadowDom);
+    void rotateSolveLayer4Edges(Megaminx* shadowDom);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
 
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
