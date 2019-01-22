@@ -954,6 +954,16 @@ void Megaminx::DetectSolved4thLayerEdges(bool piecesSolved[5])
             piecesSolved[p - 10] = true;
     }
 }
+void Megaminx::DetectSolved5thLayerCorners(bool piecesSolved[5])
+{
+    //Find out if any applicable 5-9 corner pieces are exactly in their slots.
+    for (int p = 10; p < 15; ++p) {
+        int pIndex = findCorner(p);
+        //make sure its 5-9 and make sure the colors arent flipped
+        if (pIndex >= 10 && pIndex <= 14 && p == pIndex && corners[pIndex].data.flipStatus == 0)
+            piecesSolved[p - 10] = true;
+    }
+}
 //Layer 1 part 1
 void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
 {   //FromCubeToShadowCube
@@ -1475,7 +1485,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
     int unknownloop = 0;
     do {
         assert(unknownloop == 0);
-        if (loopcount == 1)
+        if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
         bool facesLocked[13] = { false, false, false, false, false, false, false, false, false, false, false, false, false };
@@ -1514,8 +1524,6 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         bool ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
         bool ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
         bool ontopC = (cornerFaceNeighbors.c > 1 && cornerFaceNeighbors.c < 7);
-        //    //RE-NOTE: Doing this over and over is wasting moves solving the partial-solved top every time.
-        //    //RE-TODO: This means we need a plan for any 5-9 corner to get moved into any 0-4 slot even when top isn't solved.
         //Rotates the white face to its solved position, first solved EDGE matches up to its face.
         //Edges should already be solved, if not, get top white face spun oriented back to normal
         int edgesOffBy = shadowDom->findEdge(0); //always piece 0
@@ -1569,7 +1577,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
                 x = cornerFaceNeighbors.a;
                 y = cornerFaceNeighbors.b;
             }
-            //The loop point crosses over at the Pink (TODO?FIX?BUG - or should it be beige?)
+            //The loop point crosses over at the Pink 
             if (x < PINK)
                 x += 5;
             if (y < PINK)
@@ -1610,6 +1618,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
 }
 
 //Layer 4 - Edges
+//Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
 void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
 {   //FromCubeToShadowCube
     if (!shadowDom)
@@ -1621,8 +1630,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
     int loopcount = 0;
     int unknownloop = 0;
     do {
-        assert(unknownloop == 0);
-        if (loopcount > 0)
+        if (loopcount > 101)
             break;
         bool piecesSolved[10] = { false, false, false, false, false, false, false, false, false, false };
         shadowDom->DetectSolved4thLayerEdges(piecesSolved);
@@ -1672,22 +1680,22 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             edgesOffBy *= -1;
             shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
         }
+        //Found piece as solved
         else if (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus == 0) {
             piecesSolved[i - 10] = true;
             continue;
         }
+        //Get ready for algorithms
         else if ((isOnRow34 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
             (isOnRow7)) {
             if (isOnRow7) {
+                //Align GRAY top to the exact position for pre-drop-in.
                 int offby = 0;
-                int row7 = 0;
                 if (isRight)
-                    row7 = sourceEdgeIndex - 27 - i;
-                else if (isLeft)
-                    row7 = sourceEdgeIndex - 28 - i;
-                //These should be equivalent but for example -12 and -7 both reduce to -2
-                //TODO: make function to reduce the number itself
-                bool moved = shadowMultiRotate(GRAY, row7, shadowDom);
+                    offby = sourceEdgeIndex - 27 - i;
+                else if (isLeft) //row 4B's B-half is +1 from row4A's B-half (DARK_BLUE,LIGHT_GREEN) vs (DARK_BLUE,PINK)
+                    offby = sourceEdgeIndex - 28 - i;
+                bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
                 //Align the GRAY layer 7 to be directly underneath the intended solve area
                 if (moved)
                     continue;
@@ -1700,26 +1708,23 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 loc = g_faceNeighbors[max(edgeFaceNeighbors.b,edgeFaceNeighbors.a)];
             //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6
             std::vector<numdir> bulk;
-            if ((isOnRow7 && isLeft) || (isOnRow4))
-                // F' R', F' F', r f    // 12 o'clock to 7 o'clock
-                // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
-                //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-                if (EdgeItselfA->data.flipStatus == 0)
+            if ((isOnRow7 && isLeft) || (isOnRow4)) {
+                if (EdgeItselfA->data.flipStatus == 0 || (isOnRow4))
                     bulk = shadowDom->ParseAlgorithmString("F' R', F' F', r f", loc);  // left
                 else
                     bulk = shadowDom->ParseAlgorithmString("U' R' DR' F F DR R", loc); //l+inverted
-            else if ((isOnRow7 && isRight) || (isOnRow3))
-                // f l, f f, L' F'      //12 o'clock to 5 o'clock.        
-                // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()
-                if (EdgeItselfA->data.flipStatus == 0)
+            }
+            else if ((isOnRow7 && isRight) || (isOnRow3)) {
+                if (EdgeItselfA->data.flipStatus == 0 || (isOnRow3))
                     bulk = shadowDom->ParseAlgorithmString("f l, f f, L' F'", loc);    // right
                 else
                     bulk = shadowDom->ParseAlgorithmString("u l dl F' F' DL' L'", loc); //r+inverted
-            for (auto op : bulk)    //+1 the 0-11 faces
+            }
+            for (auto op : bulk)        //+1 the 0-11 faces
                 shadowDom->shadowRotate(op.num + 1, op.dir);
         }
+        //Row 6 - flip piece up to GRAY, then return the moved faces to unharm the low corners.
         else if (isOnRow6) {
-            //we need to flip it up to gray, then return the moved faces to unharm the corners.
             if (dirToWhiteA != 0) {
                 shadowDom->shadowRotate(edgeFaceNeighbors.a, -1 * dirToWhiteA);
                 shadowDom->shadowRotate(GRAY, dirToWhiteA);
@@ -1731,13 +1736,114 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
             }
         }
-        //Layer 7 is an intermediate buffer
-        else //this happens in limbo. prevents full auto-solve, needs re-keypress
+        else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
+        assert(unknownloop == 0);
         loopcount++;
     } while (!allSolved);
 
     //After all loops, load the shadow Queue into the real queue    
+    if (shadowDom->shadowRotateQueue.size() > 0) {
+        if (rotateQueue.size() == 0)
+            rotateQueue.swap(shadowDom->shadowRotateQueue);
+        else {
+            size_t numsize = shadowDom->shadowRotateQueue.size();
+            for (int q = 0; q < numsize; ++q) {
+                rotateQueue.push(shadowDom->shadowRotateQueue.front());
+                shadowDom->shadowRotateQueue.pop();
+            }
+        }
+    }
+}
+
+
+//Layer 5 - Corners
+void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
+{   //White Face on Top:
+    if (!shadowDom)
+        shadowDom = new Megaminx();
+    shadowDom->LoadNewEdgesFromOtherCube(this);
+    shadowDom->LoadNewCornersFromOtherCube(this);
+    bool allSolved = false;
+    //Loop management:
+    int loopcount = 0;
+    int unknownloop = 0;
+    do {
+        assert(unknownloop == 0);
+        if (loopcount > 0)
+            break;
+        bool piecesSolved[5] = { false, false, false, false, false };
+        bool facesLocked[13] = { false, false, false, false, false, false, false, false, false, false, false, false, false };
+        shadowDom->DetectSolved5thLayerCorners(piecesSolved);
+        for (int a = 0; a < 5; ++a) {
+            int x = PINK + a;
+            if (x > BEIGE)
+                x -= 5;
+            facesLocked[x] = piecesSolved[a];
+        }
+        int i = 10; //the piece
+        while (i < 15 && piecesSolved[i - 10] == true)
+            i++;
+        if (i >= 15) {
+            allSolved = true;
+            break;
+        }
+        int sourceCornerIndex = shadowDom->findCorner(i);
+        //Determine which two faces the corner belongs to:
+        colorpiece cornerFaceNeighbors = g_cornerPiecesColors[sourceCornerIndex];
+        //Find everything and get it moved over to its drop-in point:
+        //Determine where on those faces the corners are positioned, 0-4
+        int cornerFaceLocA = shadowDom->faces[cornerFaceNeighbors.a - 1].find5CornerLoc(i);
+        assert(cornerFaceLocA != -1); //(-1 for fail, not found)
+        int cornerFaceLocB = shadowDom->faces[cornerFaceNeighbors.b - 1].find5CornerLoc(i);
+        assert(cornerFaceLocB != -1); //should not happen
+        int cornerFaceLocC = shadowDom->faces[cornerFaceNeighbors.c - 1].find5CornerLoc(i);
+        assert(cornerFaceLocC != -1); //should not happen
+        Corner* CornerItselfA = shadowDom->faces[cornerFaceNeighbors.a - 1].corner[cornerFaceLocA];
+        //Line up things that are solved on the top face.
+        bool isOnRow1 = (sourceCornerIndex >= 0 && sourceCornerIndex < 5);
+        bool isOnRow2 = (sourceCornerIndex >= 5 && sourceCornerIndex < 10);
+        bool isOnRow3 = (sourceCornerIndex >= 10 && sourceCornerIndex < 15);
+        bool isOnRow4 = (sourceCornerIndex >= 15 && sourceCornerIndex < 20);
+        //New breakthrough idea, any matching pieces that end up on its matching face can be spun in 2 moves or 1.
+        bool ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
+        bool ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
+        bool ontopC = (cornerFaceNeighbors.c > 1 && cornerFaceNeighbors.c < 7);
+        //Rotates the white face to its solved position, first solved EDGE matches up to its face.
+        //Edges should already be solved, if not, get top white face spun oriented back to normal
+        int edgesOffBy = shadowDom->findEdge(0); //always piece 0
+        if (edgesOffBy > 0 && edgesOffBy < 5) {
+            edgesOffBy *= -1;
+            shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
+        }
+        else if (sourceCornerIndex == i && CornerItselfA->data.flipStatus == 0) {
+            piecesSolved[i - 10] = true;
+            continue;
+        }
+        //Row 3 pieces that are mis-solved use algo to go to gray face as temporary holding (ends up on row4)
+        else if (isOnRow3) {
+            int x = BEIGE - (i - 10);
+            colordirs loc = g_faceNeighbors[x];
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r u R' U'", loc);  //right
+            for (auto op : bulk)        //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+        }
+        //Get the Pieces to drop-in ready on Row 4 (gray layer) to solved Row3
+        else if (isOnRow4) {
+            //Orient Gray Top layer
+            int offby = sourceCornerIndex + (i - 10) - 20;
+            bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
+            int x = BEIGE - (i - 10);
+            colordirs loc = g_faceNeighbors[x];
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r u R' U'", loc);  //right
+            for (auto op : bulk)        //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+        }
+        else //if this happens we are undefined behavior.
+            unknownloop++;
+        loopcount++;
+    } while (!allSolved);
+    //After both loops, load the shadow Queue into the real queue    
     if (shadowDom->shadowRotateQueue.size() > 0) {
         if (rotateQueue.size() == 0)
             rotateQueue.swap(shadowDom->shadowRotateQueue);

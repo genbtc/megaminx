@@ -366,7 +366,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F5:
         menuHandler(306); break; //rotate_4th_layer-edges
     case GLUT_KEY_F6:
-        break;
+        menuHandler(307); break; //rotate_5th_layer-corners
     case GLUT_KEY_F7:
     case GLUT_KEY_F8:
     case GLUT_KEY_F9:
@@ -487,6 +487,7 @@ void createMenu()
     glutAddMenuEntry("2nd Layer Edges", 304);
     glutAddMenuEntry("3rd Layer Corners", 305);
     glutAddMenuEntry("4th Layer Edges", 306);
+    glutAddMenuEntry("5th Layer Corners", 307);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -668,23 +669,26 @@ void menuHandler(int num)
     case 99: //Restore Game State
         FromVectorFileToCube();
         break;
-    case 301: //GLUT_KEY_INSERT
+    case 301: //instanciate shadow cube - GLUT_KEY_INSERT
         FromCubeToShadowCube();
         break;
-    case 302: //GLUT_KEY_PAGE_DOWN
+    case 302: //layer 1 edges rotate+autosolve F1
         megaminx->rotateSolveWhiteEdges(shadowDom);
         break;
-    case 303: //GLUT_KEY_PAGE_UP
+    case 303: //layer 1 corners rotate+autosolve F2
         megaminx->rotateSolveWhiteCorners(shadowDom);
         break;
-    case 304: //layer 2 rotate+autosolve GLUT_KEY_HOME
+    case 304: //layer 2 edges rotate+autosolve F3
         megaminx->rotateSolveLayer2Edges(shadowDom);
         break;
-    case 305: //layer 3 rotate+autosolve GLUT_KEY_END
+    case 305: //layer 3 corners rotate+autosolve F4
         megaminx->rotateSolve3rdLayerCorners(shadowDom);
         break;
-    case 306: //layer 4 rotate+autosolve
+    case 306: //layer 4 edges rotate+autosolve F5
         megaminx->rotateSolveLayer4Edges(shadowDom);
+        break;
+    case 307: //layer 5 corners rotate+autosolve F6
+        megaminx->rotateSolve5thLayerCorners(shadowDom);
         break;
     default:
         break;
