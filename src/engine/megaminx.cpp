@@ -1704,11 +1704,17 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 // F' R', F' F', r f    // 12 o'clock to 7 o'clock
                 // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
                 //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-                bulk = shadowDom->ParseAlgorithmString("F' R', F' F', r f", loc); // left
+                if (EdgeItselfA->data.flipStatus == 0)
+                    bulk = shadowDom->ParseAlgorithmString("F' R', F' F', r f", loc);  // left
+                else
+                    bulk = shadowDom->ParseAlgorithmString("U' R' DR' F F DR R", loc); //l+inverted
             else if ((isOnRow7 && isRight) || (isOnRow3))
                 // f l, f f, L' F'      //12 o'clock to 5 o'clock.        
                 // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()
-                bulk = shadowDom->ParseAlgorithmString("f l, f f, L' F'", loc); // right
+                if (EdgeItselfA->data.flipStatus == 0)
+                    bulk = shadowDom->ParseAlgorithmString("f l, f f, L' F'", loc);    // right
+                else
+                    bulk = shadowDom->ParseAlgorithmString("u l dl F' F' DL' L'", loc); //r+inverted
             for (auto op : bulk)    //+1 the 0-11 faces
                 shadowDom->shadowRotate(op.num + 1, op.dir);
         }
