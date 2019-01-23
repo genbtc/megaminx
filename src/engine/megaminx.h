@@ -83,6 +83,9 @@ public:
     void rotateSolve5thLayerCorners(Megaminx * shadowDom);
     void rotateSolveLayer6Edges(Megaminx * shadowDom);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
+    int getRotateQueueNum() {
+        return rotateQueue.size();
+    }
 
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     static const int numFaces = 12;

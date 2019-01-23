@@ -104,8 +104,6 @@ void RenderScene()
         g_camera.RotateGLCameraView();
         //Render it.
         megaminx->render();
-        if (megaminx->isInvisible() && shadowDom)
-            shadowDom->render();
     }
     glPopMatrix();
     //Print out Text (FPS display + Angles + face Name)
@@ -121,8 +119,12 @@ void RenderScene()
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
-        if (megaminx->isInvisible() && shadowDom)
-            utDrawText2D((WIDTH / 2) - 40, HEIGHT - 12.f, "SHADOW DOM");
+        shadowQueueLength = megaminx->getRotateQueueNum();
+        if (shadowQueueLength > 0) {
+            static char rotquestr[21];
+            snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
+            utDrawText2D((WIDTH / 2) - 44, HEIGHT - 12.f, rotquestr);
+        }
     }
     utResetPerspectiveProjection();
     glutSwapBuffers();
@@ -370,6 +372,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F7:
         menuHandler(308); break; //rotate_6th_layer-edges
     case GLUT_KEY_F8:
+        menuHandler(309); break; //Layers 1-6 all at once 
     case GLUT_KEY_F9:
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
@@ -693,6 +696,16 @@ void menuHandler(int num)
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         break;
     case 308: //layer 6 edges rotate+autosolve F7
+        megaminx->rotateSolveLayer6Edges(shadowDom);
+        break;
+    case 309: //layers 1-6 all rotate+autosolve F8
+        FromCubeToShadowCube();
+        megaminx->rotateSolveWhiteEdges(shadowDom);
+        megaminx->rotateSolveWhiteCorners(shadowDom);
+        megaminx->rotateSolveLayer2Edges(shadowDom);
+        megaminx->rotateSolve3rdLayerCorners(shadowDom);
+        megaminx->rotateSolveLayer4Edges(shadowDom);
+        megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
         break;
     default:

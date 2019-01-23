@@ -3,7 +3,7 @@
 #include "common_physics/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.33 - genBTC mod";
+const char *title = "Megaminx v1.34 - genBTC mod";
 //testing framerate cap:
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
@@ -32,6 +32,7 @@ bool spinning = false;
 bool help = true;
 int currentFace = 0;
 char lastface[32];
+int shadowQueueLength = 0;
 
 // global Camera
 Camera g_camera;

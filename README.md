@@ -1,4 +1,4 @@
-MegaMinx - v1.32 genBTC Mod (December 19, 2018)
+MegaMinx - v1.34 genBTC Mod (January 23, 2019)
 ========
 ![Current129](https://puu.sh/yyfd7/525320ef95.png)
 <p>It's a working simulator of a Rubik's ~~cube~~ Dodecahedron puzzle called the <b>Megaminx</b>!<br />
@@ -50,22 +50,18 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 "Solve Current Face's Corners"<br>
 "Swap Face Edge 1-5<br>
 "Rotate Face Corner 1-5<br>
-<h2>Last Layer solve helpers</h2><br>
+<h2>AutoSolve using Human Rotate Algorithms</h2>
 "Solve White Star"<br>
 "Solve White Corners"<br>
+"2nd Layer Edges"<br>
+"3rd Layer Corners"<br>
+"4th Layer Edges"<br>
+"5th Layer Corners"<br>
+"6th Layer Edges"<br>
+<p>
+<h2>Last Layer solve helpers</h2><br>
 "Solve Grey Star"<br>
 "Solve Grey Corners"<br>
-//TODO These arent implemented yet.<br>
-//  "Swap 1 Gray Edge"<br>
-//  "Swap 1 Gray Corner"<br>
-//  "Swap 2 Gray Corners"<br>
-//TODO Add the rest of these:<br>
-//  "2nd Layer Edges"<br>
-//  "Low Y's (corners)"<br>
-//  "4th Layer Edges"<br>
-//  "High Y's (corners)"<br>
-//  "6th Layer Edges"<br>
-<p>
 <h2>Notation Algorithms</h2><br>
 "r u R' U'"<br>
 "l u L' U'"<br>
@@ -74,12 +70,11 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 "u l U' R' u L' U' r"<br>
 "u r 2U' L' 2u R' 2U' l u"<br>
 "R' D' R D"<br>
-//TODO: These are Not doing the right things yet for some reason.<br>
 "Edge Permutation 1":  r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5)<br>
 "Edge Permutation 2":  r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5)<br>
 "Edge Permutation 3":  r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)<br>
 "Edge Permutation 4":  r u R' u , R' U' r2 U', R' u R' u, r U2' (5 to 2, 2 to 1, 1 to 5)<br>
 "Edge Permutation 5":  l r u2, L' u R', l U' r u2, L' u2 R' (5 and 3 swap, 1 and 2 swap)<br>
 <h2> Programming Credits </h2>
-genBTC - genBTC@gmx.com - November to December 2017, and 2018 (C)<br>
+genBTC - genBTC@gmx.com - December 2017, all of 2018, and January 2019 (C)<br>
 Uses forked code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com<br>
