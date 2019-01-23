@@ -847,6 +847,71 @@ void Megaminx::highYmiddleW() {
     resetFiveCorners(pieceListB);
 }
 
+//Start of AI:
+//Layer 1: White Face:  White Edges, White Corners.
+//Do the same thing as below, but with the Edges first, intuitively moving them in.
+//We can do either, but presumably it will be harder to jump the edges over the corners afterwards.
+//one by one, find all white corners. Move any in the white face OUT and move ALL of them to the middle "W" layer 3/5,
+// preferably right above its face and position. so you can insert it down and in by RDR'D' move or whatever.
+//Has to be color flipped. Can be avoided if placed on the W the right way.
+//Position it in the right spot:
+//BUILD A PIECE SWAPPER that acts like .swapdata(edge->data) but goes through the rotations. It needs to know obviously,
+// source and dest Piece, which can be given and assigned by Piece Index #. This system has only recently been used for the algorithms above, highYmiddleW(),
+// for example: the concept of assigning semantic names to these arbitrary human combinations of pieces. (These can be named constexpr later)
+// To avoid all the conflicts we had with Swap, we need to check first and make sure any source pieces are not in any dest slots, if there are, move them OUT (to anywhere above/below the solved layer boundary).
+//Good idea: Think about Linear pathway lines that the blocks travel around on. These are made from a known number of fixed points, the corner's outer tips. These represent train stations aka stops along a train track.
+//Once the piece has been confirmed as on the track (hoisted up or intersected with it from another route) - we can compute how many stops it needs to travel to its destination.
+//From there we can use a TTL routing protocol to forward the block as if it were a packet across the pathway line.
+//That way we can make a decision on whether to take a color flip detour before we get to the end or not.
+//Once the pathways are defined, the pieces can be scored and ranked on how far away they are from their destination. Farther ones should be more aggressively moved toward their destination as an optimization.
+// ://www.jaapsch.net/puzzles/megaminx.htm for a more list of notations.
+//Layer 2: Edges,One at a time, If any of the 5 pieces that are supposed to be in this #2 edge slot, move them OUT, and to the W layer.
+//Position it in the right spot, the source location decides the destination drop-in:
+//Execute the known, human algo Layer 2 Edge Star Left/Right if its Left or right.
+//Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
+//Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
+// this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
+//3rd layer Corners = Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
+// and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
+//Layer 3: Corners Like layer 1 and we use the gray layer as the temp layer
+//Layer 4: Edges, since We know the all the Star/edges algo for 2/4/6. Left/Right needs to be decided on the destination this time,
+// the source is always at 12 o clock. drops into either 5 / 7 o'clock (Right/Left)
+//Pieces already in the layer 4 area but wrong in location need to be moved up and out onto the Gray face as temporary, using Algos.
+//Any pieces on the gray face need to be Color-flipped favorably before the drop-in. To change the color, we need to TODO:??????????????????
+//
+//We can also solve some Layer 6 edges now without hurting anything, which helps because some of our source pieces may be there.
+//Layer 5: Corners, again. This time they source from Gray layer 7 as the drop-in point. We should find one that exists up on that top layer that can be dropped in.
+// otherwise we will have to hoist the pieces up from below. We will have to do this anyway. Theoretically you can pick any piece to start, hoist it up, then drop it in. Then repeat until you've finished.
+// But there should be some already up there, and if we Look for them as they come around, and solve those next, more will be solved this way.
+//When they are ready to drop in, the colors can be one of 3 ways, and this can be accomplished by either 1, 3 or 5 R/D moves
+//Layer 6: Edges source from Gray layer 7 and drop in a short 1/5th sideways. same idea applies from Layer#4
+// the source is always at 12 o clock. drops into either 3 / 9 o'clock (Right/Left)
+//Layer 7: from what I can tell, do Corners first, because some of the corner algos affect the edges also, and some of the edge algos affect the corners, so those can be used too...
+// So do corners with the intention of corrupting the edges but making ultimate progress on getting the edges all facing downwards at least.
+//Coloring the corners involves multiple moves of R/D/R'/D' until they color correctly. This corrupts the lines you use for the transformation, "Z",
+// Repeats and reverts in cycles of 6. So after one corner is solved, the temporary lines may still be corrupted, if they are,
+// you must rotate the Top/Gray again and continue to color-flip additional Top corners to revert the corrupted "Z" line before you move on.
+// This may approach a catch 22, where everything is solved but only one gray corner is 1 flip away, if this is the case, I don't know what to do...
+//Theres a lot of last-layer algorithms to choose from. Choose wisely!
+//
+//TODO: Uncovered a bug in this algo where it swaps 90% of the elements Out and then is left with a parity, for example:
+//A = { 22, 11, 10, 22, 3, 26, 28, 26,  }
+//B = { 26, 3, 28, 26, 11, 22, 10, 22, }
+//It thinks swapping A[0] with B[0] and so on, amounts to a net change of 0. And its right. But why am i wrong?
+//This also occurs down to 3 pieces: such like: A = { 1, 2, 4 } and B = { 2, 4, 1 }, or even just two: {0,4}/{4,0} 
+//
+//get piece from A to B by rotating it:
+//white edges. intuitive. edges 0-4 will flop in from 5-9, watch polarity.
+//Possibility = Alternate 1Edge + 1Corner for whiteface.
+//for corners find out what floor 1-4 theyre on
+//for first step, whole cube is unsolved we can rotate without bad consequences, but later we will need to know how to stick to the bottom half and gray layer for scratch temp space, without affecting anything. or at least switch to non-destructive forwarding
+//for next step we need to move-out with a human-algo
+//white corners 0-4 will drop in from 5-9
+//to affect a piece, we query the &Pieces for which 2 or 3 faces its claimed by. Add a stat to track this.
+//Q:) How to figure out which 3 faces and dir to turn them? A:) we can fake try all 6 choices and see which gets closer.
+//Level 3 corners can be flipped color easily, follow this, they use the bottom side layers and level 5 corners to temp-hold them in 3 moves - 5 moves.
+//Pathways will be defined as the 5 Z-lines going from white to gray corner Line covers 3 edges. 5 lines * 3 = 15. Plus the top/bottom lines = 5 * 2 = 10, + 15, = 25 the 5 extra edges to make 30 happen in the 10-wide 4th layer and need not be worried about.
+
 bool Megaminx::shadowMultiRotate(int face, int &offby, Megaminx* shadowDom)
 {
     int defaultDir = Face::CW;
@@ -1125,73 +1190,6 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         }
     }
 }
-
-
-//get piece from A to B by rotating it:
-//white edges. intuitive. edges 0-4 will flop in from 5-9, watch polarity.
-//Possibility = Alternate 1Edge + 1Corner for whiteface.
-//for corners find out what floor 1-4 theyre on
-//for first step, whole cube is unsolved we can rotate without bad consequences, but later we will need to know how to stick to the bottom half and gray layer for scratch temp space, without affecting anything. or at least switch to non-destructive forwarding
-//for next step we need to move-out with a human-algo
-//white corners 0-4 will drop in from 5-9
-//to affect a piece, we query the &Pieces for which 2 or 3 faces its claimed by. Add a stat to track this.
-//Q:) How to figure out which 3 faces and dir to turn them? A:) we can fake try all 6 choices and see which gets closer.
-//Level 3 corners can be flipped color easily, follow this, they use the bottom side layers and level 5 corners to temp-hold them in 3 moves - 5 moves.
-//Pathways will be defined as the 5 Z-lines going from white to gray corner Line covers 3 edges. 5 lines * 3 = 15. Plus the top/bottom lines = 5 * 2 = 10, + 15, = 25 the 5 extra edges to make 30 happen in the 10-wide 4th layer and need not be worried about.
-
-//Start of AI:
-//Layer 1: White Face:  White Edges, White Corners.
-//Do the same thing as below, but with the Edges first, intuitively moving them in.
-//We can do either, but presumably it will be harder to jump the edges over the corners afterwards.
-//one by one, find all white corners. Move any in the white face OUT and move ALL of them to the middle "W" layer 3/5,
-// preferably right above its face and position. so you can insert it down and in by RDR'D' move or whatever.
-//Has to be color flipped. Can be avoided if placed on the W the right way.
-//Position it in the right spot:
-//BUILD A PIECE SWAPPER that acts like .swapdata(edge->data) but goes through the rotations. It needs to know obviously,
-// source and dest Piece, which can be given and assigned by Piece Index #. This system has only recently been used for the algorithms above, highYmiddleW(),
-// for example: the concept of assigning semantic names to these arbitrary human combinations of pieces. (These can be named constexpr later)
-// To avoid all the conflicts we had with Swap, we need to check first and make sure any source pieces are not in any dest slots, if there are, move them OUT (to anywhere above/below the solved layer boundary).
-//Good idea: Think about Linear pathway lines that the blocks travel around on. These are made from a known number of fixed points, the corner's outer tips. These represent train stations aka stops along a train track.
-//Once the piece has been confirmed as on the track (hoisted up or intersected with it from another route) - we can compute how many stops it needs to travel to its destination.
-//From there we can use a TTL routing protocol to forward the block as if it were a packet across the pathway line.
-//That way we can make a decision on whether to take a color flip detour before we get to the end or not.
-//Once the pathways are defined, the pieces can be scored and ranked on how far away they are from their destination. Farther ones should be more aggressively moved toward their destination as an optimization.
-// ://www.jaapsch.net/puzzles/megaminx.htm for a more list of notations.
-//Layer 2: Edges,One at a time, If any of the 5 pieces that are supposed to be in this #2 edge slot, move them OUT, and to the W layer.
-//Position it in the right spot, the source location decides the destination drop-in:
-//Execute the known, human algo Layer 2 Edge Star Left/Right if its Left or right.
-//Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
-//Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
-// this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
-//3rd layer Corners = Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
-// and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
-//Layer 3: Corners Like layer 1 and we use the gray layer as the temp layer
-//Layer 4: Edges, since We know the all the Star/edges algo for 2/4/6. Left/Right needs to be decided on the destination this time,
-// the source is always at 12 o clock. drops into either 5 / 7 o'clock (Right/Left)
-//Pieces already in the layer 4 area but wrong in location need to be moved up and out onto the Gray face as temporary, using Algos.
-//Any pieces on the gray face need to be Color-flipped favorably before the drop-in. To change the color, we need to TODO:??????????????????
-//
-//We can also solve some Layer 6 edges now without hurting anything, which helps because some of our source pieces may be there.
-//Layer 5: Corners, again. This time they source from Gray layer 7 as the drop-in point. We should find one that exists up on that top layer that can be dropped in.
-// otherwise we will have to hoist the pieces up from below. We will have to do this anyway. Theoretically you can pick any piece to start, hoist it up, then drop it in. Then repeat until you've finished.
-// But there should be some already up there, and if we Look for them as they come around, and solve those next, more will be solved this way.
-//When they are ready to drop in, the colors can be one of 3 ways, and this can be accomplished by either 1, 3 or 5 R/D moves
-//Layer 6: Edges source from Gray layer 7 and drop in a short 1/5th sideways. same idea applies from Layer#4
-// the source is always at 12 o clock. drops into either 3 / 9 o'clock (Right/Left)
-//Layer 7: from what I can tell, do Corners first, because some of the corner algos affect the edges also, and some of the edge algos affect the corners, so those can be used too...
-// So do corners with the intention of corrupting the edges but making ultimate progress on getting the edges all facing downwards at least.
-//Coloring the corners involves multiple moves of R/D/R'/D' until they color correctly. This corrupts the lines you use for the transformation, "Z",
-// Repeats and reverts in cycles of 6. So after one corner is solved, the temporary lines may still be corrupted, if they are,
-// you must rotate the Top/Gray again and continue to color-flip additional Top corners to revert the corrupted "Z" line before you move on.
-// This may approach a catch 22, where everything is solved but only one gray corner is 1 flip away, if this is the case, I don't know what to do...
-//Theres a lot of last-layer algorithms to choose from. Choose wisely!
-//
-//TODO: Uncovered a bug in this algo where it swaps 90% of the elements Out and then is left with a parity, for example:
-//A = { 22, 11, 10, 22, 3, 26, 28, 26,  }
-//B = { 26, 3, 28, 26, 11, 22, 10, 22, }
-//It thinks swapping A[0] with B[0] and so on, amounts to a net change of 0. And its right. But why am i wrong?
-//This also occurs down to 3 pieces: such like: A = { 1, 2, 4 } and B = { 2, 4, 1 }, or even just two: {0,4}/{4,0} 
-//
 
 //Layer 1 part 2
 void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
@@ -1568,7 +1566,6 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
                 shadowDom->shadowRotate(turnface, defaultDir);
                 shadowDom->shadowRotate(turnface, defaultDir);
             }
-
         }
         //Row 3 pieces go to gray face as temporary holding (1 CCW turn) (ends up on row4)
         else if (isOnRow3) {
@@ -1793,6 +1790,9 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         Corner* CornerItselfA = shadowDom->faces[cornerFaceNeighbors.a - 1].corner[cornerFaceLocA];
         bool isOnRow3 = (sourceCornerIndex >= 10 && sourceCornerIndex < 15);
         bool isOnRow4 = (sourceCornerIndex >= 15 && sourceCornerIndex < 20);
+        bool ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
+        bool ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
+        bool ontopC = (cornerFaceNeighbors.c > 1 && cornerFaceNeighbors.c < 7);
         //Solved case
         if (sourceCornerIndex == i && CornerItselfA->data.flipStatus == 0) {
             piecesSolved[i - 10] = true;
@@ -1800,12 +1800,35 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         }
         //Get the Pieces to drop-in ready on Row 4 (gray layer) solved into Row3
         //Any Row 3 pieces that are mis-solved use same algo to go up to gray layer (ends up on row4)
-        else if (isOnRow4 || isOnRow3) {
-            if (isOnRow4) {
-                //Orient Gray Top layer (index goes in reverse)
-                int offby = sourceCornerIndex + (i - 10) - 20;
-                shadowMultiRotate(GRAY, offby, shadowDom);
+        else if (isOnRow3) {
+            int defaultDir = Face::CCW;
+            int offby = sourceCornerIndex - i;
+            megaminxColor maxABC;
+            int x, y;
+            if (ontopA) {
+                x = cornerFaceNeighbors.b;
+                y = cornerFaceNeighbors.c;
             }
+            else if (ontopB) {
+                x = cornerFaceNeighbors.a;
+                y = cornerFaceNeighbors.c;
+            }
+            else if (ontopC) {
+                x = cornerFaceNeighbors.a;
+                y = cornerFaceNeighbors.b;
+            }
+            int result = min(x, y);
+            if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
+                result = BEIGE;
+            colordirs loc = g_faceNeighbors[result];
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r u R' U'", loc);  //right
+            for (auto op : bulk)        //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+        }
+        else if (isOnRow4) {
+            //Orient Gray Top layer (index goes in reverse)
+            int offby = sourceCornerIndex + (i - 10) - 20;
+            shadowMultiRotate(GRAY, offby, shadowDom);
             //quick shortcut to know which face we're working on.
             int front = BEIGE - (i - 10);
             colordirs loc = g_faceNeighbors[front];
@@ -1844,7 +1867,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
     int loopcount = 0;
     int unknownloop = 0;
     do {
-        if (loopcount > 0)
+        if (loopcount > 101)
             break;
         bool piecesSolved[10] = { false, false, false, false, false, false, false, false, false, false };
         shadowDom->DetectSolved6thLayerEdges(piecesSolved);
@@ -1874,14 +1897,10 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
         //Determine which color half-edge is on each face
         int edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
         int edgeHalfColorB = EdgeItselfA->data._colorNum[whichcolorEdgeB];
-        //Line up things that are solved on the top face.
-        bool isOnRow1 = (sourceEdgeIndex >= 0 && sourceEdgeIndex < 5);
-        bool isOnRow2 = (sourceEdgeIndex >= 5 && sourceEdgeIndex < 10);
-        bool isOnRow3 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 15);
-        bool isOnRow34 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 20); //Middle W
-        bool isOnRow4 = (sourceEdgeIndex >= 15 && sourceEdgeIndex < 20);
+        //Only care about row6 and 7
         bool isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
         bool isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
+        //on Row7, One of these will be gray, so the other letter is the colored face target.
         bool graymatchA = edgeFaceNeighbors.a == GRAY;
         bool graymatchB = edgeFaceNeighbors.b == GRAY;
         //Solved case
@@ -1893,33 +1912,38 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
         else if ((isOnRow6 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
             (isOnRow7)) {
             if (isOnRow7) {
-                if (dirToWhiteA == 0) {
-                    int offby = graymatchA ? (edgeFaceNeighbors.b - edgeHalfColorB) : (edgeFaceNeighbors.a - edgeHalfColorA);
-                    //Align GRAY top to the exact position for pre-drop-in.
-                    bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
-                    //Align the GRAY layer 7 to be directly underneath the intended solve area
-                    if (moved)
-                        continue;
-                }
+                assert(dirToWhiteA == 0);
+                int offby = graymatchA ? (edgeFaceNeighbors.b - edgeHalfColorB) : (edgeFaceNeighbors.a - edgeHalfColorA);
+                //Align GRAY top to the exact position for pre-drop-in.
+                bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
+                //Align the GRAY layer 7 to be directly underneath the intended solve area
+                if (moved)
+                    continue;
             }
             //obtain the non-gray face neighbor we need to be rotating
-            colordirs loc;
+            int result = 0;
+            int x = edgeFaceNeighbors.a;
+            int y = edgeFaceNeighbors.b;
             if (isOnRow7)
-                loc = (graymatchA) ? g_faceNeighbors[edgeFaceNeighbors.b] : g_faceNeighbors[edgeFaceNeighbors.a];
-            else if (isOnRow6)
-                loc = g_faceNeighbors[min(edgeFaceNeighbors.b, edgeFaceNeighbors.a)];
+                result = (graymatchA) ? y : x;
+            else if (isOnRow6) {
+                result = min(x, y);
+                if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
+                    result = BEIGE;
+            }
+            colordirs loc = g_faceNeighbors[result];
             //Check left/right faces for which direction to drop-in
             bool isLeft = false, isRight = false;
-            if (loc.left == edgeHalfColorA)
-                isLeft = true;
-            else if (loc.right == edgeHalfColorA)
-                isRight = true;
+            if (isOnRow7) {
+                isLeft = (loc.left == edgeHalfColorA);
+                isRight = (loc.right == edgeHalfColorA);
+            }
             //works to insert pieces from row7 to 6 and also pops wrong pieces out from 6 to 7
             std::vector<numdir> bulk;
-            if ((isOnRow7 && isLeft) || isOnRow6) {
+            if (isLeft) {
                 bulk = shadowDom->ParseAlgorithmString("U' L' u l u f U' F'", loc); //left
             }
-            else if ((isOnRow7 && isRight)) {
+            else if (isRight || isOnRow6) {
                 bulk = shadowDom->ParseAlgorithmString("u r U' R' U' F' u f", loc); //right
             }
             for (auto op : bulk)        //+1 the 0-11 faces
