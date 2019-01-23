@@ -368,6 +368,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F6:
         menuHandler(307); break; //rotate_5th_layer-corners
     case GLUT_KEY_F7:
+        menuHandler(308); break; //rotate_6th_layer-edges
     case GLUT_KEY_F8:
     case GLUT_KEY_F9:
     case GLUT_KEY_F10:
@@ -488,6 +489,7 @@ void createMenu()
     glutAddMenuEntry("3rd Layer Corners", 305);
     glutAddMenuEntry("4th Layer Edges", 306);
     glutAddMenuEntry("5th Layer Corners", 307);
+    glutAddMenuEntry("6th Layer Edges", 308);
 
     //SubLevel5 Menu - Reset Faces
     submenu5_id = glutCreateMenu(menuHandler);
@@ -689,6 +691,9 @@ void menuHandler(int num)
         break;
     case 307: //layer 5 corners rotate+autosolve F6
         megaminx->rotateSolve5thLayerCorners(shadowDom);
+        break;
+    case 308: //layer 6 edges rotate+autosolve F7
+        megaminx->rotateSolveLayer6Edges(shadowDom);
         break;
     default:
         break;

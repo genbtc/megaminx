@@ -964,6 +964,16 @@ void Megaminx::DetectSolved5thLayerCorners(bool piecesSolved[5])
             piecesSolved[p - 10] = true;
     }
 }
+void Megaminx::DetectSolved6thLayerEdges(bool piecesSolved[5])
+{
+    //Find out if any applicable 5-9 edge pieces are exactly in their slots.
+    for (int p = 20; p < 25; ++p) {
+        int pIndex = findEdge(p);
+        //make sure its 5-9 and make sure the colors arent flipped
+        if (pIndex >= 20 && pIndex <= 24 && p == pIndex && edges[pIndex].data.flipStatus == 0)
+            piecesSolved[p - 20] = true;
+    }
+}
 //Layer 1 part 1
 void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
 {   //FromCubeToShadowCube
@@ -1787,7 +1797,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         if (sourceCornerIndex == i && CornerItselfA->data.flipStatus == 0) {
             piecesSolved[i - 10] = true;
             continue;
-        }    
+        }
         //Get the Pieces to drop-in ready on Row 4 (gray layer) solved into Row3
         //Any Row 3 pieces that are mis-solved use same algo to go up to gray layer (ends up on row4)
         else if (isOnRow4 || isOnRow3) {
@@ -1808,6 +1818,120 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         loopcount++;
     } while (!allSolved);
     //After both loops, load the shadow Queue into the real queue    
+    if (shadowDom->shadowRotateQueue.size() > 0) {
+        if (rotateQueue.size() == 0)
+            rotateQueue.swap(shadowDom->shadowRotateQueue);
+        else {
+            size_t numsize = shadowDom->shadowRotateQueue.size();
+            for (int q = 0; q < numsize; ++q) {
+                rotateQueue.push(shadowDom->shadowRotateQueue.front());
+                shadowDom->shadowRotateQueue.pop();
+            }
+        }
+    }
+}
+
+//Layer 6 - Edges
+//Cube must have gray side on top, layer 1+2+3+4+5 Solved, and rest of puzzle Unsolved
+void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
+{   //FromCubeToShadowCube
+    if (!shadowDom)
+        shadowDom = new Megaminx();
+    shadowDom->LoadNewEdgesFromOtherCube(this);
+    shadowDom->LoadNewCornersFromOtherCube(this);
+    bool allSolved = false;
+    //Loop management:
+    int loopcount = 0;
+    int unknownloop = 0;
+    do {
+        if (loopcount > 0)
+            break;
+        bool piecesSolved[10] = { false, false, false, false, false, false, false, false, false, false };
+        shadowDom->DetectSolved6thLayerEdges(piecesSolved);
+        int i = 20; //the piece
+        while (i < 25 && piecesSolved[i - 20] == true)
+            i++;
+        if (i >= 25) {
+            allSolved = true;
+            break;
+        }
+        int sourceEdgeIndex = shadowDom->findEdge(i);
+        //Determine which two faces the edge belongs to:
+        colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
+        //Find everything and get it moved over to its drop-in point:
+        //Determine where on those faces the edges are positioned, 0-4
+        int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].find5EdgeLoc(i);
+        assert(edgeFaceLocA != -1); //(-1 for fail, not found)
+        int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].find5EdgeLoc(i);
+        assert(edgeFaceLocB != -1); //should not happen
+        //Determine which direction those faces need to rotate to land the Edge on the white
+        int dirToWhiteA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
+        int dirToWhiteB = DirToWhiteFace[edgeFaceNeighbors.b - 1][edgeFaceLocB];
+        Edge* EdgeItselfA = shadowDom->faces[edgeFaceNeighbors.a - 1].edge[edgeFaceLocA];
+        //Use reference table to check edge internal color data struct-order.
+        int whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a - 1][edgeFaceLocA];
+        int whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b - 1][edgeFaceLocB];
+        //Determine which color half-edge is on each face
+        int edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
+        int edgeHalfColorB = EdgeItselfA->data._colorNum[whichcolorEdgeB];
+        //Line up things that are solved on the top face.
+        bool isOnRow1 = (sourceEdgeIndex >= 0 && sourceEdgeIndex < 5);
+        bool isOnRow2 = (sourceEdgeIndex >= 5 && sourceEdgeIndex < 10);
+        bool isOnRow3 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 15);
+        bool isOnRow34 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 20); //Middle W
+        bool isOnRow4 = (sourceEdgeIndex >= 15 && sourceEdgeIndex < 20);
+        bool isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
+        bool isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
+        bool graymatchA = edgeFaceNeighbors.a == GRAY;
+        bool graymatchB = edgeFaceNeighbors.b == GRAY;
+        //Solved case
+        if (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus == 0) {
+            piecesSolved[i - 20] = true;
+            continue;
+        }
+        //Get ready for algorithms
+        else if ((isOnRow6 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
+            (isOnRow7)) {
+            if (isOnRow7) {
+                if (dirToWhiteA == 0) {
+                    int offby = graymatchA ? (edgeFaceNeighbors.b - edgeHalfColorB) : (edgeFaceNeighbors.a - edgeHalfColorA);
+                    //Align GRAY top to the exact position for pre-drop-in.
+                    bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
+                    //Align the GRAY layer 7 to be directly underneath the intended solve area
+                    if (moved)
+                        continue;
+                }
+            }
+            //obtain the non-gray face neighbor we need to be rotating
+            colordirs loc;
+            if (isOnRow7)
+                loc = (graymatchA) ? g_faceNeighbors[edgeFaceNeighbors.b] : g_faceNeighbors[edgeFaceNeighbors.a];
+            else if (isOnRow6)
+                loc = g_faceNeighbors[min(edgeFaceNeighbors.b, edgeFaceNeighbors.a)];
+            //Check left/right faces for which direction to drop-in
+            bool isLeft = false, isRight = false;
+            if (loc.left == edgeHalfColorA)
+                isLeft = true;
+            else if (loc.right == edgeHalfColorA)
+                isRight = true;
+            //works to insert pieces from row7 to 6 and also pops wrong pieces out from 6 to 7
+            std::vector<numdir> bulk;
+            if ((isOnRow7 && isLeft) || isOnRow6) {
+                bulk = shadowDom->ParseAlgorithmString("U' L' u l u f U' F'", loc); //left
+            }
+            else if ((isOnRow7 && isRight)) {
+                bulk = shadowDom->ParseAlgorithmString("u r U' R' U' F' u f", loc); //right
+            }
+            for (auto op : bulk)        //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+        }
+        else //unknown error occured, canary in the coalmine that somethings wrong.
+            unknownloop++;
+        assert(unknownloop == 0);
+        loopcount++;
+    } while (!allSolved);
+
+    //After all loops, load the shadow Queue into the real queue    
     if (shadowDom->shadowRotateQueue.size() > 0) {
         if (rotateQueue.size() == 0)
             rotateQueue.swap(shadowDom->shadowRotateQueue);
