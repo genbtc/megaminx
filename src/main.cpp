@@ -123,7 +123,7 @@ void RenderScene()
         if (shadowQueueLength > 0) {
             static char rotquestr[21];
             snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
-            utDrawText2D((WIDTH / 2) - 44, HEIGHT - 12.f, rotquestr);
+            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
         }
     }
     utResetPerspectiveProjection();
