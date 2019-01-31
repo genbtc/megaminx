@@ -27,17 +27,26 @@ public:
     Center *center;
     Corner *corner[5];
     Edge   *edge[5];
+    template <typename T>
+    Piece* getPiece(int i) {
+        if (std::is_same<T, Edge>::value)
+            return edge[i];
+        else if (std::is_same<T, Corner>::value)
+            return corner[i];
+        else
+            return center;
+    };
 
     std::vector<int> defaultCorners;
     std::vector<int> defaultEdges;
 
-    std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;
-
-    void attachEdgePieces(Edge& n);
+    void attachCenter(Center* a, double* centerVertexBase);
     void attachCornerPieces(Corner& n);
+    void attachEdgePieces(Edge& n);
+
     int find5EdgeLoc(int pieceNum);
     int find5CornerLoc(int pieceNum);
-    void attachCenter(Center* a, double* centerVertexBase);
+    std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;    
 
     int getNum() const { return thisNum; }
     void initAxis(int n);    
@@ -106,7 +115,7 @@ constexpr static int  CCW6E[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };
 constexpr static int  CCW7E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
 constexpr static int  CCW8E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
 constexpr static int  CCW9E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
-constexpr static int CCW10E[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };//54213, 54231, 14235,  24135, 42135
+constexpr static int CCW10E[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };
 constexpr static int CCW11E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
 //Flip direction lists for PlaceParts: //Clockwise Edges
 //CW Edges

@@ -30,8 +30,12 @@ public:
     void undoQuad();
     void scramble();
     void setCurrentFaceActive(int i);
-    void flipCornerColor(int i, int x);
-    void flipEdgeColor(int i, int x);
+   template <typename T>
+    void flipPieceColor(int face, int num);
+    void flipCornerColor(int face, int num);
+    void flipEdgeColor(int face, int num);
+   template <typename T>
+    std::vector<int> findPieces(int i);
     std::vector<int> findCorners(int i);
     std::vector<int> findEdges(int i);
     void rotate(int, int);
@@ -42,12 +46,18 @@ public:
     void rotateBulkAlgoString(std::string algoString, const colordirs & loc);
     void resetQueue();
     void resetFace(int n);
+   template <typename T>
+    int resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve = true);
     int resetFacesCorners(int color_n);
     int resetFacesEdges(int color_n);
     int resetFacesCorners(int color_n, const std::vector<int> &loadNewCorners, bool solve=true);
     int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve=true);
+   template <typename T>
+    std::vector<int> getAllPiecesColorFlipStatus();
     std::vector<int> getAllCornerPiecesColorFlipStatus();
     std::vector<int> getAllEdgePiecesColorFlipStatus();
+   template <typename T>
+    int LoadNewPiecesFromVector(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
     void LoadNewCornersFromOtherCube(Megaminx* source);
@@ -69,23 +79,18 @@ public:
     void lowYmiddleW();
     void highYmiddleW();
     void DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5]);
-    void DetectSolvedWhiteCorners(bool piecesSolved[5]);
-    void DetectSolved2ndLayerEdges(bool piecesSolved[5]);
-    void DetectSolved3rdLayerCorners(bool piecesSolved[5]);
-    void DetectSolved4thLayerEdges(bool piecesSolved[5]);
-    void DetectSolved5thLayerCorners(bool piecesSolved[5]);
-    void DetectSolved6thLayerEdges(bool piecesSolved[5]);
+    void DetectSolvedCorners(int startI, int endI, bool piecesSolved[5]);
+    void DetectSolvedEdges(int startI, int endI, bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
+    void updateRotateQueueWithShadow(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
     void rotateSolveLayer2Edges(Megaminx* shadowDom);
     void rotateSolve3rdLayerCorners(Megaminx* shadowDom);
     void rotateSolveLayer4Edges(Megaminx* shadowDom);
-    void rotateSolve5thLayerCorners(Megaminx * shadowDom);
-    void rotateSolveLayer6Edges(Megaminx * shadowDom);
+    void rotateSolve5thLayerCorners(Megaminx* shadowDom);
+    void rotateSolveLayer6Edges(Megaminx* shadowDom);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
-    int getRotateQueueNum() {
-        return rotateQueue.size();
-    }
+    int getRotateQueueNum() { return (int)rotateQueue.size(); }
 
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     static const int numFaces = 12;
@@ -105,12 +110,9 @@ private:
     void _rotate_internal(numdir i);
     void shadowRotate(int num, int dir);
     std::queue<numdir> shadowRotateQueue;
+    Piece* rootCornerOrEdge();
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
-static int seenEdges[30] = { 0 };
-static int seenCorners[20] = { 0 };
-static int EdgeSwapCount = 0;
-static int CornerSwapCount = 0;
 void serializeVectorInt(std::vector<int> list1, std::string filename);
 #endif

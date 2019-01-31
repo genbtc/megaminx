@@ -4,7 +4,6 @@ void Center::createAxis(int n, double* target)
 {
     piecepack pack;
     switch (n + 1) {
-    //no need for case1.
     case 2:
     case 3:
     case 4:

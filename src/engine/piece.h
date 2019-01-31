@@ -24,9 +24,8 @@ static const long double INS_CIRCLE_RAD = DODESIZE / sqrt((5 - sqrt(5.f)) / 2); 
 static const long double TWOFIFTHS = (double)2/5;
 static const long double EDGEFIFTH = DODESIZE / sin(pim(2));            //105.14622122913930
 static const long double COSPIM35 = INS_CIRCLE_RAD * cos(pim(3.5));     //-50.000004917867173
-static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
 static const long double COSPIM15 = INS_CIRCLE_RAD * cos(pim(1.5));     //49.999998901510480
-static const long double SINPIM15 = INS_CIRCLE_RAD * sin(pim(1.5));     //68.819098307200690
+static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
 
 struct piecepack {
     char axis1, axis2;
@@ -169,36 +168,7 @@ public:
         rotateVertex(target, pack.axis2, PI);
         axis1multi(target, pack);
     }
-    static void OpSwitcher(double* target, piecepack &pack, int opnum) {
-        if (opnum < 1) return;
-        switch (opnum) {
-        case 1:
-            axis1multi(target, pack);
-        case 2:
-            CenterSide1(target, pack);
-        case 3:
-            CenterCenter(target, pack);
-        case 4:
-            CenterSide2(target, pack);
-        case 5:
-            CornerGrp3(target, pack);
-        case 6:
-            CornerGrp4(target, pack);
-        case 7:
-            EdgeGrp2(target, pack);
-        case 8:
-            EdgeGrp3(target, pack);
-        case 9:
-            EdgeGrp4(target, pack);
-        case 10:
-            EdgeGrp5(target, pack);
-        case 11:
-            EdgeGrp6(target, pack);
-        default:
-            break;
-        }
-    }
-    //Deals with colors. Flip/rotate/switches colors for current piece.
+    //Changes colors. Flip/rotate/switches colors for current piece.
     void flip() {
         const bool isCorner = (numSides == 3);
         double buf[3];
@@ -255,23 +225,23 @@ public:
         _vertex[2][1] = SINPIM35;
 
         _vertex[3][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //corner inside edge b
-        _vertex[3][1] = SINPIM15;
+        _vertex[3][1] = SINPIM35;
         rotateVertex(_vertex[3], 'z', pim(2));
 
         _vertex[4][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 6
-        _vertex[4][1] = SINPIM15 * TWOFIFTHS;
+        _vertex[4][1] = SINPIM35 * TWOFIFTHS;
         rotateVertex(_vertex[4], 'z', pim(-3));
         rotateVertex(_vertex[4], 'x', PI - SIDE_ANGLE);
         rotateVertex(_vertex[4], 'z', pim(2));
 
         _vertex[5][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS; //brother = 3 or 1
-        _vertex[5][1] = SINPIM15;
+        _vertex[5][1] = SINPIM35;
         rotateVertex(_vertex[5], 'z', pim(-3));
         rotateVertex(_vertex[5], 'x', PI - SIDE_ANGLE);
         rotateVertex(_vertex[5], 'z', pim(2));
 
         _vertex[6][0] = COSPIM15 * TWOFIFTHS; //brother = 0 or 4
-        _vertex[6][1] = SINPIM15 * TWOFIFTHS;
+        _vertex[6][1] = SINPIM35 * TWOFIFTHS;
         rotateVertex(_vertex[6], 'z', pim(-5));
         rotateVertex(_vertex[6], 'x', PI - SIDE_ANGLE);
         return &_vertex[0][0];
@@ -287,10 +257,10 @@ public:
         _vertex[0][1] = SINPIM35 * TWOFIFTHS;
 
         _vertex[1][0] = COSPIM15 * TWOFIFTHS;
-        _vertex[1][1] = SINPIM15 * TWOFIFTHS;
+        _vertex[1][1] = SINPIM35 * TWOFIFTHS;
 
         _vertex[2][0] = COSPIM15 - EDGEFIFTH * TWOFIFTHS;
-        _vertex[2][1] = SINPIM15;
+        _vertex[2][1] = SINPIM35;
 
         _vertex[3][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS;
         _vertex[3][1] = SINPIM35;
@@ -325,8 +295,8 @@ public:
             //_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5));
             //_vertex[i][2] = -INS_SPHERE_RAD;
             //This puts it on the back face
-            _vertex[i][0] = -COSPIM15 + EDGEFIFTH * TWOFIFTHS;
-            _vertex[i][1] = -SINPIM15;
+            _vertex[i][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS;
+            _vertex[i][1] = -SINPIM35;
             _vertex[i][2] = -INS_SPHERE_RAD;
             rotateVertex(_vertex[i], 'z', pim(2));
             rotateVertex(_vertex[i], 'x', PI - SIDE_ANGLE);

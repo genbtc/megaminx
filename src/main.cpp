@@ -395,8 +395,6 @@ void createMenu()
     glutAddMenuEntry("Edit... Undo By Two", 94);
     glutAddMenuEntry("Edit... Undo Quad", 95);
     glutAddMenuEntry("Scramble [Del]", 100);
-    //Sublevel 1 meun - Admin Mode
-    //submenu1_id = glutCreateMenu(menuHandler);    
     glutAddMenuEntry("Save Cube State", 98);
     glutAddMenuEntry("Restore Cube State", 99);
     glutAddMenuEntry("Exit!", 102);
@@ -405,11 +403,9 @@ void createMenu()
     submenu2_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Rotate CCW <<", 19);
     glutAddMenuEntry("Rotate  CW >>", 20);
-    //glutAddMenuEntry("-----------------------", 0);
     glutAddMenuEntry("Place/Solve Entire Face", 21);
     glutAddMenuEntry("Place/Solve Five Edges", 22);
     glutAddMenuEntry("Place/Solve Five Corners", 23);
-    //glutAddMenuEntry("-----------------------", 0);
     glutAddMenuEntry("Flip Colors Edge [1+Shift]", 24);
     glutAddMenuEntry("Flip Colors Edge [2+Shift]", 25);
     glutAddMenuEntry("Flip Colors Edge [3+Shift]", 26);
@@ -513,8 +509,6 @@ void createMenu()
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning", 1);
     glutAddSubMenu("Main Menu ---->", submenu0_id);
-    //glutAddMenuEntry("---------------", 0);
-    //glutAddSubMenu("Admin Mode --->", submenu1_id);
     glutAddSubMenu("Algorithms --->", submenu4_id);
     glutAddSubMenu("Auto Solve --->", submenu3_id);
     glutAddSubMenu("Solve Face --->", submenu5_id);
