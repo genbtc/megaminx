@@ -20,7 +20,7 @@ private:
 
 public:
     Camera();
-    ~Camera() { }
+    ~Camera() = default;
 
     void ChangeViewportSize(int w, int h);
     void PressSpecialKey(int key, int x, int y);

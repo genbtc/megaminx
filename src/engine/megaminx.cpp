@@ -3,8 +3,10 @@
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
  * genBTC January 2019 - human rotate auto solve layers 1-6
+   genBTC October 2019 - fixup code. making gray layer 7
  */
 #include "megaminx.h"
+#include <algorithm>
 
 //simple constructor. 
 Megaminx::Megaminx()
@@ -133,10 +135,12 @@ void Megaminx::shadowRotate(int num, int dir)
 //Adds entire vector of numdirs to the Rotate queue one by one.
 void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
 {
+    undoStack.push({ -999,-999 });
     for (auto one : bulk) {
         rotateQueue.push(one);
         undoStack.push(one);
     }
+    undoStack.push({ 999, 999 });
 }
 //Takes an Algo String and parses it, vectorizes it, then rotates it. (based off current-face)
 void Megaminx::rotateBulkAlgoString(std::string algoString)
@@ -171,6 +175,24 @@ void Megaminx::undoQuad()
     if (undoStack.size() < 4) return;
     undoDouble(); undoDouble();
 }
+void Megaminx::undoBulk()
+{
+    if (undoStack.empty()) return;
+    auto end = undoStack.top();
+    if (end.num == 999 && end.dir == 999) {
+        undoStack.pop();
+        while (!undoStack.empty()) {
+            auto begin = undoStack.top();
+            if (begin.num == -999 && begin.dir == -999) {
+                undoStack.pop();
+                break;
+            }
+            begin.dir *= -1;
+            rotateQueue.push(begin);
+            undoStack.pop();
+        }
+    }
+}
 
 //Clear the Queue and stop any repeated rotating actions.
 void Megaminx::resetQueue()
@@ -185,6 +207,7 @@ void Megaminx::resetQueue()
 //FIXED: apparently scrambles are even more random if you rotate by 2/5ths instead of 1/5th.
 void Megaminx::scramble()
 {
+    resetQueue();
     //Do 137 iterations of scrambling (like a human)
     for (int q = 0; q < 137; q++) {
         int t = 0;
@@ -200,7 +223,6 @@ void Megaminx::scramble()
                 t = 0;  //alternate or not
         }
     }
-    resetQueue();
 }
 
 /**
@@ -213,7 +235,7 @@ void Megaminx::flipPieceColor(int face, int num)
 {
     assert(face > 0 && face <= numFaces);
     assert(num > 0 && num <= 5);
-    Piece* piece = faces[face].getPiece<T>(num);
+    Piece* piece = faces[face].getFacePiece<T>(num);
     piece->flip();
 }
 void Megaminx::flipCornerColor(int face, int num) { return flipPieceColor<Corner>(face, num); }
@@ -261,7 +283,7 @@ std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
     std::vector<int> allPiecesPos;
     for (int face = 0; face < 12; ++face)
         for (int r = 0; r < 5; ++r) {
-            Piece* piece = faces[face].getPiece<T>(r);
+            Piece* piece = faces[face].getFacePiece<T>(r);
             allPiecesPos.push_back(piece->data.flipStatus);
         }
     return allPiecesPos;
@@ -283,7 +305,7 @@ int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const 
         int f = face * 5;
         //Pieces can be in the right place but maybe in wrong orientation, so flip the colors:
         for (int i = 0; i < 5; ++i) {
-            Piece* piece = faces[face].getPiece<T>(i);
+            Piece* piece = faces[face].getFacePiece<T>(i);
             while (piece->data.flipStatus != readPieceColors[f + i])
                 piece->flip();
         }
@@ -317,6 +339,7 @@ int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPiece
         return resetFacesEdges(color_n, defaultPieces, solve);
     else if (std::is_same<T, Corner>::value)
         return resetFacesCorners(color_n, defaultPieces, solve);
+    return 0;
 }
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.
@@ -357,7 +380,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
         while (activeFace.edge[j]->data.flipStatus != 0)
             activeFace.edge[j]->flip();
         //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
-        auto &pIndex = activeFace.edge[j]->data.pieceIndex;
+        auto &pIndex = activeFace.edge[j]->data.pieceNum;
         if (pIndex != defaultEdges[j]) {
             edges[pIndex].swapdata(edges[defaultEdges[j]].data);
             j = -1;
@@ -404,7 +427,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
         while (activeFace.corner[j]->data.flipStatus != 0)
             activeFace.corner[j]->flip();
         //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
-        auto &pIndex = activeFace.corner[j]->data.pieceIndex;
+        auto &pIndex = activeFace.corner[j]->data.pieceNum;
         if (pIndex != defaultCorners[j]) {
             corners[pIndex].swapdata(corners[defaultCorners[j]].data);
             j = -1;
@@ -420,7 +443,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
  * \param y camera_angleY
  * \return face # color-int (1-12) as result.
  */
-extern int getCurrentFaceFromAngles(int x, int y)
+int getCurrentFaceFromAngles(int x, int y)
 {
     //Vars:
     constexpr int r = 72;       //face angles
@@ -480,189 +503,206 @@ void Megaminx::rotateAlgo(int current_face, int i)
     assert(current_face > 0 && current_face <= numFaces);
     const colordirs &loc = g_faceNeighbors[current_face];
     switch (i) {
+    case 9991:
     case 1:
-    // r u R' U' , 51 - most common one, suitable for white corners or any.
+        // most common one, suitable for white corners or any.
         rotateBulkAlgoString("r u R' U'");
-        break;    
+        break;
+    case 9992:
     case 2:
-    // l u L' U' , 52 - brother to #1
+        // opposite pair to first one
         rotateBulkAlgoString("l u L' U'");
         break;
+    case 9993:
     case 3:
-    // U' L' u l , 53 //(opposite is case#2)
-        //https://youtu.be/PWTISbs0AAs?t=493 og video. //L#2-Edges, Insert to Left = This First, then next.
+        //simple L#2-Edges - (opposite is case#2)
+            //https://youtu.be/PWTISbs0AAs?t=493 og video., Insert to Left = This First, then next.
         rotateBulkAlgoString("U' L' u l");
         break;
+    case 9994:
     case 100:
-    // u r U' R' , 53 (opposite is case#1) re video: //L#2-Edges, Insert to Right = This first, then previous.
+        //simple L#2-Edges - (opposite is case#1) 
+            //same as ^ video: Insert to Right = This first, then previous.
         rotateBulkAlgoString("u r U' R'");
         break;
-    case 4:
-    // r u R' u r 2U' R' , 54
-        //Last Layer Step 2:
-        // Rotating the Star/Edge pieces into their correct position:
-        //NOTE: Affects corners too. //only 1 corner and 2 edges remain untouched: Corner 1 and Edge 1/5
-        //The 6 and 8 o'clock pieces will remain unaffected and in their same position.
-        //The remaining 3 will rotate in an Anti Clockwise fashion. Repeat until all correctly positioned.
-        //#2. Two Edges Solved: (Solved edge in the front & lower left) : // r u,  R' u, r U'2, R'
-        rotateBulkAlgoString("r u R' u r 2U' R'");
-        break;
-    case 41:
-    // r u2, R' u, r u2, R'
-        //Last Layer Step 2: continued
-        //#1. Two Edges Solved : (Solved edge in the front & upper right) :
-        //#3. One Edge is Permuted : (Permuted edge in the front) this algo + then go back do the previous algo)
-        rotateBulkAlgoString("r u2, R' u, r u2, R'");
-        break;
-    case 5:
-    // u l U' R' u L' U' r , 55 orient bottom Corners // 1,2,3
-        //Only affects corners. //repeat 3x = undo 
-        //the 3, 5 and 7 o clock corners will rotate with each other  //moves Corners from #1to2,2to3,3to1
-        //left-side (8:00 to 2:00) and diag-left-back 2corner+3edges will stay the SAME.
-        rotateBulkAlgoString("u l U' R' u L' U' r");
-        break;
-    case 6:
-    // u r 2U' L' 2u R' 2U' l u , 56
-        //Only affects corners. //repeat 3x = undo 
-        //Last Layer Step 3:
-        // Get the corner into their correct positions. // 3,5,4
-        // The front face corners (1&2) at the 5 and 7 o'clock will stay same,
-        // and the three surrounding front edges(1,2,5) stay the SAME.
-        // The 3 affected corners will cycle rotate around counter-clockwise.
-        rotateBulkAlgoString("u r 2U' L' 2u R' 2U' l u");
-        break;
+    case 9995:
     case 7:
-    // R' D' R D , 57
-        //Last Layer Step 4: Orientating the Corners.
-        //You repeat with all corners until they are all orientated correctly.
-        //repeat by executions of 4x. It will dis-align the R and D pieces temporarily.
-        //NOTE: This may result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved. Not sure what then.
-        //This is also done in the White Corners stage by repetitions of 3
+        //Last Layer Step 4: Orientating (color-flipping) the Corners. (gray on top)
+            //You repeat this over and over with all corners until they are all orientated correctly.
+            //identity function repeats every 6x. Each gray color will take 2x cycles to colorflip. It will dis-align the R and D faces temporarily.
+            //NOTE: This may result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved. Not sure what then.
+            //Note2: this step is also done in the White Corners stage by repetitions of 3
         rotateBulkAlgoString("R' DR' R DR");
         break;
-    case 207: //four times
+    case 9996:
+    case 208: //repeat two times
+        for (int i = 0; i < 2; ++i)
+            rotateBulkAlgoString("R' DR' R DR");
+        break;
+    case 9997:
+    case 207: //repeat four times
         for (int i = 0; i < 4; ++i)
             rotateBulkAlgoString("R' DR' R DR");
         break;
+    case 99910:
+    case 5:
+        //7LL: Step 3-Orient bottom Corners #1,2,3 // Put the corners into their correct positions. (gray on top)
+            //ONLY affects Corners. //repeat 3x = undo
+            //the 3, 5 and 7 o clock corners will rotate with each other  //moves Corners from #1to2,2to3,3to1
+            //left+rear-side (9:00 to 12:00) and back-left's 2corner+3edges will stay the SAME.
+        rotateBulkAlgoString("u l U' R' u L' U' r");
+        break;
+    case 99911:
+    case 6:
+        //7LL: Step 3-Orient rear Corners #3,5,4 // Put the corners into their correct positions. (gray on top)
+            //ONLY affects Corners. //repeat 3x = undo 
+            // The front face corners (1&2) at the 5 and 7 o'clock will stay same,
+            // The 3 affected corners will cycle rotate around counter-clockwise.
+        rotateBulkAlgoString("u r 2U' L' 2u R' 2U' l u");
+        break;
+    case 99912:
+    case 10:
+        //Last Layer: Step 2/3 Corner+Edge Permutation 3: (gray on top)  // (5 to 1, 1 to 2, 2 to 5)
+            // Front face is untouched. (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
+            //NOTE: CORNERS ARE AFFECTED by this too.  // 3 repeats = undo
+        rotateBulkAlgoString("r u R' F', r  u  R' U', R' f r2 U' R'");
+        break;
+    case 99913:
+    case 12:
+        //Last Layer: Step 2/3 - Corner+Edge Permutation 5: (gray on top)
+            //NOTE: CORNERS ARE AFFECTED by this edge algo,   //1 Repeat = Undo
+            // l r u2,  L' u R',  l U' r u2,  L' u2 R' (5 and 3 swap, 1 and 2 swap) //1 and 5, 4 and 2
+        rotateBulkAlgoString("l r u2, L' u R', l U' r u2, L' u2 R'");
+        break;
+    case 99914:
+    case 4:
+        //7Last Layer: Step 2/3 (gray on top): main
+            // Rotates the far 3 Star/Edge pieces into their correct position + (Affects corners too)
+            //The nearest 1 corner and 2 edges stay the same (Corner 1 and Edge 1/5 remain untouched)
+            // (The 6 and 8 o'clock pieces will remain unaffected and in their same position)
+            //The remaining 3 will rotate cyclicly in an Anti Clockwise fashion. (Does not invert color)
+            //#2. Two Edges Solved: (Solved edge in the front & lower left) 
+        rotateBulkAlgoString("r u R' u r 2U' R'");
+        break;
+    case 99915:
+    case 209:
+        //7Last Layer: Step 2/3: (gray on top), continued
+            //#1. Two Edges Solved : (Solved edge in the front & upper right)
+            //#3. One Edge is Permuted : (Permuted edge in the front) this algo + then go back do the previous algo)
+        rotateBulkAlgoString("r u2, R' u, r u2, R'");
+        break;
+    case 99916:
     case 8:
-    // r2 U2' R2' U' r2 U2' R2' (5 to 2, 2 to 4, 4 to 5) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
-        //Edge Permutation 1:
-        //6 o'clock and 1 o'clock STAY the same. Right Star Arrow -> rotate others CCW
-        //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
-        //rotateBulkAlgoString("r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2', r2 U2' R2' U' r2 U2' R2'");
+        //Last Layer: Step 2 - Edge Permutation 1: (gray on top) // (5 to 2, 2 to 4, 4 to 5), 8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+            //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
+            //ONLY Affects Edges & needs 5 executions; Called on Front Face. Affects top gray face's 3 edges
+            // 13 moves * Repeated 5 times = Total 65 moves.
         for (int i = 0; i < 5; ++i)
             rotateBulkAlgoString("r2 U2' R2' U' r2 U2' R2'");
-        //13 moves * Repeated 5 times = Total 65 moves.
         break;
+    case 99917:
     case 9:
-    // r2 u2  R2' u  r2 u2  R2' (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
-        //Edge Permutation 2:
-        //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others CW
-        //Only affects Edges & needs 5 executions; Called on Front Face, but affects top face's 3 edges //Front=Light_Blue,Changes Top=Gray
-        //rotateBulkAlgoString("r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2', r2 u2 R2' u r2 u2 R2'");
+        //Last Layer: Step 2 - Edge Permutation 2: (gray on top) // (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
+            //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
+            //ONLY Affects Edges & needs 5 executions; Called on Front Face. Affects top gray face's 3 edges
         for (int i = 0; i < 5; ++i)
             rotateBulkAlgoString("r2 u2 R2' u r2 u2 R2'");
         //13 moves * Repeated 5 times = Total 65 moves.
         break;
-    case 10:
-    // r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5)
-        //Edge Permutation 3:
-        // Front face is untouched. (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
-        //NOTE: CORNERS ARE AFFECTED by this too.  // 3 repeats = undo
-        rotateBulkAlgoString("r u R' F', r  u  R' U', R' f r2 U' R'");
-        break;
+    case 99918:
     case 11:
-    // r u R' u,  R' U' r2 U',  R' u R' u,  r U2' (5 to 2, 2 to 1, 1 to 5)
-        //Edge Permutation 4a:
-        //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock
-        //Only affects Edges, only needs one run.
-        // Unaffecteds(2) = stay on front/left sides
-        //opposite of the previous one above , but corners aren't affected...
+        //Last Layer: Step 2 - Edge Permutation 4a: (gray on top) // (5 to 2, 2 to 1, 1 to 5)
+            //opposite of the previous one #3 above , but corners aren't affected...
+            //ONLY Affects Edges, only needs one run.
+            //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock        
+            // Unaffecteds(2) = stay on front/left sides        
         rotateBulkAlgoString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'");
         break;
+    case 99919:
     case 201:
-        //Edge Permutation 4b:
-        //Opposite of EdgePermutation4a. Reverses #4A only when 3 edges are positioned in the front row,
-        // Unaffecteds(2) = stay on both/back sides. Cycles edges in the opposite rotation.
-        //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
-        //Reverses 4a if cube is rotated 2 turns CW.
+        //Last Layer: Step 2 - Edge Permutation 4b: (gray on top)
+            //Opposite of EdgePermutation4a. Reverses #4A only when 3 edges are positioned in the front row,
+            // Unaffecteds(2) = stay on both/back sides. Cycles edges in the opposite rotation.
+            //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
+            //Reverses 4a if cube is rotated 2 turns CW.
         rotateBulkAlgoString("r' u' r u', r u r2' u, r u' r u', r' u2");
         break;
+    case 99920:
     case 202:
-        //Edge Permutation 4c:
-        // Unaffecteds(2) = right/back side untouched. edges cycle rotate = clockwise
-        //Reverses 4a if cube is rotated 2 turns CCW.
-        //Identical Twin to 4b but Rotates the front face instead of right
+        //Last Layer: Step 2 - Edge Permutation 4c: (gray on top)
+            // Unaffecteds(2) = right/back side untouched. edges cycle rotate = clockwise
+            //Reverses 4a if cube is rotated 2 turns CCW.
+            //Identical Twin to 4b but Rotates the front face instead of right
         rotateBulkAlgoString("f' u' f u', f u f2' u, f u' f u', f' u2");
         break;
-    case 12:
-        //Edge Permutation 5:
-        // l r u2,  L' u R',  l U' r u2,  L' u2 R' (5 and 3 swap, 1 and 2 swap) //1 and 5, 4 and 2
-        //NOTE: CORNERS ARE AFFECTED by this edge algo,   //1 Repeat = Undo
-        rotateBulkAlgoString("l r u2, L' u R', l U' r u2, L' u2 R'");
-        break;
-    case 18:
-        // #2nd-Layer Edges/Star(LEFT) =  7 o'clock to 9 o'clock:
-        //reverse engineered from #17 myself (Exact opposite)
-        rotateBulkAlgoString("dl l dl l' dl' f' dl' f");
-    case 17:
-        // #2nd-Layer Edges/Star(RIGHT) =  5 o'clock to 3 o'clock:
-        //Algo from QJ cube manual & (White face on top)
-        rotateBulkAlgoString("dr' r' dr' r dr f dr f'");
-        break;
-    case 14:
-        // F' R', F' F', r f    // 12 o'clock to 7 o'clock
-        // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA()
-        //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-        rotateBulkAlgoString("F' R', F' F', r f");
-        break;
-    case 13:        
-        // f l, f f, L' F'      //12 o'clock to 5 o'clock.        
-        // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB()
-        rotateBulkAlgoString("f l, f f, L' F'");
-        break;
-    case 15:
-        // #6th-Layer Edges(LEFT) = U' L' u l u f U' F'  //Must have Layers 1-5 solved, and 7th layer is affected.
-        // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
-        //https://www.youtube.com/watch?v=j4x61L5Onzk
-        rotateBulkAlgoString("U' L' u l u f U' F'");
-        break;
-    case 16:
-        // #6th-Layer Edges(RIGHT) = u r U' R' U' F' u f //opposite of previous, To the edge @ 3 o'clock
-        rotateBulkAlgoString("u r U' R' U' F' u f");
-        break;
+    case 99921:
     case 203:
-        // #7Last-Layer 5-way-star, Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 (aka 1,3,5,2,4)
-        //  60 moves. copied from cube manual (turned upside down)
-        //rotateBulkAlgoString("l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r', l' u2 r u2' l u2 r'");
+        // #7Last-Layer Edge 5-way star, Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4
+            // ONLY Affects Edges (all 5) //  60 moves. copied from cube manual (turned upside down).(gray on top) 
         for (int i = 0; i < 6; ++i)
             rotateBulkAlgoString("l' u2 r u2' l u2 r'");
         break;
+    case 99922:
     case 204:
-        // #7Last-Layer 5-way star, copied from cube manual, Two halves //2,1,3,4,5
-        // 60 moves. Gray Face must be on top. Non invasive overall but very invasive temporarily
-        //rotateBulkAlgoString("r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'");
+        // #7Last-Layer Edge 5-way star, copied from cube manual, Two halves //2,1,3,4,5
+            // ONLY Affects Edges (all 5) // 60 moves. (gray on top)
         rotateBulkAlgoString("r' l u' r l' u2");
         for (int i = 0; i < 6; ++i)
             rotateBulkAlgoString("r' l u2' r l' u2");
         rotateBulkAlgoString("r' l u' r l'");
         break;
+    case 99923:
     case 205:
-        // #7Last-Layer Edge swaps - have 1 edge solved remains in front, then swap 2&3 and 4&5
-        //copied from manual. 44 moves total. Gray Face must be on top. Non invasive overall but very invasive temporarily
-        //rotateBulkAlgoString("u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u");
+        // #7Last-Layer Edge two swaps - have 1 edge solved remains in front, then swap 2&3 and 4&5
+            //copied from manual. 44 moves total. Gray Face must be on top. 
         rotateBulkAlgoString("u2' l2' u2' l2 u' l2' u2' l2 u'");
         rotateBulkAlgoString("    l2' u2' l2 u' l2' u2' l2 u'");
         rotateBulkAlgoString("    l2' u2' l2 u' l2' u2' l2 u ");
         break;
+    case 99924:
     case 206:
-        //#7Last-Layer-Edge-Permu Copied from manual, 30 moves total... have 1 edge solved, then swap 2&4 and 3&5/INVERTED.
-        //Solved piece remains in front, right/backRight swap and left/backLeft swap
-        // with INVERTS @ 8 o'clock and 1 o'clock. Gray Face must be on top.
-        //rotateBulkAlgoString("r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'");
+        //#7Last-Layer Edge two swaps - have 1 edge solved, then swap 2&4 and 3&5/INVERTED.
+            //Solved piece remains in front, right/backRight swap and left/backLeft swap // with INVERTS @ 8 o'clock and 1 o'clock. 
+            //copied from manual, 30 moves total... Gray Face must be on top.
         rotateBulkAlgoString("r' l f2' r l' u2 r' l");
         rotateBulkAlgoString("f' r l' u2' r' l f2' r");
         rotateBulkAlgoString("l' u2 r' l f' r l' u2'");
+        break;
+    case 99925:
+    case 13:
+        // #2nd-Layer Edges/Star(LEFT) =  7 o'clock to 9 o'clock:
+            //reverse engineered from #14 myself (Exact opposite)
+        rotateBulkAlgoString("dl l dl l' dl' f' dl' f");
+        break;
+    case 99926:
+    case 14:
+        // #2nd-Layer Edges/Star(RIGHT) =  5 o'clock to 3 o'clock:
+            //Algo from QJ cube manual & (White face on top)
+        rotateBulkAlgoString("dr' r' dr' r dr f dr f'");
+        break;
+    case 99927:
+    case 15:
+        // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA() // 12 o'clock to 7 o'clock
+            //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+        rotateBulkAlgoString("F' R', F' F', r f");
+        break;
+    case 99928:
+    case 16:
+        // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB() //12 o'clock to 5 o'clock.
+            //Cube must have gray side on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+        rotateBulkAlgoString("f l, f f, L' F'");
+        break;
+    case 99929:
+    case 17:
+        // #6th-Layer Edges(LEFT) //Must have Layers 1-5 solved, and 7th layer is affected.
+            // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
+            //https://www.youtube.com/watch?v=j4x61L5Onzk
+        rotateBulkAlgoString("U' L' u l u f U' F'");
+        break;
+    case 99930:
+    case 18:
+        // #6th-Layer Edges(RIGHT) //opposite of previous, To the edge @ 3 o'clock
+        rotateBulkAlgoString("u r U' R' U' F' u f");
         break;
     default:
         break;
@@ -674,33 +714,34 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
 {
     std::vector<numdir> readVector;
     std::stringstream ss(algorithmString); // create a stringstream to iterate over
+    auto npos = std::string::npos;
     while (ss) {                           // while the stream is good
         std::string word;                  // parse first word
         numdir op = { -1, Face::Clockwise };
         if (ss >> word) {
-            if (word.find("'") != std::string::npos)
+            if (word.find("'") != npos)
                 op.dir *= -1;
-            if ((word.find("dr") != std::string::npos) ||
-                (word.find("DR") != std::string::npos))
+            if      ((word.find("dr") !=npos) ||
+                    (word.find("DR") !=npos))
                 op.num = loc.downr - 1;
-            else if ((word.find("dl") != std::string::npos) ||
-                     (word.find("DL") != std::string::npos))
+            else if ((word.find("dl") !=npos) ||
+                     (word.find("DL") !=npos))
                 op.num = loc.downl - 1;
-            else if ((word.find("r") != std::string::npos) ||
-                     (word.find("R") != std::string::npos))
+            else if ((word.find("r") !=npos) ||
+                     (word.find("R") !=npos))
                 op.num = loc.right - 1;
-            else if ((word.find("f") != std::string::npos) ||
-                     (word.find("F") != std::string::npos))
-                op.num = loc.front - 1;
-            else if ((word.find("l") != std::string::npos) ||
-                     (word.find("L") != std::string::npos))
+            else if ((word.find("l") !=npos) ||
+                     (word.find("L") !=npos))
                 op.num = loc.left - 1;
-            else if ((word.find("u") != std::string::npos) ||
-                     (word.find("U") != std::string::npos))
+            else if ((word.find("f") !=npos) ||
+                     (word.find("F") !=npos))
+                op.num = loc.front - 1;
+            else if ((word.find("u") !=npos) ||
+                     (word.find("U") !=npos))
                 op.num = loc.up - 1;
             if (op.num > -1)
                 readVector.push_back(op);
-            if (word.find("2") != std::string::npos) {
+            if (word.find("2") != npos) {
                 assert(readVector.size() > 0);
                 readVector.push_back(readVector.back());
             }
@@ -709,87 +750,66 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
     return readVector;
 }
 
-int Megaminx::findEdge(int pieceNum)
+template <typename T>
+int Megaminx::findPiece(int pieceNum)
 {
-    for (int i = 0; i < numEdges; ++i)
-        if (edges[i].data.pieceIndex == pieceNum)
+    Piece* piece = getPieceArray<T>(0);
+    for (int i = 0; i < getMaxNumberOfPieces<T>(); ++i)
+        if (piece[i].data.pieceNum == pieceNum)
             return i;
     return -1;
-}
-std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5])
+} //where T = Corner or Edge
+int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
+int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
+
+template <typename T>
+std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
 {
     std::vector<int> pieceList;
     for (int i = 0; i < 5; i++)
-        pieceList.push_back(findEdge(pieceNums[i]));
+        pieceList.push_back(findPiece<T>(pieceNums[i]));
     return pieceList;
-}
-std::vector<int> Megaminx::findEdgePieces(std::vector<int> &v)
+} //where T = Corner or Edge
+std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findFivePieces<Edge>(pieceNums); }
+std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
+
+template <typename T>
+std::vector<int> Megaminx::findFivePieces(std::vector<int> &v)
 {
     assert(v.size() == 5);
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    return findEdgePieces(vecPieceNums);
-}
+    return findFivePieces<T>(vecPieceNums);
+} //where T = Corner or Edge
+std::vector<int> Megaminx::findEdgePieces(std::vector<int> &v) { return findFivePieces<Edge>(v); }
+std::vector<int> Megaminx::findCornerPieces(std::vector<int> &v) { return findFivePieces<Corner>(v); }
 
-void Megaminx::resetFiveEdges(const int indexes[5]) {
+template <typename T>
+void Megaminx::resetFivePieces(const int indexes[5]) {
+    Piece* pieces = getPieceArray<T>(0);
     for (int i = 0; i < 5; ++i) {
-        std::vector<int> whereAreTheyNow = findEdgePieces(indexes);
-        if (edges[indexes[i]].data.pieceIndex != indexes[i]) {
-            edges[indexes[i]].swapdata(edges[whereAreTheyNow[i]].data);
+        std::vector<int> whereAreTheyNow = findFivePieces<T>(indexes);
+        if (pieces[indexes[i]].data.pieceNum != indexes[i]) {
+            pieces[indexes[i]].swapdata(pieces[whereAreTheyNow[i]].data);
             i = -1;
         }
     }
     //Pieces are in the right place but maybe wrong orientation, so flip the colors:
     for (int i = 0; i < 5; ++i) {
-        while (edges[indexes[i]].data.flipStatus != 0)
-            edges[indexes[i]].flip();
+        while (pieces[indexes[i]].data.flipStatus != 0)
+            pieces[indexes[i]].flip();
     }
-}
-void Megaminx::resetFiveEdges(std::vector<int> &v) {
-    assert(v.size() == 5);
-    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    resetFiveEdges(vecPieceNums);
-}
+} //where T = Corner or Edge
+void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(indexes); }
+void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
 
-int Megaminx::findCorner(int pieceNum)
-{
-    for (int i = 0; i < numCorners; ++i)
-        if (corners[i].data.pieceIndex == pieceNum)
-            return i;
-    return -1;
-}
-std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5])
-{
-    std::vector<int> pieceList;
-    for (int i = 0; i < 5; i++)
-        pieceList.push_back(findCorner(pieceNums[i]));
-    return pieceList;
-}
-std::vector<int> Megaminx::findCornerPieces(std::vector<int> &v)
-{
+template <typename T>
+void Megaminx::resetFivePieces(std::vector<int> &v) {
     assert(v.size() == 5);
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    return findCornerPieces(vecPieceNums);
-}
-
-void Megaminx::resetFiveCorners(const int indexes[5]) {
-    for (int i = 0; i < 5; ++i) {
-        std::vector<int> whereAreTheyNow = findCornerPieces(indexes);
-        if (corners[indexes[i]].data.pieceIndex != indexes[i]) {
-            corners[indexes[i]].swapdata(corners[whereAreTheyNow[i]].data);
-            i = -1;
-        }
-    }
-    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
-    for (int i = 0; i < 5; ++i) {
-        while (corners[indexes[i]].data.flipStatus != 0)
-            corners[indexes[i]].flip();
-    }
-}
-void Megaminx::resetFiveCorners(std::vector<int> &v) {
-    assert(v.size() == 5);
-    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    resetFiveCorners(vecPieceNums);
-}
+    resetFivePieces<T>(vecPieceNums);
+} //where T = Corner or Edge
+void Megaminx::resetFiveEdges(std::vector<int> &v) { resetFivePieces<Edge>(v); }
+void Megaminx::resetFiveCorners(std::vector<int> &v) { resetFivePieces<Corner>(v); }
 
 void Megaminx::secondLayerEdges() {
     constexpr int secondLayerEdges[5] = { 5, 6, 7, 8, 9 };
@@ -805,7 +825,6 @@ void Megaminx::sixthLayerEdges() {
     constexpr int sixthLayerEdges[5] = { 20, 21, 22, 23, 24 };
     resetFiveEdges(sixthLayerEdges);
 }
-
 void Megaminx::lowYmiddleW() {
     constexpr int pieceListA[5] = { 5, 6, 7, 8, 9 };
     resetFiveCorners(pieceListA);
@@ -814,69 +833,6 @@ void Megaminx::highYmiddleW() {
     constexpr int pieceListB[5] = { 10, 11, 12, 13, 14 };
     resetFiveCorners(pieceListB);
 }
-
-//Start of AI:
-//rambling ideas:
-//white edges. intuitive. edges 0-4 will flop in from 5-9, watch polarity.
-//for corners find out what floor 1-4 theyre on
-//for first step, whole cube is unsolved we can rotate without bad consequences, but later we will need to know how to stick to the bottom half and gray layer for scratch temp space, without affecting anything. or at least switch to non-destructive forwarding
-//for next step we need to move-out with a human-algo
-//white corners 0-4 will drop in from 5-9
-//to affect a piece, we query the &Pieces for which 2 or 3 faces its claimed by. Add a stat to track this.
-//Level 3 corners can be flipped color easily, follow this, they use the bottom side layers and level 5 corners to temp-hold them in 3 moves - 5 moves.
-//Pathways will be defined as the 5 Z-lines going from white to gray corner Line covers 3 edges. 5 lines * 3 = 15. Plus the top/bottom lines = 5 * 2 = 10, + 15, = 25 the 5 extra edges to make 30 happen in the 10-wide 4th layer and need not be worried about.
-//More Concrete Rough Outline:
-//Layer 1: White Face:  White Edges, White Corners.
-//Do the same thing as below, but with the Edges first, intuitively moving them in.
-//We can do either, but presumably it will be harder to jump the edges over the corners afterwards.
-//one by one, find all white corners. Move any in the white face OUT and move ALL of them to the middle "W" layer 3/5,
-// preferably right above its face and position. so you can insert it down and in by RDR'D' move or whatever.
-//Has to be color flipped. Can be avoided if placed on the W the right way.
-//Position it in the right spot:
-//BUILD A PIECE SWAPPER that acts like .swapdata(edge->data) but goes through the rotations. It needs to know obviously,
-// source and dest Piece, which can be given and assigned by Piece Index #. This system has only recently been used for the algorithms above, highYmiddleW(),
-// for example: the concept of assigning semantic names to these arbitrary human combinations of pieces. (These can be named constexpr later)
-// To avoid all the conflicts we had with Swap, we need to check first and make sure any source pieces are not in any dest slots, if there are, move them OUT (to anywhere above/below the solved layer boundary).
-//Good idea: Think about Linear pathway lines that the blocks travel around on. These are made from a known number of fixed points, the corner's outer tips. These represent train stations aka stops along a train track.
-//Once the piece has been confirmed as on the track (hoisted up or intersected with it from another route) - we can compute how many stops it needs to travel to its destination.
-//From there we can use a TTL routing protocol to forward the block as if it were a packet across the pathway line.
-//That way we can make a decision on whether to take a color flip detour before we get to the end or not.
-//Once the pathways are defined, the pieces can be scored and ranked on how far away they are from their destination. Farther ones should be more aggressively moved toward their destination as an optimization.
-// ://www.jaapsch.net/puzzles/megaminx.htm for a more list of notations.
-//Layer 2: Edges,One at a time, If any of the 5 pieces that are supposed to be in this #2 edge slot, move them OUT, and to the W layer.
-//Position it in the right spot, the source location decides the destination drop-in:
-//Execute the known, human algo Layer 2 Edge Star Left/Right if its Left or right.
-//Find desired edge piece, surf it around to the gray layer, then back down to the top of the star either to the left or the right of dropping it into place.
-//Drop in procedure: Move star-top away from the drop-in location, then spin the R/L side UP (the side thats opposite of the star-top turn-away direction) (up is either CW or CCW depending on the side) and then rotate both back
-// this will group the correct edge to the correct the corner, above the drop-in location. A second similar drop-in move is needed, likely "u r U' R'" or "u l U' L'"
-//3rd layer Corners = Low Y's involve flipping the puzzle upside down, white face on top, and positioning the desired piece on the bottom layer, then swiveling the bottom face around to orient it,
-// and then rotating it up and into the Low Y. since the entire rest of the puzzle is unsolved, this can be done intuitively, just rotate the piece on the bottom until its colored correctly, then drop it in.
-//Layer 3: Corners Like layer 1 and we use the gray layer as the temp layer
-//Layer 4: Edges, since We know the all the Star/edges algo for 2/4/6. Left/Right needs to be decided on the destination this time,
-// the source is always at 12 o clock. drops into either 5 / 7 o'clock (Right/Left)
-//Pieces already in the layer 4 area but wrong in location need to be moved up and out onto the Gray face as temporary, using Algos.
-//Any pieces on the gray face need to be Color-flipped favorably before the drop-in.  we'd need to change the color
-//We can also possibly solve some Layer 6 edges now without hurting anything, which helps because some of our source pieces may be there.
-//Layer 5: Corners, again. This time they source from Gray layer 7 as the drop-in point. We should find one that exists up on that top layer that can be dropped in.
-// otherwise we will have to hoist the pieces up from below. We will have to do this anyway. Theoretically you can pick any piece to start, hoist it up, then drop it in. Then repeat until you've finished.
-// But there should be some already up there, and if we Look for them as they come around, and solve those next, more will be solved this way.
-//When they are ready to drop in, the colors can be one of 3 ways, and this can be accomplished by either 1, 3 or 5 R/D moves
-//Layer 6: Edges source from Gray layer 7 and drop in a short 1/5th sideways. same idea applies from Layer#4
-// the source is always at 12 o clock. drops into either 3 / 9 o'clock (Right/Left)
-//Layer 7: from what I can tell, do Corners first, because some of the corner algos affect the edges also, and some of the edge algos affect the corners, so those can be used too...
-// So do corners with the intention of corrupting the edges but making ultimate progress on getting the edges all facing downwards at least.
-//Coloring the corners involves multiple moves of R/D/R'/D' until they color correctly. This corrupts the lines you use for the transformation, "Z",
-// Repeats and reverts in cycles of 6. So after one corner is solved, the temporary lines may still be corrupted, if they are,
-// you must rotate the Top/Gray again and continue to color-flip additional Top corners to revert the corrupted "Z" line before you move on.
-// This may approach a catch 22, where everything is solved but only one gray corner is 1 flip away, if this is the case, I don't know what to do...
-//Theres a lot of last-layer algorithms to choose from. Choose wisely!
-//
-//TODO: Uncovered a bug in the original .swap() algo where it swaps 90% of the elements Out and then is left with a parity error, for example:
-//A = { 22, 11, 10, 22, 3, 26, 28, 26,  }
-//B = { 26, 3, 28, 26, 11, 22, 10, 22, }
-//It thinks swapping A[0] with B[0] and so on, amounts to a net change of 0. And its right. But why am i wrong?
-//This also occurs down to 3 pieces: such like: A = { 1, 2, 4 } and B = { 2, 4, 1 }, or even just two: {0,4}/{4,0}
-//? Maybe try reducing the dupes if possible
 
 bool Megaminx::shadowMultiRotate(int face, int &offby, Megaminx* shadowDom)
 {
@@ -890,34 +846,28 @@ bool Megaminx::shadowMultiRotate(int face, int &offby, Megaminx* shadowDom)
         while (offby >= 5)
             offby -= 5;
         //Saves moves by going the opposite direction:
-        if (offby == 4) {
-            offby = 1;
-            defaultDir *= -1;
-        }
-        else if (offby == 3) {
-            offby = 2;
+        if (offby > 2.5) {
+            offby = (offby - 5) * -1;
             defaultDir *= -1;
         }
         for (int j = 0; j < offby; ++j)
             shadowDom->shadowRotate(face, defaultDir);
-        //do not reset the loop, keep executing,
     }
     return (offby > 0);
 }
 
 void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 {
-    if (shadowDom->shadowRotateQueue.size() > 0) {
-        if (rotateQueue.size() == 0)
-            rotateQueue.swap(shadowDom->shadowRotateQueue);
-        else {
-            size_t numsize = shadowDom->shadowRotateQueue.size();
-            for (int q = 0; q < numsize; ++q) {
-                rotateQueue.push(shadowDom->shadowRotateQueue.front());
-                shadowDom->shadowRotateQueue.pop();
-            }
+    size_t numsize = shadowDom->shadowRotateQueue.size();
+    if (numsize <= 0) return;
+    undoStack.push({ -999, -999 });
+        for (int q = 0; q < numsize; ++q) {
+            auto op = shadowDom->shadowRotateQueue.front();
+            rotateQueue.push(op);
+            shadowDom->shadowRotateQueue.pop();
+            undoStack.push(op);
         }
-    }
+    undoStack.push({ 999, 999 });
 }
 
 //This is more complex than normal because its the most flexible
@@ -960,28 +910,93 @@ void Megaminx::DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5])
         numSolved++;
     }
 }
-//Generic way to detect if CORNER pieces are solved in their correct locations with correct colors
-void Megaminx::DetectSolvedCorners(int startI, int endI, bool piecesSolved[5])
+
+//Generic template way to detect if pieces are solved in their correct locations with correct colors
+template <typename T>
+void Megaminx::DetectSolvedPieces(int startI, bool piecesSolved[5])
 {
-    //Find out if any applicable startI-endI corner pieces are exactly in their slots.
+    int endI = startI + 5;
+    //Find out if any applicable startI-endI pieces are exactly in their slots.
     for (int p = startI; p < endI; ++p) {
-        int pIndex = findCorner(p);
+        int pIndex = findPiece<T>(p);
+        Piece* piece = getPieceArray<T>(pIndex);
         //make sure its startI-endI and make sure the colors arent flipped
-        if (pIndex >= startI && pIndex < endI && p == pIndex && corners[pIndex].data.flipStatus == 0)
+        if (pIndex >= startI && pIndex < endI && p == pIndex && piece->data.flipStatus == 0)
             piecesSolved[p - startI] = true;
     }
 }
-//Generic way to detect if EDGE pieces are solved in their correct locations with correct colors
-void Megaminx::DetectSolvedEdges(int startI, int endI, bool piecesSolved[5])
-{
-    //Find out if any applicable startI-endI edge pieces are exactly in their slots.
-    for (int p = startI; p < endI; ++p) {
-        int pIndex = findEdge(p);
-        //make sure its startI-endI and make sure the colors arent flipped
-        if (pIndex >= startI && pIndex < endI && p == pIndex && edges[pIndex].data.flipStatus == 0)
-            piecesSolved[p - startI] = true;
-    }
+void Megaminx::DetectSolvedCorners(int startI, bool piecesSolved[5]) {
+    DetectSolvedPieces<Corner>(startI, &piecesSolved[0]);
 }
+void Megaminx::DetectSolvedEdges(int startI, bool piecesSolved[5]) {
+    DetectSolvedPieces<Edge>(startI,  &piecesSolved[0]);
+}
+
+class LayerAssist {
+public:
+    int sourceEdgeIndex;
+    colorpiece edgeFaceNeighbors;
+    int edgeFaceLocA;
+    int edgeFaceLocB;
+    int dirToWhiteA;
+    int dirToWhiteB;
+    Edge* EdgeItselfA;
+    Edge* EdgeItselfB;
+    int whichcolorEdgeA;
+    int whichcolorEdgeB;
+    int edgeHalfColorA;
+    int edgeHalfColorB;
+    bool colormatchA;
+    bool colormatchB;
+    bool isOnRow1;
+    bool isOnRow2;
+    bool isOnRow3;
+    bool isOnRow4;
+    bool isOnRow5;
+    bool isOnRow6;
+    bool isOnRow7;
+    bool ontopA;
+    bool ontopB;
+
+    LayerAssist(Megaminx* shadowDom, int i) {
+        sourceEdgeIndex = shadowDom->findEdge(i);
+        //Determine which two faces the edge belongs to:
+        edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
+        //Find everything and get it moved over to its drop-in point:
+        //Determine where on those faces the edges are positioned, from 0-4
+        edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].find5EdgeLoc(i);
+        assert(edgeFaceLocA != -1); //(-1 for fail, not found)
+        edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].find5EdgeLoc(i);
+        assert(edgeFaceLocB != -1); //should not happen
+        //Determine which direction those faces need to rotate to land the Edge on the white
+        dirToWhiteA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
+        dirToWhiteB = DirToWhiteFace[edgeFaceNeighbors.b - 1][edgeFaceLocB];
+        EdgeItselfA = shadowDom->faces[edgeFaceNeighbors.a - 1].edge[edgeFaceLocA];
+        EdgeItselfB = shadowDom->faces[edgeFaceNeighbors.b - 1].edge[edgeFaceLocB];
+        assert(EdgeItselfA == EdgeItselfB); //sanity check.
+        //Use reference table to check edge internal color data struct-order.
+        whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a - 1][edgeFaceLocA];
+        whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b - 1][edgeFaceLocB];
+        assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.
+        //Determine which color half-edge is on each face
+        edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
+        edgeHalfColorB = EdgeItselfB->data._colorNum[whichcolorEdgeB];
+        colormatchA = edgeHalfColorA != WHITE;
+        colormatchB = edgeHalfColorB != WHITE;
+        assert(colormatchA != colormatchB); //sanity check.
+        //Line up things that are solved on the top face.
+        isOnRow1 = (sourceEdgeIndex >= 0 && sourceEdgeIndex < 5);
+        isOnRow2 = (sourceEdgeIndex >= 5 && sourceEdgeIndex < 10);
+        isOnRow3 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 15);
+        isOnRow4 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 20);
+        isOnRow5 = (sourceEdgeIndex >= 15 && sourceEdgeIndex < 20);
+        isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
+        isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
+        //Check if the faces we have are considered as the Top half of the cube.
+        ontopA = (edgeFaceNeighbors.a > 1 && edgeFaceNeighbors.a < 7);
+        ontopB = (edgeFaceNeighbors.b > 1 && edgeFaceNeighbors.b < 7);
+    }
+};
 
 //Layer 1 part 1 - White Edges
 void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
@@ -1015,44 +1030,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             allSolved = true;
             break;
         }
-        int sourceEdgeIndex = shadowDom->findEdge(i);
-        //Determine which two faces the edge belongs to:
-        colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
-        //Find everything and get it moved over to its drop-in point:
-        //Determine where on those faces the edges are positioned, 0-4watc
-        int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].find5EdgeLoc(i);            
-        assert(edgeFaceLocA != -1); //(-1 for fail, not found)
-        //auto defaultEdgeFaceLocsA = shadowDom->faces[edgeFaceNeighbors.a - 1].defaultEdges;
-        int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].find5EdgeLoc(i);
-        assert(edgeFaceLocB != -1); //should not happen
-        //auto defaultEdgeFaceLocsB = shadowDom->faces[edgeFaceNeighbors.b - 1].defaultEdges;
-        //Determine which direction those faces need to rotate to land the Edge on the white
-        int dirToWhiteA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
-        int dirToWhiteB = DirToWhiteFace[edgeFaceNeighbors.b - 1][edgeFaceLocB];
-        Edge* EdgeItselfA = shadowDom->faces[edgeFaceNeighbors.a - 1].edge[edgeFaceLocA];
-        Edge* EdgeItselfB = shadowDom->faces[edgeFaceNeighbors.b - 1].edge[edgeFaceLocB];
-        assert(EdgeItselfA == EdgeItselfB); //sanity check.
-        //Use reference table to check edge internal color data struct-order.
-        int whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a - 1][edgeFaceLocA];
-        int whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b - 1][edgeFaceLocB];
-        assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.
-        //Determine which color half-edge is on each face
-        int edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
-        int edgeHalfColorB = EdgeItselfB->data._colorNum[whichcolorEdgeB];
-        bool colormatchA = edgeHalfColorA != WHITE;
-        bool colormatchB = edgeHalfColorB != WHITE;
-        assert(colormatchA != colormatchB); //sanity check.
-        //Line up things that are solved on the top face.
-        bool isOnRow1 = (sourceEdgeIndex >= 0 && sourceEdgeIndex < 5);
-        bool isOnRow2 = (sourceEdgeIndex >= 5 && sourceEdgeIndex < 10);
-        bool isOnRow3 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 15);
-        bool isOnRow4 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 20);
-        bool isOnRow44 = (sourceEdgeIndex >= 15 && sourceEdgeIndex < 20);
-        bool isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
-        bool isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
-        //Check if the faces we have are considered as the Top half of the cube.
-        bool ontopA = (edgeFaceNeighbors.a > 1 && edgeFaceNeighbors.a < 7);
-        bool ontopB = (edgeFaceNeighbors.b > 1 && edgeFaceNeighbors.b < 7);
+        LayerAssist l{ shadowDom,i };
         //Rotates the white face to its solved position, first solved edge matches up to its face.
         if (firstSolvedPiece != -1) {
             //NOTE: Doing this over and over is wasting moves solving the partial-solved top every time.
@@ -1066,47 +1044,47 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             }
         }
         //Any matching pieces that end up on its matching face can be spun in with just 2 or 1 moves.
-        if (ontopA && ((isOnRow4 && colormatchA) || isOnRow2)) {
-            int offby = colormatchA ? (edgeFaceNeighbors.a - edgeHalfColorA) : (edgeFaceNeighbors.b - edgeHalfColorB);
+        if (l.ontopA && ((l.isOnRow4 && l.colormatchA) || l.isOnRow2)) {
+            int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA) : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
             //Set up Rotated White top to be in-line with the face we want to spin in.
             shadowMultiRotate(WHITE, offby, shadowDom);
-            if (isOnRow4 && colormatchA) {
-                shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
-                shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
+            if (l.isOnRow4 && l.colormatchA) {
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
             }
-            else if (isOnRow2 && colormatchA)
-                shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
-            else if (isOnRow2 && colormatchB)
-                shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+            else if (l.isOnRow2 && l.colormatchA)
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
+            else if (l.isOnRow2 && l.colormatchB)
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         }
         //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by facesSolved pieces
-        else if (isOnRow4 && dirToWhiteA != 0 && ((edgeFaceNeighbors.a < GRAY && !facesSolved[edgeFaceNeighbors.a - 1]) || edgeFaceNeighbors.a >= GRAY)) {
-            shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
+        else if (l.isOnRow4 && l.dirToWhiteA != 0 && ((l.edgeFaceNeighbors.a < GRAY && !facesSolved[l.edgeFaceNeighbors.a - 1]) || l.edgeFaceNeighbors.a >= GRAY)) {
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
         }
-        else if (isOnRow4 && dirToWhiteB != 0 && ((edgeFaceNeighbors.b < GRAY && !facesSolved[edgeFaceNeighbors.b - 1]) || edgeFaceNeighbors.b >= GRAY)) {
-            shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+        else if (l.isOnRow4 && l.dirToWhiteB != 0 && ((l.edgeFaceNeighbors.b < GRAY && !facesSolved[l.edgeFaceNeighbors.b - 1]) || l.edgeFaceNeighbors.b >= GRAY)) {
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
             //REFRESH
             int sourceEdgeIndexNext = shadowDom->findEdge(i);
             //Moves a piece again from Row 4 to Row 6. (if the face it lands on is locked).
             //Determine which two faces the edge belongs to
             colorpiece edgeFaceNeighborsNext = g_edgePiecesColors[sourceEdgeIndexNext];
             //we know the next piece has the same neighbor
-            if (edgeFaceNeighborsNext.b == edgeFaceNeighbors.b)
+            if (edgeFaceNeighborsNext.b == l.edgeFaceNeighbors.b)
                 //check if the next neighbor face is Solved aka blocked ?
                 if (facesSolved[edgeFaceNeighborsNext.a - 1])
                     //make sure its the move going to the right
-                    if (edgeFaceNeighborsNext.a == g_faceNeighbors[edgeFaceNeighbors.a].right)
-                        shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+                    if (edgeFaceNeighborsNext.a == g_faceNeighbors[l.edgeFaceNeighbors.a].right)
+                        shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         }
-        else if (isOnRow6 || isOnRow7 && dirToWhiteA != 0)
-            shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
-        else if (isOnRow6 || isOnRow7 && dirToWhiteB != 0)
-            shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+        else if (l.isOnRow6 || l.isOnRow7 && l.dirToWhiteA != 0)
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
+        else if (l.isOnRow6 || l.isOnRow7 && l.dirToWhiteB != 0)
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         //These can still trigger if the top pieces are in the top row but the wrong slot (or are color-flipped)
-        else if (isOnRow1 && dirToWhiteA != 0 && !facesSolved[edgeFaceNeighbors.a - 1])
-            shadowDom->shadowRotate(edgeFaceNeighbors.a, dirToWhiteA);
-        else if (isOnRow1 && dirToWhiteB != 0 && !facesSolved[edgeFaceNeighbors.b - 1])
-            shadowDom->shadowRotate(edgeFaceNeighbors.b, dirToWhiteB);
+        else if (l.isOnRow1 && l.dirToWhiteA != 0 && !facesSolved[l.edgeFaceNeighbors.a - 1])
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
+        else if (l.isOnRow1 && l.dirToWhiteB != 0 && !facesSolved[l.edgeFaceNeighbors.b - 1])
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
         loopcount++;
@@ -1141,7 +1119,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
-        shadowDom->DetectSolvedCorners(0, 5, piecesSolved);
+        shadowDom->DetectSolvedCorners(0, piecesSolved);
         int i = 0; //the starting piece
         while (i < 5 && piecesSolved[i] == true)
             i++;
@@ -1191,7 +1169,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             if (offby >= 2) {
                 const colordirs &loc = g_faceNeighbors[offby];
                 std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("R' DR' R DR", loc);
-                for (auto op : bulk)    //returns raw faces
+                for (auto op : bulk)    //+1 the 0-11 faces
                     shadowDom->shadowRotate(op.num+1, op.dir);
             }
         }
@@ -1207,7 +1185,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                     bulk = shadowDom->ParseAlgorithmString("f dr F'", loc);
                 else
                     bulk = shadowDom->ParseAlgorithmString("R' DR' R", loc);
-                for (auto op : bulk)    //returns raw faces
+                for (auto op : bulk)    //+1 the 0-11 faces
                     shadowDom->shadowRotate(op.num+1, op.dir);
             }
         }
@@ -1230,7 +1208,6 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         else if (isOnRow3) {
             int defaultDir = Face::CW;
             int offby = sourceCornerIndex - i - 10;
-            megaminxColor maxABC;
             int x, y;
             if (ontopA) {
                 x = cornerFaceNeighbors.b;
@@ -1247,17 +1224,16 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             int result = max(x, y);
             if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                 result = LIGHT_BLUE;
-            maxABC = (megaminxColor)result;
-            shadowDom->shadowRotate(maxABC, defaultDir);
+            shadowDom->shadowRotate(result, defaultDir);
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2
         else if (isOnRow4) {
+            int defaultDir = Face::CCW;
             int offby = sourceCornerIndex - i - 18;
             shadowMultiRotate(GRAY, offby, shadowDom);
             int x = PINK + (i);
             if (x > BEIGE)
                 x -= 5;
-            int defaultDir = Face::CCW;
             shadowDom->shadowRotate(x, defaultDir);
             shadowDom->shadowRotate(x, defaultDir);
         }
@@ -1286,7 +1262,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
-        shadowDom->DetectSolvedEdges(5, 10, piecesSolved);
+        shadowDom->DetectSolvedEdges(5, piecesSolved);
         int i = 5; //the starting piece
         while (i < 10 && piecesSolved[i - 5] == true)
             i++;
@@ -1322,19 +1298,8 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         bool isOnRow4 = (sourceEdgeIndex >= 15 && sourceEdgeIndex < 20);
         bool isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
         bool isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
-        //Rotates the white face to its solved position, first solved EDGE matches up to its face.
-        //Edges should already be solved, if not, get top white face spun oriented back to normal
-        int edgesOffBy = shadowDom->findEdge(0); //always piece 0
-        if (edgesOffBy > 0 && edgesOffBy < 5) {
-            edgesOffBy *= -1;
-            shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
-        }
-        //Solved case
-        else if (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus == 0) {
-            piecesSolved[i - 5] = true;
-            continue;
-        }
-        else if ((isOnRow2 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
+
+        if ((isOnRow2 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
             (isOnRow34 && ontopA && edgeFaceLocA == 4 && edgeFaceNeighbors.a == edgeHalfColorA)) {
             const colordirs &loc = g_faceNeighbors[edgeFaceNeighbors.a];
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("dl l dl l' dl' f' dl' f", loc); // left
@@ -1371,14 +1336,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         }
         //Layer 7 is an intermediate buffer
         else if (isOnRow7) {
-            int offby = 0;
             int row7 = sourceEdgeIndex - 28 - i;
-            if (edgeFaceNeighbors.a == GRAY)
-                offby = RED + edgeFaceLocA + 1 + i;
-            else if (edgeFaceNeighbors.b == GRAY)
-                offby = RED + edgeFaceLocB + 1 + i;
-            //These should be equivalent but for example -12 and -7 both reduce to -2
-            //TODO: make function to reduce the number itself
             bool moved = shadowMultiRotate(GRAY, row7, shadowDom);
             //Align the GRAY layer 7 to be directly underneath the intended solve area
             if (moved == false) {
@@ -1417,7 +1375,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
-        shadowDom->DetectSolvedCorners(5, 10, piecesSolved);
+        shadowDom->DetectSolvedCorners(5, piecesSolved);
         int i = 5; //the starting piece
         while (i < 10 && piecesSolved[i - 5] == true)
             i++;
@@ -1446,20 +1404,9 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         bool ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
         bool ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
         bool ontopC = (cornerFaceNeighbors.c > 1 && cornerFaceNeighbors.c < 7);
-        //Rotates the white face to its solved position, first solved EDGE matches up to its face.
-        //Edges should already be solved, if not, get top white face spun oriented back to normal
-        int edgesOffBy = shadowDom->findEdge(0); //always piece 0
-        if (edgesOffBy > 0 && edgesOffBy < 5) {
-            edgesOffBy *= -1;
-            shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
-        }
-        //Solved case
-        else if (sourceCornerIndex == i && CornerItselfA->data.flipStatus == 0) {
-            piecesSolved[i - 5] = true;
-            continue;
-        }
+
         //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
-        else if (isOnRow2) {
+        if (isOnRow2) {
             int defaultDir = Face::CW;
             int offby = sourceCornerIndex - i - 5;
             megaminxColor turnface;
@@ -1481,7 +1428,6 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         else if (isOnRow3) {
             int defaultDir = Face::CCW;
             int offby = sourceCornerIndex - i - 10;
-            megaminxColor maxABC;
             int x, y;
             if (ontopA) {
                 x = cornerFaceNeighbors.b;
@@ -1503,17 +1449,16 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
             int result = max(x, y);
             if (result > BEIGE)
                 result -= 5;
-            maxABC = (megaminxColor)result;
-            shadowDom->shadowRotate(maxABC, defaultDir);
+            shadowDom->shadowRotate(result, defaultDir);
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved
         else if (isOnRow4) {
+            int defaultDir = Face::CCW;
             int offby = sourceCornerIndex - (i - 5) - 18;
             shadowMultiRotate(GRAY, offby, shadowDom);
             int x = PINK + (i - 5);
             if (x > BEIGE)
-                x -= 5;
-            int defaultDir = Face::CCW;
+                x -= 5;            
             shadowDom->shadowRotate(x, defaultDir);
             shadowDom->shadowRotate(x, defaultDir);
         }
@@ -1543,7 +1488,8 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[10] = { false, false, false, false, false, false, false, false, false, false };
-        shadowDom->DetectSolvedEdges(10, 20, piecesSolved);
+        shadowDom->DetectSolvedEdges(10, piecesSolved);
+        shadowDom->DetectSolvedEdges(15, &piecesSolved[5]);
         int i = 10; //the piece
         while (i < 20 && piecesSolved[i - 10] == true)
             i++;
@@ -1583,13 +1529,8 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
         //drop-in directions: left is row 4, right is row 3 (determined from original I, not sourceEdgeIndex)
         bool isRight = (i >= 10 && i < 15);
         bool isLeft  = (i >= 15 && i < 20);
-        //Solved case
-        if (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus == 0) {
-            piecesSolved[i - 10] = true;
-            continue;
-        }
         //Get ready for algorithms
-        else if ((isOnRow34 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
+        if ((isOnRow34 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
             (isOnRow7)) {
             if (isOnRow7) {
                 //Align GRAY top to the exact position for pre-drop-in.
@@ -1664,7 +1605,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
-        shadowDom->DetectSolvedCorners(10, 15, piecesSolved);
+        shadowDom->DetectSolvedCorners(10, piecesSolved);
         int i = 10; //the starting piece
         while (i < 15 && piecesSolved[i - 10] == true)
             i++;
@@ -1684,14 +1625,9 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         bool ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
         bool ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
         bool ontopC = (cornerFaceNeighbors.c > 1 && cornerFaceNeighbors.c < 7);
-        //Solved case
-        if (sourceCornerIndex == i && CornerItselfA->data.flipStatus == 0) {
-            piecesSolved[i - 10] = true;
-            continue;
-        }
         //Get the Pieces to drop-in ready on Row 4 (gray layer) solved into Row3
         //Any Row 3 pieces that are mis-solved use same algo to go up to gray layer (ends up on row4)
-        else if (isOnRow3) {
+        if (isOnRow3) {
             int defaultDir = Face::CCW;
             int offby = sourceCornerIndex - i;
             int x, y;
@@ -1752,7 +1688,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false, false, false, false, false };
-        shadowDom->DetectSolvedEdges(20, 25, piecesSolved);
+        shadowDom->DetectSolvedEdges(20, piecesSolved);
         int i = 20; //the starting piece
         while (i < 25 && piecesSolved[i - 20] == true)
             i++;
@@ -1785,13 +1721,8 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
         //on Row7, One of these will be gray, so the other letter is the colored face target.
         bool graymatchA = edgeFaceNeighbors.a == GRAY;
         bool graymatchB = edgeFaceNeighbors.b == GRAY;
-        //Solved case
-        if (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus == 0) {
-            piecesSolved[i - 20] = true;
-            continue;
-        }
         //Get ready for algorithms
-        else if ((isOnRow6 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
+        if ((isOnRow6 && (sourceEdgeIndex != i || (sourceEdgeIndex == i && EdgeItselfA->data.flipStatus != 0))) ||
             (isOnRow7)) {
             if (isOnRow7) {
                 assert(dirToWhiteA == 0);
@@ -1836,3 +1767,61 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
 }
 
 //TODO: Last Layer
+//Layer 7 - Last Layer Edges (GRAY top)
+//Cube must have gray side on top, layer 1+2+3+4+5+6 Solved
+void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
+{   //FromCubeToShadowCube()
+    if (!shadowDom) {
+        shadowDom = new Megaminx();
+        shadowDom->LoadNewEdgesFromOtherCube(this);
+        shadowDom->LoadNewCornersFromOtherCube(this);
+    }
+    bool allSolved = false;
+    //Loop management:
+    int loopcount = 0;
+    int unknownloop = 0;
+    do {
+        if (loopcount > 101)
+            break;
+        bool piecesSolved[5] = { false, false, false, false, false };
+        shadowDom->DetectSolvedEdges(25, piecesSolved);
+        int i = 25; //the starting piece
+        while (i < 30 && piecesSolved[i - 25] == true)
+            i++;
+        if (i >= 30) {
+            allSolved = true;
+            break;
+        }
+        LayerAssist l{ shadowDom,i };
+
+        //PSUEDOCODE
+        /*----------
+        Last Layer includes both sides of the edge and all corners.
+        EDGES:
+        Start finding out which Edges are OK
+        OK means multiple correct pieces in order, or  1 piece's color flipped correctly (gray),
+        Needs to be rotated? must be considered...
+        If solved 1/5, find out which piece and try to solve the adjacent piece to it next.
+        If solved 2/5 find out if they are attached. NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
+                                                     YES: Choose a three-ina-row Edge+/Corner algo
+        If solved >=3/5 theres a problem. It goes from 2/5 to 5/5 ideally.
+        CORNERS:
+        Corners must keep the edges in place, we will know solved rotation by having the offby=0 as a query to solved findEdges above.
+        If solved 1/5, determine if better to skip and start at 0 or continue with this.
+         1pt2: check next piece, find out if its capable of being moved in 1 move, or if its 2 moves.
+        If solved 2/5, find out if they are attached: NO: If not, why? are they 3 away? we have no three-way-opposite algo, must give up, go back to 1.
+                                                     YES: Choose right three-in-a-row corner-only algo
+        If solved 3/5, find out if they are attached: NO: If not, proceed to next.
+                                                     YES: Choose right three-way corner-only algo
+        */
+        if (l.isOnRow7)
+            continue;
+        else //unknown error occured, canary in the coalmine that somethings wrong.
+            unknownloop++;
+        loopcount++;
+    } while (!allSolved);
+
+    //After all loops, load the shadow Queue into the real queue    
+    updateRotateQueueWithShadow(shadowDom);
+    assert(unknownloop == 0);
+}

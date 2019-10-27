@@ -1,4 +1,4 @@
-/** @file utils.h
+/** @file opengl.h
  *  @brief useful utilities for opengl based apps
  *
  *  @author Bartlomiej Filipek

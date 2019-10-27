@@ -1,5 +1,5 @@
 /** @file camera.cpp
- *  @brief common input functions
+ *  @brief common camera & input functions
  *
  *  @author Bartlomiej Filipek
  *  @date April 2011

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include "color.h"
-#include "../common_physics/opengl.h"
+#include "../ui/opengl.h"
 
 using std::acos;
 using std::atan;
@@ -11,7 +11,6 @@ using std::cos;
 using std::sin;
 using std::sqrt;
 
-void rotateVertex(double *vertex, char axis, double angle);
 //common geometric constants
 static const long double DODESIZE = 100;
 static const long double FI = (1 + sqrt(5.f)) / 2;  //1.6180340051651001
@@ -26,6 +25,7 @@ static const long double EDGEFIFTH = DODESIZE / sin(pim(2));            //105.14
 static const long double COSPIM35 = INS_CIRCLE_RAD * cos(pim(3.5));     //-50.000004917867173
 static const long double COSPIM15 = INS_CIRCLE_RAD * cos(pim(1.5));     //49.999998901510480
 static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
+void rotateVertex(double *vertex, char axis, double angle);
 
 struct piecepack {
     char axis1, axis2;
@@ -44,7 +44,7 @@ public:
         double _color[3][3];
         int _colorNum[3];
         const wchar_t* _colorName[3];
-        int pieceIndex;
+        int pieceNum;
         int flipStatus;
     } data;
 

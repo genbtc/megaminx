@@ -2,7 +2,7 @@
 <project version="1">
     <root name="."/>
     <paths>
-        <dir name="src/common_physics"/>
+        <dir name="src/ui"/>
         <dir name="src/engine"/>
         <dir name="src/"/>
     </paths>

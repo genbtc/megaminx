@@ -20,7 +20,7 @@ void Face::attachEdgePieces(Edge& n)
     defaultEdges = Face::findPiecesOfFace(n, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
         edge[i] = &n + defaultEdges[i];
-        assert(edge[i]->data.pieceIndex == defaultEdges[i]);
+        assert(edge[i]->data.pieceNum == defaultEdges[i]);
     }
 }
 
@@ -30,7 +30,7 @@ void Face::attachCornerPieces(Corner& n)
     defaultCorners = Face::findPiecesOfFace(n, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
         corner[i] = &n + defaultCorners[i];
-        assert(corner[i]->data.pieceIndex == defaultCorners[i]);
+        assert(corner[i]->data.pieceNum == defaultCorners[i]);
     }
 }
 
@@ -56,14 +56,14 @@ std::vector<int> Face::findPiecesOfFace(Piece& pieceRef, int times) const
 int Face::find5EdgeLoc(int pieceNum)
 {
     for (int i = 0; i < 5; ++i)
-        if (edge[i]->data.pieceIndex == pieceNum)
+        if (edge[i]->data.pieceNum == pieceNum)
             return i;
     return -1;
 }
 int Face::find5CornerLoc(int pieceNum)
 {
     for (int i = 0; i < 5; ++i)
-        if (corner[i]->data.pieceIndex == pieceNum)
+        if (corner[i]->data.pieceNum == pieceNum)
             return i;
     return -1;
 }
@@ -104,23 +104,17 @@ void Face::rotate(int direction)
     turnDir = direction;
 }
 
-/**
- * \brief Public. Given two local indexes 0-5, swap the Corners.
- */
-void Face::swapCorners(int a, int b)
+/* Public. Given two pieces on the face with local indexes 0-5, swap them. */
+template <typename T>
+void Face::swapPieces(int a, int b)
 {
     assert(a >= 0 && a < 5 && b >= 0 && b < 5);
-    corner[a]->swapdata(corner[b]->data);
+    Piece* pieceA = getFacePiece<T>(a);
+    Piece* pieceB = getFacePiece<T>(b);
+    pieceA->swapdata(pieceB->data);
 }
-
-/**
- * \brief Public. given two local indexes 0-5, swap the Edges.
- */
-void Face::swapEdges(int a, int b)
-{
-    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
-    edge[a]->swapdata(edge[b]->data);
-}
+void Face::swapCorners(int a, int b) { swapPieces<Corner>(a, b); }
+void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
 
 /**
  * \brief Private. Simple-Flips (inverts) one Edge-piece
@@ -145,18 +139,15 @@ void Face::FlipCorners(int a, int b, int c, int d, const int* pack)
     pack[3] ? corner[d]->flip() : corner[d]->flipTwice();
 }
 
-//Private. Swap 4 Corners, given a list of 8 indexes
-void Face::QuadSwapCorners(int const pack[8])
+//Private. Swap 4 Pieces, given a list of 8 indexes
+template <typename T>
+void Face::QuadSwapPieces(int const pack[8])
 {
     for (int i = 0; i < 8; ++i)
-        swapCorners(pack[i], pack[i++]);
-}
-//Private. Swap 4 Edges, given a list of 8 indexes
-void Face::QuadSwapEdges(int const pack[8])
-{
-    for (int i = 0; i < 8; ++i)
-        swapEdges(pack[i], pack[i++]);
-}
+        swapPieces<T>(pack[i], pack[i++]);
+} //where T = Corner or Edge
+void Face::QuadSwapCorners(int const pack[8]) { QuadSwapPieces<Corner>(pack); }
+void Face::QuadSwapEdges(int const pack[8]) { QuadSwapPieces<Edge>(pack); }
 
 /**
  * \brief Colorizing function. Intricate series of flips/swaps.
@@ -325,21 +316,25 @@ bool Face::render()
 {
     glPushMatrix();
     //8 is the current rotational turnspeed for turnDir
-    constexpr int turnspeed = 8;
+    constexpr int turnspeed = 16; //16 is fastmode
     if (rotating)
         angle += turnDir * turnspeed;
+    //Slow down once its 75% complete (and angle == 56 == 56 % 8 == 0)
     if (rotating && angle >= 56 || angle <= -56)
         angle -= turnDir * (turnspeed/2);
     if (angle)
         glRotated(angle, axis[0], axis[1], axis[2]);
+    //Render:
     for (int i = 0; i < 5; ++i) {
         corner[i]->render();
         edge[i]->render();
     }
     center->render();
     glPopMatrix();
+    //Draw a black pentagon to block out view from see-thru hollow insides
     glColor3d(0, 0, 0);
     makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
+    //Done animating, clean up and commit
     if (angle >= 72 || angle <= -72) {
         angle = 0;
         rotating = false;

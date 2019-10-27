@@ -1,6 +1,6 @@
 #pragma once
 #include "engine/megaminx.h"
-#include "common_physics/camera.h"
+#include "ui/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 const char *title = "Megaminx v1.34 - genBTC mod";

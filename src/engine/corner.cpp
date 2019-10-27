@@ -50,7 +50,7 @@ void Corner::init(int n, bool doAxes)
         for (int i = 0; i < 7; ++i)
             createAxis(n, _vertex[i]);
     initColor(g_cornerPiecesColors[n], true);
-    data.pieceIndex = n;
+    data.pieceNum = n;
 }
 
 void Corner::render()
@@ -87,11 +87,11 @@ void Corner::render()
     glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
     glEnd();
     //Piece Numbering Test:
-    //std::string c = std::to_string(data.pieceIndex);
+    //std::string c = std::to_string(data.pieceNum);
     //utDrawText3D(_vertex[2][0], _vertex[2][1], _vertex[2][2] + 5, c.c_str());
     //Vertex Draw Test:
     //for (int i = 0; i < 7; ++i) {
     //    std::string c = std::to_string(i);
-    //    utDrawText3D(_vertex[i][0], _vertex[i][1], _vertex[i][2], c.c_str());
+    //    utDrawText3D(_vertex[i][0] +5, _vertex[i][1] +5, _vertex[i][2], c.c_str());
     //}
 }

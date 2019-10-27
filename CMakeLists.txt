@@ -1,5 +1,6 @@
+# by genBTC 2017/2018/2019 requires CMake>=3.8 for C++ 17
 cmake_minimum_required(VERSION 3.8)
-# by genBTC 2017/2018/2019, project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change stuff as needed.
+# project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change stuff as needed.
 # Also compiles natively on Windows with MSVC as long as you MSVC build freeglut and set the GLUT_ROOT_PATH on Line 33.
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 set(PACKAGE_NAME "Megaminx")
@@ -20,12 +21,12 @@ if(MINGW)
 	set(CMAKE_CXX_COMPILER "g++")
 	message("MingW Platform detected, using G++/GCC/Ninja from: " ${CMAKE_PREFIX_PATH})
 	set(MING_INCLUDES "
-    ${CMAKE_PREFIX_PATH}/include/c++/8.2.0;
-    ${CMAKE_PREFIX_PATH}/include/c++/8.2.0/x86_64-w64-mingw32;
-    ${CMAKE_PREFIX_PATH}/include/c++/8.2.0/backward;
-    ${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include;
+    ${CMAKE_PREFIX_PATH}/include/c++/9.2.0;
+    ${CMAKE_PREFIX_PATH}/include/c++/9.2.0/x86_64-w64-mingw32;
+    ${CMAKE_PREFIX_PATH}/include/c++/9.2.0/backward;
+    ${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/9.2.0/include;
     ${CMAKE_PREFIX_PATH}/include;    
-    ${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/8.2.0/include-fixed;
+    ${CMAKE_PREFIX_PATH}/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed;
     ${CMAKE_PREFIX_PATH}/x86_64-w64-mingw32/include;
     ")
 	message("Manually specified MingW GCC System Include Dirs: " ${MING_INCLUDES})
@@ -65,8 +66,8 @@ if(MINGW)
 endif()
 #// Prepare EXE - by listing all source files (explicitly is safer), and the Res.rc (icon resource)
 add_executable(${PACKAGE_NAME} WIN32 
-    src/common_physics/camera.cpp
-    src/common_physics/opengl.cpp
+    src/ui/camera.cpp
+    src/ui/opengl.cpp
     src/engine/center.cpp
     src/engine/corner.cpp
     src/engine/edge.cpp

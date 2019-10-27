@@ -27,15 +27,21 @@ public:
     Center *center;
     Corner *corner[5];
     Edge   *edge[5];
-    template <typename T>
-    Piece* getPiece(int i) {
+
+   template <typename T>
+    Piece* getFacePiece(int i) {
         if (std::is_same<T, Edge>::value)
             return edge[i];
         else if (std::is_same<T, Corner>::value)
             return corner[i];
-        else
-            return center;
+        return center;
     };
+
+    void initAxis(int n);
+    bool render();
+    void rotate(int direction);
+    bool placeParts(int direction);
+    const int getNum() const { return thisNum; }
 
     std::vector<int> defaultCorners;
     std::vector<int> defaultEdges;
@@ -44,21 +50,20 @@ public:
     void attachCornerPieces(Corner& n);
     void attachEdgePieces(Edge& n);
 
+   template <typename T>
+    void swapPieces(int a, int b);
+    void swapCorners(int a, int b);
+    void swapEdges(int a, int b);
+
     int find5EdgeLoc(int pieceNum);
     int find5CornerLoc(int pieceNum);
     std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;    
 
-    int getNum() const { return thisNum; }
-    void initAxis(int n);    
-    bool render();
-    void rotate(int direction);
-    bool placeParts(int direction);
-    void swapCorners(int a, int b);
-    void swapEdges(int a, int b);
-
 private:
     void TwoEdgesFlip(int a, int b);
     void FlipCorners(int a, int b, int c, int d, const int* pack);
+   template<typename T>
+    void QuadSwapPieces(int const pack[8]);
     void QuadSwapCorners(int const pack[8]);
     void QuadSwapEdges(int const pack[8]);
 

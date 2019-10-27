@@ -146,8 +146,7 @@ void GetCurrentFace()
 //CAPS LOCK cannot work.
 int GetDirFromSpecialKey()
 {
-    return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ?
-            (int)Face::CCW : (int)Face::CW;
+    return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? (int)Face::CCW : (int)Face::CW;
 }
 
 //Double click Rotates Current Face with Shift Modifier.
@@ -260,7 +259,7 @@ void onKeyboard(unsigned char key, int x, int y)
         switch (key) {
         case 3: //Ctrl+C
             glutDestroyWindow(1);
-            exit(0);
+            exit(0); break;
         case 26: //Ctrl+Z
             megaminx->undo();
             break;
@@ -344,7 +343,7 @@ void onKeyboard(unsigned char key, int x, int y)
 //Secondary Keyboard Handler (Special Keys)
 void onSpecialKeyPress(int key, int x, int y)
 {
-    //TODO make a Lua console to input these commands
+    //TODO maybe make a Lua console to input these commands
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
@@ -355,8 +354,8 @@ void onSpecialKeyPress(int key, int x, int y)
         break;
     case GLUT_KEY_END:
         break;
-    case GLUT_KEY_INSERT:
-        menuHandler(301); break; //Instanciate shadow dom
+    //case GLUT_KEY_INSERT:
+        //menuHandler(301); break; //Instanciate shadow dom
     case GLUT_KEY_F1:
         menuHandler(302); break; //Rotate_white_edges
     case GLUT_KEY_F2:
@@ -385,18 +384,19 @@ void onSpecialKeyPress(int key, int x, int y)
     g_camera.PressSpecialKey(key, x, y);
 }
 
-//Right Click Menu structure definitions.
+//Right Click Menu text/function mappings, actual user interface front-end
 void createMenu()
 {
     //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Camera Home Pos.", 93);
-    glutAddMenuEntry("Edit... Undo", 91);
-    glutAddMenuEntry("Edit... Undo By Two", 94);
-    glutAddMenuEntry("Edit... Undo Quad", 95);
-    glutAddMenuEntry("Scramble [Del]", 100);
-    glutAddMenuEntry("Save Cube State", 98);
-    glutAddMenuEntry("Restore Cube State", 99);
+    glutAddMenuEntry("Edit.Undo", 91);
+    glutAddMenuEntry("Edit.Undo [2x]", 94);
+    glutAddMenuEntry("Edit.Undo [4x]", 95);
+    glutAddMenuEntry("Edit.Undo [Bulk]", 96);
+    glutAddMenuEntry("Scramble! [Del]", 100);
+    glutAddMenuEntry("Save Cube...", 98);
+    glutAddMenuEntry("Restore Cube...", 99);
     glutAddMenuEntry("Exit!", 102);
 
     //SubLevel2 Menu - Current Face
@@ -458,30 +458,32 @@ void createMenu()
     glutAddMenuEntry("l u L' U'", 52);
     glutAddMenuEntry("U' L' u l", 53);
     glutAddMenuEntry("u r U' R'", 150);
-    glutAddMenuEntry("r u R' u r 2U' R'", 54);
-    glutAddMenuEntry("u l U' R' u L' U' r", 55);
-    glutAddMenuEntry("u r 2U' L' 2u R' 2U' l u", 56);
     glutAddMenuEntry("R' D' R D", 57);
-    glutAddMenuEntry("R' D' R D x4", 257);
-    glutAddMenuEntry("Edge Permu 1+ x5", 58);
-    glutAddMenuEntry("Edge Permu 2- x5", 59);
-    glutAddMenuEntry("Edge Permu 3+CORNERS Front=Safe", 60);
-    glutAddMenuEntry("Edge Permu 4a+ Front/Left=Safe", 61);
-    glutAddMenuEntry("Edge Permu 4b- Both/Back=Safe", 251);
-    glutAddMenuEntry("Edge Permu 4c- Right/Back=Safe", 252);
-    glutAddMenuEntry("Edge Permu 5+CORNERS", 62);
-    glutAddMenuEntry("Edge Permu LL #203", 253);
-    glutAddMenuEntry("Edge Permu LL #204", 254);
-    glutAddMenuEntry("Edge Permu LL #205", 255);
-    glutAddMenuEntry("Edge Permu LL #206", 256);
-    glutAddMenuEntry("2nd Layer Star Left", 68);
-    glutAddMenuEntry("2nd Layer Star Right", 67);
-    glutAddMenuEntry("4th Layer Star Left", 64);
-    glutAddMenuEntry("4th Layer Star Right", 63);
-    glutAddMenuEntry("6th Layer Star Left", 65);
-    glutAddMenuEntry("6th Layer Star Right", 66);
+    glutAddMenuEntry("R' D' R D [x2]", 258);
+    glutAddMenuEntry("R' D' R D [x4]", 257);    
+    glutAddMenuEntry("LL Corner: u l U' R' u L' U' r", 55);
+    glutAddMenuEntry("LL Corner: u r 2U' L' 2u R' 2U' l u", 56);
+    glutAddMenuEntry("LL Edge+Corn, Front=Safe", 60);
+    glutAddMenuEntry("LL Edge+Corn, Back/Left=Safe", 62);
+    glutAddMenuEntry("LL Edge: r u R' u r 2U' R'", 54);
+    glutAddMenuEntry("LL Edge: r u2, R' u, r u2, R'", 259);
+    glutAddMenuEntry("LL Edge 1+ [x5]", 58);
+    glutAddMenuEntry("LL Edge 2- [x5]", 59);
+    glutAddMenuEntry("LL Edge 4a+, Front/Left=Safe", 61);
+    glutAddMenuEntry("LL Edge 4b-, Both/Back=Safe", 251);
+    glutAddMenuEntry("LL Edge 4c-, Right/Back=Safe", 252);
+    glutAddMenuEntry("LL Edge #203", 253);
+    glutAddMenuEntry("LL Edge #204", 254);
+    glutAddMenuEntry("LL Edge #205", 255);
+    glutAddMenuEntry("LL Edge #206", 256);
+    glutAddMenuEntry("2nd Layer Star Left", 63);
+    glutAddMenuEntry("2nd Layer Star Right", 64);
+    glutAddMenuEntry("4th Layer Star Left", 65);
+    glutAddMenuEntry("4th Layer Star Right", 66);
+    glutAddMenuEntry("6th Layer Star Left", 67);
+    glutAddMenuEntry("6th Layer Star Right", 68);
 
-    //Sublevel X = Human Rotate Auto-Solve algos.
+    //Sublevel X = Human Rotate AUTO-Solve whole layer routines
     glutAddMenuEntry("1st Layer White Edges", 302);
     glutAddMenuEntry("1st Layer White Corners", 303);
     glutAddMenuEntry("2nd Layer Edges", 304);
@@ -490,7 +492,7 @@ void createMenu()
     glutAddMenuEntry("5th Layer Corners", 307);
     glutAddMenuEntry("6th Layer Edges", 308);
 
-    //SubLevel5 Menu - Reset Faces
+    //SubLevel5 Menu - Reset Faces (to solved position)
     submenu5_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry(" 1 WHITE", 71);
     glutAddMenuEntry(" 2 DARK_BLUE", 72);
@@ -518,7 +520,7 @@ void createMenu()
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
-//Right Click Menu event Handler
+//Right Click Menu event Handler, user interface back-end
 void menuHandler(int num)
 {
     switch (num) {
@@ -572,6 +574,8 @@ void menuHandler(int num)
     case 55:
     case 56:
     case 57:
+    case 259:
+    case 258:
     case 257:
     case 58:
     case 59:
@@ -617,6 +621,8 @@ void menuHandler(int num)
         megaminx->undoDouble(); break;
     case 95:
         megaminx->undoQuad(); break;
+    case 96:
+        megaminx->undoBulk(); break;
     case 100:
         megaminx->scramble(); break;
     case 102: 
@@ -707,20 +713,20 @@ void menuHandler(int num)
     }
 }
 
-//Save State filenames
+//Cube SaveState filenames
 #define EDGEFILE "EdgeCurPos.dat"
 #define CORNERFILE "CornerCurPos.dat" 
 #define EDGEFILECOLORS "EdgeColorPos.dat"
 #define CORNERFILECOLORS "CornerColorPos.dat"
 
-//Store (Write)
+//Store Cube (Write VectorFile)
 void FromCubeToVectorFile() {
     WritePiecesFile(EDGEFILE,false);
     WritePiecesFile(CORNERFILE,true);
     serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
     serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
-//Load (Read)
+//Load Cube (Read VectorFile)
 void FromVectorFileToCube() {
     const std::vector<int> &readEdgevector = ReadPiecesFileVector(EDGEFILE);
     const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(EDGEFILECOLORS);
@@ -740,6 +746,7 @@ void FromCubeToShadowCube() {
     shadowDom->LoadNewCornersFromOtherCube(megaminx);
 }
 
+//helper function takes a vector and writes the { } object and each element to a text file
 extern void serializeVectorInt(std::vector<int> list1, std::string filename) {
     std::ofstream file(filename);
     file << "{ ";
@@ -750,6 +757,7 @@ extern void serializeVectorInt(std::vector<int> list1, std::string filename) {
     file.close();
 }
 
+//call findpieces and write them to output file
 void WritePiecesFile(std::string filename, bool corner)
 {
     std::ofstream file(filename);
@@ -761,6 +769,7 @@ void WritePiecesFile(std::string filename, bool corner)
     file.close();
 }
 
+//basic parser for reading vectors from file.
 const std::vector<int> ReadPiecesFileVector(std::string filename)
 {
     std::ifstream input(filename);

@@ -27,10 +27,10 @@ utils.o: src/engine/utils.cpp
 	g++ -c src/engine/utils.cpp
 megaminx.o: src/engine/megaminx.cpp
 	g++ -c src/engine/megaminx.cpp
-camera.o: src/common_physics/camera.cpp
-	g++ -c src/common_physics/camera.cpp
-opengl.o: src/common_physics/opengl.cpp
-	g++ -c src/common_physics/opengl.cpp
+camera.o: src/ui/camera.cpp
+	g++ -c src/ui/camera.cpp
+opengl.o: src/ui/opengl.cpp
+	g++ -c src/ui/opengl.cpp
 #Res.rc.o is a Resource file for an Icon, and windres.exe needs to be used with arguments, it needs this stuff
 # (customized to use the 32-bit windres on a MingW64 setup)
 Res.rc.o:
