@@ -8,18 +8,7 @@
 #include <variant>
 #include <type_traits>
 
-//Named Flip Direction lists:
-constexpr int FlipInwards[4] = { 0, 1, 1, 0 };
-constexpr int FlipOutwards[4] = { 1, 0, 0, 1 };
-constexpr int FlipBackwards[4] = { 0, 0, 1, 1 };
-constexpr int FlipForwards[4] = { 1, 1, 0, 0 };
-constexpr int FlipBackwardAlt[4] = { 0, 1, 0, 1 };
-constexpr int FlipForwardAlt[4] = { 1, 0, 1, 0 };
-
 class Face : public Piece {
-public:
-    enum TurnDir  { Clockwise = -1, None = 0, CounterClockwise = 1 };
-    enum TurnDir2 { CW = -1, CCW = 1 };
 public:
     Face();
     virtual ~Face() = default;
@@ -29,7 +18,7 @@ public:
     Edge   *edge[5];
 
    template <typename T>
-    Piece* getFacePiece(int i) {
+    Piece* getFacePiece(int i) const{
         if (std::is_same<T, Edge>::value)
             return edge[i];
         else if (std::is_same<T, Corner>::value)
@@ -41,7 +30,7 @@ public:
     bool render();
     void rotate(int direction);
     bool placeParts(int direction);
-    const int getNum() const { return thisNum; }
+    int getNum() const { return thisNum; }
 
     std::vector<int> defaultCorners;
     std::vector<int> defaultEdges;
@@ -50,14 +39,16 @@ public:
     void attachCornerPieces(Corner& n);
     void attachEdgePieces(Edge& n);
 
-   template <typename T>
+    std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;
+    template<typename T>
+    int find5PieceLoc(int pieceNum) const;
+    int find5EdgeLoc(int pieceNum) const;
+    int find5CornerLoc(int pieceNum) const;
+
+    template <typename T>
     void swapPieces(int a, int b);
     void swapCorners(int a, int b);
     void swapEdges(int a, int b);
-
-    int find5EdgeLoc(int pieceNum);
-    int find5CornerLoc(int pieceNum);
-    std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;    
 
 private:
     void TwoEdgesFlip(int a, int b);
@@ -72,12 +63,24 @@ private:
     bool rotating;
     double angle;
     double axis[3];
+public:
+    enum TurnDir { Clockwise = -1, None = 0, CounterClockwise = 1 };
+    enum TurnDir2 { CW = -1, CCW = 1 };
 };
 
 struct numdir {
     int num;
     int dir;
 };
+
+//Named Flip Direction lists:
+constexpr int FlipInwards[4] = { 0, 1, 1, 0 };
+constexpr int FlipOutwards[4] = { 1, 0, 0, 1 };
+constexpr int FlipBackwards[4] = { 0, 0, 1, 1 };
+constexpr int FlipForwards[4] = { 1, 1, 0, 0 };
+constexpr int FlipBackwardAlt[4] = { 0, 1, 0, 1 };
+constexpr int FlipForwardAlt[4] = { 1, 0, 1, 0 };
+
 //These are invoked when Face::placeParts() is ran, when it's rotating.
 //Called from Face::render() only, not on startup.
 //Flip direction lists for PlaceParts: //CounterClockwise CORNERS

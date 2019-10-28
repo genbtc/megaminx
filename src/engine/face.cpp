@@ -1,5 +1,3 @@
-#include <vector>
-#include <cassert>
 #include "megaminx.h"
 
 Face::Face()
@@ -53,20 +51,21 @@ std::vector<int> Face::findPiecesOfFace(Piece& pieceRef, int times) const
     return pieceList;
 }
 
-int Face::find5EdgeLoc(int pieceNum)
+//General: Is this piecenum on this face 1-5?
+//Is this 1-30 piecenum on this face 1-5 edges?
+//Is this 1-20 piecenum on this face 1-5 corners?
+template <typename T>
+int Face::find5PieceLoc(int pieceNum) const
 {
-    for (int i = 0; i < 5; ++i)
-        if (edge[i]->data.pieceNum == pieceNum)
+    for (int i = 0; i < 5; ++i) {
+        const auto piece = getFacePiece<T>(i);
+        if (piece->data.pieceNum == pieceNum)
             return i;
+    }
     return -1;
-}
-int Face::find5CornerLoc(int pieceNum)
-{
-    for (int i = 0; i < 5; ++i)
-        if (corner[i]->data.pieceNum == pieceNum)
-            return i;
-    return -1;
-}
+} //where T = Corner or Edge
+int Face::find5EdgeLoc(int pieceNum) const { return find5PieceLoc<Edge>(pieceNum); }
+int Face::find5CornerLoc(int pieceNum) const { return find5PieceLoc<Corner>(pieceNum); }
 
 /**
  * \brief Pre-initialize center with a re-usable list
@@ -104,22 +103,7 @@ void Face::rotate(int direction)
     turnDir = direction;
 }
 
-/* Public. Given two pieces on the face with local indexes 0-5, swap them. */
-template <typename T>
-void Face::swapPieces(int a, int b)
-{
-    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
-    Piece* pieceA = getFacePiece<T>(a);
-    Piece* pieceB = getFacePiece<T>(b);
-    pieceA->swapdata(pieceB->data);
-}
-void Face::swapCorners(int a, int b) { swapPieces<Corner>(a, b); }
-void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
-
-/**
- * \brief Private. Simple-Flips (inverts) one Edge-piece
- * and then the other, individually.
- */
+//Private. Simple-Flips (inverts) one Edge-piece and then the other, individually.
 void Face::TwoEdgesFlip(int a,int b)
 {
     assert(a >= 0 && a < 5 && b >= 0 && b < 5);
@@ -138,6 +122,18 @@ void Face::FlipCorners(int a, int b, int c, int d, const int* pack)
     pack[2] ? corner[c]->flip() : corner[c]->flipTwice();
     pack[3] ? corner[d]->flip() : corner[d]->flipTwice();
 }
+
+/* Public. Given two pieces on the face with local indexes 0-5, swap them. */
+template <typename T>
+void Face::swapPieces(int a, int b)
+{
+    assert(a >= 0 && a < 5 && b >= 0 && b < 5);
+    Piece* pieceA = getFacePiece<T>(a);
+    Piece* pieceB = getFacePiece<T>(b);
+    pieceA->swapdata(pieceB->data);
+} //where T = Corner or Edge
+void Face::swapCorners(int a, int b) { swapPieces<Corner>(a, b); }
+void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
 
 //Private. Swap 4 Pieces, given a list of 8 indexes
 template <typename T>

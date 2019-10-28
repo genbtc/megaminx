@@ -71,7 +71,7 @@ void Edge::init(int n, bool doAxes)
     data.pieceNum = n;
 }
 
-void Edge::render()
+void Edge::render() const
 {
     glColor3dv(data._color[0]);
     glBegin(GL_POLYGON);

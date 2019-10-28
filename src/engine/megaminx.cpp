@@ -61,11 +61,11 @@ void Megaminx::initFacePieces()
 //Need to render all the pieces unconditionally. (once at the start)
 void Megaminx::renderAllPieces()
 {
-    for (auto& center : centers)
+    for (const auto &center : centers)
         center.render();
-    for (auto& edge : edges)
+    for (const auto &edge : edges)
         edge.render();
-    for (auto& corner: corners)
+    for (const auto &corner: corners)
         corner.render();
     //for (auto& face : faces)
     //    face.render();
@@ -237,7 +237,7 @@ void Megaminx::flipPieceColor(int face, int num)
     assert(num > 0 && num <= 5);
     Piece* piece = faces[face].getFacePiece<T>(num);
     piece->flip();
-}
+} //where T = Corner or Edge
 void Megaminx::flipCornerColor(int face, int num) { return flipPieceColor<Corner>(face, num); }
 void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(face, num); }
 
@@ -300,6 +300,7 @@ int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const 
         int f = ((face - 1) * 5);
         std::vector<int> loadPieces = { readPieces[f + 0],readPieces[f + 1],readPieces[f + 2],readPieces[f + 3],readPieces[f + 4] };
         resetFacesPieces<T>(face, loadPieces, false);
+        //resetFivePieces<T>(loadPieces);
     }
     for (int face = 0; face < 12; ++face) {
         int f = face * 5;
@@ -379,12 +380,12 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
         //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
         while (activeFace.edge[j]->data.flipStatus != 0)
             activeFace.edge[j]->flip();
-        //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
-        auto &pIndex = activeFace.edge[j]->data.pieceNum;
-        if (pIndex != defaultEdges[j]) {
-            edges[pIndex].swapdata(edges[defaultEdges[j]].data);
-            j = -1;
-        }
+        ////Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
+        //auto &pIndex = activeFace.edge[j]->data.pieceNum;
+        //if (pIndex != defaultEdges[j]) {
+        //    edges[pIndex].swapdata(edges[defaultEdges[j]].data);
+        //    j = -1;
+        //}
     }
     return 1;
 }
@@ -426,12 +427,12 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
         //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
         while (activeFace.corner[j]->data.flipStatus != 0)
             activeFace.corner[j]->flip();
-        //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
-        auto &pIndex = activeFace.corner[j]->data.pieceNum;
-        if (pIndex != defaultCorners[j]) {
-            corners[pIndex].swapdata(corners[defaultCorners[j]].data);
-            j = -1;
-        }
+        ////Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
+        //auto &pIndex = activeFace.corner[j]->data.pieceNum;
+        //if (pIndex != defaultCorners[j]) {
+        //    corners[pIndex].swapdata(corners[defaultCorners[j]].data);
+        //    j = -1;
+        //}
     }
     return 1;
 }
@@ -1030,7 +1031,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             allSolved = true;
             break;
         }
-        LayerAssist l{ shadowDom,i };
+        
         //Rotates the white face to its solved position, first solved edge matches up to its face.
         if (firstSolvedPiece != -1) {
             //NOTE: Doing this over and over is wasting moves solving the partial-solved top every time.
@@ -1043,6 +1044,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 continue;
             }
         }
+        LayerAssist l{ shadowDom,i };
         //Any matching pieces that end up on its matching face can be spun in with just 2 or 1 moves.
         if (l.ontopA && ((l.isOnRow4 && l.colormatchA) || l.isOnRow2)) {
             int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA) : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
@@ -1799,8 +1801,9 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         Last Layer includes both sides of the edge and all corners.
         EDGES:
         Start finding out which Edges are OK
-        OK means multiple correct pieces in order, or  1 piece's color flipped correctly (gray),
-        Needs to be rotated? must be considered...
+        OK means multiple correct pieces in order, or  1 piece's color facing correctly (gray),
+        Does it Need to be rotated? must be considered...
+        if 0/5, find how many colors are gray,
         If solved 1/5, find out which piece and try to solve the adjacent piece to it next.
         If solved 2/5 find out if they are attached. NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
                                                      YES: Choose a three-ina-row Edge+/Corner algo

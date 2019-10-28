@@ -53,7 +53,7 @@ void Corner::init(int n, bool doAxes)
     data.pieceNum = n;
 }
 
-void Corner::render()
+void Corner::render() const
 {
     glColor3dv(data._color[0]);
     glBegin(GL_POLYGON);

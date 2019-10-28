@@ -9,7 +9,7 @@ public:
     void createAxis(int n, double* target);
     void init(int n, double* edgeVertexBase);
     void init(int n, bool doAxes = true);
-    void render();
+    void render() const;
 };
 
 #endif

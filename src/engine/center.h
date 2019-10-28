@@ -11,7 +11,7 @@ public:
     ~Center() {}
 
     void init(int n);
-    void render();
+    void render() const;
 };
 
 #endif

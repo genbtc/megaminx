@@ -36,7 +36,7 @@ void Center::init(int n)
     initColor(n + 1);
 }
 
-void Center::render()
+void Center::render() const
 {
     glColor3dv(data._color[0]);
     makeGLpentagon(_vertex, 1.0 , GL_POLYGON);

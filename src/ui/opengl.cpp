@@ -92,7 +92,7 @@ void utCalculateAndPrintFps(float x, float y)
 }
 
 
-void makeGLpentagon(double(&_vertex)[7][3], double scale, int shape)
+void makeGLpentagon(const double(&_vertex)[7][3], double scale, int shape)
 {
     glBegin(shape);
     for (int i = 0; i < 5; ++i) {
