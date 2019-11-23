@@ -90,7 +90,7 @@ public:
     void sixthLayerEdges();
     void lowYmiddleW();
     void highYmiddleW();
-    void DetectSolvedWhiteEdgesUnOrdered(bool piecesSolved[5]);
+    void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
    template <typename T>
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
     void DetectSolvedCorners(int startI, bool piecesSolved[5]);

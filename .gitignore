@@ -40,3 +40,4 @@ _ReSharper*/
 .settings
 .vs/
 CMakeBuilds*
+vc140.pdb

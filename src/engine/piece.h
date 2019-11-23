@@ -13,10 +13,12 @@ using std::sqrt;
 
 //common geometric constants
 static const long double DODESIZE = 100;
-static const long double FI = (1 + sqrt(5.f)) / 2;  //1.6180340051651001
 static const long double PI = acos(-1.f);           //3.1415927410125732
+//Golden Ratio (Phi) (also The ratio between the side length of a regular pentagon and one of its diagonals.)
+static const long double FI = (1 + sqrt(5.f)) / 2;  //1.6180340051651001
 static const long double SIDE_ANGLE = 2 * atan(FI); //2.0344439448698051
-static const long double INS_SPHERE_RAD = DODESIZE * sqrt(10+22 / sqrt(5.f)) / 4;   //111.35163307189941
+//inscribed sphere radius ( ri = a / 2 * √ ( 25 + 11 * √5 ) / 10 )
+static const long double INS_SPHERE_RAD = DODESIZE * sqrt(10+22 / sqrt(5.f)) / 4;   //111.35163307189941 
 static const long double INS_CIRCLE_RAD = DODESIZE / sqrt((5 - sqrt(5.f)) / 2);     // 85.065082037033278
 #define pim(x) x*PI/5
 //megaminx vertex shortcuts
@@ -118,56 +120,7 @@ public:
                 data._colorNum[1] == color ||
                 data._colorNum[2] == color;
     }
-    //main transform: used in almost every other algo
-    static void axis1multi(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis1, pim(pack.multi));
-    }
-    static void CenterSide1(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis1, pim(1));
-        rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
-        axis1multi(target, pack);
-    }
-    static void CenterCenter(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis1, PI);
-    }
-    static void CenterSide2(double* target, piecepack &pack) {
-        CenterCenter(target, pack);
-        rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
-        rotateVertex(target, 'z', pim(pack.multi));
-        //This is always z, because axis1/2 are usually y/x and
-        //is re-used by face, where it is Z.
-    }
-    static void CornerGrp3(double* target, piecepack &pack) {
-        CenterSide1(target, pack);
-        rotateVertex(target, pack.axis2, PI);
-    }
-    static void CornerGrp4(double* target, piecepack &pack) {
-        CenterCenter(target, pack);
-        rotateVertex(target, pack.axis2, pim(pack.multi));
-    }
-    static void EdgeGrp2(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis1, pim(3));
-        rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
-        axis1multi(target, pack);
-    }
-    static void EdgeGrp3(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis1, pim(6));
-        EdgeGrp2(target, pack);
-    }
-    static void EdgeGrp4(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis1, pim(8));
-        EdgeGrp2(target, pack);
-    }
-    static void EdgeGrp5(double* target, piecepack &pack) {
-        pack.multi += 1;
-        rotateVertex(target, pack.axis1, pim(2));
-        rotateVertex(target, pack.axis2, SIDE_ANGLE);
-        axis1multi(target, pack);
-    }
-    static void EdgeGrp6(double* target, piecepack &pack) {
-        rotateVertex(target, pack.axis2, PI);
-        axis1multi(target, pack);
-    }
+
     //Changes colors. Flip/rotate/switches colors for current piece.
     void flip() {
         const bool isCorner = (numSides == 3);
@@ -330,4 +283,55 @@ static void rotateVertex(double *vertex, char axis, double angle)
     default:
         break;
     }
+}
+
+//main transform: used in almost every other algo
+static void axis1multi(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis1, pim(pack.multi));
+}
+static void CenterSide1(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis1, pim(1));
+    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
+    axis1multi(target, pack);
+}
+static void CenterCenter(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis1, PI);
+}
+static void CenterSide2(double* target, piecepack &pack) {
+    CenterCenter(target, pack);
+    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
+    rotateVertex(target, 'z', pim(pack.multi));
+    //This is always z, because axis1/2 are usually y/x and
+    //is re-used by face, where it is Z.
+}
+static void CornerGrp3(double* target, piecepack &pack) {
+    CenterSide1(target, pack);
+    rotateVertex(target, pack.axis2, PI);
+}
+static void CornerGrp4(double* target, piecepack &pack) {
+    CenterCenter(target, pack);
+    rotateVertex(target, pack.axis2, pim(pack.multi));
+}
+static void EdgeGrp2(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis1, pim(3));
+    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
+    axis1multi(target, pack);
+}
+static void EdgeGrp3(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis1, pim(6));
+    EdgeGrp2(target, pack);
+}
+static void EdgeGrp4(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis1, pim(8));
+    EdgeGrp2(target, pack);
+}
+static void EdgeGrp5(double* target, piecepack &pack) {
+    pack.multi += 1;
+    rotateVertex(target, pack.axis1, pim(2));
+    rotateVertex(target, pack.axis2, SIDE_ANGLE);
+    axis1multi(target, pack);
+}
+static void EdgeGrp6(double* target, piecepack &pack) {
+    rotateVertex(target, pack.axis2, PI);
+    axis1multi(target, pack);
 }

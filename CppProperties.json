@@ -12,6 +12,7 @@
             "defines": [
                 "_WINDOWS",
                 "WIN32",
+                "_WIN32",
                 "DEBUG",
                 "_DEBUG",
                 "UNICODE",
@@ -31,6 +32,7 @@
             "defines": [
                 "_WINDOWS",
                 "WIN32",
+                "_WIN32",
                 "NDEBUG",
                 "UNICODE",
                 "_UNICODE"

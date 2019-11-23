@@ -12,7 +12,7 @@ Face::Face()
     axis[2] = -1;
 }
 
-//connect the right matching Edge pieces to the face. and store the list.
+/** \brief connect the right matching Edge pieces to the face. and store the list. */
 void Face::attachEdgePieces(Edge& n)
 {
     defaultEdges = Face::findPiecesOfFace(n, Megaminx::numEdges);
@@ -22,7 +22,7 @@ void Face::attachEdgePieces(Edge& n)
     }
 }
 
-//connect the right matching Corner pieces to the face. and store the list.
+/** \brief connect the right matching Corner pieces to the face. and store the list. */
 void Face::attachCornerPieces(Corner& n)
 {
     defaultCorners = Face::findPiecesOfFace(n, Megaminx::numCorners);
@@ -35,8 +35,8 @@ void Face::attachCornerPieces(Corner& n)
 /**
  * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
  *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
- * \pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
- * \times how many times to iterate over the ref'd array
+ * \param pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
+ * \param times how many times to iterate over the ref'd array
  * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
  */
 std::vector<int> Face::findPiecesOfFace(Piece& pieceRef, int times) const

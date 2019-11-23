@@ -354,7 +354,8 @@ void onSpecialKeyPress(int key, int x, int y)
         break;
     case GLUT_KEY_END:
         break;
-    //case GLUT_KEY_INSERT:
+    case GLUT_KEY_INSERT:
+        break;
         //menuHandler(301); break; //Instanciate shadow dom
     case GLUT_KEY_F1:
         menuHandler(302); break; //Rotate_white_edges
@@ -371,7 +372,7 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F7:
         menuHandler(308); break; //rotate_6th_layer-edges
     case GLUT_KEY_F8:
-        menuHandler(309); break; //Layers 1-6 all at once 
+        menuHandler(309); break; //Layers 1-6 all at once +7 
     case GLUT_KEY_F9:
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
@@ -417,6 +418,7 @@ void createMenu()
     glutAddMenuEntry("Flip Colors Corner [4]", 32);
     glutAddMenuEntry("Flip Colors Corner [5]", 33);
 
+    //Sublevel6 Menu - AutoSwap Piece
     submenu6_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Swap Edges 1 & 2", 125);
     glutAddMenuEntry("Swap Edges 1 & 3", 126);
@@ -441,7 +443,7 @@ void createMenu()
 
     //SubLevel3 Menu - Auto Solve Steps (internal fast solve)
     submenu3_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("**Solve Entire Puzzle**", 92);
+    glutAddMenuEntry("*New/Reset/SolveAll*", 92);
     glutAddMenuEntry("1st Layer White Star", 41);
     glutAddMenuEntry("1st Layer White Corners", 42);
     glutAddMenuEntry("2nd Layer Edges", 151);
@@ -449,8 +451,8 @@ void createMenu()
     glutAddMenuEntry("4th Layer Edges", 153);
     glutAddMenuEntry("5th Layer High Y's", 154);
     glutAddMenuEntry("6th Layer Edges", 155);
-    glutAddMenuEntry("Last Layer Grey Star", 156);
-    glutAddMenuEntry("Last Layer Grey Corners", 157);
+    glutAddMenuEntry("7th Layer Grey Star", 156);
+    glutAddMenuEntry("7th Layer Grey Corners", 157);
 
     //SubLevel4 Menu - Human Rotate Algos
     submenu4_id = glutCreateMenu(menuHandler);
@@ -469,21 +471,20 @@ void createMenu()
     glutAddMenuEntry("LL Edge: r u2, R' u, r u2, R'", 259);
     glutAddMenuEntry("LL Edge 1+ [x5]", 58);
     glutAddMenuEntry("LL Edge 2- [x5]", 59);
-    glutAddMenuEntry("LL Edge 4a+, Front/Left=Safe", 61);
-    glutAddMenuEntry("LL Edge 4b-, Both/Back=Safe", 251);
-    glutAddMenuEntry("LL Edge 4c-, Right/Back=Safe", 252);
-    glutAddMenuEntry("LL Edge #203", 253);
-    glutAddMenuEntry("LL Edge #204", 254);
-    glutAddMenuEntry("LL Edge #205", 255);
-    glutAddMenuEntry("LL Edge #206", 256);
-    glutAddMenuEntry("2nd Layer Star Left", 63);
-    glutAddMenuEntry("2nd Layer Star Right", 64);
-    glutAddMenuEntry("4th Layer Star Left", 65);
-    glutAddMenuEntry("4th Layer Star Right", 66);
-    glutAddMenuEntry("6th Layer Star Left", 67);
-    glutAddMenuEntry("6th Layer Star Right", 68);
-
-    //Sublevel X = Human Rotate AUTO-Solve whole layer routines
+    glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 61);
+    glutAddMenuEntry("LL Edge 3b-, Both/Back=Safe", 251);
+    glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 252);
+    glutAddMenuEntry("LL Edge 5-way scramble (#203)", 253);
+    glutAddMenuEntry("LL Edge 5-way scramble (#204)", 254);
+    glutAddMenuEntry("LL Edge 5-way two swaps (#205)", 255);
+    glutAddMenuEntry("LL Edge 5-way swap/INVERT (#206)", 256);
+    glutAddMenuEntry("2nd Layer Edge (Left Algo)", 63);
+    glutAddMenuEntry("2nd Layer Edge (Right Algo) ", 64);
+    glutAddMenuEntry("4th Layer Edge (Left Algo)", 65);
+    glutAddMenuEntry("4th Layer Edge (Right Algo)", 66);
+    glutAddMenuEntry("6th Layer Edge (Left Algo)", 67);
+    glutAddMenuEntry("6th Layer Edge (Right Algo)", 68);
+    //Sublevel X = Human Rotate Bulk-Solve whole layer routines
     glutAddMenuEntry("1st Layer White Edges", 302);
     glutAddMenuEntry("1st Layer White Corners", 303);
     glutAddMenuEntry("2nd Layer Edges", 304);
@@ -492,7 +493,7 @@ void createMenu()
     glutAddMenuEntry("5th Layer Corners", 307);
     glutAddMenuEntry("6th Layer Edges", 308);
 
-    //SubLevel5 Menu - Reset Faces (to solved position)
+    //SubLevel5 Menu - Solve Current Faces (Reset to solved position)
     submenu5_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry(" 1 WHITE", 71);
     glutAddMenuEntry(" 2 DARK_BLUE", 72);
@@ -512,10 +513,10 @@ void createMenu()
     glutAddMenuEntry("Toggle Spinning", 1);
     glutAddSubMenu("Main Menu ---->", submenu0_id);
     glutAddSubMenu("Algorithms --->", submenu4_id);
-    glutAddSubMenu("Auto Solve --->", submenu3_id);
-    glutAddSubMenu("Solve Face --->", submenu5_id);
-    glutAddSubMenu("Current Face ->", submenu2_id);
-    glutAddSubMenu("Piece Swaps -->", submenu6_id);
+    glutAddSubMenu("AutoSolve Layer", submenu3_id);
+    glutAddSubMenu("AutoSolve Face ", submenu5_id);
+    glutAddSubMenu("AutoSwap Piece ", submenu6_id);
+    glutAddSubMenu("Modify Face    ", submenu2_id);
     glutAddMenuEntry("Close Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -707,6 +708,7 @@ void menuHandler(int num)
         megaminx->rotateSolveLayer4Edges(shadowDom);
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
+        megaminx->rotateSolveLayer7Edges(shadowDom);
         break;
     default:
         break;
