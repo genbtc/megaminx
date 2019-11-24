@@ -103,6 +103,7 @@ public:
     void rotateSolve5thLayerCorners(Megaminx* shadowDom);
     void rotateSolveLayer6Edges(Megaminx* shadowDom);
     void rotateSolveLayer7Edges(Megaminx * shadowDom);
+    void testingAlgostrings(Megaminx* shadowDom);
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
     int getRotateQueueNum() { return (int)rotateQueue.size(); }
@@ -142,6 +143,7 @@ private:
     std::queue<numdir> shadowRotateQueue;
     void shadowRotate(int num, int dir);
     friend class LayerAssist;
+    
 };
 
 int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp

@@ -1632,8 +1632,8 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         //Get the Pieces to drop-in ready on Row 4 (gray layer) solved into Row3
         //Any Row 3 pieces that are mis-solved use same algo to go up to gray layer (ends up on row4)
         if (isOnRow3) {
-            int defaultDir = Face::CCW;
-            int offby = sourceCornerIndex - i;
+            //int defaultDir = Face::CCW;
+            //int offby = sourceCornerIndex - i;
             int x, y;
             if (ontopA) {
                 x = cornerFaceNeighbors.b;
@@ -1792,7 +1792,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         int i = 25; //the starting piece
         shadowDom->DetectSolvedEdgesUnOrdered(i, &piecesSolved[0]);
         shadowDom->DetectSolvedEdges(i, &piecesSolvedStrict[0]);
-        while (i < 30 && piecesSolved[i - 25] == true)
+        while (i < 30 && piecesSolvedStrict[i - 25] == true)
             i++;
         if (i >= 30) {
             allSolved = true;
@@ -1803,41 +1803,46 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         int firstSolvedPiece = -1;
         int firstUnsolvedPiece = -1;
         for (int k = 0; k < 5; ++k) {
-            if (piecesSolved[k]) {
+            if (piecesSolvedStrict[k])
                 solvedCount++;
-                if (firstSolvedPiece == -1)
-                    firstSolvedPiece = k;
-            }
-            if (piecesSolved[k] == false && firstUnsolvedPiece == -1)
+            if (piecesSolved[k] && firstSolvedPiece == -1)
+                firstSolvedPiece = k;
+            if (!piecesSolved[k] && firstUnsolvedPiece == -1)
                 firstUnsolvedPiece = k;
         }
         //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
-        if (piecesSolvedStrict[0] == false && firstSolvedPiece != -1 && piecesSolved[i-25] == false && solvedCount > (i-25)) {
+        if (!piecesSolvedStrict[0] && firstSolvedPiece != -1 && piecesSolved[i-25] == true && solvedCount > (i-25)) {
             //NOTE: Doing this over and over is wasting moves potentially
             int findIfPieceSolved = shadowDom->findEdge(i+firstSolvedPiece);
             int offby = findIfPieceSolved - i + firstSolvedPiece;
             if (findIfPieceSolved >= 25 && findIfPieceSolved < 30 && offby != 0) {
-                offby += 1; offby *= -1;
+                //offby += 1; offby *= -1;
                 shadowMultiRotate(GRAY, offby, shadowDom);
                 break;
             }
             break;
         }
-        //first and second piece solved for sure. 
+        else if (piecesSolvedStrict[0] && !piecesSolvedStrict[1]) {
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #11 3a+
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'", loc);
+            for (auto op : bulk)    //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+            break;
+        }
+        //first and second piece solved for sure. (attached)
         else if (solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1]) {
             int sourceEdgeIndex = shadowDom->findEdge(i);
             int offby = sourceEdgeIndex - i;
             if (offby == 2) {
-                colordirs loc = g_faceNeighbors[ORANGE];    //algo #11
+                colordirs loc = g_faceNeighbors[ORANGE];    //algo #11 3a+
                 std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'", loc);
                 for (auto op : bulk)    //+1 the 0-11 faces
                     shadowDom->shadowRotate(op.num + 1, op.dir);
-                break;
             }
-            else
-                break;
             break;
         }
+        //third piece is in place but flagged as unsolved (wrong color) //first part needs to be written variadicly for solvedcount to match order of piecesSolved
+        /* for (solvedcount = i = 0 ; piecesSolvedStrict[i] == true, i < 5; i++) { everythingOK = true; }; */
         else if (solvedCount >= 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && i == shadowDom->findEdge(i)) {
             colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
@@ -1847,19 +1852,22 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
         else
             break;
-        //PSUEDOCODE
+        //PSEUDOCODE
         /*----------
         Last Layer includes both sides of the edge and all corners.
-        EDGES:
+        EDGES = (phase one):
         Start finding out which Edges are OK
         OK means multiple correct pieces in order, or  1 piece's color facing correctly (gray),
         Does it Need to be rotated? must be considered...
         if 0/5, find how many colors are gray,
         If solved 1/5, find out which piece and try to solve the adjacent piece to it next.
-        If solved 2/5 find out if they are attached. NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
-                                                     YES: Choose a three-ina-row Edge+/Corner algo
-        If solved >=3/5 theres a problem. It goes from 2/5 to 5/5 ideally.
-        CORNERS:
+        If solved 2/5 find out if #2 is attached? NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
+                                                   YES: Choose a three-ina-row Edge+/Corner rotate algo, ie: algo #11
+        If solved >=3/5 find out if #3 is attached?: NO: IDK
+                                                      YES: ie: Algo #206 to invert the other 2 corners
+        Can go from 2/5 to all 5/5 at once OR go from 3/5 to 5/5.
+
+        CORNERS = (phase two):
         Corners must keep the edges in place, we will know solved rotation by having the offby=0 as a query to solved findEdges above.
         If solved 1/5, determine if better to skip and start at 0 or continue with this.
          1pt2: check next piece, find out if its capable of being moved in 1 move, or if its 2 moves.
@@ -1874,4 +1882,36 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue    
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+}
+
+void Megaminx::testingAlgostrings(Megaminx* shadowDom)
+{
+    if (!shadowDom) {
+        shadowDom = new Megaminx();
+        shadowDom->LoadNewEdgesFromOtherCube(this);
+        shadowDom->LoadNewCornersFromOtherCube(this);
+    }
+    for (int i=12; i < 12; i++)
+    {
+        auto a = g_AlgoStrings[i];
+        colordirs loc = g_faceNeighbors[ORANGE];    //front-face
+        int repeat = (a.repeatX != NULL) ? a.repeatX : 1;
+        for (int n = 0; n < repeat; ++n) {
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString(a.algo, loc);
+            for (auto op : bulk)    //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+        }
+        std::vector<int> foundEdges;
+        auto defaultEdges = faces[GRAY - 1].defaultEdges;
+        for (int i = 0; i < 5; ++i) {
+            const auto piece = shadowDom->faces[GRAY - 1].getFacePiece<Edge>(i);
+            foundEdges.push_back(piece->data.pieceNum);
+        }
+        std::vector<int> newDifference;
+        for (int i = 0; i < 5; ++i) {
+            newDifference.push_back(foundEdges[i] - defaultEdges[i]);
+        }
+        int printfbreakpoint = 0;
+    }
+    updateRotateQueueWithShadow(shadowDom);
 }

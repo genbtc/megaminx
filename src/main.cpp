@@ -709,6 +709,7 @@ void menuHandler(int num)
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
         megaminx->rotateSolveLayer7Edges(shadowDom);
+        //megaminx->testingAlgostrings(shadowDom);
         break;
     default:
         break;

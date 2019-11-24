@@ -139,4 +139,44 @@ constexpr static int  CW8E[8] = { 3, 4, 2, 4, 1, 2, 0, 1 };
 constexpr static int  CW9E[8] = { 3, 4, 2, 4, 1, 2, 0, 1 };
 constexpr static int CW10E[8] = { 0, 1, 0, 3, 0, 4, 0, 2 };
 constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
+
+struct AlgoString {
+    int num;
+    const char * algo;
+    int repeatX;
+};
+
+constexpr AlgoString g_AlgoStrings[35] = {
+    {0, ""},
+    //AlgoStrings
+    { 1, "r u R' U'"},
+    { 2, "l u L' U'"},
+    { 3, "U' L' u l"},
+    { 4, "u r U' R'"},
+    { 5, "R' DR' R DR"},
+    //{ 5, "R' DR' R DR", 2},
+    //{ 5, "R' DR' R DR", 4},
+    { 6, "u l U' R' u L' U' r"},
+    { 7, "u r 2U' L' 2u R' 2U' l u"},                         
+    { 8, "r u R' F', r  u  R' U', R' f r2 U' R'"},       //  0,1,1,-2,0
+    { 9, "l r u2, L' u R', l U' r u2, L' u2 R'"},        //  4,2,0,-2,-4
+    {10, "r u R' u r 2U' R'"},                           //  0,2,-1,-1,0
+    {11, "r u2, R' u, r u2, R'"},                        //  0,3,0,-2,-1
+    {12, "r2 U2' R2' U' r2 U2' R2'", 5},                 //  0,3,0,-2,-1
+    {13, "r2 u2 R2' u r2 u2 R2'", 5},                    //  0,2,0,1,-3
+    {14, "r u R' u,  R' U' r2 U',  R' u R' u,  r U2'"},  //  0,2,-1,-1,0
+    {15, "r' u' r u', r u r2' u, r u' r u', r' u2"},     //  1,3,0,0,-4
+    {16, "f' u' f u', f u f2' u, f u' f u', f' u2"},     //  3,0,0,1,-4
+    {17, "l' u2 r u2' l u2 r'", 6},                      //  2,2,2,-3,-3
+    {18, "r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'"}, // 4,-1,1,-2,-2  
+    {19, "u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u "},  // 0,1, -1, 1, -1
+    {20, "r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'"},   // 0 , 2, 2, -2, -2
+    {21, "dl l dl l' dl' f' dl' f"},
+    {22, "dr' r' dr' r dr f dr f'"},
+    {23, "F' R', F' F', r f"},
+    {24, "f l, f f, L' F'"},
+    {25, "U' L' u l u f U' F'"},
+    {26, "u r U' R' U' F' u f"}
+};
+
 #endif
