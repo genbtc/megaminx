@@ -969,6 +969,7 @@ public:
         sourceEdgeIndex = shadowDom->findEdge(i);
         auto currentPiece = shadowDom->getPieceArray<Edge>(sourceEdgeIndex);
         auto currentpieceColor = currentPiece->data._colorNum[0];
+        auto currentpieceFlipStatus = currentPiece->data.flipStatus;
         //Determine which two faces the edge belongs to:
         edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
         //Find everything and get it moved over to its drop-in point:
@@ -1789,7 +1790,8 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             break;
         bool piecesSolvedMaybe[5] = { false, false, false, false, false };
         bool piecesSolvedStrict[5] = { false, false, false, false, false };
-        bool colorsSolved[5] = { false, false, false, false, false };
+        bool colorsSolvedMaybe[5] = { false, false, false, false, false };
+        bool colorsSolvedStrict[5] = { false, false, false, false, false };        
         int i = 25; //the starting piece
         shadowDom->DetectSolvedEdgesUnOrdered(i, &piecesSolvedMaybe[0]);
         shadowDom->DetectSolvedEdges(i, &piecesSolvedStrict[0]);
@@ -1800,52 +1802,41 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             break;
         }
         //LayerAssist l{ shadowDom,i };
-        int solvedCount = 0; 
+        int solvedCount = 0;
         int firstSolvedPiece = -1;
         int firstUnsolvedPiece = -1;
         for (int k = 0; k < 5; ++k) {
-            if (piecesSolvedStrict[k])
+            if (piecesSolvedStrict[k]) {
                 solvedCount++;
-            if (piecesSolvedStrict[k])
-                colorsSolved[k] = true;
+                colorsSolvedStrict[k] = true;
+            }
             if (piecesSolvedMaybe[k] && firstSolvedPiece == -1)
                 firstSolvedPiece = k;
             if (!piecesSolvedMaybe[k] && firstUnsolvedPiece == -1)
                 firstUnsolvedPiece = k;
         }
-        int sourceEdgeIndex = shadowDom->findEdge(i);
-        //Determine which two faces the edge belongs to:
-        colorpiece edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
-        //Find everything and get it moved over to its drop-in point:
-        //Determine where on those faces the edges are positioned, 0-4
-        int edgeFaceLocA = shadowDom->faces[edgeFaceNeighbors.a - 1].find5EdgeLoc(i);
-        assert(edgeFaceLocA != -1); //(-1 for fail, not found)
-        int edgeFaceLocB = shadowDom->faces[edgeFaceNeighbors.b - 1].find5EdgeLoc(i);
-        assert(edgeFaceLocB != -1); //should not happen
-        Edge* EdgeItselfA = shadowDom->faces[edgeFaceNeighbors.a - 1].edge[edgeFaceLocA];
-        //Determine which direction those faces need to rotate to land the Edge on the white
-        int dirToWhiteA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
-        int dirToWhiteB = DirToWhiteFace[edgeFaceNeighbors.b - 1][edgeFaceLocB];
-        //Use reference table to check edge internal color data struct-order.
-        int whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a - 1][edgeFaceLocA];
-        int whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b - 1][edgeFaceLocB];
-        //Determine which color half-edge is on each face
-        int edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
-        int edgeHalfColorB = EdgeItselfA->data._colorNum[whichcolorEdgeB];
-        //Only care about row7
-        bool isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
-        //on Row7, One of these will be gray, so the other letter is the colored face target.
-        bool graymatchA = edgeFaceNeighbors.a == GRAY;
-        bool graymatchB = edgeFaceNeighbors.b == GRAY;
         for (int k = 0; k < 5; ++k) {
             Edge* EdgeItselfNext = shadowDom->faces[GRAY - 1].edge[k];
-            if ((k+25 == shadowDom->findEdge(k+25)) && EdgeItselfNext->data.flipStatus == 0)
-                colorsSolved[k] = true;
+            // 
+            if (EdgeItselfNext->data.flipStatus == 0)
+                colorsSolvedMaybe[k] = true;
         }
+        int sourceEdgeIndex = shadowDom->findEdge(i);
         int offby = sourceEdgeIndex - i;
+        auto currentPiece = shadowDom->getPieceArray<Edge>(sourceEdgeIndex);
+        auto currentpieceColor = currentPiece->data._colorNum[0];
+        auto currentpieceFlipStatus = currentPiece->data.flipStatus;
+        //orient the first piece if it exists:
+        int findIfPieceSolved = shadowDom->findEdge(25); //always piece 0
+        if (findIfPieceSolved > 25 && findIfPieceSolved < 30 && currentpieceFlipStatus == 0 && !piecesSolvedStrict[0] && offby != 0) {
+            //Test 3 passes.
+            int offby = findIfPieceSolved - 25;
+            shadowMultiRotate(GRAY, offby, shadowDom);
+            break;
+        }
         //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
-        if (!piecesSolvedStrict[0] && firstSolvedPiece != -1 && piecesSolvedMaybe[i-25] == true && solvedCount >= (i-25)) {
-            int findIfPieceSolved = shadowDom->findEdge(i+firstSolvedPiece);
+        else if (!piecesSolvedStrict[0] && firstSolvedPiece != -1 && (piecesSolvedMaybe[i - 25]) && solvedCount >= (i - 25)) {
+            int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);
             int offby = findIfPieceSolved - i + firstSolvedPiece;
             if (findIfPieceSolved >= 25 && findIfPieceSolved < 30 && offby != 0) {
                 shadowMultiRotate(GRAY, offby, shadowDom);
@@ -1853,9 +1844,9 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             }
             break;
         }
-        else if ((offby == 1) && !colorsSolved[i-25] &&
+        else if ((offby == 1) && !colorsSolvedStrict[i - 25] &&
             (solvedCount >= 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1])
-        ){
+            ) {
             //invert has to be on 8' & 1' oclock relative to face.
             colordirs loc = g_faceNeighbors[BEIGE];    //algo #206
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
@@ -1865,7 +1856,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
         else if ((offby == 3) &&
             (solvedCount == 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1])
-        ){
+            ) {
             //invert has to be on 8' & 1' oclock relative to face.
             colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
@@ -1874,11 +1865,11 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             break;
         }
         //first and second piece solved for sure. (attached)
-        else if ((offby == 2) && 
+        else if ((offby == 2) &&
             (solvedCount == 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1]) ||
             (solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1]) ||
             (solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4])
-        ){
+            ) {
             if ((solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4]))
                 solvedCount += 3;   //Test2-pt2-pass
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + solvedCount - 1];    //algo #11 3a+
@@ -1887,9 +1878,40 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 shadowDom->shadowRotate(op.num + 1, op.dir);
             break;
         }
-        //third piece is in place but flagged as unsolved (wrong color) //first part needs to be written variadicly for solvedcount to match order of piecesSolved
-        /* for (solvedcount = i = 0 ; piecesSolvedStrict[i] == true, i < 5; i++) { everythingOK = true; }; */
-        else if (solvedCount >= 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && i == sourceEdgeIndex) {
+        //third piece is in place but flagged as unsolved (wrong color)
+        //condition needs to be written variadicly for solvedcount to match order of piecesSolved
+        else if (
+            (solvedCount >= 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && i == sourceEdgeIndex)
+            ) {
+            //invert has to be on 8' & 1' oclock relative to face.
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
+            for (auto op : bulk)    //+1 the 0-11 faces
+                shadowDom->shadowRotate(op.num + 1, op.dir);
+            break;
+        }
+        else if (
+            //Piece 0 is colored wrong, check offset, reverse it to the 1 oclock face. 
+            (solvedCount == 0 && !piecesSolvedStrict[0] && !colorsSolvedStrict[0])
+        ) {
+            int target = 0;
+            switch (offby) {
+            case 0:
+                target = -2; break;
+            case 1:
+                target = -1; break;
+            case 2:
+                target = 0; break;
+            case 3:
+                target = 1; break;
+            case 4:
+                target = 2; break;
+            case -1:
+                target = 2; break;
+            case -2:
+                target = 1; break;
+            }
+            shadowMultiRotate(GRAY, target, shadowDom);
             //invert has to be on 8' & 1' oclock relative to face.
             colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
