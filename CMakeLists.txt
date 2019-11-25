@@ -68,11 +68,15 @@ endif()
 add_executable(${PACKAGE_NAME} WIN32 
     src/ui/camera.cpp
     src/ui/opengl.cpp
+    src/ui/menu.cpp
     src/engine/center.cpp
     src/engine/corner.cpp
     src/engine/edge.cpp
     src/engine/face.cpp
     src/engine/megaminx.cpp
+    src/engine/solve.cpp
+    src/engine/shadow.cpp
+    src/engine/load.cpp
     src/main.cpp
     src/Res.rc
 )

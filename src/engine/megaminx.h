@@ -85,11 +85,24 @@ public:
     void resetFivePieces(std::vector<int> &v);
     void resetFiveEdges(std::vector<int> &v);
     void resetFiveCorners(std::vector<int> &v);
-    void secondLayerEdges();
-    void fourthLayerEdges();
-    void sixthLayerEdges();
-    void lowYmiddleW();
-    void highYmiddleW();
+
+    void Megaminx::secondLayerEdges() {        
+        resetFiveEdges(m_secondLayerEdges);
+    }
+    void Megaminx::fourthLayerEdges() {        
+        resetFiveEdges(m_fourthLayerEdgesA);        
+        resetFiveEdges(m_fourthLayerEdgesB);
+    }
+    void Megaminx::sixthLayerEdges() {        
+        resetFiveEdges(m_sixthLayerEdges);
+    }
+    void Megaminx::lowYmiddleW() {        
+        resetFiveCorners(m_secondLayerEdges);
+    }
+    void Megaminx::highYmiddleW() {        
+        resetFiveCorners(m_fourthLayerEdgesA);
+    }
+
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
    template <typename T>
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
@@ -146,6 +159,7 @@ private:
     
 };
 
-int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
-void serializeVectorInt(std::vector<int> list1, std::string filename);
+extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
+extern void serializeVectorInt(std::vector<int> list1, std::string filename);
+
 #endif

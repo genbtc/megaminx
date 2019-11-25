@@ -140,6 +140,11 @@ constexpr static int  CW9E[8] = { 3, 4, 2, 4, 1, 2, 0, 1 };
 constexpr static int CW10E[8] = { 0, 1, 0, 3, 0, 4, 0, 2 };
 constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
 
+constexpr static int m_secondLayerEdges[5]  = { 5, 6, 7, 8, 9 };
+constexpr static int m_fourthLayerEdgesA[5] = { 10, 11, 12, 13, 14 };
+constexpr static int m_fourthLayerEdgesB[5] = { 15, 16, 17, 18, 19 };
+constexpr static int m_sixthLayerEdges[5]   = { 20, 21, 22, 23, 24 };
+
 struct AlgoString {
     int num;
     const char * algo;
