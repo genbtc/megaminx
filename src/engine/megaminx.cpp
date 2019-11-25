@@ -574,18 +574,18 @@ void Megaminx::rotateAlgo(int current_face, int i)
     case 99919:
     case 201:
         //Last Layer: Edge Permutation 3b-: (gray on top)
-            //Opposite of EdgePermutation4a. Reverses #4A only when 3 edges are positioned in the front row,
+            //Opposite of EdgePermutation3a. Reverses #4A only when 3 edges are positioned in the front row,
             // Unaffecteds(2) = stay on both/back sides. Cycles edges in the opposite rotation.
             //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
-            //Reverses 4a if cube is rotated 2 turns CW.
+            //Reverses 3a if cube is rotated 2 turns CW.
         rotateBulkAlgoString("r' u' r u', r u r2' u, r u' r u', r' u2");
         break;
     case 99920:
     case 202:
         //Last Layer: Edge Permutation 3c-: (gray on top)
             // Unaffecteds(2) = right/back side untouched. edges cycle rotate = clockwise
-            //Reverses 4a if cube is rotated 2 turns CCW.
-            //Identical Twin to 4b but Rotates the front face instead of right
+            //Reverses 3a if cube is rotated 2 turns CCW.
+            //Identical Twin to 3b but Rotates the front face instead of right
         rotateBulkAlgoString("f' u' f u', f u f2' u, f u' f u', f' u2");
         break;
     case 99921:

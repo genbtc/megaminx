@@ -946,6 +946,13 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (EdgeItselfNext->data.flipStatus == 0)
                 colorsSolvedMaybe[k] = true;
         }
+        bool allColorsSolvedMaybe = colorsSolvedMaybe[0] && colorsSolvedMaybe[1] && colorsSolvedMaybe[2] && colorsSolvedMaybe[3] && colorsSolvedMaybe[4];
+        bool twoAdjacentPieces = (  //test2-p3p4OK-rotate3a+ PASS
+            (piecesSolvedStrict[0] && piecesSolvedStrict[1]) ||
+            (piecesSolvedStrict[1] && piecesSolvedStrict[2]) ||
+            (piecesSolvedStrict[2] && piecesSolvedStrict[3]) ||
+            (piecesSolvedStrict[3] && piecesSolvedStrict[4]) ||
+            (piecesSolvedStrict[4] && piecesSolvedStrict[0]));
         std::vector<numdir> bulk;
         int sourceEdgeIndex = shadowDom->findEdge(i);
         int offby = sourceEdgeIndex - i;
@@ -954,14 +961,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         auto currentpieceFlipStatus = currentPiece->data.flipStatus;
         //orient the first piece if it exists:
         int findIfPieceSolved = shadowDom->findEdge(25); //always piece 0
-        if (findIfPieceSolved > 25 && findIfPieceSolved < 30 && currentpieceFlipStatus == 0 && !piecesSolvedStrict[0] && offby != 0) {
+        if (findIfPieceSolved > 25 && findIfPieceSolved < 30 && currentpieceFlipStatus == 0 && !piecesSolvedStrict[0] && offby != 0 && !twoAdjacentPieces) {
             //Test 3 passes.
             int offby = findIfPieceSolved - 25;
             shadowMultiRotate(GRAY, offby, shadowDom);
             break;
         }
         //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
-        else if (!piecesSolvedStrict[0] && firstSolvedPiece != -1 && (piecesSolvedMaybe[i - 25]) && solvedCount >= (i - 25)) {
+        else if (!piecesSolvedStrict[0] && firstSolvedPiece != -1 && piecesSolvedMaybe[i - 25] && solvedCount >= (i - 25)) {
             int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);
             int offby = findIfPieceSolved - i + firstSolvedPiece;
             if (findIfPieceSolved >= 25 && findIfPieceSolved < 30 && offby != 0) {
@@ -970,18 +977,31 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             }
             break;
         }
+        else if (offby == 1 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && allColorsSolvedMaybe)  //test4-pt2 ->(blue/orange)=PASS
+        {
+            colordirs loc = g_faceNeighbors[BEIGE];    //algo #13 3c-+
+            bulk = shadowDom->ParseAlgorithmString("f' u' f u', f u f2' u, f u' f u', f' u2", loc);
+        }
+        else if (offby == 3 && solvedCount == 2 && piecesSolvedStrict[1] && piecesSolvedStrict[2])  //test3-pt2-manual->(orange/green)=PASS
+        {
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #13 3c-+
+            bulk = shadowDom->ParseAlgorithmString("f' u' f u', f u f2' u, f u' f u', f' u2", loc);
+        }
         //first and second piece solved for sure. (attached)        // +TODO: repeats this a 2nd time instead of doing 3b- to go backwards.
-        else if ((offby == 2) &&
+        else if ((offby == 2) && (
             (solvedCount == 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1]) ||
             (solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1]) ||
+            (solvedCount == 2 && piecesSolvedStrict[1] && piecesSolvedStrict[2]) ||
             (solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4]) ||
-            ((solvedCount >= 2 && piecesSolvedStrict[4] && piecesSolvedStrict[0])
-                && shadowDom->faces[GRAY - 1].edge[2]->data.flipStatus == 1 && shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1)
+            (solvedCount >= 2 && piecesSolvedStrict[4] && piecesSolvedStrict[0]                                                               //test5
+                && ((shadowDom->faces[GRAY - 1].edge[2]->data.flipStatus == 1 &&
+                    shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1) || allColorsSolvedMaybe)))
             ) {
-            if ((solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4]))
+            
+            if (solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4])
                 solvedCount += 3;   //Test2-pt2-pass
-            if (solvedCount >= 2 && piecesSolvedStrict[4] && piecesSolvedStrict[0] &&
-                shadowDom->faces[GRAY - 1].edge[2]->data.flipStatus == 1 && shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1)
+            if (solvedCount >= 2 && piecesSolvedStrict[4] && piecesSolvedStrict[0] &&                                                       //test5
+                ((shadowDom->faces[GRAY - 1].edge[2]->data.flipStatus == 1 && shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1) || allColorsSolvedMaybe))
                 solvedCount = 1;   //Test4-fixns
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + solvedCount - 1];    //algo #11 3a+
             bulk = shadowDom->ParseAlgorithmString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'", loc);
