@@ -1817,10 +1817,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
         for (int k = 0; k < 5; ++k) {
             Edge* EdgeItselfNext = shadowDom->faces[GRAY - 1].edge[k];
-            // 
             if (EdgeItselfNext->data.flipStatus == 0)
                 colorsSolvedMaybe[k] = true;
         }
+        std::vector<numdir> bulk;
         int sourceEdgeIndex = shadowDom->findEdge(i);
         int offby = sourceEdgeIndex - i;
         auto currentPiece = shadowDom->getPieceArray<Edge>(sourceEdgeIndex);
@@ -1844,55 +1844,52 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             }
             break;
         }
+        else if ((offby == 0) && !colorsSolvedStrict[i - 25] &&
+            (solvedCount >= 2 && piecesSolvedStrict[0] && !piecesSolvedStrict[1]) &&
+            (shadowDom->faces[GRAY - 1].edge[1]->data.flipStatus == 1 && shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1) //testcase4 manual.
+            ) {
+            colordirs loc = g_faceNeighbors[BEIGE];    //algo #206  //invert has to be on 8' & 1' oclock relative to face.
+            bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
+        }
         else if ((offby == 1) && !colorsSolvedStrict[i - 25] &&
             (solvedCount >= 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1])
             ) {
-            //invert has to be on 8' & 1' oclock relative to face.
-            colordirs loc = g_faceNeighbors[BEIGE];    //algo #206
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
-            for (auto op : bulk)    //+1 the 0-11 faces
-                shadowDom->shadowRotate(op.num + 1, op.dir);
-            break;
+            colordirs loc = g_faceNeighbors[BEIGE];    //algo #206  //invert has to be on 8' & 1' oclock relative to face.
+            bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
         }
         else if ((offby == 3) &&
             (solvedCount == 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1])
             ) {
-            //invert has to be on 8' & 1' oclock relative to face.
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
-            for (auto op : bulk)    //+1 the 0-11 faces
-                shadowDom->shadowRotate(op.num + 1, op.dir);
-            break;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206 //invert has to be on 8' & 1' oclock relative to face.
+            bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
         }
-        //first and second piece solved for sure. (attached)
+        //first and second piece solved for sure. (attached)        // +TODO: repeats this a 2nd time instead of doing 3b- to go backwards.
         else if ((offby == 2) &&
             (solvedCount == 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1]) ||
             (solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1]) ||
-            (solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4])
+            (solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4]) ||
+            ((solvedCount >= 2 && piecesSolvedStrict[4] && piecesSolvedStrict[0])
+             && shadowDom->faces[GRAY - 1].edge[2]->data.flipStatus == 1 && shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1)
             ) {
             if ((solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4]))
                 solvedCount += 3;   //Test2-pt2-pass
+            if (solvedCount >= 2 && piecesSolvedStrict[4] && piecesSolvedStrict[0] &&
+                shadowDom->faces[GRAY - 1].edge[2]->data.flipStatus == 1 && shadowDom->faces[GRAY - 1].edge[3]->data.flipStatus == 1)
+                solvedCount = 1;   //Test4-fixns
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + solvedCount - 1];    //algo #11 3a+
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'", loc);
-            for (auto op : bulk)    //+1 the 0-11 faces
-                shadowDom->shadowRotate(op.num + 1, op.dir);
-            break;
+            bulk = shadowDom->ParseAlgorithmString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'", loc);
         }
         //third piece is in place but flagged as unsolved (wrong color)
         //condition needs to be written variadicly for solvedcount to match order of piecesSolved
         else if (
             (solvedCount >= 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && i == sourceEdgeIndex)
             ) {
-            //invert has to be on 8' & 1' oclock relative to face.
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
-            for (auto op : bulk)    //+1 the 0-11 faces
-                shadowDom->shadowRotate(op.num + 1, op.dir);
-            break;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206 //invert has to be on 8' & 1' oclock relative to face.
+            bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
         }
         else if (
             //Piece 0 is colored wrong, check offset, reverse it to the 1 oclock face. 
-            (solvedCount == 0 && !piecesSolvedStrict[0] && !colorsSolvedStrict[0])
+            (solvedCount == 0 && !piecesSolvedStrict[0] && !colorsSolvedStrict[0] && currentpieceFlipStatus == 1)
         ) {
             int target = 0;
             switch (offby) {
@@ -1906,21 +1903,19 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 target = 1; break;
             case 4:
                 target = 2; break;
-            case -1:
-                target = 2; break;
-            case -2:
-                target = 1; break;
             }
             shadowMultiRotate(GRAY, target, shadowDom);
-            //invert has to be on 8' & 1' oclock relative to face.
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
-            for (auto op : bulk)    //+1 the 0-11 faces
-                shadowDom->shadowRotate(op.num + 1, op.dir);
-            break;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #206 //invert has to be on 8' & 1' oclock relative to face.
+            bulk = shadowDom->ParseAlgorithmString("r' l f2' r l' u2 r' l f' r l' u2' r' l f2' r l' u2 r' l f' r l' u2'", loc);
         }
         else
             break;
+        //DO IT:
+        for (auto op : bulk)    //+1 the 0-11 faces
+            shadowDom->shadowRotate(op.num + 1, op.dir);
+        //EXIT FAST:
+        break;
+
         //PSEUDOCODE
         /*----------
         Last Layer includes both sides of the edge and all corners.
