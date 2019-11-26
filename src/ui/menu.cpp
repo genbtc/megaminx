@@ -189,6 +189,7 @@ void createMenu()
     glutAddMenuEntry("Close Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
+//TODO: refactor all into one map of { "menu name", "menu handle #", function+args }
 
 //Right Click Menu event Handler, user interface back-end
 void menuHandler(int num)

@@ -153,7 +153,7 @@ struct AlgoString {
 
 constexpr AlgoString g_AlgoStrings[35] = {
     {0, ""},
-    //AlgoStrings
+    //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
     { 1, "r u R' U'"},
     { 2, "l u L' U'"},
     { 3, "U' L' u l"},
