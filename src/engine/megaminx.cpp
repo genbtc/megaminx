@@ -546,7 +546,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 99916:
     case 8:
-        //Last Layer: Edge Permutation 1: (gray on top) // (5 to 2, 2 to 4, 4 to 5), 8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+        //Last Layer: Edge Permutation 1: (gray on top) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
             //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
             //ONLY Affects Edges & needs 5 executions; Called on Front Face. Affects top gray face's 3 edges
         for (int i = 0; i < 5; ++i)
@@ -555,7 +555,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 99917:
     case 9:
-        //Last Layer: Edge Permutation 2: (gray on top) // (5 to 4, 4 to 2, 2 to 5) (opposite of previous; all the "up"s get reversed)
+        //Last Layer: Edge Permutation 2: (gray on top)(opposite of previous; all the "up"s get reversed)
             //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
             //ONLY Affects Edges & needs 5 executions; Called on Front Face. Affects top gray face's 3 edges
         for (int i = 0; i < 5; ++i)
@@ -564,10 +564,9 @@ void Megaminx::rotateAlgo(int current_face, int i)
         break;
     case 99918:
     case 11:
-        //Last Layer: Edge Permutation 3a+: (gray on top) // (5 to 2, 2 to 1, 1 to 5)
+        //Last Layer: Edge Permutation 3a+: (gray on top) //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock        
             //opposite of the previous one #3 above , but corners aren't affected...
-            //ONLY Affects Edges, only needs one run.
-            //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock        
+            //ONLY Affects Edges, only needs one run.            
             // Unaffecteds(2) = stay on front/left sides        
         rotateBulkAlgoString("r u R' u,  R' U' r2 U',  R' u R' u,  r U2'");
         break;
@@ -629,7 +628,7 @@ void Megaminx::rotateAlgo(int current_face, int i)
     case 99925:
     case 13:
         // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
-            //reverse engineered from #14 myself (Exact opposite)
+            //copied right algo then reverse engineered it back to left myself (Exact opposite)
         rotateBulkAlgoString("dl l dl l' dl' f' dl' f");
         break;
     case 99926:
