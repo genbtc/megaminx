@@ -34,7 +34,7 @@ public:
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     bool isRotating;
     void rotate(int num, int dir);    
-    void rotateAlgo(int n, int i);
+    void rotateAlgo(int face, int id);
     void rotateBulkAlgoVector(std::vector<numdir> &bulk);
     void rotateBulkAlgoString(std::string algoString);
     void rotateBulkAlgoString(std::string algoString, const colordirs & loc);

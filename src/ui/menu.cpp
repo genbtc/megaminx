@@ -113,46 +113,46 @@ void createMenu()
     //SubLevel3 Menu - Auto Solve Steps (internal fast solve)
     submenu3_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("*New/Reset/SolveAll*", 92);
-    glutAddMenuEntry("1st Layer White Star", 41);
-    glutAddMenuEntry("1st Layer White Corners", 42);
-    glutAddMenuEntry("2nd Layer Edges", 151);
-    glutAddMenuEntry("3rd Layer Low Y's", 152);
-    glutAddMenuEntry("4th Layer Edges", 153);
-    glutAddMenuEntry("5th Layer High Y's", 154);
-    glutAddMenuEntry("6th Layer Edges", 155);
-    glutAddMenuEntry("7th Layer Grey Star", 156);
-    glutAddMenuEntry("7th Layer Grey Corners", 157);
+    glutAddMenuEntry("1st Layer White Star", 40);
+    glutAddMenuEntry("1st Layer White Corners", 41);
+    glutAddMenuEntry("2nd Layer Edges", 42);
+    glutAddMenuEntry("3rd Layer Low Y's", 43);
+    glutAddMenuEntry("4th Layer Edges", 44);
+    glutAddMenuEntry("5th Layer High Y's", 45);
+    glutAddMenuEntry("6th Layer Edges", 46);
+    glutAddMenuEntry("7th Layer Grey Star", 47);
+    glutAddMenuEntry("7th Layer Grey Corners", 48);
 
     //SubLevel4 Menu - Human Rotate Algos
     submenu4_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("r u R' U'", 51);
     glutAddMenuEntry("l u L' U'", 52);
     glutAddMenuEntry("U' L' u l", 53);
-    glutAddMenuEntry("u r U' R'", 150);
-    glutAddMenuEntry("R' D' R D", 57);
-    glutAddMenuEntry("R' D' R D [x2]", 258);
-    glutAddMenuEntry("R' D' R D [x4]", 257);
-    glutAddMenuEntry("LL Corner: u l U' R' u L' U' r", 55);
-    glutAddMenuEntry("LL Corner: u r 2U' L' 2u R' 2U' l u", 56);
-    glutAddMenuEntry("LL Edge+Corn, Front=Safe", 60);
-    glutAddMenuEntry("LL Edge+Corn, Back/Left=Safe", 62);
-    glutAddMenuEntry("LL Edge: r u R' u r 2U' R'", 54);
-    glutAddMenuEntry("LL Edge: r u2, R' u, r u2, R'", 259);
-    glutAddMenuEntry("LL Edge 1+ [x5]", 58);
-    glutAddMenuEntry("LL Edge 2- [x5]", 59);
-    glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 61);
-    glutAddMenuEntry("LL Edge 3b-, Both+Backs=Safe", 251);
-    glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 252);
-    glutAddMenuEntry("LL Edge 5-way scramble (#203)", 253);
-    glutAddMenuEntry("LL Edge 5-way scramble (#204)", 254);
-    glutAddMenuEntry("LL Edge 5-way two swaps (#205)", 255);
-    glutAddMenuEntry("LL Edge 5-way swap/INVERT (#206)", 256);
-    glutAddMenuEntry("2nd Layer Edge (Left Algo)", 63);
-    glutAddMenuEntry("2nd Layer Edge (Right Algo) ", 64);
-    glutAddMenuEntry("4th Layer Edge (Left Algo)", 65);
-    glutAddMenuEntry("4th Layer Edge (Right Algo)", 66);
-    glutAddMenuEntry("6th Layer Edge (Left Algo)", 67);
-    glutAddMenuEntry("6th Layer Edge (Right Algo)", 68);
+    glutAddMenuEntry("u r U' R'", 54);
+    glutAddMenuEntry("R' D' R D", 55);
+    //glutAddMenuEntry("R' D' R D [x2]", 55);
+    //glutAddMenuEntry("R' D' R D [x4]", 55);
+    glutAddMenuEntry("LL Corner: u l U' R' u L' U' r", 56);
+    glutAddMenuEntry("LL Corner: u r 2U' L' 2u R' 2U' l u", 57);
+    glutAddMenuEntry("LL Edge+Corn, Front=Safe", 58);
+    glutAddMenuEntry("LL Edge+Corn, Back/Left=Safe", 59);
+    glutAddMenuEntry("LL Edge: r u R' u r 2U' R'", 60);
+    glutAddMenuEntry("LL Edge: r u2, R' u, r u2, R'", 61);
+    glutAddMenuEntry("LL Edge 1+ [x5]", 62);
+    glutAddMenuEntry("LL Edge 2- [x5]", 63);
+    glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 64);
+    glutAddMenuEntry("LL Edge 3b-, Both+Backs=Safe", 65);
+    glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 66);
+    glutAddMenuEntry("LL Edge 5-way scramble (#203)", 67);
+    glutAddMenuEntry("LL Edge 5-way scramble (#204)", 68);
+    glutAddMenuEntry("LL Edge 5-way two swaps (#205)", 69);
+    glutAddMenuEntry("LL Edge 5-way swap/INVERT (#206)", 70);
+    glutAddMenuEntry("2nd Layer Edge (Left Algo)", 71);
+    glutAddMenuEntry("2nd Layer Edge (Right Algo) ",72);
+    glutAddMenuEntry("4th Layer Edge (Left Algo)", 73);
+    glutAddMenuEntry("4th Layer Edge (Right Algo)", 74);
+    glutAddMenuEntry("6th Layer Edge (Left Algo)", 75);
+    glutAddMenuEntry("6th Layer Edge (Right Algo)", 76);
     //Sublevel X = Human Rotate Bulk-Solve whole layer routines
     glutAddMenuEntry("1st Layer White Edges", 302);
     glutAddMenuEntry("1st Layer White Corners", 303);
@@ -164,18 +164,18 @@ void createMenu()
 
     //SubLevel5 Menu - Solve Current Faces (Reset to solved position)
     submenu5_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry(" 1 WHITE", 71);
-    glutAddMenuEntry(" 2 DARK_BLUE", 72);
-    glutAddMenuEntry(" 3 RED", 73);
-    glutAddMenuEntry(" 4 DARK_GREEN", 74);
-    glutAddMenuEntry(" 5 PURPLE", 75);
-    glutAddMenuEntry(" 6 YELLOW", 76);
-    glutAddMenuEntry(" 7 GRAY", 77);
-    glutAddMenuEntry(" 8 LIGHT_BLUE", 78);
-    glutAddMenuEntry(" 9 ORANGE", 79);
-    glutAddMenuEntry("10 LIGHT_GREEN", 80);
-    glutAddMenuEntry("11 PINK", 81);
-    glutAddMenuEntry("12 BEIGE", 82);
+    glutAddMenuEntry(" 1 WHITE", 171);
+    glutAddMenuEntry(" 2 DARK_BLUE", 172);
+    glutAddMenuEntry(" 3 RED", 173);
+    glutAddMenuEntry(" 4 DARK_GREEN", 174);
+    glutAddMenuEntry(" 5 PURPLE", 175);
+    glutAddMenuEntry(" 6 YELLOW", 176);
+    glutAddMenuEntry(" 7 GRAY", 177);
+    glutAddMenuEntry(" 8 LIGHT_BLUE", 178);
+    glutAddMenuEntry(" 9 ORANGE", 179);
+    glutAddMenuEntry("10 LIGHT_GREEN", 180);
+    glutAddMenuEntry("11 PINK", 181);
+    glutAddMenuEntry("12 BEIGE", 182);
 
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
@@ -219,45 +219,35 @@ void menuHandler(int num)
     case 32:  //color flip corner piece 4
     case 33:  //color flip corner piece 5
         megaminx->flipCornerColor(currentFace, num - 28); break;
-    case 41:  //1st Layer = WHITE Edges
+    case 40:  //1st Layer = WHITE Edges
         megaminx->resetFacesEdges(WHITE); break;
-    case 42:  //1st Layer = WHITE Corners
+    case 41:  //1st Layer = WHITE Corners
         megaminx->resetFacesCorners(WHITE); break;
-    case 151: //2nd Layer
+    case 42: //2nd Layer
         megaminx->secondLayerEdges(); break;
-    case 152: //3rd Layer
+    case 43: //3rd Layer
         megaminx->lowYmiddleW(); break;
-    case 153: //4th Layer
+    case 44: //4th Layer
         megaminx->fourthLayerEdges(); break;
-    case 154: //5th Layer
+    case 45: //5th Layer
         megaminx->highYmiddleW(); break;
-    case 155: //6th Layer
+    case 46: //6th Layer
         megaminx->sixthLayerEdges(); break;
-    case 156:  //Last Layer GRAY Edges
+    case 47:  //Last Layer GRAY Edges
         megaminx->resetFacesEdges(GRAY); break;
-    case 157:  //Last Layer GRAY Corners
+    case 48:  //Last Layer GRAY Corners
         megaminx->resetFacesCorners(GRAY); break;
     case 51:
     case 52:
     case 53:
-    case 150:
     case 54:
     case 55:
     case 56:
     case 57:
-    case 259:
-    case 258:
-    case 257:
     case 58:
     case 59:
     case 60:
     case 61:
-    case 251:
-    case 252:
-    case 253:
-    case 254:
-    case 255:
-    case 256:
     case 62:
     case 63:
     case 64:
@@ -267,21 +257,19 @@ void menuHandler(int num)
     case 68:
     case 69:
     case 70:
-        megaminx->rotateAlgo(currentFace, num - 50); break;
-        //Solve Faces (Reset) 1-12:
     case 71:
     case 72:
     case 73:
     case 74:
     case 75:
     case 76:
-    case 77:
-    case 78:
-    case 79:
-    case 80:
-    case 81:
-    case 82:
-        megaminx->resetFace(num - 70); break;
+    //case 77:
+    //case 78:
+    //case 79:
+    //case 80:
+    //case 81:
+    //case 82:
+        megaminx->rotateAlgo(currentFace, num - 50); break;
     case 91:
         megaminx->undo(); break;
     case 92:
@@ -339,6 +327,20 @@ void menuHandler(int num)
         megaminx->g_currentFace->swapCorners(2, 4); break;
     case 144:
         megaminx->g_currentFace->swapCorners(3, 4); break;
+        //Solve Faces (Reset) 1-12:
+    case 171:
+    case 172:
+    case 173:
+    case 174:
+    case 175:
+    case 176:
+    case 177:
+    case 178:
+    case 179:
+    case 180:
+    case 181:
+    case 182:
+        megaminx->resetFace(num - 170); break;
     case 98: //Save Game State
         FromCubeToVectorFile();
         break;
