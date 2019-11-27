@@ -126,21 +126,23 @@ void createMenu()
     glutAddMenuEntry("R' D' R D", 55);
     //glutAddMenuEntry("R' D' R D [x2]", 55);
     //glutAddMenuEntry("R' D' R D [x4]", 55);
-    glutAddMenuEntry("LL Corners: Front=Safe", 57);
-    glutAddMenuEntry("LL Corners: Back/Left=Safe", 56);    
+    glutAddMenuEntry("LL Corners: Cycle CCW Front=Safe", 57);
+    glutAddMenuEntry("LL Corners: Cycle CCW Back/Left=Safe", 56);
+    glutAddMenuEntry("LL Corners: Cycle CCW L=Safe", 78);
+    glutAddMenuEntry("LL Corners: Cycle CW R=Safe", 77);    
     glutAddMenuEntry("LL Edge+Corn, Front=Safe", 58);
     glutAddMenuEntry("LL Edge+Corn, Back/Left=Safe", 59);
     glutAddMenuEntry("LL Edge+Corn: r u R' u r 2U' R'", 60);
     glutAddMenuEntry("LL Edge+Corn: r u2, R' u, r u2, R'", 61);
-    glutAddMenuEntry("LL Edge 1+ [x5]", 62);
-    glutAddMenuEntry("LL Edge 2- [x5]", 63);
+    glutAddMenuEntry("LL Edge 1+ [x5] Front/R.Back=Safe", 62);
+    glutAddMenuEntry("LL Edge 2- [x5] Front/R.Back=Safe", 63);
     glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 64);
     glutAddMenuEntry("LL Edge 3b-, Both+Backs=Safe", 65);
     glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 66);
     glutAddMenuEntry("LL Edge 5-way cycle", 67);
     glutAddMenuEntry("LL Edge 5-way cycle", 68);
-    glutAddMenuEntry("LL Edge 4-way two swaps", 69);
-    glutAddMenuEntry("LL Edge 4-way swap/INVERT", 70);
+    glutAddMenuEntry("LL Edge 4-way two swaps, !Front", 69);
+    glutAddMenuEntry("LL Edge 4-way swap/INVERT, !Front", 70);
     glutAddMenuEntry("2nd Layer Edge (Left Algo)", 71);
     glutAddMenuEntry("2nd Layer Edge (Right Algo) ",72);
     glutAddMenuEntry("4th Layer Edge (Left Algo)", 73);
@@ -259,8 +261,8 @@ void menuHandler(int num)
     case 74:
     case 75:
     case 76:
-    //case 77:
-    //case 78:
+    case 77:
+    case 78:
     //case 79:
     //case 80:
     //case 81:

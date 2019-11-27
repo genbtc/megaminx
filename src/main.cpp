@@ -316,8 +316,10 @@ void onSpecialKeyPress(int key, int x, int y)
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
+        menuHandler(307);
         break;
     case GLUT_KEY_PAGE_DOWN:
+        menuHandler(308);
         break;
     case GLUT_KEY_HOME:
         break;
@@ -325,28 +327,27 @@ void onSpecialKeyPress(int key, int x, int y)
         break;
     case GLUT_KEY_INSERT:
         break;
-        //menuHandler(301); break; //Instanciate shadow dom
     case GLUT_KEY_F1:
-        menuHandler(302); break; //Rotate_white_edges
+        menuHandler(300); break; //Rotate_white_edges
     case GLUT_KEY_F2:
-        menuHandler(303); break; //Rotate_white_corners
+        menuHandler(301); break; //Rotate_white_corners
     case GLUT_KEY_F3:
-        menuHandler(304); break; //rotate_2nd-layer-edges
+        menuHandler(302); break; //rotate_2nd-layer-edges
     case GLUT_KEY_F4:
-        menuHandler(305); break; //rotate_3rd_layer-corners
+        menuHandler(303); break; //rotate_3rd_layer-corners
     case GLUT_KEY_F5:
-        menuHandler(306); break; //rotate_4th_layer-edges
+        menuHandler(304); break; //rotate_4th_layer-edges
     case GLUT_KEY_F6:
-        menuHandler(307); break; //rotate_5th_layer-corners
+        menuHandler(305); break; //rotate_5th_layer-corners
     case GLUT_KEY_F7:
-        menuHandler(308); break; //rotate_6th_layer-edges
+        menuHandler(306); break; //rotate_6th_layer-edges
     case GLUT_KEY_F8:
         menuHandler(309); break; //Layers 1-6 all at once +7 
     case GLUT_KEY_F9:
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
     case GLUT_KEY_F12:
-        megaminx->rotate(key, dir); break;
+        //megaminx->rotate(key, dir); break;
     default:
         break;
     }
