@@ -40,12 +40,13 @@ public:
     void attachEdgePieces(Edge& n);
 
     std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;
-    template<typename T>
+
+   template<typename T>
     int find5PieceLoc(int pieceNum) const;
     int find5EdgeLoc(int pieceNum) const;
     int find5CornerLoc(int pieceNum) const;
 
-    template <typename T>
+   template <typename T>
     void swapPieces(int a, int b);
     void swapCorners(int a, int b);
     void swapEdges(int a, int b);
@@ -53,6 +54,7 @@ public:
 private:
     void TwoEdgesFlip(int a, int b);
     void FlipCorners(int a, int b, int c, int d, const int* pack);
+
    template<typename T>
     void QuadSwapPieces(int const pack[8]);
     void QuadSwapCorners(int const pack[8]);
@@ -152,6 +154,7 @@ struct AlgoString {
 };
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
+//commented description is ^ above the described command
 constexpr AlgoString g_AlgoStrings[32] = {
     {0, ""},    
     // most common one, suitable for white corners or any.
@@ -176,12 +179,13 @@ constexpr AlgoString g_AlgoStrings[32] = {
     //{ 5, "R' DR' R DR", 4},
     //Last Layer: Step 3 - Orient bottom Corners #1,2,3 // Put the corners into their correct positions. (gray on top)
         //ONLY affects Corners. //repeat 3x = undo
-        //the 3, 5 and 7 o clock corners will rotate with each other  //moves Corners from #1to2,2to3,3to1
         //left+rear-side (9:00 to 12:00) and back-left's 2corner+3edges will stay the SAME.
+        //the 3, 5 and 7 o clock corners will rotate with each other  //moves Corners from #1to2,2to3,3to1
+    // Algo 6 and 7 operate in the same direction, just different face of reference. so no point.
     { 6, "u l U' R' u L' U' r"},
     //Last Layer: Step 3 - Orient rear Corners #3,5,4 // Put the corners into their correct positions. (gray on top)
         //ONLY affects Corners. //repeat 3x = undo 
-        // The front face corners (1&2) at the 5 and 7 o'clock will stay same,
+        // The front face corners (1&2) at the 5 and 7 o'clock will stay the SAME,
         // The 3 affected corners will cycle rotate around counter-clockwise.
     { 7, "u r 2U' L' 2u R' 2U' l u"},
     //Last Layer: Step 2/3 - Corner+Edge Permutation 3: (gray on top)  // (5 to 1, 1 to 2, 2 to 5)
@@ -229,12 +233,12 @@ constexpr AlgoString g_AlgoStrings[32] = {
         //Reverses 3a if cube is rotated 2 turns CCW.
         //Identical Twin to 3b but Rotates the front face instead of right
     {16, "f' u' f u', f u f2' u, f u' f u', f' u2"},     //  3,0,0,1,-4
-    // #7Last-Layer: Edge 5-way star scramble, (gray on top) 
+    // #7Last-Layer: Edge 5-way star cycle, (gray on top) 
         //Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4
         //ONLY Affects Edges (all 5)
         //60 moves total. copied from cube manual (turned upside down).
     {17, "l' u2 r u2' l u2 r'", 6},                      //  2,2,2,-3,-3
-    // #7Last-Layer: Edge 5-way star scramble, (gray on top)
+    // #7Last-Layer: Edge 5-way star cycle, (gray on top)
         // Two halves //2,1,3,4,5   //ONLY Affects Edges (all 5)
         //60 moves total. (copied from cube manual)
     {18, "r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'"}, // 4,-1,1,-2,-2
@@ -243,8 +247,8 @@ constexpr AlgoString g_AlgoStrings[32] = {
         //44 moves total. (copied from manual. )
     {19, "u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u "},  // 0,1, -1, 1, -1
     //#7Last-Layer: Edge swap & Invert, (gray on top)
-    //have 1 edge solved (remains in front), then swap 2&4 and 3&5 /INVERTED.
-    //right/backRight swap and left/backLeft swap // with INVERTS @ 8 o'clock and 1 o'clock <- 
+        //have 1 edge solved (remains in front), then swap 2&4 and 3&5 /INVERTED.
+        //right/backRight swap and left/backLeft swap // with INVERTS @ 8 o'clock and 1 o'clock <- 
         //30 moves total. (copied from manual.)
     {20, "r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'"},   // 0 , 2, 2, -2, -2
     // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:

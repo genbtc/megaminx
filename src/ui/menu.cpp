@@ -1,27 +1,21 @@
 #include "../ui/opengl.h"
 #include "../engine/megaminx.h"
 
-extern  int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
-                            submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
 extern int currentFace;
-void menuHandler(int num);
-void menuVisible(int status, int x, int y);
-void utPrintHelpMenu(float w, float h);
+extern bool spinning;
+void createMegaMinx();
+void resetCameraView();
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
 submenu3_id, submenu4_id, submenu5_id, submenu6_id;
-
+void menuHandler(int num);
 void serializeVectorInt(std::vector<int> list1, std::string filename);
 void WritePiecesFile(std::string filename, bool corner);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
 void FromCubeToVectorFile();
 void FromVectorFileToCube();
 void FromCubeToShadowCube();
-extern bool spinning;
-extern void createMegaMinx();
-extern void resetCameraView();
-
 
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
@@ -132,21 +126,21 @@ void createMenu()
     glutAddMenuEntry("R' D' R D", 55);
     //glutAddMenuEntry("R' D' R D [x2]", 55);
     //glutAddMenuEntry("R' D' R D [x4]", 55);
-    glutAddMenuEntry("LL Corner: u l U' R' u L' U' r", 56);
-    glutAddMenuEntry("LL Corner: u r 2U' L' 2u R' 2U' l u", 57);
+    glutAddMenuEntry("LL Corners: Front=Safe", 57);
+    glutAddMenuEntry("LL Corners: Back/Left=Safe", 56);    
     glutAddMenuEntry("LL Edge+Corn, Front=Safe", 58);
     glutAddMenuEntry("LL Edge+Corn, Back/Left=Safe", 59);
-    glutAddMenuEntry("LL Edge: r u R' u r 2U' R'", 60);
-    glutAddMenuEntry("LL Edge: r u2, R' u, r u2, R'", 61);
+    glutAddMenuEntry("LL Edge+Corn: r u R' u r 2U' R'", 60);
+    glutAddMenuEntry("LL Edge+Corn: r u2, R' u, r u2, R'", 61);
     glutAddMenuEntry("LL Edge 1+ [x5]", 62);
     glutAddMenuEntry("LL Edge 2- [x5]", 63);
     glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 64);
     glutAddMenuEntry("LL Edge 3b-, Both+Backs=Safe", 65);
     glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 66);
-    glutAddMenuEntry("LL Edge 5-way scramble (#203)", 67);
-    glutAddMenuEntry("LL Edge 5-way scramble (#204)", 68);
-    glutAddMenuEntry("LL Edge 5-way two swaps (#205)", 69);
-    glutAddMenuEntry("LL Edge 5-way swap/INVERT (#206)", 70);
+    glutAddMenuEntry("LL Edge 5-way cycle", 67);
+    glutAddMenuEntry("LL Edge 5-way cycle", 68);
+    glutAddMenuEntry("LL Edge 4-way two swaps", 69);
+    glutAddMenuEntry("LL Edge 4-way swap/INVERT", 70);
     glutAddMenuEntry("2nd Layer Edge (Left Algo)", 71);
     glutAddMenuEntry("2nd Layer Edge (Right Algo) ",72);
     glutAddMenuEntry("4th Layer Edge (Left Algo)", 73);
@@ -154,13 +148,15 @@ void createMenu()
     glutAddMenuEntry("6th Layer Edge (Left Algo)", 75);
     glutAddMenuEntry("6th Layer Edge (Right Algo)", 76);
     //Sublevel X = Human Rotate Bulk-Solve whole layer routines
-    glutAddMenuEntry("1st Layer White Edges", 302);
-    glutAddMenuEntry("1st Layer White Corners", 303);
-    glutAddMenuEntry("2nd Layer Edges", 304);
-    glutAddMenuEntry("3rd Layer Corners", 305);
-    glutAddMenuEntry("4th Layer Edges", 306);
-    glutAddMenuEntry("5th Layer Corners", 307);
-    glutAddMenuEntry("6th Layer Edges", 308);
+    glutAddMenuEntry("1st Layer White Edges", 300);
+    glutAddMenuEntry("1st Layer White Corners", 301);
+    glutAddMenuEntry("2nd Layer All Edges", 302);
+    glutAddMenuEntry("3rd Layer All Corners", 303);
+    glutAddMenuEntry("4th Layer All Edges", 304);
+    glutAddMenuEntry("5th Layer All Corners", 305);
+    glutAddMenuEntry("6th Layer All Edges", 306);
+    glutAddMenuEntry("7th Layer Gray Edges", 307);
+    glutAddMenuEntry("7th Layer Gray Corners", 308);
 
     //SubLevel5 Menu - Solve Current Faces (Reset to solved position)
     submenu5_id = glutCreateMenu(menuHandler);
@@ -347,29 +343,41 @@ void menuHandler(int num)
     case 99: //Restore Game State
         FromVectorFileToCube();
         break;
-    case 301: //instanciate shadow cube - GLUT_KEY_INSERT
+    case 300: //layer 1 edges rotate+autosolve F1
         FromCubeToShadowCube();
-        break;
-    case 302: //layer 1 edges rotate+autosolve F1
         megaminx->rotateSolveWhiteEdges(shadowDom);
         break;
-    case 303: //layer 1 corners rotate+autosolve F2
+    case 301: //layer 1 corners rotate+autosolve F2
+        FromCubeToShadowCube();
         megaminx->rotateSolveWhiteCorners(shadowDom);
         break;
-    case 304: //layer 2 edges rotate+autosolve F3
+    case 302: //layer 2 edges rotate+autosolve F3
+        FromCubeToShadowCube();
         megaminx->rotateSolveLayer2Edges(shadowDom);
         break;
-    case 305: //layer 3 corners rotate+autosolve F4
+    case 303: //layer 3 corners rotate+autosolve F4
+        FromCubeToShadowCube();
         megaminx->rotateSolve3rdLayerCorners(shadowDom);
         break;
-    case 306: //layer 4 edges rotate+autosolve F5
+    case 304: //layer 4 edges rotate+autosolve F5
+        FromCubeToShadowCube();
         megaminx->rotateSolveLayer4Edges(shadowDom);
         break;
-    case 307: //layer 5 corners rotate+autosolve F6
+    case 305: //layer 5 corners rotate+autosolve F6
+        FromCubeToShadowCube();
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         break;
-    case 308: //layer 6 edges rotate+autosolve F7
+    case 306: //layer 6 edges rotate+autosolve F7
+        FromCubeToShadowCube();
         megaminx->rotateSolveLayer6Edges(shadowDom);
+        break;
+    case 307: //layer 7 edges
+        FromCubeToShadowCube();
+        megaminx->rotateSolveLayer7Edges(shadowDom);
+        break;
+    case 308: //layer 7 corners
+        FromCubeToShadowCube();
+        megaminx->rotateSolve7thLayerCorners(shadowDom);
         break;
     case 309: //layers 1-6 all rotate+autosolve F8
         FromCubeToShadowCube();
@@ -381,6 +389,7 @@ void menuHandler(int num)
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
         megaminx->rotateSolveLayer7Edges(shadowDom);
+        megaminx->rotateSolve7thLayerCorners(shadowDom);
         //megaminx->testingAlgostrings(shadowDom);
         break;
     default:

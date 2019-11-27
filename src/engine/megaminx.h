@@ -116,6 +116,7 @@ public:
     void rotateSolve5thLayerCorners(Megaminx* shadowDom);
     void rotateSolveLayer6Edges(Megaminx* shadowDom);
     void rotateSolveLayer7Edges(Megaminx * shadowDom);
+    void rotateSolve7thLayerCorners(Megaminx * shadowDom);
     void testingAlgostrings(Megaminx* shadowDom);
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
