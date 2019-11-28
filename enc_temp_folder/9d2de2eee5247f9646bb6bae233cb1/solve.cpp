@@ -1035,7 +1035,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if (i == 25 && !colorsSolvedStrict[0])
         {
             offby -= 2;
-            if (!grayFacmore test eColorSolved[1] && !grayFaceColorSolved[4])
+            if (!grayFaceColorSolved[1] && !grayFaceColorSolved[4])
                 offby = 2;
             shadowMultiRotate(GRAY, offby, shadowDom);
             colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #20 //INVERT color: has to be on 8' & 1' oclock relative to face.

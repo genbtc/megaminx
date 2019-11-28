@@ -69,9 +69,9 @@ void utDrawText3D(float x, float y, float z, void *font, char *string)
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {
     static char anglesStr[16];
-    snprintf(anglesStr, 16, "X: %5.3f", x1);
+    snprintf(anglesStr, 16, "X: %5.0f", x1);
     utDrawText2D(x, y, anglesStr);
-    snprintf(anglesStr, 16, "Y: %5.3f", y1);
+    snprintf(anglesStr, 16, "Y: %5.0f", y1);
     utDrawText2D(x, y + 13, anglesStr);
 }
 

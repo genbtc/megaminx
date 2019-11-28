@@ -17,30 +17,27 @@ public:
     Corner *corner[5];
     Edge   *edge[5];
 
+    int getNum() const { return thisNum; }
+    void initAxis(int n);
+    bool render();
+    void rotate(int direction);
+    bool placeParts(int direction);
+
+    std::vector<int> defaultCorners, defaultEdges;
+
+    void attachCenter(Center* a, double* centerVertexBase);
+    void attachCornerPieces(Corner& n);
+    void attachEdgePieces(Edge& n);
+
    template <typename T>
-    Piece* getFacePiece(int i) const{
+    Piece* getFacePiece(int i) const {
         if (std::is_same<T, Edge>::value)
             return edge[i];
         else if (std::is_same<T, Corner>::value)
             return corner[i];
         return center;
     };
-
-    void initAxis(int n);
-    bool render();
-    void rotate(int direction);
-    bool placeParts(int direction);
-    int getNum() const { return thisNum; }
-
-    std::vector<int> defaultCorners;
-    std::vector<int> defaultEdges;
-
-    void attachCenter(Center* a, double* centerVertexBase);
-    void attachCornerPieces(Corner& n);
-    void attachEdgePieces(Edge& n);
-
     std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;
-
    template<typename T>
     int find5PieceLoc(int pieceNum) const;
     int find5EdgeLoc(int pieceNum) const;

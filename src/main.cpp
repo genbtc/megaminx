@@ -316,10 +316,10 @@ void onSpecialKeyPress(int key, int x, int y)
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
-        menuHandler(307);
+        menuHandler(307);    //rotate_7th_layer-edges
         break;
     case GLUT_KEY_PAGE_DOWN:
-        menuHandler(308);
+        menuHandler(308);    //rotate_7th_layer-corners
         break;
     case GLUT_KEY_HOME:
         break;
