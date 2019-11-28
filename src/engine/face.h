@@ -153,7 +153,7 @@ struct AlgoString {
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
 constexpr AlgoString g_AlgoStrings[32] = {
-    {0, ""},    
+    {0, ""},
     // most common one, suitable for white corners or any.
     { 1, "r u R' U'"},
     // opposite pair to first one
@@ -207,46 +207,39 @@ constexpr AlgoString g_AlgoStrings[32] = {
     {11, "r u2, R' u, r u2, R'"},                        //  0,3,0,-2,-1
     // #7Last Layer: Edge Permutation 1: (gray on top) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
-        //ONLY Affects Edges & needs 5 executions; Called on Front Face. Affects top gray face's 3 edges
         // 13 moves * Repeated 5 times = Total 65 moves.
     {12, "r2 U2' R2' U' r2 U2' R2'", 5},                 //  0,3,0,-2,-1
     // #7Last Layer: Edge Permutation 2: (gray on top)(opposite of previous; all the "up"s get reversed)
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
-        //ONLY Affects Edges & needs 5 executions; Called on Front Face. Affects top gray face's 3 edges
         // 13 moves * Repeated 5 times = Total 65 moves.
     {13, "r2 u2 R2' u r2 u2 R2'", 5},                    //  0,2,0,1,-3
     // #7Last Layer: Edge Permutation 3a+: (gray on top) //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock        
-        //opposite of the previous one #3 above , but corners aren't affected...
-        //ONLY Affects Edges, only needs one run.            
-        // Unaffecteds(2) = stay on front/left sides       
+        // opposite of the previous one #3 above , but corners aren't affected...
+        //Unaffecteds(2) = stay on front/left sides       
     {14, "r u R' u,  R' U' r2 U',  R' u R' u,  r U2'"},  //  0,2,-1,-1,0
     // #7Last Layer: Edge Permutation 3b-: (gray on top)
-        //Opposite of EdgePermutation3a. Reverses #4A only when 3 edges are positioned in the front row,
-        // Unaffecteds(2) = stay on both/back sides. Cycles edges in the opposite rotation.
-        //manually reverse engineered from 4, to be equal to #3 but without affecting corners.
-        //Reverses 3a if cube is rotated 2 turns CW.
+        //Opposite of EdgePermutation 3a+(if cube is rotated 2 turns CW). Reverses #3A+ only when 3 edges are positioned in the front row.
+        // manually reverse engineered from 4, to be equal to #3 but without affecting corners.
+        //Unaffecteds(2) = stay on both/back sides. Cycles edges in the opposite rotation.
     {15, "r' u' r u', r u r2' u, r u' r u', r' u2"},     //  1,3,0,0,-4
     // #7Last Layer: Edge Permutation 3c-: (gray on top)
-        // Unaffecteds(2) = right/back side untouched. edges cycle rotate = clockwise
-        //Reverses 3a if cube is rotated 2 turns CCW.
-        //Identical Twin to 3b but Rotates the front face instead of right
+        // Reverses 3a if cube is rotated 2 turns CCW. //Identical Twin to 3b but Rotates the front face instead of right
+        //Unaffecteds(2) = right/back side untouched. edges cycle rotate = clockwise
     {16, "f' u' f u', f u f2' u, f u' f u', f' u2"},     //  3,0,0,1,-4
-    // #7Last-Layer: Edge 5-way star cycle, (gray on top) 
+    // #7Last-Layer: Edge 5-way star cycle all, (gray on top) 
         //Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4
-        //ONLY Affects Edges (all 5)
         //60 moves total. copied from cube manual (turned upside down).
-    {17, "l' u2 r u2' l u2 r'", 6},                      //  2,2,2,-3,-3
-    // #7Last-Layer: Edge 5-way star cycle, (gray on top)
-        // Two halves //2,1,3,4,5   //ONLY Affects Edges (all 5)
+    {17, "l' u2 r u2' l u2 r' ", 6},                      //  2,2,2,-3,-3
+    // #7Last-Layer: Edge 5-way star cycle all, (gray on top) // Two halves //2,1,3,4,5
         //60 moves total. (copied from cube manual)
     {18, "r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'"}, // 4,-1,1,-2,-2
-    // #7Last-Layer: Edge two swaps, (gray on top)
-        //have 1 edge solved (remains in front), then swap 2&3 and 4&5
+    // #7Last-Layer: Edge two adjacent swaps, (gray on top)
+        //Safe Edge = FRONT. then swap 2&3 and 4&5
         //44 moves total. (copied from manual. )
     {19, "u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u "},  // 0,1, -1, 1, -1
-    // #7Last-Layer: Edge swap & Invert, (gray on top)
-        //have 1 edge solved (remains in front), then swap 2&4 and 3&5 /INVERTED.
-        //right/backRight swap and left/backLeft swap // with INVERTS @ 8 o'clock and 1 o'clock <- 
+    // #7Last-Layer: Edge opposite swap & Invert, (gray on top)
+        //Safe Edge = FRONT. then swap 2&4 and 3&5=INVERTED.
+        //right/backLeft swap and left/backRight swap + and INVERTS @ 8 o'clock and 1 o'clock <-- 
         //30 moves total. (copied from manual.)
     {20, "r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'"},   // 0 , 2, 2, -2, -2
     // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
@@ -266,11 +259,13 @@ constexpr AlgoString g_AlgoStrings[32] = {
     {25, "U' L' u l u f U' F'"},
     // #6th-Layer Edges(RIGHT) //opposite of previous, To the edge @ 3 o'clock
     {26, "u r U' R' U' F' u f"},
-    // Clockwise Cycle Corners 7LL  (very necessary, didnt have) Safe Area = Right
+    // 7LL Clockwise Cycle Corners (very necessary, didnt have) Safe Area = Right
         //TODO Should be moved higher in the list and dupes removed.
     {27, "L' u2 R U'2 , L u2 R' U'2"},
-        // CounterClockwise Cycle Corners 7LL (already described as Algo #6/#7) Safe Area = Left
-    {28, "R U'2 L' u2 , R' U'2 L u2"}
+    // 7LL CounterClockwise Cycle Corners (already described as Algo #6/#7) Safe Area = Left
+    {28, "R U'2 L' u2 , R' U'2 L u2"},
+    //#7LL: Edge two swaps (Invert 4 in place),front=safe. (~57 moves total.) (copied from manual.) similar to #20
+    {29, "r' l f2' r l' u2 r' l,  f' r l' u2' r' l f2' r,  l' u2 r' l f' r l' u,  r' l f' r l' u2 r' l,  f2' r l' u2' r' l f' r,  l' u2 r' l f2' r l' "},
 };
 
 #endif

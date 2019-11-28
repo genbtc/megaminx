@@ -124,6 +124,19 @@ void Megaminx::rotate(int num, int dir)
     undoStack.push({ num, dir });
 }
 
+/**
+ * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops to happen
+ * in accordance with how a player would want to achieve certain moves.
+ * \param face from 1 - 12
+ * \param id Index into g_AlgoStrings[] struct
+ */
+void Megaminx::rotateAlgo(int face, int id)
+{
+    assert(face > 0 && face <= numFaces);
+    const colordirs &loc = g_faceNeighbors[face];
+    rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
+}
+
 //Adds entire vector of numdirs to the Rotate queue one by one.
 void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
 {
@@ -446,18 +459,6 @@ void Megaminx::resetFivePieces(std::vector<int> &v) {
 void Megaminx::resetFiveEdges(std::vector<int> &v) { resetFivePieces<Edge>(v); }
 void Megaminx::resetFiveCorners(std::vector<int> &v) { resetFivePieces<Corner>(v); }
 
-/**
- * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops to happen
- * in accordance with how a player would want to achieve certain swaps.
- * \param face from 1 - 12
- */
-void Megaminx::rotateAlgo(int face, int id)
-{
-    assert(face > 0 && face <= numFaces);
-    const colordirs &loc = g_faceNeighbors[face];
-    rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
-}
-
 //A letter/notation parser to manipulate the cube with algo strings
 const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, colordirs loc)
 {
@@ -474,20 +475,23 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
                 (word.find("DR") != npos))
                 op.num = loc.downr - 1;
             else if ((word.find("dl") != npos) ||
-                (word.find("DL") != npos))
+                     (word.find("DL") != npos))
                 op.num = loc.downl - 1;
             else if ((word.find("r") != npos) ||
-                (word.find("R") != npos))
+                     (word.find("R") != npos))
                 op.num = loc.right - 1;
             else if ((word.find("l") != npos) ||
-                (word.find("L") != npos))
+                     (word.find("L") != npos))
                 op.num = loc.left - 1;
             else if ((word.find("f") != npos) ||
-                (word.find("F") != npos))
+                     (word.find("F") != npos))
                 op.num = loc.front - 1;
             else if ((word.find("u") != npos) ||
-                (word.find("U") != npos))
+                     (word.find("U") != npos))
                 op.num = loc.up - 1;
+            else if ((word.find("b") != npos) ||
+                     (word.find("B") != npos))
+                op.num = loc.bottom - 1;
             if (op.num > -1)
                 readVector.push_back(op);
             if (word.find("2") != npos) {

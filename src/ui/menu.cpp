@@ -139,10 +139,11 @@ void createMenu()
     glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 64);
     glutAddMenuEntry("LL Edge 3b-, Both+Backs=Safe", 65);
     glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 66);
-    glutAddMenuEntry("LL Edge 5-way cycle", 67);
-    glutAddMenuEntry("LL Edge 5-way cycle", 68);
-    glutAddMenuEntry("LL Edge 4-way two swaps, !Front", 69);
-    glutAddMenuEntry("LL Edge 4-way swap/INVERT, !Front", 70);
+    glutAddMenuEntry("LL Edge 5-way cycle +", 67);
+    glutAddMenuEntry("LL Edge 5-way cycle -", 68);
+    glutAddMenuEntry("LL Edge 4-way adj.swaps 2&3,4&5", 69);
+    glutAddMenuEntry("LL Edge 4-way opp.swaps 24,35flip", 70);
+    glutAddMenuEntry("LL Edge 4-way color flip 2,3,4,5", 79);
     glutAddMenuEntry("2nd Layer Edge (Left Algo)", 71);
     glutAddMenuEntry("2nd Layer Edge (Right Algo) ",72);
     glutAddMenuEntry("4th Layer Edge (Left Algo)", 73);
@@ -263,7 +264,7 @@ void menuHandler(int num)
     case 76:
     case 77:
     case 78:
-    //case 79:
+    case 79:
     //case 80:
     //case 81:
     //case 82:
