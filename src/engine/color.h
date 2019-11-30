@@ -64,7 +64,7 @@ constexpr colorpiece g_edgePiecesColors[30] = {
     { WHITE, PURPLE },
     { WHITE, YELLOW },
     // 5 - 9
-    { DARK_BLUE, RED }, //D_blue and red faces share Edge #2
+    { DARK_BLUE, RED },
     { RED, DARK_GREEN },
     { DARK_GREEN, PURPLE },
     { PURPLE, YELLOW },
@@ -82,7 +82,7 @@ constexpr colorpiece g_edgePiecesColors[30] = {
     { PURPLE, ORANGE },
     { YELLOW, LIGHT_GREEN },
     // 20 - 24
-    { PINK, BEIGE },    //pink and beige faces share edge #3
+    { PINK, BEIGE },
     { BEIGE, LIGHT_BLUE },
     { LIGHT_BLUE, ORANGE },
     { ORANGE, LIGHT_GREEN },

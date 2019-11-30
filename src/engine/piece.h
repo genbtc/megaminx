@@ -40,6 +40,8 @@ public:
 
     //Coords for GL vertex (up to 7, not all used)
     double _vertex[7][3];
+    //Keeps the default number in the piece. do not swap.
+    int defaultPieceNum = NULL;
 
     //data-members we can swap out
     struct _data {

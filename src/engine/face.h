@@ -8,6 +8,8 @@
 #include <variant>
 #include <type_traits>
 
+class Megaminx; //forward declare for Attach
+
 class Face : public Piece {
 public:
     Face();
@@ -16,6 +18,7 @@ public:
     Center *center;
     Corner *corner[5];
     Edge   *edge[5];
+    //TODO: maybe hold a pointer back to the parent megaminx.
 
     int getNum() const { return thisNum; }
     void initAxis(int n);
@@ -25,9 +28,9 @@ public:
 
     std::vector<int> defaultCorners, defaultEdges;
 
-    void attachCenter(Center* a, double* centerVertexBase);
-    void attachCornerPieces(Corner& n);
-    void attachEdgePieces(Edge& n);
+    void attachCenter(Center* c, double* centerVertexBase);
+    void attachCornerPieces(Megaminx* const megaminx, Corner& c);
+    void attachEdgePieces(Megaminx* const megaminx, Edge& e);
 
    template <typename T>
     Piece* getFacePiece(int i) const {
@@ -37,7 +40,10 @@ public:
             return corner[i];
         return center;
     };
-    std::vector<int> findPiecesOfFace(Piece& pieceRef, int times) const;
+   template<typename T>
+    std::vector<int> findPiecesOrder() const;
+    std::vector<int> findCornersOrder() const;
+    std::vector<int> findEdgesOrder() const;
    template<typename T>
     int find5PieceLoc(int pieceNum) const;
     int find5EdgeLoc(int pieceNum) const;
@@ -53,9 +59,9 @@ private:
     void FlipCorners(int a, int b, int c, int d, const int* pack);
 
    template<typename T>
-    void QuadSwapPieces(int const pack[8]);
-    void QuadSwapCorners(int const pack[8]);
-    void QuadSwapEdges(int const pack[8]);
+    void QuadSwapPieces(const int pack[8]);
+    void QuadSwapCorners(const int pack[8]);
+    void QuadSwapEdges(const int pack[8]);
 
     int thisNum;
     int turnDir;

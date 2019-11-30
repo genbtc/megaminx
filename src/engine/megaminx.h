@@ -42,6 +42,8 @@ public:
     void resetFace(int n);
    template <typename T>
     int resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve = true);
+    int resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve);
+    int resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve);
     int resetFacesCorners(int color_n, const std::vector<int> &loadNewCorners, bool solve = true);
     int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve = true);
     int resetFacesCorners(int color_n);
@@ -51,9 +53,13 @@ public:
     void flipCornerColor(int face, int num);
     void flipEdgeColor(int face, int num);
    template <typename T>
-    std::vector<int> getAllPiecesColorFlipStatus();
-    std::vector<int> getAllCornerPiecesColorFlipStatus();
-    std::vector<int> getAllEdgePiecesColorFlipStatus();
+    std::vector<int> getAllPiecesPosition() const;
+    std::vector<int> getAllCornerPiecesPosition() const;
+    std::vector<int> getAllEdgePiecesPosition() const;
+   template <typename T>
+    std::vector<int> getAllPiecesColorFlipStatus() const;
+    std::vector<int> getAllCornerPiecesColorFlipStatus() const;
+    std::vector<int> getAllEdgePiecesColorFlipStatus() const;
    template <typename T>
     int LoadNewPiecesFromVector(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
@@ -65,26 +71,31 @@ public:
     int findPiece(int pieceNum);
     int findEdge(int pieceNum);
     int findCorner(int pieceNum);
+    std::vector<int> findPiecesOfFace(int face, Piece& pieceRef, int times) const;
    template <typename T>
-    std::vector<int> findPieces(int i);
-    std::vector<int> findCorners(int i);
-    std::vector<int> findEdges(int i);
+    std::vector<int> findPiecesOrder(int face) const;
+    std::vector<int> findCornersOrder(int face) const;
+    std::vector<int> findEdgesOrder(int face) const;
+   template <typename T>
+    std::vector<int> findPieces(int face);
+    std::vector<int> findCorners(int face);
+    std::vector<int> findEdges(int face);
    template <typename T>
     std::vector<int> findFivePieces(const int pieceNums[5]);
     std::vector<int> findEdgePieces(const int pieceNums[5]);
     std::vector<int> findCornerPieces(const int pieceNums[5]);
    template <typename T>
-    std::vector<int> findFivePieces(std::vector<int> &v);
-    std::vector<int> findEdgePieces(std::vector<int> &v);
-    std::vector<int> findCornerPieces(std::vector<int> &v);
+    std::vector<int> findFivePieces(std::vector<int> v);
+    std::vector<int> findEdgePieces(std::vector<int> v);
+    std::vector<int> findCornerPieces(std::vector<int> v);
    template<typename T>
     void resetFivePieces(const int indexes[5]);
     void resetFiveEdges(const int indexes[5]);
     void resetFiveCorners(const int indexes[5]);
    template <typename T>
-    void resetFivePieces(std::vector<int> &v);
-    void resetFiveEdges(std::vector<int> &v);
-    void resetFiveCorners(std::vector<int> &v);
+    void resetFivePiecesV(std::vector<int> v);
+    void resetFiveEdgesV(std::vector<int> v);
+    void resetFiveCornersV(std::vector<int> v);
 
     void Megaminx::secondLayerEdges() {        
         resetFiveEdges(m_secondLayerEdges);

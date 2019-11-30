@@ -12,44 +12,80 @@ Face::Face()
     axis[2] = -1;
 }
 
-/** \brief connect the right matching Edge pieces to the face. and store the list. */
-void Face::attachEdgePieces(Edge& n)
+/**
+ * \brief Pre-initialize center with a re-usable list
+ * \param c The center to attach
+ * \param centerVertexBase array of geometric vertexes
+ */
+void Face::attachCenter(Center *c, double* centerVertexBase)
 {
-    defaultEdges = Face::findPiecesOfFace(n, Megaminx::numEdges);
+    center = c;
+    memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
+}
+
+/**
+ * \brief create our Face's Axes (we can re-use the Center axis creation)
+ * \param n is the number of this face 0-11
+ */
+void Face::initAxis(int n)
+{
+    assert(n >= 0 && n <= 11);
+    thisNum = n;    //0-11
+    center->createAxis(n, axis);
+    for (int i = 0; i < 5; ++i)
+        center->createAxis(n, _vertex[i]);
+}
+
+/** \brief connect the right matching Edge pieces to the face. and store the list. */
+void Face::attachEdgePieces(Megaminx* const megaminx, Edge& e)
+{
+    defaultEdges = megaminx->findPiecesOfFace(thisNum+1, e, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
-        edge[i] = &n + defaultEdges[i];
+        edge[i] = &e + defaultEdges[i];
+        edge[i]->defaultPieceNum = defaultEdges[i];
         assert(edge[i]->data.pieceNum == defaultEdges[i]);
     }
 }
 
 /** \brief connect the right matching Corner pieces to the face. and store the list. */
-void Face::attachCornerPieces(Corner& n)
+void Face::attachCornerPieces(Megaminx* const megaminx, Corner& c)
 {
-    defaultCorners = Face::findPiecesOfFace(n, Megaminx::numCorners);
+    defaultCorners = megaminx->findPiecesOfFace(thisNum+1, c, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
-        corner[i] = &n + defaultCorners[i];
+        corner[i] = &c + defaultCorners[i];
+        corner[i]->defaultPieceNum = defaultCorners[i];
         assert(corner[i]->data.pieceNum == defaultCorners[i]);
     }
 }
 
 /**
- * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
- *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
- * \param pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
- * \param times how many times to iterate over the ref'd array
- * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
+ * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
+ * \param direction turn direction: -1 for Right, +1 for left (seems/is backwards).
  */
-std::vector<int> Face::findPiecesOfFace(Piece& pieceRef, int times) const
+void Face::rotate(int direction)
 {
-    std::vector<int> pieceList;
-    const int color = center->data._colorNum[0];
-    for (int i = 0; i < times, pieceList.size() < 5; ++i) {
-        const bool result = (&pieceRef)[i].matchesColor(color);
-        if (result)
-            pieceList.push_back(i);
-    }
-    return pieceList;
+    assert(direction == Face::Clockwise || direction == Face::CCW);
+    rotating = true;
+    turnDir = direction;
 }
+
+/**
+* \brief Returns an EXACT ORDER list of pieces on[Face], (either Edge or Corner piece)
+* \return List of face's pieces in 1-5 face order
+*/
+template <typename T>
+std::vector<int> Face::findPiecesOrder() const
+{
+    std::vector<int> pieceOrder;
+    //Compile the accurate color solved maybe list.  (maybe rotated)
+    for (int i = 0; i < 5; ++i) {
+        const auto piece = getFacePiece<T>(i);
+        pieceOrder.push_back(piece->data.pieceNum);
+    }
+    return pieceOrder;
+} //where T = Corner or Edge
+std::vector<int> Face::findCornersOrder() const { return findPiecesOrder<Corner>(); };
+std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); };
 
 //General: Is this piecenum on this face 1-5?
 //Is this 1-30 piecenum on this face 1-5 edges?
@@ -67,43 +103,7 @@ int Face::find5PieceLoc(int pieceNum) const
 int Face::find5EdgeLoc(int pieceNum) const { return find5PieceLoc<Edge>(pieceNum); }
 int Face::find5CornerLoc(int pieceNum) const { return find5PieceLoc<Corner>(pieceNum); }
 
-/**
- * \brief Pre-initialize center with a re-usable list
- * \param a The center to attach
- * \param centerVertexBase array of geometric vertexes
- */
-void Face::attachCenter(Center *a, double* centerVertexBase)
-{
-    center = a;
-    memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
-}
-
-/**
- * \brief create our Face's Axes
- * We can re-use the Center axis creation
- * \param n is the number of this face
- */
-void Face::initAxis(int n)
-{
-    assert(n >= 0 && n <= 11);
-    thisNum = n;
-    center->createAxis(n, axis);
-    for (int i = 0; i < 5; ++i)
-        center->createAxis(n, _vertex[i]);
-}
-
-/**
- * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
- * \param direction turn direction: -1 for Right, +1 for left (seems/is backwards).
- */
-void Face::rotate(int direction)
-{
-    assert(direction == Face::Clockwise || direction == Face::CCW);
-    rotating = true;
-    turnDir = direction;
-}
-
-//Private. Simple-Flips (inverts) one Edge-piece and then the other, individually.
+//Private/Internal. Simple-Flips (inverts) one Edge-piece and then the other, individually.
 void Face::TwoEdgesFlip(int a,int b)
 {
     assert(a >= 0 && a < 5 && b >= 0 && b < 5);
@@ -111,7 +111,7 @@ void Face::TwoEdgesFlip(int a,int b)
     edge[b]->flip();
 }
 
-//Private. Functional Generic Switch that flips
+//Private/Internal. Functional Generic Switch that flips
 void Face::FlipCorners(int a, int b, int c, int d, const int* pack)
 {
     //Feed in 4 ints a,b,c,d representing four of the face's Five Corner indexes (Range 0-4)
@@ -137,13 +137,13 @@ void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
 
 //Private. Swap 4 Pieces, given a list of 8 indexes
 template <typename T>
-void Face::QuadSwapPieces(int const pack[8])
+void Face::QuadSwapPieces(const int pack[8])
 {
     for (int i = 0; i < 8; ++i)
         swapPieces<T>(pack[i], pack[i++]);
 } //where T = Corner or Edge
-void Face::QuadSwapCorners(int const pack[8]) { QuadSwapPieces<Corner>(pack); }
-void Face::QuadSwapEdges(int const pack[8]) { QuadSwapPieces<Edge>(pack); }
+void Face::QuadSwapCorners(const int pack[8]) { QuadSwapPieces<Corner>(pack); }
+void Face::QuadSwapEdges(const int pack[8]) { QuadSwapPieces<Edge>(pack); }
 
 /**
  * \brief Colorizing function. Intricate series of flips/swaps.

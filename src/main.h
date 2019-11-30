@@ -16,14 +16,6 @@ double ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
 double START_ANGLE = 60.0f;
 double view_distance_view_angle = 20;
 ///////////////////////////////////////////////////////////////////////////////
-// data for mouse selection
-//MouseRayTestData g_rayTest;
-unsigned int g_lastHitPointID;
-unsigned int g_draggedPointID;
-bool g_areWeDraggingPoint;
-constexpr int DOUBLE_CLICK_INTERVAL = 400;
-static int bnstate[16]; //mousebutton
-int menuVisibleState = 0;
 
 // global vars
 double g_appRenderTimeTotal = 0.0;
@@ -46,10 +38,6 @@ void Idle(int);
 void RenderScene();
 
 void mousePressed(int button, int state, int x, int y);
-void processMousePassiveMotion(int x, int y); //currently unused
-    // ^ called when no mouse btn are pressed and mouse moves
-    // does nothing but record mouse position in camera class.
-    //g_camera.ProcessPassiveMouseMotion(x, y);
 void mousePressedMove(int x, int y);
 void GetCurrentFace();
 void double_click(int x, int y);
@@ -62,7 +50,7 @@ void utPrintHelpMenu(float w, float h);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
                             submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 
-void serializeVectorInt(std::vector<int> list1, std::string filename);
+void serializeVectorInt(std::vector<int> list, std::string filename);
 void WritePiecesFile(std::string filename, bool corner);
 const std::vector<int> ReadPiecesFileVector(std::string filename); 
 void FromCubeToVectorFile();

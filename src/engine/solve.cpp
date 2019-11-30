@@ -1131,8 +1131,6 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         Corner* CornerItselfA = shadowDom->faces[cornerFaceNeighbors.a - 1].corner[cornerFaceLocA];
         auto currentPiece = shadowDom->getPieceArray<Corner>(sourceCornerIndex);
         assert(CornerItselfA == currentPiece);
-        auto& currentpieceColor = currentPiece->data._colorNum[0];
-        auto& currentpieceFlipStatus = currentPiece->data.flipStatus;
         int offby = sourceCornerIndex - i;
         std::vector<int> pieceOrder;
         //Compile the accurate color solved maybe list.  (if rotated)
@@ -1143,19 +1141,26 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             pieceOrder.push_back(CornerItselfNext->data.pieceNum);
         }
         //iterate through the piece/color lists and make some easy compound conditional aliases
-        bool allColorsSolvedMaybe = grayFaceColorSolved[0] && grayFaceColorSolved[1] && grayFaceColorSolved[2] && grayFaceColorSolved[3] && grayFaceColorSolved[4];
         bool fullySolvedOrder = (pieceOrder[0] == 15 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 18 && pieceOrder[4] == 19);
         std::vector<numdir> bulk;
         //START MAIN
-        int findIfFirstCornerSolved = shadowDom->findCorner(15); //always piece 0
         
-        // Bring solved pieces back in-line, by checking solved EDGES and setting that right
-        int findIfFirstEdgeSolved = shadowDom->findEdge(25); //always piece 0
-        if (findIfFirstEdgeSolved > 25 && findIfFirstEdgeSolved < 30 && !piecesSolvedStrict[0] && offby != 0)
+        // firstly rotate solved piece 0 (e#25) gray top back to default, by checking the first EDGE and setting that rotation.
+        int findIfFirstEdgeDefault = shadowDom->findEdge(25); //always piece 0
+        if (findIfFirstEdgeDefault > 25 && findIfFirstEdgeDefault < 30 && !piecesSolvedStrict[0] && offby != 0)
         {
-            int offby = findIfFirstEdgeSolved - 25;
+            int offby = findIfFirstEdgeDefault - 25;
             shadowMultiRotate(GRAY, offby, shadowDom);
         }
+        //NAF: 15 19 18 17 16
+
+        //TestCube25-1 (18 15 19 17 16)
+        if (pieceOrder[0] == 18 && pieceOrder[1] == 15 && pieceOrder[2] == 19 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
+        {
+            int safeStart = 2;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+        } //  --> continues with "15 16 19 17 18" below.
 
         //TestCube26-2 (17 16 19 18 15)
         if (pieceOrder[0] == 17 && pieceOrder[1] == 16 && pieceOrder[2] == 19 && pieceOrder[3] == 18 && pieceOrder[4] == 15)

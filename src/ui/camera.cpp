@@ -73,8 +73,9 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
             m_deltaAngX = m_angleX;
             m_isLeftPressed = true;
         }
-        else if (state == GLUT_UP)
+        else if (state == GLUT_UP) {
             m_isLeftPressed = false;
+        }
     }
     else if (button == GLUT_MIDDLE_BUTTON) {
         if (state == GLUT_DOWN)
@@ -82,18 +83,58 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
         else if (state == GLUT_UP)
             m_isMiddlePressed = false;
     }
+
+    // can we move?
+    if (m_isLeftPressed) {// && g_rayTest.m_hit) {
+        g_draggedPointID = g_lastHitPointID;
+        g_areWeDraggingPoint = true;
+    }
+    else
+        g_areWeDraggingPoint = false;
+
+    //Double Click
+    bnstate[button] = state == GLUT_DOWN ? 1 : 0;
+    if (state == GLUT_DOWN) {
+        if (button == GLUT_LEFT_BUTTON) {
+            const unsigned int msec = glutGet(GLUT_ELAPSED_TIME);
+            const int dx = abs(x - prev_left_x);
+            const int dy = abs(y - prev_left_y);
+
+            if (msec - prev_left_click < DOUBLE_CLICK_INTERVAL && dx < 2 && dy < 2) {
+                double_click(x, y);
+                prev_left_click = 0;
+            }
+            else {
+                prev_left_click = msec;
+                prev_left_x = x;
+                prev_left_y = y;
+            }
+        }
+    }
+    // Disregard redundant GLUT_UP events
+    else if (state == GLUT_UP)
+        return;
+
+    //  Mouse Wheels - starts on 0, (usually 4 & 5) now are 3 & 4 
+    if (button == 3) {
+        //Mouse wheel up
+        m_zoom += 5;
+    }
+    else if (button == 4) {
+        //Mouse wheel down
+        m_zoom -= 5;
+    }
 }
 
+extern int menuVisibleState;
 void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 {
     m_mouseX = x;
     m_mouseY = y;
     if (calcRotation) {
-        //Original Implementation:
         m_angleY = m_deltaAngY + (m_lastY - m_mouseY) / 2;
         m_angleX = m_deltaAngX + (m_mouseX - m_lastX) / 2;
     }
-
 }
 
 void Camera::ProcessPassiveMouseMotion(int x, int y)
@@ -123,6 +164,66 @@ void Camera::RotateGLCameraView()
     else //default:
         glRotated(m_angleX, 0, 0, 1);
 }
+
+
+
+/**
+ * \brief Static Free function. Takes camera position angles and tells what face
+ * is most showing. Shortcut way of angle detection.
+ * \param x camera_angleX
+ * \param y camera_angleY
+ * \return face # color-int (1-12) as result.
+ */
+int getCurrentFaceFromAngles(int x, int y)
+{
+    //Vars:
+    constexpr int r = 72;       //face angles
+    constexpr int d = r / 2;    //36 half of face
+    constexpr int s = 60;  // or match START_ANGLE in main.cpp
+    int face = 0;   //color-int (1-12) as result.
+    //Angle Conditions:
+    const bool y1 = y >= (s - d) && y <= (s + d);                  // 60
+    const bool y1b = y >= (s + 240 - d) && y <= (s + 240 + d);      //300 (other opposite)
+    const bool y2 = y >= (s + 180 - d) && y <= (s + 180 + d);      //240
+    const bool y2b = y >= (s + 60 - d) && y <= (s + 60 + d);      //120 (other opposite)
+    const bool y3 = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
+    const bool y4a = y >= (0 - d) && y <= (0 + d);                //0
+    const bool y4b = y >= (360 - d) && y <= (360 + d);              //360
+    //Edited so horizontal mouse-movement isnt backwards anymore when cube is vertically inverted (white face up), reliant on fix w/ Camera.cpp@Line126
+    constexpr int toplistA[5] = { 12,11,10,9,8 };
+    constexpr int toplistB[5] = { 3,4,5,6,2 };
+    constexpr int botlistA[5] = { 11,12,8,9,10 };
+    constexpr int botlistB[5] = { 4,3,2,6,5 };
+    if (y1 && x < d)
+        face = 8;   //LIGHT_BLUE
+    else if (y2 && x < d)
+        face = 2;   //DARK_BLUE
+    if (face) return face;
+    for (int i = 0; i < 5; ++i) {
+        if (x >= d + r * i && x < d + r * (i + 1)) {
+            if (y1)
+                face = toplistA[i];
+            else if (y2)
+                face = toplistB[i];
+            if (face) return face;
+        }
+    }
+    for (int i = 0; i < 5; ++i) {
+        if (x >= r * i && x < r * (i + 1)) {
+            if (y1b)
+                face = botlistA[i];
+            else if (y2b)
+                face = botlistB[i];
+            if (face) return face;
+        }
+    }
+    if (y3 && !face)    //Bottom {1}
+        face = 1;
+    else if ((y4a || y4b) && !face) //Top {7}
+        face = 7;
+    return face;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // MouseRayTestData

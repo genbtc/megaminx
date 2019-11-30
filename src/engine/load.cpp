@@ -8,34 +8,36 @@ extern Megaminx* shadowDom;
 void serializeVectorInt(std::vector<int> list1, std::string filename);
 void WritePiecesFile(std::string filename, bool corner);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
-void FromCubeToVectorFile();
-void FromVectorFileToCube();
-void FromCubeToShadowCube();
+//void FromCubeToVectorFile();
+//void FromVectorFileToCube();
+//void FromCubeToShadowCube();
 
 //Cube SaveState filenames
-#define EDGEFILE "EdgeCurPos.dat"
-#define CORNERFILE "CornerCurPos.dat" 
-#define EDGEFILECOLORS "EdgeColorPos.dat"
-#define CORNERFILECOLORS "CornerColorPos.dat"
+#define EDGEFILE "EdgePositions.dat"
+#define CORNERFILE "CornerPositions.dat" 
+#define EDGEFILECOLORS "EdgeColors.dat"
+#define CORNERFILECOLORS "CornerColors.dat"
 
-//Store Cube (Write VectorFile)
+//Store Cube / Write VectorFile
 void FromCubeToVectorFile() {
-    WritePiecesFile(EDGEFILE, false);
-    WritePiecesFile(CORNERFILE, true);
+    serializeVectorInt(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
+    serializeVectorInt(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
     serializeVectorInt(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
     serializeVectorInt(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
-//Load Cube (Read VectorFile)
+
+//Load Cube / Read VectorFile
 void FromVectorFileToCube() {
     const std::vector<int> &readEdgevector = ReadPiecesFileVector(EDGEFILE);
     const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(EDGEFILECOLORS);
     const std::vector<int> &readCornervector = ReadPiecesFileVector(CORNERFILE);
     const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(CORNERFILECOLORS);
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 20; ++i) { //brute force get the data in. 12 was working. 1 isnt.
         megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
         megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
     }
 }
+
 //Load Source Cube and store into Shadow Cube
 void FromCubeToShadowCube() {
     if (shadowDom)
@@ -46,24 +48,13 @@ void FromCubeToShadowCube() {
 }
 
 //helper function takes a vector and writes the { } object and each element to a text file
-extern void serializeVectorInt(std::vector<int> list1, std::string filename) {
+void serializeVectorInt(std::vector<int> vec, std::string filename) {
     std::ofstream file(filename);
-    file << "{ ";
-    for (auto l : list1) {
-        file << l << ", ";
-    }
-    file << " }\n";
-    file.close();
-}
-
-//call findpieces and write them to output file
-void WritePiecesFile(std::string filename, bool corner)
-{
-    std::ofstream file(filename);
-    for (int i = 1; i <= 12; ++i) {
-        file << "----------[ " << i << " ]----------\n";
-        std::vector<int> f = corner ? megaminx->findCorners(i) : megaminx->findEdges(i);
-        file << f[0] << ", " << f[1] << ", " << f[2] << ", " << f[3] << ", " << f[4] << "\n";
+    for (int i=1; i <= 12; ++i) {
+        int f = ((i - 1) * 5);
+        file << "---[ " << i << " ]---\n";
+        //std::vector<int> f = corner ? megaminx->findCorners(i) : megaminx->findEdges(i);
+        file << vec[f+0] << " " << vec[f+1] << " " << vec[f+2] << " " << vec[f+3] << " " << vec[f+4] << "\n";
     }
     file.close();
 }
@@ -97,29 +88,29 @@ const std::vector<int> ReadPiecesFileVector(std::string filename)
 }
 
 
-//Generic template to Reset all the pieces to their default value. simple.
-template <typename T>
-int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
-{
-    if (std::is_same<T, Edge>::value)
-        return resetFacesEdges(color_n, defaultPieces, solve);
-    else if (std::is_same<T, Corner>::value)
-        return resetFacesCorners(color_n, defaultPieces, solve);
-    return 0;
-}
-
 template <typename T>
 int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors)
 {
     assert(readPieces.size() == 60);
     assert(readPieceColors.size() == 60);
-    for (int face = 1; face <= 12; ++face) {
+    for (int face = 1; face <= 1; ++face) {
         int f = ((face - 1) * 5);
+        Piece* pieceArray = getPieceArray<T>(0);
         std::vector<int> loadPieces = { readPieces[f + 0],readPieces[f + 1],readPieces[f + 2],readPieces[f + 3],readPieces[f + 4] };
-        resetFacesPieces<T>(face, loadPieces, false);
-        //resetFivePieces<T>(loadPieces);
+        //std::sort(loadPieces.begin(), loadPieces.end());
+        //resetFacesPieces<T>(face, loadPieces, false);
+        //resetFivePiecesV<T>(loadPieces);
+        
+        for (int i = 0; i < 5; ++i) {
+            std::vector<int> foundFacePieces = findPiecesOrder<T>(face);
+            Face activeFace = faces[(face - 1)];
+            Piece* facePiece = activeFace.getFacePiece<T>(i);
+            if (facePiece->data.pieceNum != loadPieces[i]) {
+                pieceArray[facePiece->data.pieceNum].swapdata(pieceArray[loadPieces[i]].data);
+            }
+        }
     }
-    for (int face = 0; face < 12; ++face) {
+    for (int face = 0; face < 1; ++face) {
         int f = face * 5;
         //Pieces can be in the right place but maybe in wrong orientation, so flip the colors:
         for (int i = 0; i < 5; ++i) {

@@ -38,29 +38,6 @@
                 "_UNICODE"
             ],
             "intelliSenseMode": "windows-msvc-x64"
-        },
-        {
-            "name": "MingW64",
-            "inheritEnvironments": [ "linux-x64", "linux_x64", "linux-gcc-x64", "mingw", "debug" ],
-            "intelliSenseMode": "linux-gcc-x64",
-            "compilerSwitches": "-std=c++17",
-            "environments": [ { "INCLUDE": "C:/msys64/mingw64/include/c++/9.2.0;C:/msys64/mingw64/include/c++/9.2.0/x86_64-w64-mingw32;C:/msys64/mingw64/include/c++/9.2.0/backward;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/9.2.0/include;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/9.2.0/../../../../include;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed;C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/9.2.0/../../../../x86_64-w64-mingw32/include;C:/msys64/mingw64/include;C:/msys64/mingw64/include/cairo" } ],
-            "includePath": [
-                "${env.INCLUDE}"
-            ],
-            "browse": {
-                "path": [
-                    "${env.INCLUDE}"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "defines": [
-                "DEBUG",
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ]
         }
     ]
 }

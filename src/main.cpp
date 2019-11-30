@@ -23,6 +23,7 @@ void ChangeSize(int x, int y)
 {
     g_camera.ChangeViewportSize(x, y);
 }
+
 //Camera - init/reset camera and vars, set view angles, etc.
 void resetCameraView()
 {
@@ -30,7 +31,7 @@ void resetCameraView()
     g_camera.m_zoom = -ZDIST;
     g_camera.m_angleY = START_ANGLE;
     g_camera.m_forced_aspect_ratio = 1;
-    g_areWeDraggingPoint = false;
+    g_camera.g_areWeDraggingPoint = false;
     ChangeSize((int)WIDTH, (int)HEIGHT);
 }
 //Megaminx Dodecahedron. Creates object class and resets camera.
@@ -157,67 +158,29 @@ void double_click(int , int )
 void mousePressed(int button, int state, int x, int y)
 {
     g_camera.ProcessMouse(button, state, x, y);
-
-    // can we move?
-    if(g_camera.m_isLeftPressed){// && g_rayTest.m_hit) {
-        g_draggedPointID = g_lastHitPointID;
-        g_areWeDraggingPoint = true;
-    }
-    else
-        g_areWeDraggingPoint = false;
-
-    static unsigned int prev_left_click;
-    static int prev_left_x, prev_left_y;
-
-    bnstate[button] = state == GLUT_DOWN ? 1 : 0;
-    if (state == GLUT_DOWN) {
-        if (button == GLUT_LEFT_BUTTON) {
-            const unsigned int msec = glutGet(GLUT_ELAPSED_TIME);
-            const int dx = abs(x - prev_left_x);
-            const int dy = abs(y - prev_left_y);
-
-            if (msec - prev_left_click < DOUBLE_CLICK_INTERVAL && dx < 3 && dy < 3) {
-                double_click(x, y);
-                prev_left_click = 0;
-            }
-            else {
-                prev_left_click = msec;
-                prev_left_x = x;
-                prev_left_y = y;
-            }
-        }
-    }
-    // Disregard redundant GLUT_UP events
-    else if (state == GLUT_UP)
-        return;
-    //  Mouse Wheels are 3 and 4 on this platform. (usually 4 / 5) 
-    if(button == 3) {
-        //Mouse wheel up
-        g_camera.m_zoom += 5;
-    }
-    else if (button == 4) {
-        //Mouse wheel down
-        g_camera.m_zoom -= 5;
-    }
 }
 
-//FIXED: FINALLY block cube rotate from happening right after we come back from right click menu visible:
-static int OldmenuVisibleState = 0;
+//TODO BUG: stop cube rotate from happening right after we come back from right click menu visible:
+//FIXED I think.
+int OldmenuVisibleState = 0;
+int oldmenux = 0, oldmenuy = 0;
 void menuVisible(int status, int x, int y)
 {
-    menuVisibleState = (status == GLUT_MENU_IN_USE);
-    if (menuVisibleState)
+    g_camera.menuVisibleState = (status == GLUT_MENU_IN_USE);
+    if (g_camera.menuVisibleState) {
         OldmenuVisibleState = 1;
+        oldmenux = x;
+        oldmenuy = y;
+    }
 }
 void mousePressedMove(int x, int y)
 {
-    //TODO: X/Y coords still change in the background when Menu is showing, and the first drag after will "jump to pos"
-    if (!menuVisibleState && OldmenuVisibleState) {
-        OldmenuVisibleState = 0;  //maybe wanna store old x and y here then re-kajigger it ?
-        return;
+    if (!g_camera.menuVisibleState && !OldmenuVisibleState)
+        g_camera.ProcessMouseMotion(x, y, true);
+    else if (!g_camera.menuVisibleState && OldmenuVisibleState) {
+        OldmenuVisibleState = 0;
+        g_camera.ProcessMouseMotion(oldmenux, oldmenuy, false);
     }
-    if (!menuVisibleState && !OldmenuVisibleState)
-        g_camera.ProcessMouseMotion(x, y, !menuVisibleState);        
 }
 
 //Main Keyboard Handler
