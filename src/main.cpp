@@ -160,7 +160,7 @@ void mousePressed(int button, int state, int x, int y)
     g_camera.ProcessMouse(button, state, x, y);
 }
 
-//TODO BUG: stop cube rotate from happening right after we come back from right click menu visible:
+//TODO BUG: stop cube rotate from happening right after we come back from right click menu visible then drag:
 //FIXED I think.
 int OldmenuVisibleState = 0;
 int oldmenux = 0, oldmenuy = 0;

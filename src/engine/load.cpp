@@ -93,30 +93,18 @@ int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const 
 {
     assert(readPieces.size() == 60);
     assert(readPieceColors.size() == 60);
-    for (int face = 1; face <= 1; ++face) {
+    for (int face = 1; face <= 12; ++face) {
         int f = ((face - 1) * 5);
         Piece* pieceArray = getPieceArray<T>(0);
-        std::vector<int> loadPieces = { readPieces[f + 0],readPieces[f + 1],readPieces[f + 2],readPieces[f + 3],readPieces[f + 4] };
-        //std::sort(loadPieces.begin(), loadPieces.end());
-        //resetFacesPieces<T>(face, loadPieces, false);
-        //resetFivePiecesV<T>(loadPieces);
-        
         for (int i = 0; i < 5; ++i) {
             std::vector<int> foundFacePieces = findPiecesOrder<T>(face);
-            Face activeFace = faces[(face - 1)];
-            Piece* facePiece = activeFace.getFacePiece<T>(i);
-            if (facePiece->data.pieceNum != loadPieces[i]) {
-                pieceArray[facePiece->data.pieceNum].swapdata(pieceArray[loadPieces[i]].data);
-            }
-        }
-    }
-    for (int face = 0; face < 1; ++face) {
-        int f = face * 5;
-        //Pieces can be in the right place but maybe in wrong orientation, so flip the colors:
-        for (int i = 0; i < 5; ++i) {
-            Piece* piece = faces[face].getFacePiece<T>(i);
-            while (piece->data.flipStatus != readPieceColors[f + i])
-                piece->flip();
+            Piece* facePiece = faces[(face - 1)].getFacePiece<T>(i);
+            if (facePiece->data.pieceNum != readPieces[f + i]) {
+                pieceArray[facePiece->data.pieceNum].swapdata(pieceArray[readPieces[f + i]].data);
+                i = -1;
+            } else
+                while (facePiece->data.flipStatus != readPieceColors[f + i])
+                    facePiece->flip();
         }
     }
     return 1;

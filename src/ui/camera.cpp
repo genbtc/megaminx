@@ -168,8 +168,8 @@ void Camera::RotateGLCameraView()
 
 
 /**
- * \brief Static Free function. Takes camera position angles and tells what face
- * is most showing. Shortcut way of angle detection.
+ * \brief Free function. Takes camera position angles and tells what face
+ *    is most showing. Shortcut way of angle detection. external linkage.
  * \param x camera_angleX
  * \param y camera_angleY
  * \return face # color-int (1-12) as result.
