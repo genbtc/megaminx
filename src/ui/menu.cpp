@@ -10,7 +10,7 @@ void resetCameraView();
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
 submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 void menuHandler(int num);
-void serializeVectorInt(std::vector<int> list1, std::string filename);
+void serializeVectorInt60(std::vector<int> list1, std::string filename);
 void WritePiecesFile(std::string filename, bool corner);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
 void FromCubeToVectorFile();

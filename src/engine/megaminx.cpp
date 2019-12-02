@@ -321,37 +321,42 @@ void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(fa
  * \brief Get a list of all pieces Color status (either Edge or Corner Piece)
  */
 template <typename T>
-std::vector<int> Megaminx::getAllPiecesPosition() const
+std::vector<int> Megaminx::getAllPiecesPosition() 
 {
     std::vector<int> allPiecesPos;
-    for (int face = 1; face <= 12; ++face) {
-        auto found = findPiecesOrder<T>(face);
-        for (int r = 0; r < 5; ++r) {
-            allPiecesPos.push_back(found[r]);
-        }
+    //for (int face = 1; face <= 12; ++face) {
+    //    auto found = findPiecesOrder<T>(face);
+    //    for (int r = 0; r < 5; ++r) {
+    //        allPiecesPos.push_back(found[r]);
+    //    }
+    //}
+    for (int r = 0; r < getMaxNumberOfPieces<T>(); ++r) {
+        allPiecesPos.push_back(getPieceArray<T>(0)[r].data.pieceNum);
     }
     return allPiecesPos;
 }
 //} //where T = Corner or Edge
-std::vector<int> Megaminx::getAllCornerPiecesPosition() const { return getAllPiecesPosition<Corner>(); }
-std::vector<int> Megaminx::getAllEdgePiecesPosition() const { return getAllPiecesPosition<Edge>(); }
-
+std::vector<int> Megaminx::getAllCornerPiecesPosition()  { return getAllPiecesPosition<Corner>(); }
+std::vector<int> Megaminx::getAllEdgePiecesPosition()  { return getAllPiecesPosition<Edge>(); }
 /**
  * \brief Get a list of all pieces Color status (either Edge or Corner Piece)
  */
 template <typename T>
-std::vector<int> Megaminx::getAllPiecesColorFlipStatus() const
+std::vector<int> Megaminx::getAllPiecesColorFlipStatus() 
 {
     std::vector<int> allPiecesPos;
-    for (int face = 0; face < 12; ++face)
-        for (int r = 0; r < 5; ++r) {
-            Piece* piece = faces[face].getFacePiece<T>(r);
-            allPiecesPos.push_back(piece->data.flipStatus);
-        }
+    //for (int face = 0; face < 12; ++face)
+    //    for (int r = 0; r < 5; ++r) {
+    //        Piece* piece = faces[face].getFacePiece<T>(r);
+    //        allPiecesPos.push_back(piece->data.flipStatus);
+    //    }
+    for (int r = 0; r < getMaxNumberOfPieces<T>(); ++r) {
+        allPiecesPos.push_back(getPieceArray<T>(0)[r].data.flipStatus);
+    }
     return allPiecesPos;
 } //where T = Corner or Edge
-std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus() const { return getAllPiecesColorFlipStatus<Corner>(); }
-std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus() const { return getAllPiecesColorFlipStatus<Edge>(); }
+std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Corner>(); }
+std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Edge>(); }
 
 //Generic template to Reset all the pieces to their default value. simple.
 template <typename T>

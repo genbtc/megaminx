@@ -53,13 +53,13 @@ public:
     void flipCornerColor(int face, int num);
     void flipEdgeColor(int face, int num);
    template <typename T>
-    std::vector<int> getAllPiecesPosition() const;
-    std::vector<int> getAllCornerPiecesPosition() const;
-    std::vector<int> getAllEdgePiecesPosition() const;
+    std::vector<int> getAllPiecesPosition();
+    std::vector<int> getAllCornerPiecesPosition();
+    std::vector<int> getAllEdgePiecesPosition();
    template <typename T>
-    std::vector<int> getAllPiecesColorFlipStatus() const;
-    std::vector<int> getAllCornerPiecesColorFlipStatus() const;
-    std::vector<int> getAllEdgePiecesColorFlipStatus() const;
+    std::vector<int> getAllPiecesColorFlipStatus();
+    std::vector<int> getAllCornerPiecesColorFlipStatus();
+    std::vector<int> getAllEdgePiecesColorFlipStatus();
    template <typename T>
     int LoadNewPiecesFromVector(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
@@ -172,6 +172,6 @@ private:
 };
 
 extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
-extern void serializeVectorInt(std::vector<int> list1, std::string filename);
+extern void serializeVectorInt60(std::vector<int> list1, std::string filename);
 
 #endif

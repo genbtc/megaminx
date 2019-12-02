@@ -59,7 +59,7 @@ public:
     void swapdata(_data &out) {
         if (&(this->data) == &out)
             return;
-        const _data temp = data;
+        _data temp = data;
         data = out;
         out = temp;
     }

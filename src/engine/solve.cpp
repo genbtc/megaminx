@@ -51,7 +51,7 @@ void Megaminx::DetectSolvedPieces(int startI, bool piecesSolved[5])
     //Find out if any applicable startI-endI pieces are exactly in their slots.
     for (int p = startI; p < endI; ++p) {
         int pIndex = findPiece<T>(p);
-        Piece* piece = getPieceArray<T>(pIndex);
+        const Piece* piece = getPieceArray<T>(pIndex);
         //make sure its startI-endI and make sure the colors arent flipped
         if (pIndex >= startI && pIndex < endI && p == pIndex && piece->data.flipStatus == 0)
             piecesSolved[p - startI] = true;
