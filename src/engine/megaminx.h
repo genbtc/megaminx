@@ -64,8 +64,6 @@ public:
     int LoadNewPiecesFromVector(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
-    void LoadNewCornersFromOtherCube(Megaminx* source);
-    void LoadNewEdgesFromOtherCube(Megaminx* source);
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
    template <typename T>
     int findPiece(int pieceNum);
@@ -114,6 +112,7 @@ public:
         resetFiveCorners(m_fourthLayerEdgesA);
     }
 
+    //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
    template <typename T>
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
@@ -126,10 +125,14 @@ public:
     void rotateSolveLayer4Edges(Megaminx* shadowDom);
     void rotateSolve5thLayerCorners(Megaminx* shadowDom);
     void rotateSolveLayer6Edges(Megaminx* shadowDom);
-    void rotateSolveLayer7Edges(Megaminx * shadowDom);
-    void rotateSolve7thLayerCorners(Megaminx * shadowDom);
+    void rotateSolveLayer7Edges(Megaminx* shadowDom);
+    void rotateSolve7thLayerCorners(Megaminx* shadowDom);
     void testingAlgostrings(Megaminx* shadowDom);
+    //in Shadow.CPP
+    void LoadNewEdgesFromOtherCube(Megaminx* source);
+    void LoadNewCornersFromOtherCube(Megaminx* source);    
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
+    void shadowRotate(int num, int dir);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
     int getRotateQueueNum() { return (int)rotateQueue.size(); }
 
@@ -166,9 +169,7 @@ private:
     std::queue<numdir> rotateQueue;
     std::stack<numdir> undoStack;
     std::queue<numdir> shadowRotateQueue;
-    void shadowRotate(int num, int dir);
-    friend class LayerAssist;
-    
+    friend class LayerAssist;    
 };
 
 extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp

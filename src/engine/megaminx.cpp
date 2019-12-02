@@ -324,12 +324,6 @@ template <typename T>
 std::vector<int> Megaminx::getAllPiecesPosition() 
 {
     std::vector<int> allPiecesPos;
-    //for (int face = 1; face <= 12; ++face) {
-    //    auto found = findPiecesOrder<T>(face);
-    //    for (int r = 0; r < 5; ++r) {
-    //        allPiecesPos.push_back(found[r]);
-    //    }
-    //}
     for (int r = 0; r < getMaxNumberOfPieces<T>(); ++r) {
         allPiecesPos.push_back(getPieceArray<T>(0)[r].data.pieceNum);
     }
@@ -345,11 +339,6 @@ template <typename T>
 std::vector<int> Megaminx::getAllPiecesColorFlipStatus() 
 {
     std::vector<int> allPiecesPos;
-    //for (int face = 0; face < 12; ++face)
-    //    for (int r = 0; r < 5; ++r) {
-    //        Piece* piece = faces[face].getFacePiece<T>(r);
-    //        allPiecesPos.push_back(piece->data.flipStatus);
-    //    }
     for (int r = 0; r < getMaxNumberOfPieces<T>(); ++r) {
         allPiecesPos.push_back(getPieceArray<T>(0)[r].data.flipStatus);
     }
@@ -386,8 +375,8 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
 {
     assert(color_n > 0 && color_n <= numFaces);
     for (int j = 0; j < 5; ++j) {
-        //std::vector<int> foundEdges = findPieces<Edge>(color_n); (ordered)
-        std::vector<int> foundEdges = faces[(color_n - 1)].findPiecesOrder<Edge>(); //(unordered)
+        std::vector<int> foundEdges = findPieces<Edge>(color_n); //(unordered)
+        //std::vector<int> foundEdges = faces[(color_n - 1)].findPiecesOrder<Edge>(); //(ordered)
         std::vector<int> wrongEdges;        
         std::set_difference(foundEdges.begin(), foundEdges.end(), defaultEdges.begin(), defaultEdges.end(),
             std::inserter(wrongEdges, wrongEdges.begin()));
@@ -434,8 +423,8 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
 {
     assert(color_n > 0 && color_n <= numFaces);
     for (int j = 0; j < 5; ++j) {
-        //std::vector<int> foundCorners = findPieces<Corner>(color_n);
-        std::vector<int> foundCorners = faces[(color_n - 1)].findPiecesOrder<Corner>();
+        std::vector<int> foundCorners = findPieces<Corner>(color_n);    //unordered
+        //std::vector<int> foundCorners = faces[(color_n - 1)].findPiecesOrder<Corner>();   //ordered
         std::vector<int> wrongCorners;        
         std::set_difference(foundCorners.begin(), foundCorners.end(), defaultCorners.begin(), defaultCorners.end(),
             std::inserter(wrongCorners, wrongCorners.begin()));
@@ -523,7 +512,6 @@ void Megaminx::resetFivePiecesV(std::vector<int> v) {
     assert(v.size() == 5);
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
     resetFivePieces<T>(vecPieceNums);
-    //resetFivePieces<T>({ v[0], v[1], v[2], v[3], v[4] });
 } //where T = Corner or Edge
 void Megaminx::resetFiveEdgesV(std::vector<int> v) { resetFivePiecesV<Edge>(v); }
 void Megaminx::resetFiveCornersV(std::vector<int> v) { resetFivePiecesV<Corner>(v); }

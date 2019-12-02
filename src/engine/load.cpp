@@ -9,9 +9,6 @@ void serializeVectorInt60(std::vector<int> list1, std::string filename);
 void serializeVectorInt30(std::vector<int> list1, std::string filename);
 void WritePiecesFile(std::string filename, bool corner);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
-//void FromCubeToVectorFile();
-//void FromVectorFileToCube();
-//void FromCubeToShadowCube();
 
 //Cube SaveState filenames
 #define EDGEFILE "EdgePositions30.dat"
@@ -46,7 +43,8 @@ void FromCubeToShadowCube() {
     shadowDom->LoadNewCornersFromOtherCube(megaminx);
 }
 
-//helper function takes a vector and writes the { } object and each element to a text file
+//helper function takes a 60 vector and writes each element to a text file by face
+//(DEPRECATED)
 void serializeVectorInt60(std::vector<int> vec, std::string filename) {
     std::ofstream file(filename);
     for (int i=1; i <= 12; ++i) {
@@ -58,7 +56,7 @@ void serializeVectorInt60(std::vector<int> vec, std::string filename) {
     file.close();
 }
 
-//helper function takes a vector and writes the { } object and each element to a text file
+//helper function takes a 30 vector and writes each element to a text file
 void serializeVectorInt30(std::vector<int> vec, std::string filename) {
     std::ofstream file(filename);
     int count = 0;
@@ -111,22 +109,19 @@ int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const 
     int count = 0;
     Piece* pieceArray = getPieceArray<T>(0);
     for (int i = 0; i < readPieces.size(); ++i) {
-//        Piece* pieceArray = getPieceArray<T>(0);
-            auto &p = readPieces[i];
-            if (pieceArray[p].data.pieceNum != p) {
-                pieceArray[pieceArray[p].data.pieceNum].swapdata(pieceArray[p].data);
-                i = -1;
-            }
+        auto &p = readPieces[i];
+        if (pieceArray[p].data.pieceNum != p) {
+            pieceArray[pieceArray[p].data.pieceNum].swapdata(pieceArray[p].data);
+            i = -1; //loop reset needed or else we skip swaps when the pair reverts backwards.
+        }
     }
     for (int i = 0; i < readPieceColors.size(); ++i) {
-//        Piece* pieceArray = getPieceArray<T>(0);
         auto &p = readPieces[i];
         auto &c = readPieceColors[i];
-        //Pieces are in the right place but maybe wrong orientation, so Swap the colors:
+        //Pieces are in the right place but maybe wrong orientation, so Flip the colors:
         while (pieceArray[p].data.flipStatus != c)
             pieceArray[p].flip();
     }
-
     return 0;
 } //where T = Corner or Edge
 int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors) {
