@@ -16,6 +16,7 @@ const std::vector<int> ReadPiecesFileVector(std::string filename);
 void FromCubeToVectorFile();
 void FromVectorFileToCube();
 void FromCubeToShadowCube();
+void FromVectorFileToShadow();
 
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
