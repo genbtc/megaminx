@@ -1,16 +1,11 @@
-#include <vector>
-#include <iostream>
-#include <fstream>
 #include "megaminx.h"
 
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
 void serializeVectorInt60(std::vector<int> list1, std::string filename);
 void serializeVectorInt30(std::vector<int> list1, std::string filename);
-void WritePiecesFile(std::string filename, bool corner);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
 void FromCubeToShadowCube();
-void FromVectorFileToShadow();
 
 //Cube SaveState filenames
 #define EDGEFILE "EdgePositions30.dat"
@@ -28,24 +23,15 @@ void FromCubeToVectorFile() {
 
 //Load Cube / Read VectorFile
 void FromVectorFileToCube() {
-    FromCubeToShadowCube();
+    if (shadowDom)
+        delete shadowDom;
+    shadowDom = new Megaminx();
     const std::vector<int> &readEdgevector = ReadPiecesFileVector(EDGEFILE);
     const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(EDGEFILECOLORS);
     const std::vector<int> &readCornervector = ReadPiecesFileVector(CORNERFILE);
     const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(CORNERFILECOLORS);
     megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
     megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
-}
-
-//Load Cube / Read VectorFile to Shadow
-void FromVectorFileToShadow() {
-    FromCubeToShadowCube();
-    const std::vector<int> &readEdgevector = ReadPiecesFileVector(EDGEFILE);
-    const std::vector<int> &readEdgeColorvector = ReadPiecesFileVector(EDGEFILECOLORS);
-    const std::vector<int> &readCornervector = ReadPiecesFileVector(CORNERFILE);
-    const std::vector<int> &readCornerColorvector = ReadPiecesFileVector(CORNERFILECOLORS);
-    shadowDom->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
-    shadowDom->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
 }
 
 //Load Source Cube and store into Shadow Cube
@@ -117,26 +103,6 @@ const std::vector<int> ReadPiecesFileVector(std::string filename)
 template <typename T>
 int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors)
 {
-    //int s = getMaxNumberOfPieces<T>();
-    //assert(readPieces.size() == s);
-    //assert(readPieceColors.size() == s);
-    //int count = 0;
-    //Piece* pieceArray = getPieceArray<T>(0);
-    //for (int i = 0; i < readPieces.size(); ++i) {
-    //    auto &p = readPieces[i];
-    //    if (pieceArray[p].data.pieceNum != p) {
-    //        pieceArray[pieceArray[p].data.pieceNum].swapdata(pieceArray[p].data);
-    //        i = -1; //loop reset needed or else we skip swaps when the pair reverts backwards.
-    //    }
-    //}
-    //for (int i = 0; i < readPieceColors.size(); ++i) {
-    //    auto &p = readPieces[i];
-    //    auto &c = readPieceColors[i];
-    //    //Pieces are in the right place but maybe wrong orientation, so Flip the colors:
-    //    while (pieceArray[p].data.flipStatus != c)
-    //        pieceArray[p].flip();
-    //}
-
     auto megaminxArray = this->getPieceArray<T>(0);
     auto shadowArray = shadowDom->getPieceArray<T>(0);
     auto arrsize = getMaxNumberOfPieces<T>();

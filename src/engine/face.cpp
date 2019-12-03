@@ -37,23 +37,21 @@ void Face::initAxis(int n)
 }
 
 /** \brief connect the right matching Edge pieces to the face. and store the list. */
-void Face::attachEdgePieces(Megaminx* const megaminx, Edge& e)
+void Face::attachEdgePieces(const Megaminx* megaminx, Edge& edgesPTR)
 {
-    defaultEdges = megaminx->findPiecesOfFace(thisNum+1, e, Megaminx::numEdges);
+    defaultEdges = megaminx->findPiecesOfFace(thisNum+1, edgesPTR, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
-        edge[i] = &e + defaultEdges[i];
-        edge[i]->defaultPieceNum = defaultEdges[i];
+        edge[i] = &edgesPTR + defaultEdges[i];
         assert(edge[i]->data.pieceNum == defaultEdges[i]);
     }
 }
 
 /** \brief connect the right matching Corner pieces to the face. and store the list. */
-void Face::attachCornerPieces(Megaminx* const megaminx, Corner& c)
+void Face::attachCornerPieces(const Megaminx* megaminx, Corner& cornersPTR)
 {
-    defaultCorners = megaminx->findPiecesOfFace(thisNum+1, c, Megaminx::numCorners);
+    defaultCorners = megaminx->findPiecesOfFace(thisNum+1, cornersPTR, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
-        corner[i] = &c + defaultCorners[i];
-        corner[i]->defaultPieceNum = defaultCorners[i];
+        corner[i] = &cornersPTR + defaultCorners[i];
         assert(corner[i]->data.pieceNum == defaultCorners[i]);
     }
 }

@@ -69,6 +69,7 @@ void Edge::init(int n, bool doAxes)
             createAxis(n, _vertex[i]);
     initColor(g_edgePiecesColors[n], false);
     data.pieceNum = n;
+    defaultPieceNum = n;
 }
 
 void Edge::render() const

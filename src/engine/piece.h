@@ -103,7 +103,7 @@ public:
         numSides = 3;
     }
     //Use the two arrays g_cornerPiecesColors and g_edgePiecesColors to populate.
-    void initColor(colorpiece color,int corner=0) {
+    void initColor(colorpiece color,bool corner=false) {
         initColorIndex(0, color.a);
         initColorIndex(1, color.b);
         if (corner) {

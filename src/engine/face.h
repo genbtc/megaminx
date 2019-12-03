@@ -29,8 +29,8 @@ public:
     std::vector<int> defaultCorners, defaultEdges;
 
     void attachCenter(Center* c, double* centerVertexBase);
-    void attachCornerPieces(Megaminx* const megaminx, Corner& c);
-    void attachEdgePieces(Megaminx* const megaminx, Edge& e);
+    void attachCornerPieces(const Megaminx* megaminx, Corner& cornersPTR);
+    void attachEdgePieces(const Megaminx* megaminx, Edge& edgesPTR);
 
    template <typename T>
     Piece* getFacePiece(int i) const {

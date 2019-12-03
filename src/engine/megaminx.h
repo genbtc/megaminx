@@ -17,7 +17,7 @@ class Megaminx {
 public:
     Megaminx();
     ~Megaminx() = default;
-    void solve();
+    void Init_Solve_Reset();
     void initCornerPieces();
     void initEdgePieces();
     void initFacePieces();

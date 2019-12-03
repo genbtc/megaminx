@@ -11,12 +11,12 @@
 //simple constructor. 
 Megaminx::Megaminx()
 {
-    solve();
+    Init_Solve_Reset();
     renderAllPieces();
 }
 
 //Solve Puzzle, aka Reset, aka the real constructor.
-void Megaminx::solve()
+void Megaminx::Init_Solve_Reset()
 {
     _rotatingFaceIndex = -1;
     isRotating = false;
