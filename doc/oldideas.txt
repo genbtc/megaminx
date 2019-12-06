@@ -68,3 +68,66 @@
 //It thinks swapping A[0] with B[0] and so on, amounts to a net change of 0. And its right. But why am i wrong?
 //This also occurs down to 3 pieces: such like: A = { 1, 2, 4 } and B = { 2, 4, 1 }, or even just two: {0,4}/{4,0}
 //? Maybe try reducing the dupes if possible
+//DID: Introduced new 0-30 swap instead of 0-60 with pairs
+
+//some LAYER 7 SOLVE TACTICS:
+
+        
+/*----------PSEUDOCODE - EDGES (first)
+    Last Layer includes both sides of the edge and all corners.
+    EDGES = (phase one):
+    Start finding out which Edges are OK
+    OK means multiple correct pieces in order, or  1 piece's color facing correctly (gray),
+    Does it Need to be rotated? must be considered...
+    if 0/5, find how many colors are gray,
+    If solved 1/5, find out which piece and try to solve the adjacent piece to it next.
+    If solved 2/5 find out if #2 is attached? NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
+                                                YES: Choose a three-ina-row Edge+/Corner rotate algo, ie: algo #11
+    If solved >=3/5 find out if #3 is attached?: NO: IDK
+                                                    YES: ie: Algo #206 to invert the other 2 corners
+    Can go from 2/5 to all 5/5 at once OR go from 3/5 to 5/5.
+*/
+/*        PSEUDOCODE - CORNERS = (phase two) :
+    Corners must keep the edges in place, we will know solved rotation by having the offby = 0 as a query to solved findEdges above.
+    If solved 1 / 5, determine if better to skip and start at 0 or continue with this.
+    1pt2 : check next piece, find out if its capable of being moved in 1 move, or if its 2 moves.
+    If solved 2 / 5, find out if they are attached : NO: If not, why ? are they 3 away ? we have no three - way - opposite algo, must give up, go back to 1.
+    YES : Choose right three - in - a - row corner - only algo
+    If solved 3 / 5, find out if they are attached : NO: If not, proceed to next.
+    YES : Choose right three - way corner - only algo
+    Algo Choice:
+    // Algo 6 and 7 operate on corners only, but both in the same direction - just different face of reference. so no point having both.
+       chose algo 7 because front-face=safe is easier. use algo 27 to reverse motion of 7.
+    //Last Layer Step 4: Orientating (color-flipping) the Corners. (gray on top)
+        //You repeat this over and over with all corners until they are all orientated correctly.
+        //identity function repeats every 6x. Each gray color will take 2x cycles to colorflip. It will dis-align the R and D faces temporarily.
+*/
+
+
+
+
+
+ /*TEMPORARY DOCUMENTATION OF SOLVE DIRECTIONS:
+//TestCube28-1 (15 19 18 17 16) --> "19 18 15 17 16" below.
+//TestCube27-1 (19 18 15 17 16) --> "18 15 19 17 16" below.
+//TestCube25-1 (18 15 19 17 16) --> "15 16 19 17 18" below.
+//TestCube26-2 (17 16 19 18 15) --> "15 16 19 17 18" below.
+//TestCube25-2 (17 18 16 19 15) --> "18 16 17 19 15" below.
+//TestCube22-3 (15 18 17 19 16) --> "18 16 17 19 15" below.
+//TestCube20-2 (15 19 17 16 18) --> 
+               (15 16 19 17 18)
+//TestCube18-1 (17 18 19 15 16) -->
+               (15 18 19 16 17) -->
+               (15 16 18 19 17)
+//             (19 17 18 15 16) -->
+               (19 15 17 18 16)
+//             (16 19 18 15 17) -->
+               (16 19 17 18 15)
+//             (17 15 18 19 16) -->
+               (17 15 16 18 19)
+//             (18 19 17 15 16) --> "19 16 17 15 18" below
+//             (18 16 17 19 15) --> "19 16 17 15 18" below
+//             (19 16 17 15 18)
+*/
+//Only 20 Permutations taken into account. 
+//There are 120. This is the wrong way to go about it.

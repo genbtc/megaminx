@@ -2,8 +2,8 @@
 
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
-void serializeVectorInt60(std::vector<int> list1, std::string filename);
-void serializeVectorInt30(std::vector<int> list1, std::string filename);
+void serializeVectorInt60(std::vector<int> vec, std::string filename);
+void serializeVectorInt30(std::vector<int> vec, std::string filename);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
 void FromCubeToShadowCube();
 

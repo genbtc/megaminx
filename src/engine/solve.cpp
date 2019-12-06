@@ -1072,22 +1072,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         for (auto op : bulk)    //+1 the 0-11 faces
             shadowDom->shadowRotate(op.num + 1, op.dir);
 
-        //PSEUDOCODE
-        /*----------
-        Last Layer includes both sides of the edge and all corners.
-        EDGES = (phase one):
-        Start finding out which Edges are OK
-        OK means multiple correct pieces in order, or  1 piece's color facing correctly (gray),
-        Does it Need to be rotated? must be considered...
-        if 0/5, find how many colors are gray,
-        If solved 1/5, find out which piece and try to solve the adjacent piece to it next.
-        If solved 2/5 find out if #2 is attached? NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
-                                                   YES: Choose a three-ina-row Edge+/Corner rotate algo, ie: algo #11
-        If solved >=3/5 find out if #3 is attached?: NO: IDK
-                                                      YES: ie: Algo #206 to invert the other 2 corners
-        Can go from 2/5 to all 5/5 at once OR go from 3/5 to 5/5.
-
-        */
         loopcount++;
     } while (!allSolved);
 
@@ -1152,7 +1136,23 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             int offby = findIfFirstEdgeDefault - 25;
             shadowMultiRotate(GRAY, offby, shadowDom);
         }
-        //NAF: 15 19 18 17 16
+        //NAF: 16 18 17 15 19
+
+        //TestCube28-1 (15 19 18 17 16)
+        if (pieceOrder[0] == 15 && pieceOrder[1] == 19 && pieceOrder[2] == 18 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
+        {
+            int safeStart = 3;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+        } //  --> continues with "19 18 15 17 16" below.
+
+        //TestCube27-1 (19 18 15 17 16)
+        if (pieceOrder[0] == 19 && pieceOrder[1] == 18 && pieceOrder[2] == 15 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
+        {
+            int safeStart = 3;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+        } //  --> continues with "18 15 19 17 16" below.
 
         //TestCube25-1 (18 15 19 17 16)
         if (pieceOrder[0] == 18 && pieceOrder[1] == 15 && pieceOrder[2] == 19 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
@@ -1234,20 +1234,6 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
 
-        //(18 19 17 15 16) --> (19 16 17 15 18)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 19 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 16)
-        {
-            int safeStart = 2;
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
-        }
-        else if (pieceOrder[0] == 19 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 18)
-        {
-            int safeStart = 1;
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
-        }
-
         //(16 19 18 15 17) --> (16 19 17 18 15)
         if (pieceOrder[0] == 16 && pieceOrder[1] == 19 && pieceOrder[2] == 18 && pieceOrder[3] == 15 && pieceOrder[4] == 17)
         {
@@ -1276,14 +1262,24 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
 
-        //(18 16 17 19 15) --> (19 16 17 15 18)
+        //(18 19 17 15 16)
+        if (pieceOrder[0] == 18 && pieceOrder[1] == 19 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 16)
+        {
+            int safeStart = 2;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+        }// --> (19 16 17 15 18)
+
+        //(18 16 17 19 15)
         if (pieceOrder[0] == 18 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 19 && pieceOrder[4] == 15)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
-        }
-        else if (pieceOrder[0] == 19 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 18)
+        }// --> (19 16 17 15 18)
+
+        //(19 16 17 15 18)
+        if (pieceOrder[0] == 19 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 18)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1330,21 +1326,6 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             shadowDom->shadowRotate(op.num + 1, op.dir);
         //break;
 
-/*        PSEUDOCODE - CORNERS = (phase two) :
-    Corners must keep the edges in place, we will know solved rotation by having the offby = 0 as a query to solved findEdges above.
-    If solved 1 / 5, determine if better to skip and start at 0 or continue with this.
-    1pt2 : check next piece, find out if its capable of being moved in 1 move, or if its 2 moves.
-    If solved 2 / 5, find out if they are attached : NO: If not, why ? are they 3 away ? we have no three - way - opposite algo, must give up, go back to 1.
-    YES : Choose right three - in - a - row corner - only algo
-    If solved 3 / 5, find out if they are attached : NO: If not, proceed to next.
-    YES : Choose right three - way corner - only algo
-    Algo Choice:
-    // Algo 6 and 7 operate on corners only, but both in the same direction - just different face of reference. so no point having both.
-       chose algo 7 because front-face=safe is easier. use algo 27 to reverse motion of 7.
-    //Last Layer Step 4: Orientating (color-flipping) the Corners. (gray on top)
-        //You repeat this over and over with all corners until they are all orientated correctly.
-        //identity function repeats every 6x. Each gray color will take 2x cycles to colorflip. It will dis-align the R and D faces temporarily.
-*/ 
         loopcount++;
     } while (!allSolved);
     //After all loops, load the shadow Queue into the real queue    
