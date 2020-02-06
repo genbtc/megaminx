@@ -114,7 +114,10 @@ public:
 
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
-   template <typename T>
+    bool isFullySolved();
+    template<typename T>
+    bool DetectIfAllSolved();
+    template <typename T>
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
     void DetectSolvedCorners(int startI, bool piecesSolved[5]);
     void DetectSolvedEdges(int startI, bool piecesSolved[5]);

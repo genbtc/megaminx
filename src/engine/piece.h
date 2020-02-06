@@ -337,3 +337,42 @@ static void EdgeGrp6(double* target, piecepack &pack) {
     rotateVertex(target, pack.axis2, PI);
     axis1multi(target, pack);
 }
+
+class Node {
+public:
+    int data = 0;
+    Node *prev, *next;
+};
+
+class LinkedFace {
+public:
+    Node head, tail;
+    LinkedFace() {
+        head.next = head.prev = &tail;
+        tail.next = tail.prev = &head;
+    };
+    ~LinkedFace() {
+        Node *curr = head.next, *tmp;
+        while (curr->next && (curr != &tail))
+            tmp = curr, curr = curr->next, delete tmp;
+    };
+    void add(int ldata) {
+        if (head.data == 0) {
+            head.data = ldata;
+            return;
+        }
+        if (tail.data == 0) {
+            tail.data = ldata;
+            return;
+        }
+        Node *nnode = new Node();
+        nnode->data = tail.data;
+        tail.data = ldata;
+        (tail.prev)->next = nnode;
+        nnode->prev = tail.prev;
+        nnode->next = &tail;
+        tail.prev = nnode;
+    }
+    LinkedFace(const LinkedFace& other);
+    LinkedFace& operator=(const LinkedFace& other);
+};

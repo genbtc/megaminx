@@ -125,6 +125,10 @@ void RenderScene()
             snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
         }
+        bool solved = megaminx->isFullySolved();
+        if (solved)
+            utDrawText2D(10.f, HEIGHT - 60.f, "SOLVED!");
+
     }
     utResetPerspectiveProjection();
     glutSwapBuffers();
