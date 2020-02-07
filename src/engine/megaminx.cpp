@@ -133,6 +133,12 @@ void Megaminx::rotateAlgo(int face, int id)
     assert(face > 0 && face <= numFaces);
     const colordirs &loc = g_faceNeighbors[face];
     rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
+    int repeat = g_AlgoStrings[id].repeatX;
+    if (repeat > 1) {
+        for (int i = 0; i < repeat - 1; ++i) {
+            rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
+        }
+    }
 }
 
 //Adds entire vector of numdirs to the Rotate queue one by one.
