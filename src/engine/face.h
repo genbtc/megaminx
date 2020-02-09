@@ -272,6 +272,15 @@ constexpr AlgoString g_AlgoStrings[32] = {
     {28, "R U'2 L' u2 , R' U'2 L u2"},
     //#7LL: Edge two swaps (Invert 4 in place),front=safe. (~57 moves total.) (copied from manual.) similar to #20
     {29, "r' l f2' r l' u2 r' l,  f' r l' u2' r' l f2' r,  l' u2 r' l f' r l' u,  r' l f' r l' u2 r' l,  f2' r l' u2' r' l f' r,  l' u2 r' l f2' r l' "},
+    // #7Last Layer: Edge Permutation 1: (gray on top) //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+        //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
+        // 13 moves * Repeated 5 times = Total 65 moves.
+    { 30, "r2 U2' R2' U' r2 U2' R2'", 2 },                 //  0,3,0,-2,-1
+    // #7Last Layer: Edge Permutation 2: (gray on top)(opposite of previous; all the "up"s get reversed)
+        //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
+        // 13 moves * Repeated 5 times = Total 65 moves.
+    { 31, "r2 u2 R2' u r2 u2 R2'", 2 },                    //  0,2,0,1,-3
+
 };
 
 #endif

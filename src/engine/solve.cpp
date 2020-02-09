@@ -949,6 +949,13 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         auto currentpieceColor = currentPiece->data._colorNum[0];
         auto currentpieceFlipStatus = currentPiece->data.flipStatus;
         //START MAIN
+
+        bool grayCornerColorSolved[5] = { false, false, false, false, false };
+        shadowDom->DetectSolvedCorners(15, grayCornerColorSolved);
+        bool allCornersColorsSolved = grayCornerColorSolved[0] && grayCornerColorSolved[1] && grayCornerColorSolved[2] && grayCornerColorSolved[3] && grayCornerColorSolved[4];
+        //    pieceOrder.push_back(CornerItselfNext->data.pieceNum);
+        //}
+
         //TODO:         //conditions need to be written variadicly for solvedcount/piecesSolved + offby, as we rotate the gray top.
 
         //orient the first piece if it exists:
@@ -962,11 +969,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if (!piecesSolvedStrict[0] && firstSolvedPiece != -1 && piecesSolvedMaybe[i - 25] && solvedCount >= (i - 25)) {
             int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);
             int offby = findIfPieceSolved - i + firstSolvedPiece;
-            if (findIfPieceSolved >= 25 && findIfPieceSolved < 30 && offby != 0) {
+            if (findIfPieceSolved >= 25 && findIfPieceSolved < 30 && offby != 0)
                 shadowMultiRotate(GRAY, offby, shadowDom);
-            }
         }
-        else if (offby == 0 && solvedCount == 3 && !allColorsSolvedMaybe && !grayFaceColorSolved[2] && !grayFaceColorSolved[3])
+        else if (offby == 0 && solvedCount == 3 && !allColorsSolvedMaybe && ((!grayFaceColorSolved[2] && !grayFaceColorSolved[3])||(!grayFaceColorSolved[1] && !grayFaceColorSolved[2])))
         {
             colordirs loc = g_faceNeighbors[LIGHT_BLUE];
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, loc);    //algo #29 SWAP colors 2/3 & 4/5
@@ -983,24 +989,24 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 loc = g_faceNeighbors[LIGHT_BLUE];
             if (piecesSolvedStrict[3])
                 loc = g_faceNeighbors[PINK];
-            //changed from 5 to 2
-            for (int i = 0; i < 2; ++i) {
-                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3-2 CW) //opposites faces at 6' and 1' must be solved 
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3-2 CW) //opposites faces at 6' and 1' must be solved 
+            int repeat = (allCornersColorsSolved) ? 5 : 2;
+            for (int i = 0; i < repeat; ++i) {
                 for (auto op : bulk)    //+1 the 0-11 faces
                     shadowDom->shadowRotate(op.num + 1, op.dir);
             }
             continue;
         }
-        else if (offby == 3 && solvedCount == 2 && piecesSolvedStrict[0] && (piecesSolvedStrict[2] || piecesSolvedStrict[3]) && allColorsSolvedMaybe)  //test6-p2 ->(blue/green)=PASS
+        else if (offby == 3 && solvedCount == 2 && piecesSolvedStrict[0] && (piecesSolvedStrict[2] || piecesSolvedStrict[3]))// && allColorsSolvedMaybe)  //test6-p2 ->(blue/green)=PASS
         {                                                                                           //RandomTestCube1-3
             colordirs loc;
             if (piecesSolvedStrict[2])
                 loc = g_faceNeighbors[LIGHT_BLUE];
             if (piecesSolvedStrict[3])
                 loc = g_faceNeighbors[PINK];
-            //changed from 5 to 2
-            for (int i = 0; i < 2; ++i) {
-                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3-1 CC/W) //opposites faces at 6' and 1' must be solved 
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3-1 CC/W) //opposites faces at 6' and 1' must be solved 
+            int repeat = (allCornersColorsSolved) ? 5 : 2;
+            for (int i = 0; i < repeat; ++i) {
                 for (auto op : bulk)    //+1 the 0-11 faces
                     shadowDom->shadowRotate(op.num + 1, op.dir);
             }
@@ -1008,8 +1014,9 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && !grayFaceColorSolved[1] && !grayFaceColorSolved[2] && grayFaceColorSolved[3] && grayFaceColorSolved[4]) {
             colordirs loc = g_faceNeighbors[LIGHT_BLUE];
-            for (int i = 0; i < 2; ++i) {
-                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3-2 CW) //opposites faces at 6' and 1' must be solved 
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3-2 CW) //opposites faces at 6' and 1' must be solved 
+            int repeat = (allCornersColorsSolved) ? 5 : 2;
+            for (int i = 0; i < repeat; ++i) {
                 for (auto op : bulk)    //+1 the 0-11 faces
                     shadowDom->shadowRotate(op.num + 1, op.dir);
             }
@@ -1049,10 +1056,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[BEIGE];         //algo #16 3c- (backwards)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, loc);
         }
-        else if (offby == 2 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[2] && (!grayFaceColorSolved[3] && !grayFaceColorSolved[4]))
-        {
+        //else if (offby == 2 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[2] && (!grayFaceColorSolved[3] && !grayFaceColorSolved[4]))
+        //{
 
-        }
+        //}
         //TODO: Collapse these three into 1 block
         else if (!grayFaceColorSolved[1] && !grayFaceColorSolved[3]) {
             colordirs loc = g_faceNeighbors[BEIGE];         //algo #20 //INVERT color: has to be on 8' & 1' oclock relative to face.
@@ -1471,6 +1478,13 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         } //continues with --> "17 15 16 18 19" below
 
+        //(18 19 15 16 17)
+        if (pieceOrder[0] == 18 && pieceOrder[1] == 19 && pieceOrder[2] == 15 && pieceOrder[3] == 16 && pieceOrder[4] == 17)
+        {
+            int safeStart = 4;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+        } ////continues with --> "18 15 16 19 17" above.
 
         //FINAL STAGE: Two adjacent pieces.
         //FINAL STAGE: one move left till solved.

@@ -137,6 +137,8 @@ void createMenu()
     glutAddMenuEntry("LL Edge+Corn: r u2, R' u, r u2, R'", 61);
     glutAddMenuEntry("LL Edge 1+ [x5] Front/R.Back=Safe", 62);
     glutAddMenuEntry("LL Edge 2- [x5] Front/R.Back=Safe", 63);
+    glutAddMenuEntry("LL Edge 1+ [x2] Front/R.Back=Safe", 80);
+    glutAddMenuEntry("LL Edge 2- [x2] Front/R.Back=Safe", 81);
     glutAddMenuEntry("LL Edge 3a+, Front/Left=Safe", 64);
     glutAddMenuEntry("LL Edge 3b-, Both+Backs=Safe", 65);
     glutAddMenuEntry("LL Edge 3c-, Right/Back=Safe", 66);
@@ -266,8 +268,8 @@ void menuHandler(int num)
     case 77:
     case 78:
     case 79:
-    //case 80:
-    //case 81:
+    case 80:
+    case 81:
     //case 82:
         megaminx->rotateAlgo(currentFace, num - 50); break;
     case 91:
@@ -383,7 +385,7 @@ void menuHandler(int num)
         FromCubeToShadowCube();
         megaminx->rotateSolve7thLayerCorners(shadowDom);
         break;
-    case 309: //layers 1-6 all rotate+autosolve F8
+    case 309: //layers 1-7 all rotate+autosolve F8
         FromCubeToShadowCube();
         megaminx->rotateSolveWhiteEdges(shadowDom);
         megaminx->rotateSolveWhiteCorners(shadowDom);
@@ -394,7 +396,6 @@ void menuHandler(int num)
         megaminx->rotateSolveLayer6Edges(shadowDom);
         megaminx->rotateSolveLayer7Edges(shadowDom);
         megaminx->rotateSolve7thLayerCorners(shadowDom);
-        //megaminx->testingAlgostrings(shadowDom);
         break;
     default:
         break;
