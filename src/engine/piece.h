@@ -373,6 +373,6 @@ public:
         nnode->next = &tail;
         tail.prev = nnode;
     }
-    LinkedFace(const LinkedFace& other);
-    LinkedFace& operator=(const LinkedFace& other);
+    //LinkedFace(const LinkedFace& other);
+    //LinkedFace& operator=(const LinkedFace& other);
 };

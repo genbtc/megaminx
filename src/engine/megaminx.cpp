@@ -1,9 +1,10 @@
-/* MegaMinx2 v1.34 - 2017+2018+2019 - genBTC mod
+/* MegaMinx v1.35 - 2017+2018+2019+2020 - genBTC edition
  * Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
  * genBTC January 2019 - human rotate auto solve layers 1-6
    genBTC October 2019 - fixup code. making gray layer 7
+   genBTC February 2020 - fixing gray layer 7 solver
  */
 #include "megaminx.h"
 #include <algorithm>

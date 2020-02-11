@@ -3,7 +3,7 @@
 #include "ui/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.34 - genBTC mod";
+const char *title = "Megaminx v1.35 - genBTC edition";
 //testing framerate cap:
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
@@ -36,11 +36,10 @@ Megaminx* shadowDom;
 // Glut function callbacks' prototypes
 void Idle(int);
 void RenderScene();
-
-void mousePressed(int button, int state, int x, int y);
-void mousePressedMove(int x, int y);
 void GetCurrentFace();
 void double_click(int x, int y);
+void mousePressed(int button, int state, int x, int y);
+void mousePressedMove(int x, int y);
 void onKeyboard(unsigned char key, int x, int y);
 void onSpecialKeyPress(int key, int x, int y);
 void createMenu();
@@ -49,10 +48,3 @@ void menuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
                             submenu3_id, submenu4_id, submenu5_id, submenu6_id;
-
-void serializeVectorInt60(std::vector<int> list, std::string filename);
-void WritePiecesFile(std::string filename, bool corner);
-const std::vector<int> ReadPiecesFileVector(std::string filename); 
-void FromCubeToVectorFile();
-void FromVectorFileToCube();
-void FromCubeToShadowCube();
