@@ -171,6 +171,10 @@ void Megaminx::undo()
 {
     if (undoStack.empty()) return;
     auto op = undoStack.top();
+    if (op.num == 999 || op.dir == 999 || op.num == -999 || op.dir == -999) {
+        undoStack.pop();
+        return;
+    }
     op.dir *= -1;
     rotateQueue.push(op);
     undoStack.pop();
