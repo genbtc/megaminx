@@ -129,26 +129,32 @@ void createMenu()
 //  glutAddMenuEntry("LL Corners: Cycle- CCW Left=Safe", 78);
     glutAddMenuEntry("LL Corners: Cycle- CCW Front=Safe", 57);
     glutAddMenuEntry("LL Corners: Cycle+  CW Right=Safe", 77);    
-    glutAddMenuEntry("LL Edge+Corn 1,  CW Front/Left=Safe", 58);
-    glutAddMenuEntry("LL Edge+Corn 2, 1&3,2&4 R.Back=Safe", 59);
-    glutAddMenuEntry("LL Edge+Corn 3, CCW Fr./L.=Safe", 60);
-    glutAddMenuEntry("LL Edge+Corn 4, CCW Fr./R.Back=Safe", 61);
+    glutAddMenuEntry("LL Edge+Corn 3,  CW Front/FL.=Safe", 58);
+    glutAddMenuEntry("LL Edge+Corn BUNNY 1&3,2&4 R.Back=Safe", 59);
+    glutAddMenuEntry("LL Edge+Corn 2, CCW Fr./L.=Safe", 60);
+    glutAddMenuEntry("LL Edge+Corn 1&3, CCW Fr./R.Back=Safe", 61);
     glutAddMenuEntry("LL Edge+C 2- CCW x1 Fr./R.Back=Safe", 81);
     glutAddMenuEntry("LL Edge+C 1+  CW x1 Fr./R.Back=Safe", 80);
     glutAddMenuEntry("LL Edge 1 - CCW [x5] Fr./R.Back=Safe", 62);
     glutAddMenuEntry("LL Edge 2 +  CW [x5] Fr./R.Back=Safe", 63);
     glutAddMenuEntry("LL Edge 3a- CCW Front/Left=Safe", 64);
+    glutAddMenuEntry("LL Edge 3e+  CW Front/Left=Safe", 83);
+    glutAddMenuEntry("LL Edge 3d- CCW Both+Backs=Safe", 82);
     glutAddMenuEntry("LL Edge 3b+  CW Both+Backs=Safe", 65);
     glutAddMenuEntry("LL Edge 3c+  CW Right/Back=Safe", 66);
-    glutAddMenuEntry("LL Edge 4-way Adj.Swaps  2&3,4&5", 69);
-    glutAddMenuEntry("LL Edge 4-way Opp.Flips  2&4,3&5", 70);
-    glutAddMenuEntry("LL Edge 4-way Color.Only 2,3,4,5", 79);
-    glutAddMenuEntry("LL Edge 5-way CCW cycle by 1,2,1,2,1", 68);
-    glutAddMenuEntry("LL Edge 5-way  CW cycle by 2", 67);
+    glutAddMenuEntry("LL Edge 2+2swap Adj.Swaps  2&3,4&5", 69);
+    glutAddMenuEntry("LL Edge 2+2swap Opp.Flips  2&4,3&5", 70);
+    glutAddMenuEntry("LL Edge 2+2swap Color.Only 2,3,4,5", 79);
+    glutAddMenuEntry("LL Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
+    glutAddMenuEntry("LL Edge 5-way  CW cycle by -2 all", 67);
+    glutAddMenuEntry("LL Edge 2+2swap BUNNY Permute Colors #36", 86);
+    glutAddMenuEntry("LL Edge 2+2swap BUNNY (keep colors) #37", 87);
     glutAddMenuEntry("2nd Layer, Place Edge (Left)", 71);
     glutAddMenuEntry("2nd Layer, Place Edge (Right)",72);
     glutAddMenuEntry("4th Layer, Place Edge (Left)", 73);
-    glutAddMenuEntry("4th Layer, Place Edge (Right)",74);
+    glutAddMenuEntry("4th Layer, Place Edge (Left+Flip)", 84);
+    glutAddMenuEntry("4th Layer, Place Edge (Right)", 74);
+    glutAddMenuEntry("4th Layer, Place Edge (Right+Flip)",85);
     glutAddMenuEntry("6th Layer, Place Edge (Left)", 75);
     glutAddMenuEntry("6th Layer, Place Edge (Right)",76);
     //Sublevel X = Human Rotate Bulk-Solve whole layer routines
@@ -268,7 +274,14 @@ void menuHandler(int num)
     case 79:
     case 80:
     case 81:
-    //case 82:
+    case 82:
+    case 83:
+    //case 84:
+    //case 85:
+    case 86:
+    case 87:
+    //case 88:
+    //case 89:
         megaminx->rotateAlgo(currentFace, num - 50); break;
     case 91:
         megaminx->undo(); break;

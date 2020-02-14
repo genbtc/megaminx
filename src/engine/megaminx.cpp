@@ -540,9 +540,11 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
             if (word.find("'") != npos)
                 op.dir *= -1;
             if ((word.find("dr") != npos) ||
+                (word.find("dR") != npos) ||
                 (word.find("DR") != npos))
                 op.num = loc.downr - 1;
             else if ((word.find("dl") != npos) ||
+                     (word.find("dL") != npos) ||
                      (word.find("DL") != npos))
                 op.num = loc.downl - 1;
             else if ((word.find("r") != npos) ||

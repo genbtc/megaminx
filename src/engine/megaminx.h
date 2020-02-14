@@ -115,9 +115,9 @@ public:
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
     bool isFullySolved();
-    template<typename T>
+   template<typename T>
     bool DetectIfAllSolved();
-    template <typename T>
+   template <typename T>
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
     void DetectSolvedCorners(int startI, bool piecesSolved[5]);
     void DetectSolvedEdges(int startI, bool piecesSolved[5]);
@@ -135,6 +135,7 @@ public:
     void LoadNewEdgesFromOtherCube(Megaminx* source);
     void LoadNewCornersFromOtherCube(Megaminx* source);    
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
+    void bulkRotateShadowAndUpdate(Megaminx* shadowDom, std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
     bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
     int getRotateQueueNum() { return (int)rotateQueue.size(); }

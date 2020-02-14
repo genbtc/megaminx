@@ -158,14 +158,14 @@ struct AlgoString {
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
-constexpr AlgoString g_AlgoStrings[32] = {
+constexpr AlgoString g_AlgoStrings[40] = {
     {0, ""},
 
     // most common one, suitable for white corners or any.
-    { 1, "r u R' U'"},
+    { 1, "r u R' U' "},
 
     // opposite pair to first one
-    { 2, "l u L' U'"},
+    { 2, "l u L' U' "},
 
     //simple L#2-Edges - (opposite is case#2)
         //https://youtu.be/PWTISbs0AAs?t=493 og video., Insert to Left = This First, then next.
@@ -173,147 +173,177 @@ constexpr AlgoString g_AlgoStrings[32] = {
 
     //simple L#2-Edges - (opposite is case#1) 
         //same as ^ video: Insert to Right = This first, then previous.
-    { 4, "u r U' R'"},
+    { 4, "u r U' R' "},
 
-    //Last Layer Step 4: Orientating (color-flipping) the Corners. 
+    //Last Layer Step 4: Orienting Corners (color-flipping in-place)
         //You repeat this over and over with all corners until they are all orientated correctly.
         //identity function repeats every 6x. Each gray color will take 2x cycles to colorflip. It will dis-align the R and D faces temporarily.
-        //NOTE: This may result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved. Not sure what then.
-        //Note2: this step is also done in the White Corners stage by repetitions of 3
-    { 5, "R' DR' R DR"},
+        //NOTE: This may SEEM like it might result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved,
+        //  But that does not occur with an internally consistent megaminx (ie pieces are not "popped out")
+        //Note2: a variation on this step is also done in the 1st White Corners stage, as 3 repetitions of this, but we can skip the 4th "dr" there (leaves temp side messy)
+    { 5, "R' DR' r dr"},
 
     //repeat two times
-    //{ 5, "R' DR' R DR", 2},
+    //{ 5, "R' DR' r dr", 2},
 
     //repeat four times
-    //{ 5, "R' DR' R DR", 4},
+    //{ 5, "R' DR' r dr", 4},
 
-    // #7Last Layer: Step 3 - Orient bottom Corners #1,2,3 CCW // Put the corners into their correct positions. 
-        //ONLY affects Corners. //repeat 3x = undo
-        //left+rear-side (9:00 to 12:00) and back-left's 2corner+3edges will stay the SAME.
+    // #7Last Layer: Step 3 - Orient bottom Corners #1,2,3 CCW (DUPE) // Put the corners into their correct positions. 
+        //ONLY affects Corners. //3rd Repetition = Undo
+        //BACK-LEFT (9:00 to 12:00) 2corners+3edges will stay the SAME.
         //the 3, 5 and 7 o clock corners will rotate with each other  (Counter-clockwise also)
-    // Algo 6 and 7 operate in the same direction, just different face of reference. dont really need both.
-    { 6, "u l U' R' u L' U' r"},
+    //DUPLICATE: Algo 6 and 7 operate in the same direction, just different face of reference. dont really need both. can remove.
+    { 6, "u l U' R', u L' U' r"},
 
     // #7Last-Layer: Step 3 - Orient rear Corners #3,5,4 CCW // Put the corners into their correct positions. 
-        //ONLY affects Corners. //repeat 3x = undo 
-        // Front face corners (1&2) @ (5'o and 7 o'clock) will stay the SAME,
+        //ONLY affects Corners. //3rd Repetition = Undo
+        // FRONT FACE corners (1&2) @ (5'o and 7 o'clock) will stay the SAME,
         // The 3 affected corners will cycle rotate around (counter-clockwise also).
-    // Algo 7 and 6 operate in the same direction, just different face of reference. dont really need both.
+    //NOTE: Algo 7 and 6 operate in the same direction, just different face of reference. dont really need both. rather remove other.
     { 7, "u r U2' L' u2 R' U2' l u"},
 
-    // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 3:   // (5 to 1, 1 to 2, 2 to 5)
-        // Front face is untouched. (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
-        //NOTE: CORNERS ARE AFFECTED by this too.  // 3 repeats = undo
-    { 8, "r u R' F', r  u  R' U', R' f r2 U' R'"},       //  0,1,1,-2,0
+    // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 3: // Entire Front Line = Safe. untouched is C1,C2,E1,E5
+        // (5 to 1, 1 to 2, 2 to 5) = (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
+        //NOTE: CORNERS ARE AFFECTED by this as well as EDGES too, but solved gray tops never change  //3rd Repetition = Undo
+    { 8, "r u R' F', r  u  R' U', R' f r2 U' R' "},       //(mod existing by @   0,1,1,-2,0
 
-    // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 5: 
-        //(5 and 3 swap, 1 and 2 swap) //1 and 5, 4 and 2
-        //NOTE: CORNERS ARE AFFECTED by this edge algo,   //1 Repeat = Undo            
-    { 9, "l r u2, L' u R', l U' r u2, L' u2 R'"},        //  4,2,0,-2,-4
+    // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 5: //R.Back=Safe
+        //(Corners 5 & 3 swap + 1 & 2 swap) && (Edges 1 & 5 swap + 4 & 2 swap)
+        //NOTE: CORNERS ARE AFFECTED by this as well as EDGES too, but solved gray tops never change  //2nd Repetition = Undo
+    { 9, "l r u2, L' u R', l U' r u2, L' u2 R' "},        //(mod existing by @   -1,2,0,-2,1
 
-    // #7Last-Layer: Step 2/3 : main
+    // #7Last-Layer: Step 2/3 : main - SUNE
         // Rotates the far 3 Star/Edge pieces into their correct position + (Affects corners too)
         //The nearest 1 corner and 2 edges stay the same (Corner 1 and Edge 1/5 remain untouched)
         // (The 6 and 8 o'clock pieces will remain unaffected and in their same position)
         //The remaining 3 will rotate cyclicly in an Anti Clockwise fashion. (same color)
         //#2. Two Edges Solved: (Solved edge in the front & lower left) 
-    {10, "r u R' u, r 2U' R'"},                           //  0,2,-1,-1,0
+    {10, "r u R' u, r U2' R' "},                           //(mod existing by @   0,2,-1,-1,0
 
     // #7Last-Layer: Step 2/3: , continued
         //#1. Two Edges Solved : (Solved edge in the front & upper right)
         //#3. One Edge is Permuted : (Permuted edge in the front) this algo + then go back do the previous algo)
-    {11, "r u2, R' u, r u2, R'"},                        //  0,3,0,-2,-1
+    {11, "r u2 R' u, r u2 R' "},                           //(mod existing by @   0,-2,0,-2,-1
 
-    // #7Last-Layer: Edge Permutation 1+:  //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+    // #7Last-Layer: Step 2: Edge Permutation 1+: HORSEFACE- //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
         // 13 moves * Repeated 5 times = Total 65 moves.
-    {12, "r2 U2' R2' U' r2 U2' R2'", 5},                 //  0,3,0,-2,-1
+    {12, "r2 U2' R2' U', r2 U2' R2' ", 5},                 //(mod existing by @   0,-2,0,-2,-1
 
-    // #7Last-Layer: Edge Permutation 2-: (opposite of previous; all the "up"s get reversed)
+    // #7Last-Layer: Step 2: Edge Permutation 2-: HORSEFACE+ (opposite of previous; all the "up"s get reversed)
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
         // 13 moves * Repeated 5 times = Total 65 moves.
-    {13, "r2 u2 R2' u r2 u2 R2'", 5},                    //  0,2,0,1,-3
+    {13, "r2 u2 R2' u, r2 u2 R2' ", 5},                    //(mod existing by @   0,2,0,1,2
 
-    // #7Last-Layer: Edge Permutation 3a-:  //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock        
-        // opposite of the previous one #3 above , but corners aren't affected...
-        //Unaffecteds(2) = stay on front/left sides       
-    {14, "r u R' u,  R' U' r2 U',  R' u R' u,  r U2'"},  //  0,2,-1,-1,0
+    // #7Last-Layer: Step 2: Edge Permutation 3a-:  MUSHROOM- //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock (4 to 2, 2 to 3, 3 to 4)
+        //Unaffecteds(2) = stay safe on Front/Left sides  = 16 moves. //edges cycle rotate = Counter-clockwise. corners aren't affected...  
+    {14, "r u R' u, R' U' r2 U', R' u R' u, r U2' "},      //(mod existing by @   0,2,-1,-1,0
 
-    // #7Last-Layer: Edge Permutation 3b+: 
-        //Opposite of EdgePermutation 3a-(if cube is rotated 2 turns CW). Reverses #3a- only when 3 edges are positioned in the front row.
-        // manually reverse engineered from 4, to be equal to #3 but without affecting corners.
-        //Unaffecteds(2) = stay on both/back sides. Cycles edges in the opposite rotation.
-    {15, "r' u' r u', r u r2' u, r u' r u', r' u2"},     //  1,3,0,0,-4
+    // #7Last-Layer: Step 2: Edge Permutation 3b+: MUSHROOM+
+        //Opposite of EdgePermutation 3a-(if cube is rotated 2 turns CW, Y++).
+        //DUPLICATE: manually reverse engineered from 3c+, to be equal to 3a-. corners aren't affected...  (Rotates the right face instead of front)
+        //Unaffecteds(2) = stay safe on Both+Back sides.  = 16 moves. //edges cycle rotate = clockwise
+    {15, "R' U' r U', r u R2' u, r U' r U', R' u2"},       //(mod existing by @   1,-2,0,0,1
 
-    // #7Last-Layer: Edge Permutation 3c+: 
-        // Reverses 3a if cube is rotated 2 turns CCW. //Identical Twin to 3b but Rotates the front face instead of right
-        //Unaffecteds(2) = right/back side untouched. edges cycle rotate = clockwise
-    {16, "f' u' f u', f u f2' u, f u' f u', f' u2"},     //  3,0,0,1,-4
+    // #7Last-Layer: Step 2: Edge Permutation 3c+: MUSHROOM+
+        //Opposite of EdgePermutation 3a- (if cube is rotated 2 turns CCW, Y--).
+        //NOTE: Identical Twin to 3b (but Rotates the front face instead of right)
+        //Unaffecteds(2) = stay safe on Right/R.Back sides. = 16 moves. edges cycle rotate = clockwise
+    {16, "F' U' f U', f u F2' u, f U' f U', F' u2"},       //(mod existing by @   -2,0,0,1,1
 
-    // #7Last-Layer: Edge 5-way star cycle+ all,  
-        //Opposites Clockwise, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4
+    // #7Last-Layer: Step 2: Edge 5-way star cycle+ , all by -2 //(mod existing by @ -2,-2,-2,-2,-2)
+        //Opposite Faces CW, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4 (new pieces @ 4,2,5,3,1)
         //60 moves total. copied from cube manual (turned upside down).
-    {17, "l' u2 r u2' l u2 r' ", 6},                      //  2,2,2,-3,-3
+    {17, "L' u2 r U2' l u2 R' ", 6},
 
-    // #7Last-Layer: Edge 5-way star cycle- all,  // Two halves //2,1,3,4,5
+    // #7Last-Layer: Step 2: Edge 5-way star cycle- , by 1,2,-1,2,1 //(mod existing by @ 1,2,-1,2,1)
+        // Two halves, 1 to 2, 2 to 4, 4 to 3, 3 to 5, 5 to 1 //1,5,3,4,2  (new pieces @ 2,4,5,3,1)
         //60 moves total. (copied from cube manual)
-    {18, "r' l u' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u2' r l' u2, r' l u' r l'"}, // 4,-1,1,-2,-2
+    {18, "R' l U' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U' r L' "}, // 1,-1,1,-2,-2
 
-    // #7Last-Layer: Edge two adjacent swaps, 
-        //Safe Edge = FRONT. then swap 2&3 and 4&5
+    // #7Last-Layer: Step 2: Edge two adjacent swaps,          //(mod existing by @  0,1,-1,1,-1
+        //Safe Edge = FRONT. then swap 2&3 and 4&5 (colors and corners maintained)
         //44 moves total. (copied from manual. )
-    {19, "u2' l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u', l2' u2' l2 u' l2' u2' l2 u "},  // 0,1, -1, 1, -1
+    {19, "U2' L2' U2' l2 U' L2' U2' l2 U', L2' U2' l2 U' L2' U2' l2 U', L2' U2' l2 U' L2' U2' l2 u"},
 
-    // #7Last-Layer: Edge opposite swap & Invert, 
-        //Safe Edge = FRONT. then swap 2&4 and 3&5=INVERTED.
-        //right/backLeft swap and left/backRight swap + and INVERTS @ 8 o'clock and 1 o'clock <-- 
-        //30 moves total. (copied from manual.)
-    {20, "r' l f2' r l' u2 r' l, f' r l' u2' r' l f2' r, l' u2 r' l f' r l' u2'"},   // 0 , 2, 2, -2, -2
+    // #7Last-Layer: Step 2: Edge opposite swap & Invert,      //(mod existing by @  0,2,2,-2,-2
+        //Safe Edge = FRONT. then swap 2&4 and 3&5 ( right/backLeft swap and left/backRight swap) + and INVERTS @ 8 o'clock and 1 o'clock <--* 
+        //30 moves total. (copied from manual.), Repeat = Undo (origin in two cycles)
+    {20, "R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2' "},
 
     // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
         //copied right algo then reverse engineered it myself back to the left
-    {21, "dl l dl l' dl' f' dl' f"},
+    {21, "dl l dl L', dL' F' dL' f"},
 
     // #2nd-Layer Edges(RIGHT) =  5 o'clock to 3 o'clock:
         //Algo from QJ cube manual & (White face on top) (Exact opposite above)
-    {22, "dr' r' dr' r dr f dr f'"},
+    {22, "dR' R' dR' r, dr f dr F' "},
 
     // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA() // 12 o'clock to 7 o'clock
         //Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-    {23, "F' R', F' F', r f"},
+    {23, "F' R' F', F' r f"},
 
     // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB() //12 o'clock to 5 o'clock.
         //Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-    {24, "f l, f f, L' F'"},
+    {24, "f l f, f L' F' "},
 
     // #6th-Layer Edges(LEFT) //Must have Layers 1-5 solved, and 7th layer is affected.
         // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
-    {25, "U' L' u l u f U' F'"},
+    {25, "U' L' u l, u f U' F' "},
 
     // #6th-Layer Edges(RIGHT) //opposite of previous, To the edge @ 3 o'clock
-    {26, "u r U' R' U' F' u f"},
+    {26, "u r U' R', U' F' u f"},
 
-    // #7LL Clockwise Cycle Corners (very necessary, didnt have) Safe Area = Right
-//TODO Should be moved higher in the list and dupes removed.
-    {27, "L' u2 R U'2 , L u2 R' U'2"},
+    // #7LL: Step 3, Clockwise Cycle Corners (very necessary, didnt have) Safe Area = Right
+//TODO Should be moved higher in the list
+    {27, "L' u2 R U2', L u2 R' U2' "},
 
-    // #7LL CounterClockwise Cycle Corners (already described as Algo #6/#7) Safe Area = Left
-    {28, "R U'2 L' u2 , R' U'2 L u2"},
+    // #7LL: Step 3, CounterClockwise Cycle Corners (already described as Algo #6/#7) Safe Area = Left
+//TODO Dupes Should be removed.
+    {28, "R U2' L' u2, R' U2' L u2"},
 
-    // #7LL: Edge two swaps (Invert 4 in place),front=safe.
+    // #7LL: Step 1, Edge Orientation, Flip Colors only (Invert 4 in place), front=safe.
         //(~57 moves total.) (copied from manual.) similar to #20
-    {29, "r' l f2' r l' u2 r' l,  f' r l' u2' r' l f2' r,  l' u2 r' l f' r l' u,  r' l f' r l' u2 r' l,  f2' r l' u2' r' l f' r,  l' u2 r' l f2' r l' "},
+    {29, "R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L' "},
 
-    // #7LL: Edge Permutation 1:  //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
+    // #7LL: Step 2, Edge Permutation 1:  //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
-        // 13 moves * Repeated 5 times = Total 65 moves.
-    { 30, "r2 U2' R2' U' r2 U2' R2'", 1 },                 //  0,3,0,-2,-1
+        //DUPE of #12 except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
+    {30, "r2 U2' R2' U', r2 U2' R2' ", 1 },                 //(mod existing by @   0,-2,0,-2,-1
 
-    // #7LL: Edge Permutation 2: (opposite of previous; all the "up"s get reversed)
+    // #7LL: Step 2, Edge Permutation 2: (opposite of previous; all the "up"s get reversed)
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
-        // 13 moves * Repeated 5 times = Total 65 moves.
-    { 31, "r2 u2 R2' u r2 u2 R2'", 1 },                    //  0,2,0,1,-3
+        //DUPE of #13 except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
+    {31, "r2 u2 R2' u, r2 u2 R2' ", 1 },                    //(mod existing by @   0,2,0,1,2
+
+    // #7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
+//TODO:  MOVE UP & Organize with related 
+    //{ 14, "r u R' u,  R' U' r2 U',  R' u R' u,  r U2' " },  //(mod existing by @   0,2,-1,-1,0
+    //Copied 3a- ^ and reversed the algo. However it actually performs a reverse of 3B+
+    {32, "U2' r, u R' u R', U' r2 U' R', u R' u r" },
+
+    // #7Last-Layer: Step 2: Edge Permutation 3e- //"LL Edge 3e+  CW Front/Left=Safe"
+//TODO:  MOVE UP & Organize with related 
+    //{ 15, "R' U' r U', r u R2' u, r U' r U', R' u2" },     //(mod existing by @   1,-2,0,0,1
+    //Therefore if i reverse 3b+ ^ we actually get an algo that performs a reverse on 3A-
+    {33, "u2 R', U' r U' r, u R2' u r, U' r U' R' " },
+
+    // #4th-Layer Edges(LEFT+INVERT)
+    {34, "U' R' DR' f, f dr r" },
+
+    // #4th-Layer Edges(RIGHT+INVERT)
+    {35, "u l dl F', F' DL' L' " },
+
+    //Edge Permute #6, 2+2 swap, (Color Safe) BUT AFFECTS CORNERS!
+    //Swap an adjacent pair, and a non - adjacent pair of edges(U / R < ->U / L and U / BR < ->U / BL) aka swaps 2&5 + 3&4
+    //(R + U + ) (R - U + ) (R + U - ) (R - U++) (R + U++ R - )
+    //repeat 6x to get back to origin
+    {36, "r u R' u, r U' R' u2, r u2 R' "},
+
+    //Bunny from ELL, 2+2 swap, keeps colors, https://sites.google.com/site/permuteramera/other-methods/ell
+    //one rep affects corners. 5 reps maintains corners.
+    {37, "r U2' R' U', r U' R' u, r U2' R' ", 5},
 
 };
 

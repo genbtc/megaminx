@@ -128,6 +128,8 @@ void RenderScene()
         bool solved = megaminx->isFullySolved();
         if (solved)
             utDrawText2D(10.f, HEIGHT - 60.f, "SOLVED!");
+        else
+            utDrawText2D(10.f, HEIGHT - 60.f, "[F8] = SOLVER");
 
     }
     utResetPerspectiveProjection();
