@@ -76,6 +76,7 @@ public:
 struct numdir {
     int num;
     int dir;
+    int algo;
 };
 
 //Named Flip Direction lists:
@@ -87,7 +88,7 @@ constexpr int FlipBackwardAlt[4] = { 0, 1, 0, 1 };
 constexpr int FlipForwardAlt[4] = { 1, 0, 1, 0 };
 
 //These are invoked when Face::placeParts() is ran, when it's rotating.
-//Called from Face::render() only, not on startup.
+//Called from Face::render(), only when something is moved, NEVER on startup.
 //Flip direction lists for PlaceParts: //CounterClockwise CORNERS
 //CCW Corners
 constexpr static int  CCW0C[8] = { 0, 1, 1, 2, 2, 3, 3, 4 };
@@ -145,10 +146,12 @@ constexpr static int  CW9E[8] = { 3, 4, 2, 4, 1, 2, 0, 1 };
 constexpr static int CW10E[8] = { 0, 1, 0, 3, 0, 4, 0, 2 };
 constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
 
+constexpr static int m_firstLayerEdges[5]   = { 0, 1, 2, 3, 4 };
 constexpr static int m_secondLayerEdges[5]  = { 5, 6, 7, 8, 9 };
 constexpr static int m_fourthLayerEdgesA[5] = { 10, 11, 12, 13, 14 };
 constexpr static int m_fourthLayerEdgesB[5] = { 15, 16, 17, 18, 19 };
 constexpr static int m_sixthLayerEdges[5]   = { 20, 21, 22, 23, 24 };
+constexpr static int m_seventhLayerEdges[5] = { 25, 26, 27, 28, 29 };
 
 struct AlgoString {
     int num;
@@ -267,25 +270,25 @@ constexpr AlgoString g_AlgoStrings[40] = {
         //44 moves total. (copied from manual. )
     {19, "U2' L2' U2' l2 U' L2' U2' l2 U', L2' U2' l2 U' L2' U2' l2 U', L2' U2' l2 U' L2' U2' l2 u"},
 
-    // #7Last-Layer: Step 2: Edge opposite swap & Invert,      //(mod existing by @  0,2,2,-2,-2
+    // #7Last-Layer: Step 2: Edge opposite swaps & flip/Invert, //(mod existing by @  0,2,2,-2,-2
         //Safe Edge = FRONT. then swap 2&4 and 3&5 ( right/backLeft swap and left/backRight swap) + and INVERTS @ 8 o'clock and 1 o'clock <--* 
         //30 moves total. (copied from manual.), Repeat = Undo (origin in two cycles)
     {20, "R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2' "},
 
     // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
-        //copied right algo then reverse engineered it myself back to the left
+        //Note: copied right algo then reverse engineered it myself back to the left
     {21, "dl l dl L', dL' F' dL' f"},
 
     // #2nd-Layer Edges(RIGHT) =  5 o'clock to 3 o'clock:
-        //Algo from QJ cube manual & (White face on top) (Exact opposite above)
+        //Note: Algo from QJ cube manual & (White face on top) (Exact opposite above)
     {22, "dR' R' dR' r, dr f dr F' "},
 
     // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA() // 12 o'clock to 7 o'clock
-        //Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+        //Obviously: Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
     {23, "F' R' F', F' r f"},
 
     // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB() //12 o'clock to 5 o'clock.
-        //Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+        //Obviously: Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
     {24, "f l f, f L' F' "},
 
     // #6th-Layer Edges(LEFT) //Must have Layers 1-5 solved, and 7th layer is affected.
@@ -296,11 +299,11 @@ constexpr AlgoString g_AlgoStrings[40] = {
     {26, "u r U' R', U' F' u f"},
 
     // #7LL: Step 3, Clockwise Cycle Corners (very necessary, didnt have) Safe Area = Right
-//TODO Should be moved higher in the list
+//TODO Should be moved higher in the list, Important.
     {27, "L' u2 R U2', L u2 R' U2' "},
 
     // #7LL: Step 3, CounterClockwise Cycle Corners (already described as Algo #6/#7) Safe Area = Left
-//TODO Dupes Should be removed.
+//TODO Dupes Should be removed. Commented out in menu
     {28, "R U2' L' u2, R' U2' L u2"},
 
     // #7LL: Step 1, Edge Orientation, Flip Colors only (Invert 4 in place), front=safe.
@@ -309,12 +312,12 @@ constexpr AlgoString g_AlgoStrings[40] = {
 
     // #7LL: Step 2, Edge Permutation 1:  //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
-        //DUPE of #12 except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
+        //DUPLICATE: of #12 - except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
     {30, "r2 U2' R2' U', r2 U2' R2' ", 1 },                 //(mod existing by @   0,-2,0,-2,-1
 
     // #7LL: Step 2, Edge Permutation 2: (opposite of previous; all the "up"s get reversed)
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
-        //DUPE of #13 except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
+        //DUPLICATE: of #13 - except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
     {31, "r2 u2 R2' u, r2 u2 R2' ", 1 },                    //(mod existing by @   0,2,0,1,2
 
     // #7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
@@ -330,19 +333,23 @@ constexpr AlgoString g_AlgoStrings[40] = {
     {33, "u2 R', U' r U' r, u R2' u r, U' r U' R' " },
 
     // #4th-Layer Edges(LEFT+INVERT)
+//TODO:  MOVE UP & Organize with related 
     {34, "U' R' DR' f, f dr r" },
 
     // #4th-Layer Edges(RIGHT+INVERT)
+//TODO:  MOVE UP & Organize with related 
     {35, "u l dl F', F' DL' L' " },
 
-    //Edge Permute #6, 2+2 swap, (Color Safe) BUT AFFECTS CORNERS!
-    //Swap an adjacent pair, and a non - adjacent pair of edges(U / R < ->U / L and U / BR < ->U / BL) aka swaps 2&5 + 3&4
-    //(R + U + ) (R - U + ) (R + U - ) (R - U++) (R + U++ R - )
-    //repeat 6x to get back to origin
-    {36, "r u R' u, r U' R' u2, r u2 R' "},
+    //#7LL-2/3- Edge Permute #6, 2+2 swap, swaps 2&5 + 3&4, (Color Safe) BUT AFFECTS CORNERS!
+    //Swap an adjacent pair, and a non - adjacent pair of edges (U/R <-> U/L and U/BR <-> U/BL)
+    //(R+ U+) (R- U+) (R+ U-) (R- U++) (R+ U++ R-)
+    //repeating 2x becomes a corner-permutation algo only=(corners color flip in-place by 1), 6x Repetitions = Undo, go back to origin (+3 color flips)
+//TODO:  MOVE UP & Organize with related 
+    {36, "r u R' u, r U' R' u2, r u2 R' ", 1},
 
-    //Bunny from ELL, 2+2 swap, keeps colors, https://sites.google.com/site/permuteramera/other-methods/ell
-    //one rep affects corners. 5 reps maintains corners.
+    //#7LL-2- BEST Bunny from ELL, 2+2 swap, swaps 2&5 + 3&4, (Color Safe), https://sites.google.com/site/permuteramera/other-methods/ell
+    //one rep affects corners. 5 reps maintains corners. 13 moves * 5 = 65 moves total.
+//TODO:  MOVE UP & Organize with related 
     {37, "r U2' R' U', r U' R' u, r U2' R' ", 5},
 
 };

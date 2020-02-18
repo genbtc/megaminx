@@ -129,7 +129,7 @@ void RenderScene()
         if (solved)
             utDrawText2D(10.f, HEIGHT - 60.f, "SOLVED!");
         else
-            utDrawText2D(10.f, HEIGHT - 60.f, "[F8] = SOLVER");
+            utDrawText2D(10.f, HEIGHT - 60.f, "[F9] = SOLVER");
 
     }
     utResetPerspectiveProjection();
@@ -285,10 +285,8 @@ void onSpecialKeyPress(int key, int x, int y)
     const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
-        menuHandler(307);    //rotate_7th_layer-edges
         break;
     case GLUT_KEY_PAGE_DOWN:
-        menuHandler(308);    //rotate_7th_layer-corners
         break;
     case GLUT_KEY_HOME:
         break;
@@ -297,22 +295,24 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_INSERT:
         break;
     case GLUT_KEY_F1:
-        menuHandler(300); break; //Rotate_white_edges
-    case GLUT_KEY_F2:
+        menuHandler(300);        //Rotate_white_edges +
         menuHandler(301); break; //Rotate_white_corners
-    case GLUT_KEY_F3:
+    case GLUT_KEY_F2:
         menuHandler(302); break; //rotate_2nd-layer-edges
-    case GLUT_KEY_F4:
+    case GLUT_KEY_F3:
         menuHandler(303); break; //rotate_3rd_layer-corners
-    case GLUT_KEY_F5:
+    case GLUT_KEY_F4:
         menuHandler(304); break; //rotate_4th_layer-edges
+    case GLUT_KEY_F5:
+        menuHandler(305); break; //rotate_5th_layer-corners 
     case GLUT_KEY_F6:
-        menuHandler(305); break; //rotate_5th_layer-corners
-    case GLUT_KEY_F7:
         menuHandler(306); break; //rotate_6th_layer-edges
+    case GLUT_KEY_F7:
+        menuHandler(307); break; //rotate_7th_layer-edges
     case GLUT_KEY_F8:
-        menuHandler(309); break; //Layers 1-6 all at once +7 
+        menuHandler(308); break; //rotate_7th_layer-corners
     case GLUT_KEY_F9:
+        menuHandler(309); break; //Layers 1-7 all at once 
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
     case GLUT_KEY_F12:
