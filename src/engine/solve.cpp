@@ -948,7 +948,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         //START MAIN
         //orient the first piece if it exists:
         int findIfPieceSolved = shadowDom->findEdge(25); //always piece 0
-        if (findIfPieceSolved > 25 && findIfPieceSolved < 30 && !allCornersColorsSolved && currentpieceFlipStatusOK && !piecesSolvedStrict[0] && offby != 0 && !twoAdjacentPieces) {
+        if (findIfPieceSolved > 25 && findIfPieceSolved < 30 && !allCornersColorsSolved && !piecesSolvedStrict[0] && offby != 0 && !twoAdjacentPieces) {
             //Test 3 passes.
             int offby = findIfPieceSolved - 25;
             shadowMultiRotate(GRAY, offby, shadowDom);
@@ -963,39 +963,33 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 //BUNNY
         else if (offby == 0 && solvedCount == 3 && !allColorsSolvedMaybe && ((!grayFaceColorSolved[2] && !grayFaceColorSolved[3])||(!grayFaceColorSolved[1] && !grayFaceColorSolved[2])))
         {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, loc);    //algo #29 SWAP colors 2/3 & 4/5
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #29 SWAP colors 2/3 & 4/5
         }
         else if (offby == 1 && solvedCount == 1 && piecesSolvedStrict[0] && allColorsSolvedMaybe)
         {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, loc);    //algo #19 SWAP pieces 2/3 & 4/5 (keep color)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #19 SWAP pieces 2/3 & 4/5 (keep color)
         }
 //TWO OFFCOLOR OPPOSITES
         //If two opposite Pieces are colored wrong, Choose the face that places them @ 8' & 1' oclock and then Algo #20 to invert those
         //algo #20 = INVERT colors on 8' & 1' oclock relative face
         //TODO: Collapse these 5 into 1 block
         else if (!grayFaceColorSolved[2] && !grayFaceColorSolved[4]) {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[LIGHT_BLUE]);
         }
         else if (!grayFaceColorSolved[3] && !grayFaceColorSolved[0]) {
-            colordirs loc = g_faceNeighbors[ORANGE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[ORANGE]);
         }
         else if (!grayFaceColorSolved[4] && !grayFaceColorSolved[1]) {
-            colordirs loc = g_faceNeighbors[LIGHT_GREEN];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[LIGHT_GREEN]);
         }
         else if (!grayFaceColorSolved[0] && !grayFaceColorSolved[2]) {
-            colordirs loc = g_faceNeighbors[PINK];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[PINK]);
         }
         else if (!grayFaceColorSolved[1] && !grayFaceColorSolved[3]) {
-            colordirs loc = g_faceNeighbors[BEIGE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[BEIGE]);
         }
 //HORSEFACE-
+//5 (+) iterations also preserves corners, 2 (+) iterations does not, 1 opposite (-) iteration does not.
         else if (offby == 3 && solvedCount == 2 && piecesSolvedStrict[0] && (piecesSolvedStrict[2] || piecesSolvedStrict[3]))// && allColorsSolvedMaybe)  //test6-p2 ->(blue/green)=PASS
         {                                                                                           //RandomTestCube1-3
             colordirs loc;
@@ -1003,24 +997,31 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 loc = g_faceNeighbors[LIGHT_BLUE];
             if (piecesSolvedStrict[3])
                 loc = g_faceNeighbors[PINK];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3.1- C/CW) //opposites faces at 6' and 1' must be solved 
-            int repeat = (allCornersColorsSolved) ? 5 : 2;
-            for (int i = 0; i < repeat; ++i) {
-                for (auto op : bulk)    //+1 the 0-11 faces
-                    shadowDom->shadowRotate(op.num + 1, op.dir);
+            //5 iterations goes + and preserves corners, 1 iteration goes - and does not.
+            if (allCornersColorsSolved) {
+                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3.1- CCW) //opposites faces at 6' and 1' must be solved
+                for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i) {
+                    for (auto op : bulk)    //+1 the 0-11 faces
+                        shadowDom->shadowRotate(op.num + 1, op.dir);
+                }
+                continue;
             }
-            continue;
+            else
+                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
         }
         else if (offby == 3 && piecesSolvedStrict[0] && !piecesSolvedStrict[1])
         {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3.1- C/CW) //opposites faces at 6' and 1' must be solved 
-            int repeat = (allCornersColorsSolved) ? 5 : 2;
-            for (int i = 0; i < repeat; ++i) {
-                for (auto op : bulk)    //+1 the 0-11 faces
-                    shadowDom->shadowRotate(op.num + 1, op.dir);
+            //5 iterations goes + and preserves corners, 1 iteration goes - and does not.
+            if (allCornersColorsSolved) {
+                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #12 (3.1- CCW) //opposites faces at 6' and 1' must be solved
+                for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i) {
+                    for (auto op : bulk)    //+1 the 0-11 faces
+                        shadowDom->shadowRotate(op.num + 1, op.dir);
+                }
+                continue;
             }
-            continue;
+            else
+                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
         }
 //HORSEFACE+
         else if (((offby == 2 && piecesSolvedStrict[2]) || (offby == 1 && piecesSolvedStrict[3])) && solvedCount == 2 && piecesSolvedStrict[0] && allColorsSolvedMaybe)  //testCube3-p2 ->(blue/green)=PASS
@@ -1030,56 +1031,54 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 loc = g_faceNeighbors[LIGHT_BLUE];
             if (piecesSolvedStrict[3])
                 loc = g_faceNeighbors[PINK];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3.2+ CW) //opposites faces at 6' and 1' must be solved 
-            int repeat = (allCornersColorsSolved) ? 5 : 2;
-            for (int i = 0; i < repeat; ++i) {
-                for (auto op : bulk)    //+1 the 0-11 faces
-                    shadowDom->shadowRotate(op.num + 1, op.dir);
+            //5 iterations goes + and preserves corners, 1 iteration goes - and does not.
+            if (allCornersColorsSolved) {
+                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3.2+ CW) //opposites faces at 6' and 1' must be solved
+                for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i) {
+                    for (auto op : bulk)    //+1 the 0-11 faces
+                        shadowDom->shadowRotate(op.num + 1, op.dir);
+                }
+                continue;
             }
-            continue;
+            else
+                bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3.1- CCW) //opposites faces at 6' and 1' must be solved
         }
-        else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && !grayFaceColorSolved[1] && !grayFaceColorSolved[2] && grayFaceColorSolved[3] && grayFaceColorSolved[4]) {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3.2+ CW) //opposites faces at 6' and 1' must be solved 
-            int repeat = (allCornersColorsSolved) ? 5 : 2;
-            for (int i = 0; i < repeat; ++i) {
-                for (auto op : bulk)    //+1 the 0-11 faces
-                    shadowDom->shadowRotate(op.num + 1, op.dir);
-            }
-            continue;
+        else if ((offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && !grayFaceColorSolved[1] && !grayFaceColorSolved[2] && grayFaceColorSolved[3] && grayFaceColorSolved[4])
+             ||  (offby == 0 && !piecesSolvedStrict[0] && !grayFaceColorSolved[4] && !grayFaceColorSolved[0])) {
+             //5 iterations goes + and preserves corners, 1 iteration goes - and does not.
+             if (allCornersColorsSolved) {
+                 bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #13 (3.2+ CW) //opposites faces at 6' and 1' must be solved
+                 for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i) {
+                     for (auto op : bulk)    //+1 the 0-11 faces
+                         shadowDom->shadowRotate(op.num + 1, op.dir);
+                 }
+                 continue;
+             }
+             else
+                 bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #12 (3.1- CCW) //opposites faces at 6' and 1' must be solved
         }
-//MUSHROOM-
+//MUSHROOM- //algo #14 3a-  (F/L Safe)
         //else if (!grayFaceColorSolved[3] && !grayFaceColorSolved[4]) {}
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && !grayFaceColorSolved[3] && !grayFaceColorSolved[4]) {   //TestCube22-2Edges
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
         }
         else if (offby == 1 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && !grayFaceColorSolved[3] && !grayFaceColorSolved[4])
         {
-            colordirs loc = g_faceNeighbors[ORANGE];         //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE]);
         }
         else if (offby == 0 && solvedCount == 3 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && piecesSolvedStrict[2] && (!grayFaceColorSolved[3] && !grayFaceColorSolved[4]))
         {                                                                                 //TestCube15-2-Edgesstuck
-            colordirs loc = g_faceNeighbors[ORANGE];         //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE]);
         }
         else if ((offby == 2 || offby == 3)&& solvedCount == 1 && piecesSolvedStrict[4] && (!grayFaceColorSolved[2] && !grayFaceColorSolved[3]))
         {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
         }
-        else if (offby == 0 && solvedCount == 1 && piecesSolvedStrict[4] && !grayFaceColorSolved[0] && !grayFaceColorSolved[1])
+        else if (offby == 0 && !currentpieceFlipStatusOK && !grayFaceColorSolved[0] && !grayFaceColorSolved[1]) // solvedCount == 1 && piecesSolvedStrict[4] && 
         { 
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
         }
-        else if (offby == 0 && solvedCount == 0 && !currentpieceFlipStatusOK && !grayFaceColorSolved[0] && !grayFaceColorSolved[1])
-        {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
-        }
-        //first and second piece solved for sure. (attached)
+        //first and second piece solved for sure, attached
         else if ((offby == 2) && (
             (solvedCount == 1 && piecesSolvedStrict[0] && !piecesSolvedStrict[1]) ||
             (solvedCount >= 2 && twoAdjacentPieces &&
@@ -1107,18 +1106,15 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
         else if (offby == 1 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && (allColorsSolvedMaybe || (!grayFaceColorSolved[2] && !grayFaceColorSolved[3])))  //test4-p2 ->(blue/orange)=PASS
         {                                                                                                                           //TestCube6-2
-            colordirs loc = g_faceNeighbors[BEIGE];         //algo #16 3c+ (R/B Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, g_faceNeighbors[BEIGE]); //algo #16 3c+ (R/B Safe)
         }
         else if (offby == 3 && solvedCount == 2 && piecesSolvedStrict[1] && piecesSolvedStrict[2])  //test3-pt2-manual->(orange/green)=PASS
         {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //algo #16 3c+ (R/B Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, g_faceNeighbors[LIGHT_BLUE]); //algo #16 3c+ (R/B Safe)
         }
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && (!grayFaceColorSolved[2] && !grayFaceColorSolved[3])) // && !piecesSolvedStrict[1]
-        {                                                                                                               //TestCube14-2
-            colordirs loc = g_faceNeighbors[BEIGE];         //algo #16 3c+ (R/B Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, loc);
+        {                                                                                       //TestCube14-2
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[16].algo, g_faceNeighbors[BEIGE]); //algo #16 3c+ (R/B Safe)
         }
         else if (offby == 1 && solvedCount == 1 && piecesSolvedStrict[0] && !grayFaceColorSolved[3] && !grayFaceColorSolved[4] && grayFaceColorSolved[1] && grayFaceColorSolved[2]) {
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece];
@@ -1209,9 +1205,16 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             continue;
         }
 
-        if (hasTwoAdjacentSolved) goto haveTwoAdjacentSolved;
+        //skip to the end if we can
+        if (checkPieceMatches(pieceOrder, 15, 16, 17, 18, 19))
+            goto startColorFlippingCorners;
+
+        //skip to the middle if we can
+        if (hasTwoAdjacentSolved)
+            goto haveTwoAdjacentSolved;
+
         //(15 19 18 17 16) - TestCube28-1 
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 19 && pieceOrder[2] == 18 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
+        if (checkPieceMatches(pieceOrder, 15, 19, 18, 17, 16))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1219,7 +1222,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //  --> continues with "19 18 15 17 16" below
 
         //(19 18 15 17 16) - TestCube27-1 
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 18 && pieceOrder[2] == 15 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 19, 18, 15, 17, 16))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1227,7 +1230,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //  --> continues with "18 15 19 17 16" below
 
         //(18 15 19 17 16) - TestCube25-1 
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 15 && pieceOrder[2] == 19 && pieceOrder[3] == 17 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 18, 15, 19, 17, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1235,7 +1238,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //  --> continues with "15 16 19 17 18" below
 
         //(17 16 19 18 15) - TestCube26-2 
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 16 && pieceOrder[2] == 19 && pieceOrder[3] == 18 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 17, 16, 19, 18, 15))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1243,7 +1246,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //  --> continues with "15 16 19 17 18" below
 
         //TestCube25-2 (17 18 16 19 15)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 18 && pieceOrder[2] == 16 && pieceOrder[3] == 19 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 17, 18, 16, 19, 15))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1251,7 +1254,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //  --> continues with "18 16 17 19 15" below
 
         //(15 18 17 19 16) - TestCube22-3 
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 18 && pieceOrder[2] == 17 && pieceOrder[3] == 19 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 15, 18, 17, 19, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1259,7 +1262,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } // --> continues with "18 16 17 19 15" below
 
         //(15 19 17 16 18) - TestCube20-2 
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 19 && pieceOrder[2] == 17 && pieceOrder[3] == 16 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 15, 19, 17, 16, 18))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1267,7 +1270,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } // --> continues with "15 16 19 17 18" below
 
         //(17 18 19 15 16) - TestCube18-1 
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 18 && pieceOrder[2] == 19 && pieceOrder[3] == 15 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 17, 18, 19, 15, 16))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1275,7 +1278,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 18 19 16 17" below
 
         //(15 18 19 16 17)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 18 && pieceOrder[2] == 19 && pieceOrder[3] == 16 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 15, 18, 19, 16, 17))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1283,7 +1286,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with  --> "15 16 18 19 17" below
 
         //(19 17 18 15 16)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 17 && pieceOrder[2] == 18 && pieceOrder[3] == 15 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 19, 17, 18, 15, 16))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (FRONT Face Safe) & 3-way CCW rotate back/rear
@@ -1291,7 +1294,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with  --> "19 15 17 18 16" below
 
         //(16 19 18 15 17)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 19 && pieceOrder[2] == 18 && pieceOrder[3] == 15 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 16, 19, 18, 15, 17))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1299,7 +1302,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } // continues with  --> "16 19 17 18 15" below
 
         //(17 15 18 19 16) 
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 15 && pieceOrder[2] == 18 && pieceOrder[3] == 19 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 17, 15, 18, 19, 16))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1307,7 +1310,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 15 16 18 19" below
 
         //(18 19 17 15 16)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 19 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 18, 19, 17, 15, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1315,7 +1318,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } // --> continues with "19 16 17 15 18" below
 
         //(15 17 16 19 18)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 17 && pieceOrder[2] == 16 && pieceOrder[3] == 19 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 15, 17, 16, 19, 18))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1323,7 +1326,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 17 18 16 19" below
 
         //(17 19 18 16 15)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 19 && pieceOrder[2] == 18 && pieceOrder[3] == 16 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 17, 19, 18, 16, 15))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1331,7 +1334,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 17 18 16 19" below
 
         //(16 15 19 18 17)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 15 && pieceOrder[2] == 19 && pieceOrder[3] == 18 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 16, 15, 19, 18, 17))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1339,7 +1342,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 16 19 18 15" above
 
         //(16 18 17 15 19)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 18 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 16, 18, 17, 15, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1347,7 +1350,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "16 17 15 18 19" below
 
         //(17 19 16 15 18)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 19 && pieceOrder[2] == 16 && pieceOrder[3] == 15 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 17, 19, 16, 15, 18))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1355,7 +1358,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "19 16 17 15 18" below
 
         //(19 18 16 15 17)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 18 && pieceOrder[2] == 16 && pieceOrder[3] == 15 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 19, 18, 16, 15, 17))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1363,7 +1366,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 18 16 17 19" below
 
         //(17 18 15 16 19) swap 1&3+2&4
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 18 && pieceOrder[2] == 15 && pieceOrder[3] == 16 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 17, 18, 15, 16, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1371,7 +1374,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 15 16 18 19" below
 
         //(16 18 19 17 15)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 18 && pieceOrder[2] == 19 && pieceOrder[3] == 17 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 16, 18, 19, 17, 15))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1379,7 +1382,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "16 19 17 18 15" below
 
         //(17 16 15 19 18) (swap 1&3+4/5)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 16 && pieceOrder[2] == 15 && pieceOrder[3] == 19 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 17, 16, 15, 19, 18))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1387,7 +1390,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "18 16 15 17 19" below
 
         //(18 16 15 17 19)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 16 && pieceOrder[2] == 15 && pieceOrder[3] == 17 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 18, 16, 15, 17, 19))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1395,7 +1398,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "18 16 17 19 15" below
 
         //(18 15 16 19 17)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 15 && pieceOrder[2] == 16 && pieceOrder[3] == 19 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 18, 15, 16, 19, 17))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1403,7 +1406,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 16 18 19 17" below
 
         //(17 15 19 16 18)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 15 && pieceOrder[2] == 19 && pieceOrder[3] == 16 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 17, 15, 19, 16, 18))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1411,7 +1414,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 15 16 18 19" below
 
         //(16 15 17 19 18)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 15 && pieceOrder[2] == 17 && pieceOrder[3] == 19 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 16, 15, 17, 19, 18))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1419,7 +1422,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "19 15 17 18 16" below
 
         //(16 18 15 19 17)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 18 && pieceOrder[2] == 15 && pieceOrder[3] == 19 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 16, 18, 15, 19, 17))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (FRONT Face Safe) & 3-way CCW rotate back/rear
@@ -1427,7 +1430,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 16 18 19 17" below
 
         //(19 17 16 18 15)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 17 && pieceOrder[2] == 16 && pieceOrder[3] == 18 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 19, 17, 16, 18, 15))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1435,7 +1438,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "16 19 17 18 15" below
 
         //(19 15 16 17 18) (all off by 1)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 15 && pieceOrder[2] == 16 && pieceOrder[3] == 17 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 19, 15, 16, 17, 18))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1443,7 +1446,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 15 16 18 19" below
 
         //(16 17 18 19 15) (all off by 1 in other direction)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 17 && pieceOrder[2] == 18 && pieceOrder[3] == 19 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 16, 17, 18, 19, 15))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1451,7 +1454,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "16 17 15 18 19" below
 
         //(16 17 19 15 18)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 17 && pieceOrder[2] == 19 && pieceOrder[3] == 15 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 16, 17, 19, 15, 18))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1459,7 +1462,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "16 17 15 18 19" below
 
         //(18 17 15 19 16)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 17 && pieceOrder[2] == 15 && pieceOrder[3] == 19 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 18, 17, 15, 19, 16))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1467,7 +1470,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 15 18 19 16" below
 
         //(19 16 18 17 15)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 16 && pieceOrder[2] == 18 && pieceOrder[3] == 17 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 19, 16, 18, 17, 15))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1475,7 +1478,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "19 16 17 15 18" below
 
         //(17 19 15 18 16)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 19 && pieceOrder[2] == 15 && pieceOrder[3] == 18 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 17, 19, 15, 18, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1483,7 +1486,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "16 17 15 18 19" below
 
         //(17 16 18 15 19)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 16 && pieceOrder[2] == 18 && pieceOrder[3] == 15 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 17, 16, 18, 15, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1491,7 +1494,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "17 15 16 18 19" below
 
         //(18 19 15 16 17)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 19 && pieceOrder[2] == 15 && pieceOrder[3] == 16 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 18, 19, 15, 16, 17))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1499,7 +1502,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "18 15 16 19 17" above.
 
         //(18 17 16 15 19)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 17 && pieceOrder[2] == 16 && pieceOrder[3] == 15 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 18, 17, 16, 15, 19))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1507,7 +1510,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 17 16 19 18" above
 
         //(18 17 19 16 15)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 17 && pieceOrder[2] == 19 && pieceOrder[3] == 16 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 18, 17, 19, 16, 15))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1515,7 +1518,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "18 16 17 19 15" below
 
         //(15 19 16 18 17)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 19 && pieceOrder[2] == 16 && pieceOrder[3] == 18 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 15, 19, 16, 18, 17))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
@@ -1523,7 +1526,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 16 18 19 17" below
 
         //(19 15 18 16 17)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 15 && pieceOrder[2] == 18 && pieceOrder[3] == 16 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 19, 15, 18, 16, 17))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1531,7 +1534,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "19 15 17 18 16" below
 
         //(18 16 19 15 17)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 16 && pieceOrder[2] == 19 && pieceOrder[3] == 15 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 18, 16, 19, 15, 17))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1539,7 +1542,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "18 16 17 19 15" below
 
         //(19 16 15 18 17)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 16 && pieceOrder[2] == 15 && pieceOrder[3] == 18 && pieceOrder[4] == 17)
+        else if (checkPieceMatches(pieceOrder, 19, 16, 15, 18, 17))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1547,7 +1550,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "19 16 17 15 18" below
 
         //(18 15 17 16 19)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 15 && pieceOrder[2] == 17 && pieceOrder[3] == 16 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 18, 15, 17, 16, 19))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
@@ -1555,88 +1558,96 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "19 15 17 18 16" below
 
         //(15 17 19 18 16)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 17 && pieceOrder[2] == 19 && pieceOrder[3] == 18 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 15, 17, 19, 18, 16))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //continues with --> "15 17 18 16 19" below
 
+        //(16 19 15 17 18)
+        else if (checkPieceMatches(pieceOrder, 16, 19, 15, 17, 18))
+        {
+            int safeStart = 0; safeStart = 5;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+        } //continues with --> "16 19 17 18 15" below
 
-haveTwoAdjacentSolved:
+    haveTwoAdjacentSolved:
         //FINAL STAGE: Two adjacent pieces.
         //FINAL STAGE: one move left till solved.
         //(15 16 18 19 17)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 16 && pieceOrder[2] == 18 && pieceOrder[3] == 19 && pieceOrder[4] == 17)
+        if (checkPieceMatches(pieceOrder, 15, 16, 18, 19, 17))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         }
         //(15 16 19 17 18)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 16 && pieceOrder[2] == 19 && pieceOrder[3] == 17 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 15, 16, 19, 17, 18))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
         //(18 16 17 19 15)
-        if (pieceOrder[0] == 18 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 19 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 18, 16, 17, 19, 15))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         }
         //(19 16 17 15 18)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 16 && pieceOrder[2] == 17 && pieceOrder[3] == 15 && pieceOrder[4] == 18)
+        else if (checkPieceMatches(pieceOrder, 19, 16, 17, 15, 18))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
         //(16 19 17 18 15)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 19 && pieceOrder[2] == 17 && pieceOrder[3] == 18 && pieceOrder[4] == 15)
+        else if (checkPieceMatches(pieceOrder, 16, 19, 17, 18, 15))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         }
         //(19 15 17 18 16)
-        if (pieceOrder[0] == 19 && pieceOrder[1] == 15 && pieceOrder[2] == 17 && pieceOrder[3] == 18 && pieceOrder[4] == 16)
+        else if (checkPieceMatches(pieceOrder, 19, 15, 17, 18, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
         //(16 17 15 18 19)
-        if (pieceOrder[0] == 16 && pieceOrder[1] == 17 && pieceOrder[2] == 15 && pieceOrder[3] == 18 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 16, 17, 15, 18, 19))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         }
         //(17 15 16 18 19)
-        if (pieceOrder[0] == 17 && pieceOrder[1] == 15 && pieceOrder[2] == 16 && pieceOrder[3] == 18 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 17, 15, 16, 18, 19))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
         //(15 17 18 16 19)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 17 && pieceOrder[2] == 18 && pieceOrder[3] == 16 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 15, 17, 18, 16, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];        //algo Corner1 (Front Face Safe) & 3-way CCW rotate back/rear
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         }
         //(15 18 16 17 19)
-        if (pieceOrder[0] == 15 && pieceOrder[1] == 18 && pieceOrder[2] == 16 && pieceOrder[3] == 17 && pieceOrder[4] == 19)
+        else if (checkPieceMatches(pieceOrder, 15, 18, 16, 17, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //algo #27 (RIGHT Face Safe) & 3-way CW rotate (needs -1)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
 
+startColorFlippingCorners:
         //Do R'DRD to color-flip each corner. (Dirties the lower rows) Each piece flip takes 2x, and each line resets at 6x.
         if (fullySolvedOrder && offby == 0 && g_dirtyCountRDRD != 6) {
             int offset = (i - 15) - 1;
@@ -1688,10 +1699,10 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         shadowDom->LoadNewEdgesFromOtherCube(this);
         shadowDom->LoadNewCornersFromOtherCube(this);
     }
-    //for (; ;)   //call one at a time.
-    int i = 12;
+    //for (; ;)   //call one at a time for now
+    int algo = 12;
     {
-        auto a = g_AlgoStrings[i];
+        AlgoString a = g_AlgoStrings[algo];
         colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //front-face (adjustable)
         int repeat = (a.repeatX != NULL) ? a.repeatX : 1;
         for (int n = 0; n < repeat; ++n) {

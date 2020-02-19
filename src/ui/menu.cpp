@@ -70,19 +70,20 @@ void createMenu()
     glutAddMenuEntry("U' L' u l", 53);
     glutAddMenuEntry("u r U' R'", 54);
     //
-    glutAddMenuEntry("7LL-E1-  CCW x5 HORSE- Fr./R.Back=Safe", 62);
-    glutAddMenuEntry("7LL-E2+   CW x5 HORSE+ Fr./R.Back=Safe", 63);
-    glutAddMenuEntry("7LL-E3a- CCW MUSHROOM- Fr./L.=Safe", 64);
-    glutAddMenuEntry("7LL-E3e+  CW MUSHROOM+ Fr./L.=Safe", 83);
-//  glutAddMenuEntry("7LL-E3d- CCW MUSHROOM- Both+Backs=Safe", 82);
-//  glutAddMenuEntry("7LL-E3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
-//  glutAddMenuEntry("7LL-E3c+  CW MUSHROOM+ Right/Back=Safe", 66);
-    glutAddMenuEntry("7LL-E37 2+2swap BUNNY BEST   2&5,3&4 (ColorSafe)", 87);
-    glutAddMenuEntry("7LL-E19 2+2swap BUNNY Adjac. 2&3,4&5", 69);
-    glutAddMenuEntry("7LL-E20 2+2swap BUNNY Oppo.  2&4,3&5 + INVERT 8'/1'", 70);
-    glutAddMenuEntry("7LL-E29 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
-    glutAddMenuEntry("7LL-E28 5-way CCW cycle by 1,2,-1,2,1", 68);
-    glutAddMenuEntry("7LL-E27 5-way  CW cycle by -2 all", 67);
+    glutAddMenuEntry("7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62);
+    glutAddMenuEntry("7LL-Edge2+   CW x5 HORSE+ Fr./R.Back=Safe", 63);
+    glutAddMenuEntry("7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64);
+    glutAddMenuEntry("7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83);
+//I consider these 3 below redundant to the 2 above:
+//  glutAddMenuEntry("7LL-Edge3d- CCW MUSHROOM- Both+Backs=Safe", 82);
+//  glutAddMenuEntry("7LL-Edge3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
+//  glutAddMenuEntry("7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
+    glutAddMenuEntry("7LL-Edge37 2+2swap BUNNY BEST   2&5,3&4 (ColorSafe)", 87);
+    glutAddMenuEntry("7LL-Edge19 2+2swap BUNNY Adjac. 2&3,4&5", 69);
+    glutAddMenuEntry("7LL-Edge20 2+2swap BUNNY Oppo.  2&4,3&5 + INVERT 8'/1'", 70);
+    glutAddMenuEntry("7LL-Edge29 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
+    glutAddMenuEntry("7LL-Edge28 5-way CCW cycle by 1,2,-1,2,1", 68);
+    glutAddMenuEntry("7LL-Edge27 5-way  CW cycle by -2 all", 67);
     //
     glutAddMenuEntry("7LL-E+C #1/3 CCW Fr./R.Back=Safe", 61);
     glutAddMenuEntry("7LL-E+C #2   CCW Fr./L.=Safe", 60);
@@ -92,13 +93,14 @@ void createMenu()
     glutAddMenuEntry("7LL-E+C 2- CCW x1 Fr./R.Back=Safe", 81);
     glutAddMenuEntry("7LL-E+C 1+  CW x1 Fr./R.Back=Safe", 80);
     //
-    glutAddMenuEntry("7LL Corners: R' D' r dr (Permute) C2+Safe", 55);
+    glutAddMenuEntry("7LL Corner: R' D' r dr (Permute) C2+Safe", 55);
     //  glutAddMenuEntry("R' D' r dr [x2]", 55);
     //  glutAddMenuEntry("R' D' r dr [x4]", 55);
-    //  glutAddMenuEntry("LL Corners: Cycle- CCW L.Back=Safe", 56);
-    //  glutAddMenuEntry("LL Corners: Cycle- CCW Left=Safe", 78);
     glutAddMenuEntry("7LL Corners: Cycle- CCW FrontLine=Safe", 57);
     glutAddMenuEntry("7LL Corners: Cycle+  CW RightLine=Safe", 77);
+//I consider these 2 below redundant to the 2 above:
+//  glutAddMenuEntry("LL Corners: Cycle- CCW L.Back=Safe", 56);
+//  glutAddMenuEntry("LL Corners: Cycle- CCW Left=Safe", 78);
 
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)
     glutAddMenuEntry("2nd Layer, Place Edge (Left)", 71);

@@ -131,6 +131,9 @@ public:
     void rotateSolveLayer7Edges(Megaminx* shadowDom);
     void rotateSolve7thLayerCorners(Megaminx* shadowDom);
     void testingAlgostrings(Megaminx* shadowDom);
+    bool checkPieceMatches(std::vector<int> pieces, int a, int b, int c, int d, int e) {
+        return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
+    };
     //in Shadow.CPP
     void LoadNewEdgesFromOtherCube(Megaminx* source);
     void LoadNewCornersFromOtherCube(Megaminx* source);    
