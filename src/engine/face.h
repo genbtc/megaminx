@@ -151,6 +151,7 @@ struct AlgoString {
     int num;
     const char * algo;
     int repeatX;
+    std::vector<numdir> *bulk;
 };
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]

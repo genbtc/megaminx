@@ -165,8 +165,7 @@ void mousePressed(int button, int state, int x, int y)
     g_camera.ProcessMouse(button, state, x, y);
 }
 
-//TODO BUG: stop cube rotate from happening right after we come back from right click menu visible then drag:
-//FIXED I think.
+//FIXED BUG: stop cube rotate from happening right after we come back from right click menu visible then drag
 int OldmenuVisibleState = 0;
 int oldmenux = 0, oldmenuy = 0;
 void menuVisible(int status, int x, int y)
@@ -199,6 +198,12 @@ void onKeyboard(unsigned char key, int x, int y)
             exit(0); break;
         case 26: //Ctrl+Z
             megaminx->undo();
+            break;
+        case 19: //CTRL+S //Save Game State
+            FromCubeToVectorFile();
+            break;
+        case 18: //CTRL+R //Restore Game State
+            FromVectorFileToCube();
             break;
         default:
             break;

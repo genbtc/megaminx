@@ -70,28 +70,28 @@ void createMenu()
     glutAddMenuEntry("U' L' u l", 53);
     glutAddMenuEntry("u r U' R'", 54);
     //
-    glutAddMenuEntry("7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62);
-    glutAddMenuEntry("7LL-Edge2+   CW x5 HORSE+ Fr./R.Back=Safe", 63);
     glutAddMenuEntry("7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64);
     glutAddMenuEntry("7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83);
 //I consider these 3 below redundant to the 2 above:
 //  glutAddMenuEntry("7LL-Edge3d- CCW MUSHROOM- Both+Backs=Safe", 82);
 //  glutAddMenuEntry("7LL-Edge3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
 //  glutAddMenuEntry("7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
-    glutAddMenuEntry("7LL-Edge37 2+2swap BUNNY BEST   2&5,3&4 (ColorSafe)", 87);
-    glutAddMenuEntry("7LL-Edge19 2+2swap BUNNY Adjac. 2&3,4&5", 69);
-    glutAddMenuEntry("7LL-Edge20 2+2swap BUNNY Oppo.  2&4,3&5 + INVERT 8'/1'", 70);
+    glutAddMenuEntry("7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62);
+    glutAddMenuEntry("7LL-Edge2+   CW x5 HORSE+ Fr./R.Back=Safe", 63);
+    glutAddMenuEntry("7LL-Edge37 2+2swap BUNNY BEST  2&5,3&4 (ColorSafe)", 87);
+    glutAddMenuEntry("7LL-Edge19 2+2swap BUNNY Adj. 2&3,4&5", 69);
+    glutAddMenuEntry("7LL-Edge20 2+2swap BUNNY Opp. 2&4,3&5 + INVERT 8'/1'", 70);
     glutAddMenuEntry("7LL-Edge29 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
     glutAddMenuEntry("7LL-Edge28 5-way CCW cycle by 1,2,-1,2,1", 68);
     glutAddMenuEntry("7LL-Edge27 5-way  CW cycle by -2 all", 67);
     //
-    glutAddMenuEntry("7LL-E+C #1/3 CCW Fr./R.Back=Safe", 61);
-    glutAddMenuEntry("7LL-E+C #2   CCW Fr./L.=Safe", 60);
-    glutAddMenuEntry("7LL-E+C #3    CW Fr.Line/L.Edge=Safe", 58);
+    glutAddMenuEntry("7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61);
+    glutAddMenuEntry("7LL-E+C #2 CCW MUSHEdge- Fr./L.=Safe", 60);
+    glutAddMenuEntry("7LL-E+C #3  CW MUSHEdge+ Fr.Line/L.Edge=Safe", 58);
     glutAddMenuEntry("7LL-E+C 2+2swap BUNNY 1&3,2&4 R.Back=Safe", 59);
     glutAddMenuEntry("7LL-E+C 2+2swap BUNNY 2&5,3&4 Front=Safe", 86);
-    glutAddMenuEntry("7LL-E+C 2- CCW x1 Fr./R.Back=Safe", 81);
-    glutAddMenuEntry("7LL-E+C 1+  CW x1 Fr./R.Back=Safe", 80);
+    glutAddMenuEntry("7LL-E+C x1 CCW HORSEdge- Fr./R.Back=Safe", 81);
+    glutAddMenuEntry("7LL-E+C x1  CW HORSEdge+ Fr./R.Back=Safe", 80);
     //
     glutAddMenuEntry("7LL Corner: R' D' r dr (Permute) C2+Safe", 55);
     //  glutAddMenuEntry("R' D' r dr [x2]", 55);

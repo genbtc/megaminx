@@ -1,10 +1,10 @@
 /* MegaMinx v1.35 - 2017+2018+2019+2020 - genBTC edition
- * Uses code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
+ * Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
  * genBTC January 2019 - human rotate auto solve layers 1-6
    genBTC October 2019 - fixup code. making gray layer 7
-   genBTC February 2020 - fixing gray layer 7 solver
+   genBTC February 2020 - fixing gray layer 7 solver. seems fixed.
  */
 #include "megaminx.h"
 #include <algorithm>
@@ -133,24 +133,22 @@ void Megaminx::rotateAlgo(int face, int id)
 {
     assert(face > 0 && face <= numFaces);
     const colordirs &loc = g_faceNeighbors[face];
-    rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
-    int repeat = g_AlgoStrings[id].repeatX;
-    if (repeat > 1) {
-        for (int i = 0; i < repeat - 1; ++i) {
-            rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
-        }
+    //Either rotate 1 time, or however many repeatX says, if it exists.
+    int repeat = (g_AlgoStrings[id].repeatX != NULL) ? g_AlgoStrings[id].repeatX : 1;
+    for (int n = 0; n < repeat; ++n) {
+        rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
     }
 }
 
 //Adds entire vector of numdirs to the Rotate queue one by one.
 void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
 {
-    undoStack.push({ -999,-999 });
+    undoStack.push({ -999,-999 });  //begin flag
     for (auto one : bulk) {
         rotateQueue.push(one);
         undoStack.push(one);
     }
-    undoStack.push({ 999, 999 });
+    undoStack.push({ 999, 999 });   //end flag
 }
 //Takes an Algo String and parses it, vectorizes it, then rotates it. (based off current-face)
 void Megaminx::rotateBulkAlgoString(std::string algoString)
@@ -171,6 +169,7 @@ void Megaminx::undo()
 {
     if (undoStack.empty()) return;
     auto op = undoStack.top();
+    //skip any of the flag values
     if (op.num == 999 || op.dir == 999 || op.num == -999 || op.dir == -999) {
         undoStack.pop();
         return;
@@ -189,6 +188,8 @@ void Megaminx::undoQuad()
     if (undoStack.size() < 4) return;
     undoDouble(); undoDouble();
 }
+//Undo a whole Chunk of moves at once, this is why we have the -999/999 flag values.
+//Sequences like these come from rotateBulkAlgoVector()
 void Megaminx::undoBulk()
 {
     if (undoStack.empty()) return;
@@ -213,8 +214,7 @@ void Megaminx::resetQueue()
 {
     isRotating = false;
     rotateQueue = std::queue<numdir>();
-    //TODO: at this point, the other Undo-Queue now has extra actions in it.
-    //    : find how many we skipped in the "cancel" and pop those off the undo queue too.
+    undoStack = std::stack<numdir>();
 }
 
 //Scramble by Rotating 1400-2700 times (137 x 12 x 2?)
@@ -537,7 +537,7 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
         std::string word;                  // parse first word
         numdir op = { -1, Face::Clockwise };
         if (ss >> word) {
-            if (word.find("'") != npos)
+            if (word.find("'") != npos)    //reverse direction if its a ' Prime
                 op.dir *= -1;
             if ((word.find("dr") != npos) ||
                 (word.find("dR") != npos) ||

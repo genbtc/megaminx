@@ -43,11 +43,13 @@ void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
     }
 }
 
+//call to find out if the puzzle is fully solved.
 bool Megaminx::isFullySolved()
 {
     return (DetectIfAllSolved<Edge>() && DetectIfAllSolved<Corner>());
 }
 
+//fast way to detect if the puzzle is solved
 template <typename T>
 bool Megaminx::DetectIfAllSolved()
 {
@@ -61,7 +63,7 @@ bool Megaminx::DetectIfAllSolved()
     return (numpieces==allSolved);
 }
 
-//Generic template way to detect if pieces are solved in their correct locations with correct colors
+//Generic template way to detect if pieces are solved, in their correct locations with correct colors, on one face
 template <typename T>
 void Megaminx::DetectSolvedPieces(int startI, bool piecesSolved[5])
 {
@@ -895,16 +897,19 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 //BUNNY
         else if (offby == 0 && solvedCount == 3 && !allEdgeColorsSolved && ((!grayFaceColorSolved[2] && !grayFaceColorSolved[3])||(!grayFaceColorSolved[1] && !grayFaceColorSolved[2])))
         {
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #29 SWAP colors 2/3 & 4/5
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #29 INVERT colors 2/3 & 4/5
         }
         else if (offby == 1 && solvedCount == 1 && piecesSolvedStrict[0] && allEdgeColorsSolved)
         {
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #19 SWAP pieces 2/3 & 4/5 (keep color)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #19 SWAP pieces 2/3 & 4/5 (colorsafe)
         }
 //TWO OFFCOLOR OPPOSITES
         //If two opposite Pieces are colored wrong, Choose the face that places them @ 8' & 1' oclock and then Algo #20 to invert those
         //algo #20 = INVERT colors on 8' & 1' oclock relative face
         //TODO: Collapse these 5 into 1 block
+        //else if (0) {
+        //    auto oppocolors = [grayFaceColorSolved](int a, int b) { return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); };
+        //}
         else if (!grayFaceColorSolved[2] && !grayFaceColorSolved[4]) {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[LIGHT_BLUE]);
         }
@@ -1030,6 +1035,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece];    //algo #14 3a-  (F/L Safe)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
         }
+        else if (offby == 1 && solvedCount == 2 && !currentpieceFlipStatusOK && piecesSolvedStrict[2] && piecesSolvedStrict[3] && grayFaceColorSolved[4] && !grayFaceColorSolved[0] && !grayFaceColorSolved[1]) { //TT9
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece];    //algo #14 3a-  (F/L Safe)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+        }
 //MUSHROOM+
         else if (offby == 1 && solvedCount == 2 && twoAdjacentPieces && allEdgeColorsSolved)
         {
@@ -1052,6 +1061,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece];
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, loc); //3e+ #33 same. (F/L safe tho)
         }
+        //(25 29 27 26 28) case to go with no gray @ 3 & 4 and also solved 0 & 2. dont worry about corners.
         else
             break;
         //DO IT:
