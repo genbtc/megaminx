@@ -21,9 +21,8 @@ void utPrintHelpMenu(float w, float h)
 {
     constexpr char helpStrings[18][32] = { "[H]elp Menu:",
                                            "[Right Click]  Actions Menu",
-                                           "[Dbl Click]  Rotate Current >>",
+                                           "[Dbl Click]  Rotate Current CW>",
 //                                           "[F1-F12]     Rotate Face #  >>",
-                                           "[F1-F9] Bulk Layer Solve.cpp",
                                            "  +Shift  CounterClockwise <<",
                                            "1,2,3,4,5 Flip Curr. Corner #",
                                            "!,@,#,$,% Flip Curr. Edge  #",
@@ -31,13 +30,14 @@ void utPrintHelpMenu(float w, float h)
                                            "[S/s]  Rotate Front Face </>",
                                            "[A/a]  Rotate Left  Face </>",
                                            "[D/d]  Rotate Right Face </>",
-                                           "[Z/z]  Rotate Diag/Left  </>",
-                                           "[C/c]  Rotate Diag/Right </>",
+                                           "[Z/z]  Rotate DownLeft   </>",
+                                           "[C/c]  Rotate DownRight  </>",
                                            "[X/x]  Rotate Bottom Face </>",
                                            "[Space]  Toggle Auto-Spinning",
                                            "[BackSpace]  Reset Camera Pos",
                                            "[Delete]  Scramble Puzzle",
-                                           "[Enter] Solve Current Face"
+                                           "[Enter] Solve Current Face",
+                                           "[F1-F8=F9] Layer# Auto Solve",
     };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
@@ -239,20 +239,22 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(WHITE); break;
     case 41:  //1st Layer = WHITE Corners
         megaminx->resetFacesCorners(WHITE); break;
-    case 42: //2nd Layer
+    case 42: //2nd Layer edges
         megaminx->secondLayerEdges(); break;
-    case 43: //3rd Layer
+    case 43: //3rd Layer corners
         megaminx->lowYmiddleW(); break;
-    case 44: //4th Layer
+    case 44: //4th Layer edges
         megaminx->fourthLayerEdges(); break;
-    case 45: //5th Layer
+    case 45: //5th Layer corners
         megaminx->highYmiddleW(); break;
-    case 46: //6th Layer
+    case 46: //6th Layer edges
         megaminx->sixthLayerEdges(); break;
     case 47:  //Last Layer GRAY Edges
         megaminx->resetFacesEdges(GRAY); break;
     case 48:  //Last Layer GRAY Corners
         megaminx->resetFacesCorners(GRAY); break;
+    //case 49:
+    //case 50:
     case 51:
     case 52:
     case 53:

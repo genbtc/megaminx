@@ -119,17 +119,16 @@ void RenderScene()
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
+        if (megaminx->isFullySolved() && !help)
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "SOLVED!");
+        else
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "[F9] = SOLVER");
         shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
             static char rotquestr[21];
             snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
         }
-        bool solved = megaminx->isFullySolved();
-        if (solved)
-            utDrawText2D(10.f, HEIGHT - 60.f, "SOLVED!");
-        else
-            utDrawText2D(10.f, HEIGHT - 60.f, "[F9] = SOLVER");
 
     }
     utResetPerspectiveProjection();
@@ -142,7 +141,7 @@ void GetCurrentFace()
     const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX, (int)g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
-        wsprintf(lastface, "%ws", g_colorRGBs[currentFace].name);
+        sprintf_s(lastface, 32, "%ws", g_colorRGBs[currentFace].name);
         //Save it into the viewmodel (sync view)
         megaminx->setCurrentFaceActive(currentFace);
     }

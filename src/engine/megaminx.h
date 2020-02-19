@@ -95,6 +95,13 @@ public:
     void resetFiveEdgesV(std::vector<int> v);
     void resetFiveCornersV(std::vector<int> v);
 
+    constexpr static int m_firstLayerEdges[5]   = { 0, 1, 2, 3, 4 };
+    constexpr static int m_secondLayerEdges[5]  = { 5, 6, 7, 8, 9 };
+    constexpr static int m_fourthLayerEdgesA[5] = { 10, 11, 12, 13, 14 };
+    constexpr static int m_fourthLayerEdgesB[5] = { 15, 16, 17, 18, 19 };
+    constexpr static int m_sixthLayerEdges[5]   = { 20, 21, 22, 23, 24 };
+    constexpr static int m_seventhLayerEdges[5] = { 25, 26, 27, 28, 29 };
+
     void Megaminx::secondLayerEdges() {        
         resetFiveEdges(m_secondLayerEdges);
     }
@@ -121,6 +128,9 @@ public:
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
     void DetectSolvedCorners(int startI, bool piecesSolved[5]);
     void DetectSolvedEdges(int startI, bool piecesSolved[5]);
+    bool checkPieceMatches(std::vector<int> pieces, int a, int b, int c, int d, int e) {
+        return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
+    };
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
     void rotateSolveLayer2Edges(Megaminx* shadowDom);
@@ -131,9 +141,7 @@ public:
     void rotateSolveLayer7Edges(Megaminx* shadowDom);
     void rotateSolve7thLayerCorners(Megaminx* shadowDom);
     void testingAlgostrings(Megaminx* shadowDom);
-    bool checkPieceMatches(std::vector<int> pieces, int a, int b, int c, int d, int e) {
-        return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
-    };
+
     //in Shadow.CPP
     void LoadNewEdgesFromOtherCube(Megaminx* source);
     void LoadNewCornersFromOtherCube(Megaminx* source);    

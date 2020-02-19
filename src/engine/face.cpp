@@ -57,17 +57,6 @@ void Face::attachCornerPieces(const Megaminx* megaminx, Corner& cornersPTR)
 }
 
 /**
- * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
- * \param direction turn direction: -1 for Right, +1 for left (seems/is backwards).
- */
-void Face::rotate(int direction)
-{
-    assert(direction == Face::Clockwise || direction == Face::CCW);
-    rotating = true;
-    turnDir = direction;
-}
-
-/**
 * \brief Returns an EXACT ORDER list of pieces on[Face], (either Edge or Corner piece)
 * \return List of face's pieces in 1-5 face order
 */
@@ -144,9 +133,21 @@ void Face::QuadSwapCorners(const int pack[8]) { QuadSwapPieces<Corner>(pack); }
 void Face::QuadSwapEdges(const int pack[8]) { QuadSwapPieces<Edge>(pack); }
 
 /**
+ * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
+ * \param direction turn direction: -1 for Right, +1 for left (seems/is backwards).
+ */
+void Face::rotate(int direction)
+{
+    assert(direction == Face::Clockwise || direction == Face::CCW);
+    rotating = true;
+    turnDir = direction;
+}
+
+/**
  * \brief Colorizing function. Intricate series of flips/swaps.
  * \param dir Each case is for each of the 12 faces,
  * / in order to get it to switch colors after it rotates.
+ * / called from render()
  */
 bool Face::placeParts(int dir)
 {
@@ -310,7 +311,7 @@ bool Face::render()
 {
     glPushMatrix();
     //8 is the current rotational turnspeed for turnDir
-    constexpr int turnspeed = 72; //16 is fastmode
+    constexpr int turnspeed = 100; //16 is fastmode
     if (rotating)
         angle += turnDir * turnspeed;
     //Slow down once its 75% complete (and angle == 56 == 56 % 8 == 0)
