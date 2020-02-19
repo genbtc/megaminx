@@ -54,10 +54,10 @@ void createMenu()
     //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Camera Home Pos.", 93);
-    glutAddMenuEntry("Edit.Undo", 91);
-    glutAddMenuEntry("Edit.Undo [2x]", 94);
-    glutAddMenuEntry("Edit.Undo [4x]", 95);
-    glutAddMenuEntry("Edit.Undo [Bulk]", 96);
+    glutAddMenuEntry("Edit.Undo [^Z]", 91);
+    glutAddMenuEntry("Edit.Undo*2", 94);
+    glutAddMenuEntry("Edit.Undo*4", 95);
+    glutAddMenuEntry("Edit.Undo*Bulk", 96);
     glutAddMenuEntry("Scramble! [Del]", 100);
     glutAddMenuEntry("Save Cube...", 98);
     glutAddMenuEntry("Restore Cube...", 99);
