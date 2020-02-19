@@ -1,4 +1,4 @@
-MegaMinx - v1.34 genBTC Mod (January 23, 2019)
+MegaMinx - v1.35 genBTC Mod (February 20, 2020)
 ========
 ![Current129](https://puu.sh/yyfd7/525320ef95.png)
 <p>It's a working simulator of a Rubik's ~~cube~~ Dodecahedron puzzle called the <b>Megaminx</b>!<br />
@@ -29,7 +29,7 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 <h2>Keyboard Commands:</h2>
 "[Right Click]  Actions Menu"<br>
 "[Dbl Click]  Rotate Current >>"<br>
-"[F1-F12]     Rotate Face #  >>"<br>
+"[F1-F8=F9] AutoSolve Layer# >>"<br>
 "  +Shift  CounterClockwise <<"<br>
 "[W/w]  Rotate Upper Face </>"<br>
 "[S/s]  Rotate Front Face </>"<br>
@@ -58,10 +58,10 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 "4th Layer Edges"<br>
 "5th Layer Corners"<br>
 "6th Layer Edges"<br>
+"7th Last Layer Edges"<br>
+"7th Last Layer Corners"<br>
 <p>
-<h2>Last Layer solve helpers</h2><br>
-"Solve Grey Star"<br>
-"Solve Grey Corners"<br>
+<h2>Also Manual Last Layer solve commands for all of the above</h2><br>
 <h2>Notation Algorithms</h2><br>
 "r u R' U'"<br>
 "l u L' U'"<br>
@@ -76,5 +76,5 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 "Edge Permutation 4":  r u R' u , R' U' r2 U', R' u R' u, r U2' (5 to 2, 2 to 1, 1 to 5)<br>
 "Edge Permutation 5":  l r u2, L' u R', l U' r u2, L' u2 R' (5 and 3 swap, 1 and 2 swap)<br>
 <h2> Programming Credits </h2>
-genBTC - genBTC@gmx.com - December 2017, all of 2018, and January 2019 (C)<br>
-Uses forked code from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com<br>
+genBTC - genBTC@gmx.com - December 2017, all of 2018, and January 2019 and November 2019 to February 2020(C)<br>
+Uses forked code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com<br>
