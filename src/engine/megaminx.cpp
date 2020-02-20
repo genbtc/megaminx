@@ -395,7 +395,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
     }
     if (!solve)
         return 0;
-    auto activeFace = faces[(color_n - 1)];
+    auto &activeFace = faces[(color_n - 1)];
     auto foundEdges2 = findPieces<Edge>(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundEdges2 == defaultEdges);
@@ -443,7 +443,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
     }
     if (!solve)
         return 0;
-    auto activeFace = faces[(color_n - 1)];
+    auto &activeFace = faces[(color_n - 1)];
     auto foundCorners2 = findPieces<Corner>(color_n);
     //assert check just double checking - we dont want to get stuck in while
     assert(foundCorners2 == defaultCorners);
@@ -499,10 +499,10 @@ template <typename T>
 void Megaminx::resetFivePieces(const int indexes[5]) {
     Piece* pieces = getPieceArray<T>(0);
     for (int i = 0; i < 5; ++i) {
-        if (pieces[indexes[i]].data.pieceNum != indexes[i]) {
-            pieces[indexes[i]].swapdata(pieces[indexes[i]].data);
-            i = -1;
-        }
+        auto &destpiece = pieces[indexes[i]];
+        auto &sourcepiece = pieces[findPiece<T>(indexes[i])];
+        if (sourcepiece.data.pieceNum == destpiece.defaultPieceNum)
+            destpiece.swapdata(sourcepiece.data);
     }
     //Pieces are in the right place but maybe wrong orientation, so flip the colors:
     for (int i = 0; i < 5; ++i) {
