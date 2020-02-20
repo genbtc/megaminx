@@ -4,11 +4,11 @@
 //the most flexible
 void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
 {
-    int endI = startI + 5;
     std::vector<int> piecesSeenOnTop;
     //populate piecesSolved
     int numSolved = 0;
-    //Find out if any applicable pieces are in the desired slots:
+    int endI = startI + 5;
+    //Check if any pieces are already in their assigned slots:
     for (int p = startI; p < endI; ++p) {
         int pIndex = findEdge(p);
         //make sure its a match and make sure the colors arent flipped
@@ -160,10 +160,12 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         //basic overflow protection:
         if (loopcount > 101)
             break;
-        bool facesSolved[12] = { false, false, false, false, false, false, false, false, false, false, false, false };
+        bool facesSolved[6] = { false, false, false, false, false, false };
         bool piecesSolved[5] = { false, false, false, false, false };
         int firstSolvedPiece = -1;
         shadowDom->DetectSolvedEdgesUnOrdered(0, piecesSolved);
+        //bool areEdgesFullySolved[5] = { false, false, false, false, false };
+        //shadowDom->DetectSolvedEdges(0, &areEdgesFullySolved[0]);
         for (int a = 0; a < 5; ++a) {
             facesSolved[1 + a] = piecesSolved[a];
             if (firstSolvedPiece == -1 && piecesSolved[a] == true)
@@ -171,10 +173,17 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         }
         while (i < 5 && piecesSolved[i] == true)
             i++;
-        if (i >= 5) {
-            allSolved = true;
+        if (i >= 5 && std::all_of(std::begin(piecesSolved), std::end(piecesSolved), [](bool j) { return j; })) {
+            allSolved = true;   //TT12-huh
             break;
         }
+        //means we got to the end but something else came undone, go back and fix it.
+        else if (i >= 5) {
+            i = 0;
+            continue;
+        }
+        LayerAssist l{ shadowDom, i };
+        assert(l.colormatchA != l.colormatchB); //sanity check.
 
         //Rotates the white face to its solved position, first solved edge matches up to its face.
         if (firstSolvedPiece != -1) {
@@ -188,9 +197,6 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 continue;
             }
         }
-        LayerAssist l{ shadowDom,i };
-        assert(l.colormatchA != l.colormatchB); //sanity check.
-
         //Any matching pieces that end up on its matching face can be spun in with just 2 or 1 moves.
         if (l.ontopA && ((l.isOnRow34 && l.colormatchA) || l.isOnRow2)) {
             int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA) : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
@@ -861,7 +867,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         //if (memcmp(m_seventhLayerEdges, vecPieceNums, sizeof(vecPieceNums)) == 0)
         //    int thisbreakpointWORKS = 0;
         //iterate through the piece/color lists and make some easy compound conditional aliases
-        bool allEdgeColorsSolved = grayFaceColorSolved[0] && grayFaceColorSolved[1] && grayFaceColorSolved[2] && grayFaceColorSolved[3] && grayFaceColorSolved[4];
+        bool allEdgeColorsSolved = std::all_of(std::begin(grayFaceColorSolved), std::end(grayFaceColorSolved), [](bool j) { return j; });
         bool twoAdjacentPieces = (  //test2-p3p4OK-rotate3a- PASS
             (piecesSolvedStrict[0] && piecesSolvedStrict[1]) ||
             (piecesSolvedStrict[1] && piecesSolvedStrict[2]) ||
@@ -878,7 +884,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         //Check gray CORNERS also, maybe we want to preserve them.
         bool grayCornerColorSolved[5] = { false, false, false, false, false };
         shadowDom->DetectSolvedCorners(15, grayCornerColorSolved);
-        bool allCornersColorsSolved = grayCornerColorSolved[0] && grayCornerColorSolved[1] && grayCornerColorSolved[2] && grayCornerColorSolved[3] && grayCornerColorSolved[4];
+        bool allCornersColorsSolved = std::all_of(std::begin(grayCornerColorSolved), std::end(grayCornerColorSolved), [](bool j) { return j; });
 //START MAIN:
 
         //orient the first piece if it exists:
