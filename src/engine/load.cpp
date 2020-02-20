@@ -5,7 +5,6 @@ extern Megaminx* shadowDom;
 void serializeVectorInt60(std::vector<int> vec, std::string filename);
 void serializeVectorInt30(std::vector<int> vec, std::string filename);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
-void FromCubeToShadowCube();
 
 //Cube SaveState filenames
 #define EDGEFILE "EdgePositions30.dat"
@@ -13,16 +12,16 @@ void FromCubeToShadowCube();
 #define EDGEFILECOLORS "EdgeColors30.dat"
 #define CORNERFILECOLORS "CornerColors30.dat"
 
-//Store Cube / Write VectorFile
-void FromCubeToVectorFile() {
+//Save/Store Cube - (Write VectorFile)
+void SaveCubetoFile() {
     serializeVectorInt30(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
     serializeVectorInt30(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
     serializeVectorInt30(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
     serializeVectorInt30(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
 
-//Load Cube / Read VectorFile
-void FromVectorFileToCube() {
+//Restore/Load Cube - (Read VectorFile)
+void RestoreCubeFromFile() {
     if (shadowDom)
         delete shadowDom;
     shadowDom = new Megaminx();
@@ -35,7 +34,7 @@ void FromVectorFileToCube() {
 }
 
 //Load Source Cube and store into Shadow Cube
-void FromCubeToShadowCube() {
+void MakeShadowCubeClone() {
     if (shadowDom)
         delete shadowDom;
     shadowDom = new Megaminx();

@@ -12,9 +12,9 @@ submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 void menuHandler(int num);
 void serializeVectorInt60(std::vector<int> list1, std::string filename);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
-void FromCubeToVectorFile();
-void FromVectorFileToCube();
-void FromCubeToShadowCube();
+void SaveCubetoFile();
+void RestoreCubeFromFile();
+void MakeShadowCubeClone();
 
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
@@ -59,11 +59,12 @@ void createMenu()
     glutAddMenuEntry("Edit.Undo*4", 95);
     glutAddMenuEntry("Edit.Undo*Bulk", 96);
     glutAddMenuEntry("Scramble! [Del]", 100);
+    glutAddMenuEntry("New Cube...", 92);
     glutAddMenuEntry("Save Cube...", 98);
     glutAddMenuEntry("Restore Cube...", 99);
     glutAddMenuEntry("Exit!", 102);
 
-    //SubLevel4 Menu - Human Rotate Algos
+    //SubLevel4 Menu - Human Bulk Rotate Algos
     submenu4_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("r u R' U'", 51);
     glutAddMenuEntry("l u L' U'", 52);
@@ -113,31 +114,31 @@ void createMenu()
     glutAddMenuEntry("6th Layer, Place Edge (Right)",76);
 
     //Sublevel Z = Human Rotate Bulk-Solve by whole layer routines with Solve.cpp
-    glutAddMenuEntry("1st Layer: White Edges (Auto)", 300);
-    glutAddMenuEntry("1st Layer: White Corners (Auto)", 301);
-    glutAddMenuEntry("2nd Layer: All Edges (Auto)", 302);
-    glutAddMenuEntry("3rd Layer: All Corners (Auto)", 303);
-    glutAddMenuEntry("4th Layer: All Edges (Auto)", 304);
-    glutAddMenuEntry("5th Layer: All Corners (Auto)", 305);
-    glutAddMenuEntry("6th Layer: All Edges (Auto)", 306);
-    glutAddMenuEntry("7th Layer: Gray Edges (Auto)", 307);
-    glutAddMenuEntry("7th Layer: Gray Corners (Auto)", 308);
-    glutAddMenuEntry("ALL Layers: #1 - #7 (Auto)", 309);
+    submenu1_id = glutCreateMenu(menuHandler);
+    glutAddMenuEntry("1st Layer: White Edges (Rotate)", 300);
+    glutAddMenuEntry("1st Layer: White Corners (Rotate)", 301);
+    glutAddMenuEntry("2nd Layer: All Edges (Rotate)", 302);
+    glutAddMenuEntry("3rd Layer: All Corners (Rotate)", 303);
+    glutAddMenuEntry("4th Layer: All Edges (Rotate)", 304);
+    glutAddMenuEntry("5th Layer: All Corners (Rotate)", 305);
+    glutAddMenuEntry("6th Layer: All Edges (Rotate)", 306);
+    glutAddMenuEntry("7th Layer: Gray Edges (Rotate)", 307);
+    glutAddMenuEntry("7th Layer: Gray Corners (Rotate)", 308);
+    glutAddMenuEntry("ALL Layers: #1 - #7 (Rotate)", 309);
 
     //SubLevel3 Menu - Computer InstaSolve by Layer (internally "pops-out"=aka cheating)
     submenu3_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("*New/Reset/SolveAll*", 92);
-    glutAddMenuEntry("1st Layer White Star", 40);
-    glutAddMenuEntry("1st Layer White Corners", 41);
-    glutAddMenuEntry("2nd Layer Edges", 42);
-    glutAddMenuEntry("3rd Layer Low Y's", 43);
-    glutAddMenuEntry("4th Layer Edges", 44);
-    glutAddMenuEntry("5th Layer High Y's", 45);
-    glutAddMenuEntry("6th Layer Edges", 46);
-    glutAddMenuEntry("7th Layer Grey Star", 47);
-    glutAddMenuEntry("7th Layer Grey Corners", 48);
+    glutAddMenuEntry("1st Layer: White Star (Teleport)", 40);
+    glutAddMenuEntry("1st Layer: White Corners (Teleport)", 41);
+    glutAddMenuEntry("2nd Layer: Edges (Teleport)", 42);
+    glutAddMenuEntry("3rd Layer: Low Y's (Teleport)", 43);
+    glutAddMenuEntry("4th Layer: Edges (Teleport)", 44);
+    glutAddMenuEntry("5th Layer: High Y's (Teleport)", 45);
+    glutAddMenuEntry("6th Layer: Edges (Teleport)", 46);
+    glutAddMenuEntry("7th Layer: Grey Star (Teleport)", 47);
+    glutAddMenuEntry("7th Layer: Grey Corners (Teleport)", 48);
 
-    //SubLevel5 Menu - Solve Current Faces (Reset to solved position)
+    //SubLevel5 Menu - Computer InstaSolve by Faces (Reset to solved position)
     submenu5_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry(" 1 WHITE", 171);
     glutAddMenuEntry(" 2 DARK_BLUE", 172);
@@ -152,23 +153,23 @@ void createMenu()
     glutAddMenuEntry("11 PINK", 181);
     glutAddMenuEntry("12 BEIGE", 182);
 
-    //SubLevel2 Menu - Current Face
+    //SubLevel2 Menu - Current Face Modifications
     submenu2_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Rotate CCW <<", 19);
-    glutAddMenuEntry("Rotate  CW >>", 20);
-    glutAddMenuEntry("Place/Solve Entire Face", 21);
-    glutAddMenuEntry("Place/Solve Five Edges", 22);
-    glutAddMenuEntry("Place/Solve Five Corners", 23);
-    glutAddMenuEntry("Flip Colors Edge [1+Shift]", 24);
-    glutAddMenuEntry("Flip Colors Edge [2+Shift]", 25);
-    glutAddMenuEntry("Flip Colors Edge [3+Shift]", 26);
-    glutAddMenuEntry("Flip Colors Edge [4+Shift]", 27);
-    glutAddMenuEntry("Flip Colors Edge [5+Shift]", 28);
-    glutAddMenuEntry("Flip Colors Corner [1]", 29);
-    glutAddMenuEntry("Flip Colors Corner [2]", 30);
-    glutAddMenuEntry("Flip Colors Corner [3]", 31);
-    glutAddMenuEntry("Flip Colors Corner [4]", 32);
-    glutAddMenuEntry("Flip Colors Corner [5]", 33);
+    glutAddMenuEntry("Rotate CounterClockwise <<", 19);
+    glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20);
+    glutAddMenuEntry("Insta-Solve Entire Face", 21);
+    glutAddMenuEntry("Insta-Solve Five Edges", 22);
+    glutAddMenuEntry("Insta-Solve Five Corners", 23);
+    glutAddMenuEntry("Flip Color: Edge [Shift+1]", 24);
+    glutAddMenuEntry("Flip Color: Edge [Shift+2]", 25);
+    glutAddMenuEntry("Flip Color: Edge [Shift+3]", 26);
+    glutAddMenuEntry("Flip Color: Edge [Shift+4]", 27);
+    glutAddMenuEntry("Flip Color: Edge [Shift+5]", 28);
+    glutAddMenuEntry("Flip Color: Corner  [1]", 29);
+    glutAddMenuEntry("Flip Color: Corner  [2]", 30);
+    glutAddMenuEntry("Flip Color: Corner  [3]", 31);
+    glutAddMenuEntry("Flip Color: Corner  [4]", 32);
+    glutAddMenuEntry("Flip Color: Corner  [5]", 33);
 
     //Sublevel6 Menu - AutoSwap Piece
     submenu6_id = glutCreateMenu(menuHandler);
@@ -195,13 +196,14 @@ void createMenu()
 
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Toggle Spinning", 1);
+    glutAddMenuEntry("Toggle Spinning..", 1);
     glutAddSubMenu("Main Menu", submenu0_id);
     glutAddSubMenu("Algorithms ---->", submenu4_id);
-    glutAddSubMenu("AutoSolve Layer", submenu3_id);
-    glutAddSubMenu("AutoSolve Face ", submenu5_id);
-    glutAddSubMenu("ADV.Modify Face", submenu2_id);
-    glutAddSubMenu("ADV.Modify Piece", submenu6_id);
+    glutAddSubMenu("Human.Solve Bulk", submenu1_id);
+    glutAddSubMenu("Comp.Solve Layer", submenu3_id);
+    glutAddSubMenu("Comp.Solve Face", submenu5_id);
+    glutAddSubMenu("Compu.Mod. Face", submenu2_id);
+    glutAddSubMenu("Compu.Mod. Piece", submenu6_id);
     glutAddMenuEntry("Close Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -366,50 +368,51 @@ void menuHandler(int num)
     case 181:
     case 182:
         megaminx->resetFace(num - 170); break;
-    case 98: //Save Game State
-        FromCubeToVectorFile();
+    case 98: //Save Cube State to File
+        SaveCubetoFile();
         break;
-    case 99: //Restore Game State
-        FromVectorFileToCube();
+    case 99: //Restore Cube State to File
+        RestoreCubeFromFile();
         break;
     case 300: //layer 1 edges rotate+autosolve F1
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolveWhiteEdges(shadowDom);
         break;
     case 301: //layer 1 corners rotate+autosolve F1
+        MakeShadowCubeClone();
         megaminx->rotateSolveWhiteCorners(shadowDom);
         break;
     case 302: //layer 2 edges rotate+autosolve F2
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolveLayer2Edges(shadowDom);
         break;
     case 303: //layer 3 corners rotate+autosolve F3
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolve3rdLayerCorners(shadowDom);
         break;
     case 304: //layer 4 edges rotate+autosolve F4
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolveLayer4Edges(shadowDom);
         break;
     case 305: //layer 5 corners rotate+autosolve F5
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         break;
     case 306: //layer 6 edges rotate+autosolve F6
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolveLayer6Edges(shadowDom);
         break;
     case 307: //layer 7 edges F7
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolveLayer7Edges(shadowDom);
         break;
     case 308: //layer 7 corners F8
-        FromCubeToShadowCube();
+        MakeShadowCubeClone();
         megaminx->rotateSolve7thLayerCorners(shadowDom);
         break;
-    case 309: //layers 1-7 all rotate+autosolve F9
-        FromCubeToShadowCube();
-        megaminx->rotateSolveWhiteEdges(shadowDom);
+    case 309:    //layers 1-7 all rotate+autosolve F9 = solve.cpp
+        MakeShadowCubeClone(); //init
+        megaminx->rotateSolveWhiteEdges(shadowDom); //start
         megaminx->rotateSolveWhiteCorners(shadowDom);
         megaminx->rotateSolveLayer2Edges(shadowDom);
         megaminx->rotateSolve3rdLayerCorners(shadowDom);
@@ -417,7 +420,21 @@ void menuHandler(int num)
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
         megaminx->rotateSolveLayer7Edges(shadowDom);
-        megaminx->rotateSolve7thLayerCorners(shadowDom);
+        megaminx->rotateSolve7thLayerCorners(shadowDom); //end
+        break;
+    case 312:   //brute force checker for solver = F12
+        for (int i = 0; i < 100; ++i) {
+            SaveCubetoFile(); //save
+            menuHandler(309);   //solver
+            //produce a debug error immediately. hit Ignore, then cancel, then sa
+            assert(shadowDom->isFullySolved()); //check
+            if (shadowDom->isFullySolved()) {
+                megaminx->resetQueue(); //Cancel
+                megaminx->scramble(); //scramble
+            }
+            else
+                break;
+        }
         break;
     default:
         break;

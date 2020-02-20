@@ -15,6 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+//#include <GL/glui.h> TODO
 #include <time.h>
 #include "main.h"
 
@@ -200,10 +201,10 @@ void onKeyboard(unsigned char key, int x, int y)
             megaminx->undo();
             break;
         case 19: //CTRL+S //Save Game State
-            FromCubeToVectorFile();
+            SaveCubetoFile();
             break;
         case 18: //CTRL+R //Restore Game State
-            FromVectorFileToCube();
+            RestoreCubeFromFile();
             break;
         default:
             break;
@@ -300,7 +301,8 @@ void onSpecialKeyPress(int key, int x, int y)
         break;
     case GLUT_KEY_F1:
         menuHandler(300);        //Rotate_white_edges +
-        menuHandler(301); break; //Rotate_white_corners
+        //menuHandler(301);     //Rotate_white_corners
+        break; 
     case GLUT_KEY_F2:
         menuHandler(302); break; //rotate_2nd-layer-edges
     case GLUT_KEY_F3:
@@ -319,8 +321,9 @@ void onSpecialKeyPress(int key, int x, int y)
         menuHandler(309); break; //Layers 1-7 all at once 
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
+        break;
     case GLUT_KEY_F12:
-        //megaminx->rotate(key, dir); break;
+        menuHandler(312); break; //Brute-Force Checker for solver. stomps on savefile.
     default:
         break;
     }

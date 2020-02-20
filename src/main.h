@@ -3,7 +3,7 @@
 #include "ui/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "Megaminx v1.35 - genBTC edition";
+const char *title = "GenBTC's Megaminx Solver v1.35";
 //testing framerate cap:
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
@@ -48,5 +48,6 @@ void menuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
 static int window, submenu0_id, submenu1_id, submenu2_id, submenu3_id,
           menu_id, submenu4_id, submenu5_id, submenu6_id;
-void FromCubeToVectorFile();
-void FromVectorFileToCube();
+void SaveCubetoFile();
+void RestoreCubeFromFile();
+void MakeShadowCubeClone();

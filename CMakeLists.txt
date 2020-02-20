@@ -1,10 +1,10 @@
-# by genBTC 2017/2018/2019 requires CMake>=3.8 for C++ 17
+# by genBTC 2017/2018/2019/2020 requires CMake>=3.8 for C++ 17
 cmake_minimum_required(VERSION 3.8)
 # project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change stuff as needed.
 # Also compiles natively on Windows with MSVC as long as you MSVC build freeglut and set the GLUT_ROOT_PATH on Line 33.
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 set(PACKAGE_NAME "Megaminx")
-set(PACKAGE_VERSION "1.3.4")
+set(PACKAGE_VERSION "1.3.5")
 project(${PACKAGE_NAME})
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME ${PACKAGE_NAME})

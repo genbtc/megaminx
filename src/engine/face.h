@@ -16,8 +16,8 @@ public:
     virtual ~Face() = default;
 
     Center *center;
-    Corner *corner[5];
-    Edge   *edge[5];
+    Corner *corner[5] = {};
+    Edge   *edge[5] = {};
     //TODO: maybe hold a pointer back to the parent megaminx.
 
     int getNum() const { return thisNum; }

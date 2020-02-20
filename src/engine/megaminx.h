@@ -17,7 +17,6 @@ class Megaminx {
 public:
     Megaminx();
     ~Megaminx() = default;
-    void Init_Solve_Reset();
     void initCornerPieces();
     void initEdgePieces();
     void initFacePieces();
@@ -83,17 +82,17 @@ public:
     std::vector<int> findEdgePieces(const int pieceNums[5]);
     std::vector<int> findCornerPieces(const int pieceNums[5]);
    template <typename T>
-    std::vector<int> findFivePieces(std::vector<int> v);
-    std::vector<int> findEdgePieces(std::vector<int> v);
-    std::vector<int> findCornerPieces(std::vector<int> v);
+    std::vector<int> findFivePieces(std::vector<int> &v);
+    std::vector<int> findEdgePieces(std::vector<int> &v);
+    std::vector<int> findCornerPieces(std::vector<int> &v);
    template<typename T>
     void resetFivePieces(const int indexes[5]);
     void resetFiveEdges(const int indexes[5]);
     void resetFiveCorners(const int indexes[5]);
    template <typename T>
-    void resetFivePiecesV(std::vector<int> v);
-    void resetFiveEdgesV(std::vector<int> v);
-    void resetFiveCornersV(std::vector<int> v);
+    void resetFivePiecesV(std::vector<int> &v);
+    void resetFiveEdgesV(std::vector<int> &v);
+    void resetFiveCornersV(std::vector<int> &v);
 
     constexpr static int m_firstLayerEdges[5]   = { 0, 1, 2, 3, 4 };
     constexpr static int m_secondLayerEdges[5]  = { 5, 6, 7, 8, 9 };
@@ -128,7 +127,7 @@ public:
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
     void DetectSolvedCorners(int startI, bool piecesSolved[5]);
     void DetectSolvedEdges(int startI, bool piecesSolved[5]);
-    bool checkPieceMatches(std::vector<int> pieces, int a, int b, int c, int d, int e) {
+    bool checkPieceMatches(std::vector<int> &pieces, int a, int b, int c, int d, int e) {
         return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
     };
     void rotateSolveWhiteEdges(Megaminx* shadowDom);

@@ -9,27 +9,23 @@
 #include "megaminx.h"
 #include <algorithm>
 
-//simple constructor. 
+//simple constructor.
+//Solve Puzzle, aka Reset, aka the real constructor.
 Megaminx::Megaminx()
 {
-    Init_Solve_Reset();
-    renderAllPieces();
-}
-
-//Solve Puzzle, aka Reset, aka the real constructor.
-void Megaminx::Init_Solve_Reset()
-{
+    g_currentFace = NULL;
     _rotatingFaceIndex = -1;
     isRotating = false;
     initEdgePieces();
     initCornerPieces();
     initFacePieces();
+    renderAllPieces();
 }
 
 //Init the Edge pieces.
 void Megaminx::initEdgePieces()
 {
-    //store a list of the basic starting vertexes
+    //store a list of the basic starting Edge vertexes
     double* edgeVertexList = edges[0].edgeInit();
     for (int i = 0; i < numEdges; ++i) {
         edges[i].init(i, edgeVertexList);
@@ -39,6 +35,7 @@ void Megaminx::initEdgePieces()
 //Init the Corner pieces.
 void Megaminx::initCornerPieces()
 {
+    //store a list of the basic starting Corner vertexes
     double* cornerVertexList = corners[0].cornerInit();
     for (int i = 0; i < numCorners; ++i) {
         corners[i].init(i, cornerVertexList);
@@ -59,7 +56,7 @@ void Megaminx::initFacePieces()
     }
 }
 
-//Need to render all the pieces unconditionally. (once at the start)
+//Render all the pieces unconditionally. (need once at the start)
 void Megaminx::renderAllPieces()
 {
     for (const auto &center : centers)
@@ -70,7 +67,8 @@ void Megaminx::renderAllPieces()
         corner.render();
 }
 
-//Display render function for OpenGL
+//Main Display Render function for OpenGL,
+// (start handling rotation calls and sub-object render calls)
 void Megaminx::render()
 {
     if (invisible) return;
@@ -132,14 +130,24 @@ void Megaminx::rotate(int num, int dir)
 void Megaminx::rotateAlgo(int face, int id)
 {
     assert(face > 0 && face <= numFaces);
-    const colordirs &loc = g_faceNeighbors[face];
     //Either rotate 1 time, or however many repeatX says, if it exists.
     int repeat = (g_AlgoStrings[id].repeatX != NULL) ? g_AlgoStrings[id].repeatX : 1;
     for (int n = 0; n < repeat; ++n) {
-        rotateBulkAlgoString(g_AlgoStrings[id].algo, loc);
+        rotateBulkAlgoString(g_AlgoStrings[id].algo, g_faceNeighbors[face]);
     }
 }
 
+//Takes an Algo String and parses it, vectorizes it, then rotates it. (based off current-face)
+void Megaminx::rotateBulkAlgoString(std::string algoString)
+{
+    rotateBulkAlgoString(algoString, g_faceNeighbors[g_currentFace->getNum() + 1]);
+}
+//Takes an Algo String and parses it, vectorizes it, then rotates it. (loc is passed in)
+void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs& loc)
+{
+    std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc);
+    rotateBulkAlgoVector(bulk);
+}
 //Adds entire vector of numdirs to the Rotate queue one by one.
 void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
 {
@@ -149,19 +157,6 @@ void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
         undoStack.push(one);
     }
     undoStack.push({ 999, 999 });   //end flag
-}
-//Takes an Algo String and parses it, vectorizes it, then rotates it. (based off current-face)
-void Megaminx::rotateBulkAlgoString(std::string algoString)
-{
-    const colordirs &loc = g_faceNeighbors[g_currentFace->getNum()+1];
-    std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc);
-    rotateBulkAlgoVector(bulk);
-}
-//Takes an Algo String and parses it, vectorizes it, then rotates it. (loc is passed in)
-void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs& loc)
-{
-    std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc);
-    rotateBulkAlgoVector(bulk);
 }
 
 //An unlimited Undo LIFO stack
@@ -288,7 +283,7 @@ std::vector<int> Megaminx::findPiecesOfFace(int face, Piece& pieceRef, int times
 {
     std::vector<int> pieceList;
     const int color = faces[face - 1].center->data._colorNum[0];
-    for (int i = 0; i < times, pieceList.size() < 5; ++i) {
+    for (int i = 0; i < times && pieceList.size() < 5; ++i) {
         const bool result = (&pieceRef)[i].matchesColor(color);
         if (result)
             pieceList.push_back(i);
@@ -394,7 +389,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
         std::vector<int> nextDefault;
         std::set_difference(defaultEdges.begin(), defaultEdges.end(), foundEdges.begin(), foundEdges.end(),
             std::inserter(nextDefault, nextDefault.begin()));
-        for (int k = 0; k < wrongEdges.size(), k < nextDefault.size(); ++k) {
+        for (int k = 0; k < wrongEdges.size() && k < nextDefault.size(); ++k) {
             edges[wrongEdges[k]].swapdata(edges[nextDefault[k]].data);
         }
     }
@@ -442,7 +437,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
         std::vector<int> nextDefault;
         std::set_difference(defaultCorners.begin(), defaultCorners.end(), foundCorners.begin(), foundCorners.end(),
             std::inserter(nextDefault, nextDefault.begin()));
-        for (int k = 0; k < wrongCorners.size(), k < nextDefault.size(); ++k) {
+        for (int k = 0; k < wrongCorners.size() && k < nextDefault.size(); ++k) {
             corners[wrongCorners[k]].swapdata(corners[nextDefault[k]].data);
         }
     }
@@ -491,14 +486,14 @@ std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findF
 std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
 
 template <typename T>
-std::vector<int> Megaminx::findFivePieces(std::vector<int> v)
+std::vector<int> Megaminx::findFivePieces(std::vector<int> &v)
 {
     assert(v.size() == 5);
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
     return findFivePieces<T>(vecPieceNums);
 } //where T = Corner or Edge
-std::vector<int> Megaminx::findEdgePieces(std::vector<int> v) { return findFivePieces<Edge>(v); }
-std::vector<int> Megaminx::findCornerPieces(std::vector<int> v) { return findFivePieces<Corner>(v); }
+std::vector<int> Megaminx::findEdgePieces(std::vector<int> &v) { return findFivePieces<Edge>(v); }
+std::vector<int> Megaminx::findCornerPieces(std::vector<int> &v) { return findFivePieces<Corner>(v); }
 
 template <typename T>
 void Megaminx::resetFivePieces(const int indexes[5]) {
@@ -519,13 +514,13 @@ void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(inde
 void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
 
 template <typename T>
-void Megaminx::resetFivePiecesV(std::vector<int> v) {
+void Megaminx::resetFivePiecesV(std::vector<int> &v) {
     assert(v.size() == 5);
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
     resetFivePieces<T>(vecPieceNums);
 } //where T = Corner or Edge
-void Megaminx::resetFiveEdgesV(std::vector<int> v) { resetFivePiecesV<Edge>(v); }
-void Megaminx::resetFiveCornersV(std::vector<int> v) { resetFivePiecesV<Corner>(v); }
+void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
+void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
 
 //A letter/notation parser to manipulate the cube with algo strings
 const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, colordirs loc)
