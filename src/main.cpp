@@ -321,7 +321,7 @@ void onSpecialKeyPress(int key, int x, int y)
         menuHandler(309); break; //Layers 1-7 all at once 
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
-        break;
+        //break;
     case GLUT_KEY_F12:
         menuHandler(312); break; //Brute-Force Checker for solver. stomps on savefile.
     default:

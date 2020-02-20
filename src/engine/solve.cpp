@@ -100,12 +100,13 @@ public:
     bool ontopA, ontopB;
     bool graymatchA, graymatchB;
     bool isRight, isLeft;
+    Piece* currentPiece;
+    bool currentpieceFlipStatusOK;
 
     LayerAssist(Megaminx* shadowDom, int i) {
         sourceEdgeIndex = shadowDom->findEdge(i);
-        auto currentPiece = shadowDom->getPieceArray<Edge>(sourceEdgeIndex);
-        auto currentpieceColor = currentPiece->data._colorNum[0];
-        bool currentpieceFlipStatusOK = currentPiece->data.flipStatus == 0;
+        currentPiece = shadowDom->getPieceArray<Edge>(sourceEdgeIndex);
+        currentpieceFlipStatusOK = currentPiece->data.flipStatus == 0;
         //Determine which two faces the edge belongs to:
         edgeFaceNeighbors = g_edgePiecesColors[sourceEdgeIndex];
         //Find everything and get it moved over to its drop-in point:
@@ -238,6 +239,8 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         else if (l.isOnRow1 && l.dirToWhiteA != 0 && !facesSolved[l.edgeFaceNeighbors.a - 1])
             shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
         else if (l.isOnRow1 && l.dirToWhiteB != 0 && !facesSolved[l.edgeFaceNeighbors.b - 1])
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
+        else if (l.isOnRow1 && !l.currentpieceFlipStatusOK && l.dirToWhiteB != 0 && facesSolved[l.edgeFaceNeighbors.b - 1]) //TT22-abort
             shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
@@ -879,7 +882,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         int sourceEdgeIndex = shadowDom->findEdge(i);
         int offby = sourceEdgeIndex - i;
         auto currentPiece = shadowDom->getPieceArray<Edge>(sourceEdgeIndex);
-        auto currentpieceColor = currentPiece->data._colorNum[0];
         bool currentpieceFlipStatusOK = currentPiece->data.flipStatus == 0;
         //Check gray CORNERS also, maybe we want to preserve them.
         bool grayCornerColorSolved[5] = { false, false, false, false, false };
@@ -1065,6 +1067,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
         }
         else if (offby == 1 && solvedCount == 2 && !currentpieceFlipStatusOK && piecesSolvedStrict[0] && piecesSolvedStrict[4] && !grayFaceColorSolved[2] && !grayFaceColorSolved[3]) //TT15
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
+        }
+        else if (offby == 1 && solvedCount == 1 && !currentpieceFlipStatusOK && piecesSolvedStrict[0] && !grayFaceColorSolved[2] && !grayFaceColorSolved[3]) //TT20-2
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
         }
@@ -1279,6 +1285,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //continues with --> "15 18 19 16 17" below (no pairs yet)
+
+        //(19 18 17 16 15) - TT21-2
+        else if (checkPieceMatches(pieceOrder, 19, 18, 17, 16, 15))
+        {
+            int safeStart = 2;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+        } //continues with --> "15 19 17 16 18" belo (no pairs yet)
 
         //(18 15 19 17 16) - TestCube25-1 
         else if (checkPieceMatches(pieceOrder, 18, 15, 19, 17, 16))
@@ -1590,7 +1604,6 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         } //continues with --> "15 17 18 16 19" below && hasTwoAdjacentSolved now - 19/15
-
 
     haveTwoAdjacentSolved:
         //FINAL STAGE: Two adjacent pieces. One bulk move left till solved. (10 cases)
