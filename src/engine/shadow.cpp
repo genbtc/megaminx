@@ -30,7 +30,7 @@ void Megaminx::shadowRotate(int num, int dir)
 }
 
 //Rotate one face by multiple rotations. Converts any out of bound numbers to the most efficient.
-bool Megaminx::shadowMultiRotate(int face, int &offby, Megaminx* shadowDom)
+bool Megaminx::shadowMultiRotate(int face, int &offby)
 {
     int defaultDir = Face::CW;
     if (offby < 0) {    //negative reverses direction
@@ -47,7 +47,7 @@ bool Megaminx::shadowMultiRotate(int face, int &offby, Megaminx* shadowDom)
             defaultDir *= -1;
         }
         for (int j = 0; j < offby; ++j)
-            shadowDom->shadowRotate(face, defaultDir);
+            shadowRotate(face, defaultDir);
     }
     return (offby > 0);
 }

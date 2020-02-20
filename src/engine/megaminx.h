@@ -147,7 +147,7 @@ public:
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
     void bulkRotateShadowAndUpdate(Megaminx* shadowDom, std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
-    bool shadowMultiRotate(int face, int &offby, Megaminx* shadowDom);
+    bool shadowMultiRotate(int face, int &offby);
     int getRotateQueueNum() { return (int)rotateQueue.size(); }
 
     static const int numFaces = 12;

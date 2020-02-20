@@ -184,7 +184,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             int offby = findIfPieceSolved - firstSolvedPiece;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
             if (findIfPieceSolved > 0 && findIfPieceSolved < 5 && offby > 0) {
                 offby *= -1;
-                shadowMultiRotate(WHITE, offby, shadowDom);
+                shadowDom->shadowMultiRotate(WHITE, offby);
                 continue;
             }
         }
@@ -195,7 +195,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         if (l.ontopA && ((l.isOnRow34 && l.colormatchA) || l.isOnRow2)) {
             int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA) : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
             //Set up Rotated White top to be in-line with the face we want to spin in.
-            shadowMultiRotate(WHITE, offby, shadowDom);
+            shadowDom->shadowMultiRotate(WHITE, offby);
             if (l.isOnRow34 && l.colormatchA) {
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
@@ -243,7 +243,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         int findIfPieceSolved = shadowDom->findEdge(0); //always piece 0
         if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
             findIfPieceSolved *= -1;
-            shadowMultiRotate(WHITE, findIfPieceSolved, shadowDom);
+            shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved); //redundant.
         }
     }
     //After all loops, load the shadow Queue into the real queue    
@@ -297,7 +297,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         int edgesOffBy = shadowDom->findEdge(0); //always piece 0
         if (edgesOffBy > 0 && edgesOffBy < 5) {
             edgesOffBy *= -1;
-            shadowMultiRotate(WHITE, edgesOffBy, shadowDom);
+            shadowDom->shadowMultiRotate(WHITE, edgesOffBy);
         }
         //Move incorrect corners out of the 0-4 slots moves them right down with the algo
         else if (isOnRow1 && ((i != sourceCornerIndex) || (i == sourceCornerIndex && CornerItselfA->data.flipStatus != 0)) && piecesSolved[i] == false) {
@@ -374,7 +374,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         else if (isOnRow4) {
             int defaultDir = Face::CCW;
             int offby = sourceCornerIndex - i - 18;
-            shadowMultiRotate(GRAY, offby, shadowDom);
+            shadowDom->shadowMultiRotate(GRAY, offby);
             int x = PINK + (i);
             if (x > BEIGE)
                 x -= 5;
@@ -450,7 +450,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         //Layer 7 is an intermediate buffer
         else if (l.isOnRow7) {
             int row7 = l.sourceEdgeIndex - 28 - i;
-            bool moved = shadowMultiRotate(GRAY, row7, shadowDom);
+            bool moved = shadowDom->shadowMultiRotate(GRAY, row7);
             //Align the GRAY layer 7 to be directly underneath the intended solve area
             if (moved == false) {
                 if (l.dirToWhiteA != 0) {
@@ -560,7 +560,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         else if (isOnRow4) {
             int defaultDir = Face::CCW;
             int offby = sourceCornerIndex - (i - 5) - 18;
-            shadowMultiRotate(GRAY, offby, shadowDom);
+            shadowDom->shadowMultiRotate(GRAY, offby);
             int x = PINK + (i - 5);
             if (x > BEIGE)
                 x -= 5;
@@ -609,7 +609,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 int offby = l.sourceEdgeIndex - 27 - i;
                 if (l.isLeft) //row 4B's B-half is +1 from row4A's B-half (DARK_BLUE,LIGHT_GREEN) vs (DARK_BLUE,PINK)
                     offby -= 1;
-                bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
+                bool moved = shadowDom->shadowMultiRotate(GRAY, offby);
                 //Align the GRAY layer 7 to be directly underneath the intended solve area
                 if (moved)
                     continue;
@@ -718,7 +718,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         else if (isOnRow4) {
             //Orient Gray Top layer (index goes in reverse)
             int offby = sourceCornerIndex + (i - 10) - 20;
-            shadowMultiRotate(GRAY, offby, shadowDom);
+            shadowDom->shadowMultiRotate(GRAY, offby);
             //quick shortcut to know which face we're working on.
             int front = BEIGE - (i - 10);
             colordirs loc = g_faceNeighbors[front];
@@ -765,7 +765,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
                 assert(l.dirToWhiteA == 0);
                 int offby = l.graymatchA ? (l.edgeFaceNeighbors.b - l.edgeHalfColorB) : (l.edgeFaceNeighbors.a - l.edgeHalfColorA);
                 //Align GRAY top to the exact position for pre-drop-in.
-                bool moved = shadowMultiRotate(GRAY, offby, shadowDom);
+                bool moved = shadowDom->shadowMultiRotate(GRAY, offby);
                 //Align the GRAY layer 7 to be directly underneath the intended solve area
                 if (moved)
                     continue;
@@ -886,14 +886,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         if (findIfPieceSolved > 25 && findIfPieceSolved < 30 && !allCornersColorsSolved && !piecesSolvedStrict[0] && offby != 0 && !twoAdjacentPieces) {
             //Test 3 passes.
             int offby = findIfPieceSolved - 25;
-            shadowMultiRotate(GRAY, offby, shadowDom);
+            shadowDom->shadowMultiRotate(GRAY, offby);
         }
         //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
         else if (!piecesSolvedStrict[0] && !twoAdjacentPieces && !allCornersColorsSolved && firstSolvedPiece != -1 && piecesSolvedMaybe[i - 25] && solvedCount >= (i - 25)) {
             int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);
             int offby = findIfPieceSolved - i + firstSolvedPiece;
             if (findIfPieceSolved >= 25 && findIfPieceSolved < 30 && offby != 0)
-                shadowMultiRotate(GRAY, offby, shadowDom);
+                shadowDom->shadowMultiRotate(GRAY, offby);
         }
 //BUNNY COLOR
         else if (offby == 0 && solvedCount == 3 && !allEdgeColorsSolved && ((!grayFaceColorSolved[2] && !grayFaceColorSolved[3])||(!grayFaceColorSolved[1] && !grayFaceColorSolved[2])))
@@ -1173,7 +1173,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         if (findIfFirstEdgeDefault > 25 && findIfFirstEdgeDefault < 30 && !piecesSolvedStrict[0] && offby != 0)
         {
             int offby = findIfFirstEdgeDefault - 25;
-            shadowMultiRotate(GRAY, offby, shadowDom);
+            shadowDom->shadowMultiRotate(GRAY, offby);
             continue;
         }
         //int safeStart = hasTwoAdjacentSolved ? adjacentStart : offby;
@@ -1651,7 +1651,7 @@ startColorFlippingCorners:
             //rotateOffset is how we rotate gray top to move unsolved piece back over top of our dirty face
             int rotateOffset = (target - g_dirtyFaceRDRD);
             if (g_dirtyCountRDRD != 0)
-                shadowMultiRotate(GRAY, rotateOffset, shadowDom);
+                shadowDom->shadowMultiRotate(GRAY, rotateOffset);
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD]); //algo #5 "R' DR' r dr"
             for (int ii = 0; ii < 2; ++ii) {
                 for (auto op : bulk)    //+1 the 0-11 faces
@@ -1659,7 +1659,7 @@ startColorFlippingCorners:
             }
             rotateOffset *= -1;
             if (g_dirtyCountRDRD != 0 )
-                shadowMultiRotate(GRAY, rotateOffset, shadowDom);
+                shadowDom->shadowMultiRotate(GRAY, rotateOffset);
             g_dirtyCountRDRD += 2;
             bulk = {};
         }
