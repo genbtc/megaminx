@@ -1395,6 +1395,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         } //continues with --> "19 16 17 15 18" below && hasTwoAdjacentSolved now - 16/17
 
+        //(18 19 16 17 15)
+        else if (checkPieceMatches(pieceOrder, 18, 19, 16, 17, 15))
+        {
+            int safeStart = 4;
+            colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);       
+        } //continues with --> "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
+
         //(19 17 18 15 16)
         else if (checkPieceMatches(pieceOrder, 19, 17, 18, 15, 16))
         {
