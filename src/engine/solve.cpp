@@ -966,7 +966,9 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
         }
 //HORSEFACE+
-        else if (((offby == 2 && piecesSolvedStrict[2]) || (offby == 1 && piecesSolvedStrict[3])) && solvedCount == 2 && piecesSolvedStrict[0] && allEdgeColorsSolved)  //testCube3-p2 ->(blue/green)=PASS
+        else if (((offby == 2 && piecesSolvedStrict[2]) || (offby == 1 && piecesSolvedStrict[3]))
+              && solvedCount == 2 && piecesSolvedStrict[0]
+              && (allEdgeColorsSolved || !grayFaceColorSolved[1] && !grayFaceColorSolved[2]))  //testCube3-p2 ->(blue/green)=PASS  + //TT24-2
         {                                                       //TestCube10-2
             colordirs loc;
             if (piecesSolvedStrict[2])
@@ -1051,16 +1053,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
         else if (offby == 2 && solvedCount == 1 && allEdgeColorsSolved)
         {
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece];    //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);  //algo #14 3a-  (F/L Safe)
         }
-        else if (offby == 1 && solvedCount == 2 && !currentpieceFlipStatusOK && piecesSolvedStrict[2] && piecesSolvedStrict[3] && grayFaceColorSolved[4] && !grayFaceColorSolved[0] && !grayFaceColorSolved[1]) { //TT9
-            colordirs loc = g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece];    //algo #14 3a-  (F/L Safe)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, loc);
+        else if ((offby == 1 && !currentpieceFlipStatusOK || offby == 4 && currentpieceFlipStatusOK) && solvedCount == 2 && piecesSolvedStrict[2] && piecesSolvedStrict[3] && grayFaceColorSolved[4] && !grayFaceColorSolved[0] && !grayFaceColorSolved[1]) { //TT9
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);  //algo #14 3a-  (F/L Safe)
         }
         else if (offby == 2 && solvedCount == 2 && !currentpieceFlipStatusOK && !grayFaceColorSolved[3] && !grayFaceColorSolved[4] && piecesSolvedStrict[0] && piecesSolvedStrict[1]) //TT11
         { 
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);  //algo #14 3a-  (F/L Safe)
         }
         else if (offby == 4 && solvedCount == 2 && allEdgeColorsSolved && piecesSolvedStrict[1] && piecesSolvedStrict[2]) //TT14
         { 
@@ -1074,6 +1074,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
         }
+
 //MUSHROOM+
         else if (offby == 1 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && (allEdgeColorsSolved || (!grayFaceColorSolved[2] && !grayFaceColorSolved[3])))  //test4-p2 ->(blue/orange)=PASS
         {                                                                                                                                       //TestCube6-2
@@ -1111,6 +1112,11 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]); //3e+ #33 same. (F/L safe tho)
         }
+        else if (offby == 4 && solvedCount == 2 && piecesSolvedStrict[2] && piecesSolvedStrict[3] && !currentpieceFlipStatusOK && !grayFaceColorSolved[4] && !grayFaceColorSolved[0]) //TT23-2
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]); //3e+ #33 same. (F/L safe tho)
+        }
+
         //(25 29 27 26 28) case to go with no gray @ 3 & 4 and also solved 0 & 2. dont worry about corners.
 //BUNNY RE-POSITION
         else if (offby == 1 && solvedCount == 1 && piecesSolvedStrict[0] && allEdgeColorsSolved)

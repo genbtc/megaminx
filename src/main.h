@@ -25,6 +25,7 @@ bool help = true;
 int currentFace = 0;
 char lastface[32];
 int shadowQueueLength = 0;
+double solveravg = 0.;
 
 // global Camera
 Camera g_camera;

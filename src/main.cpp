@@ -130,6 +130,11 @@ void RenderScene()
             snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
         }
+        if (solveravg > 0) {
+            static char solvquestr[21];
+            snprintf(solvquestr, 21, "Solver Avg: %5g", solveravg);
+            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, solvquestr);
+        }
 
     }
     utResetPerspectiveProjection();

@@ -5,6 +5,7 @@ extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
 extern int currentFace;
 extern bool spinning;
+extern double solveravg;
 void createMegaMinx();
 void resetCameraView();
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
@@ -212,6 +213,7 @@ void createMenu()
 //Right Click Menu event Handler, user interface back-end
 void menuHandler(int num)
 {
+    double sum = 0;
     switch (num) {
     case 1:
         spinning = !spinning; break;
@@ -423,18 +425,20 @@ void menuHandler(int num)
         megaminx->rotateSolve7thLayerCorners(shadowDom); //end
         break;
     case 312:   //brute force checker for solver = F12
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < 20; ++i) {
             SaveCubetoFile(); //save
             menuHandler(309);   //solver
-            //produce a debug error immediately. hit Ignore, then cancel, then sa
+            //produce a debug error immediately. hit Ignore, then cancel, close, restore.
             assert(shadowDom->isFullySolved()); //check
             if (shadowDom->isFullySolved()) {
+                sum += megaminx->getRotateQueueNum();
                 megaminx->resetQueue(); //Cancel
                 megaminx->scramble(); //scramble
             }
             else
-                break;
+                continue;
         }
+        solveravg = sum / 20.;
         break;
     default:
         break;
