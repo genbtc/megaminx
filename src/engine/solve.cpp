@@ -238,14 +238,16 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         //These can still trigger if the top pieces are in the top row but the wrong slot (or are color-flipped)
         else if (l.isOnRow1 && l.dirToWhiteA != 0 && !facesSolved[l.edgeFaceNeighbors.a - 1])
             shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-        else if (l.isOnRow1 && l.dirToWhiteB != 0 && !facesSolved[l.edgeFaceNeighbors.b - 1])
+        //TT22-L1 //TT30-L1
+        else if (l.isOnRow1 && l.dirToWhiteB != 0) //&& !facesSolved[l.edgeFaceNeighbors.b - 1])
             shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
-        else if (l.isOnRow1 && !l.currentpieceFlipStatusOK && l.dirToWhiteB != 0 && facesSolved[l.edgeFaceNeighbors.b - 1]) //TT22-abort
-            shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
+        //else if (l.isOnRow1 && l.dirToWhiteB != 0 && facesSolved[l.edgeFaceNeighbors.b - 1]) 
+        //    shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
         loopcount++;
-        //break;
+        //break; //break stops it after only one round
+
     } while (!allSolved);
     //If its solved, get top white face spun oriented back to normal
     if (allSolved) {
@@ -1074,6 +1076,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
         }
+        else if (offby == 4 && solvedCount == 2 && piecesSolvedStrict[2] && piecesSolvedStrict[3]) //TT27-2
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
+        }
+        else if (offby == 1 && solvedCount == 2 && !currentpieceFlipStatusOK && piecesSolvedStrict[3] && piecesSolvedStrict[4] && !grayFaceColorSolved[1] && !grayFaceColorSolved[2]) //TT29-2
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
+        }
 
 //MUSHROOM+
         else if (offby == 1 && solvedCount == 2 && piecesSolvedStrict[0] && piecesSolvedStrict[1] && (allEdgeColorsSolved || (!grayFaceColorSolved[2] && !grayFaceColorSolved[3])))  //test4-p2 ->(blue/orange)=PASS
@@ -1120,13 +1130,24 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]); //3e+ #33 same. (F/L safe tho)
         }
+        else if (offby == 2 && solvedCount == 2 && piecesSolvedStrict[3] && piecesSolvedStrict[4] && !grayFaceColorSolved[0] && !grayFaceColorSolved[1]) //TT30-2
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]); //3e+ #33 same. (F/L safe tho)
+        }
+        else if (offby == 1 && solvedCount == 2 && piecesSolvedStrict[2] && piecesSolvedStrict[3] && !grayFaceColorSolved[4] && !grayFaceColorSolved[0]) //TT33-2
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]); //3e+ #33 same. (F/L safe tho)
+        }
         //(25 29 27 26 28) case to go with no gray @ 3 & 4 and also solved 0 & 2. dont worry about corners.
 //BUNNY RE-POSITION
         else if (offby == 1 && solvedCount == 1 && piecesSolvedStrict[0] && allEdgeColorsSolved)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #19 SWAP pieces 2/3 & 4/5 (colorsafe)
         }
-        else
+//Last Chance to do something. Solve off-colored blue.  //TT32-2
+        else if (offby != 0 && !piecesSolvedStrict[0] && !currentpieceFlipStatusOK) {
+            shadowDom->shadowMultiRotate(GRAY, offby);
+        } else
             break;
         //DO IT:
         bulkRotateShadowAndUpdate(shadowDom, bulk);
