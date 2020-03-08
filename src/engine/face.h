@@ -15,7 +15,7 @@ public:
     Face();
     virtual ~Face() = default;
 
-    Center *center;
+    Center *center = {};
     Corner *corner[5] = {};
     Edge   *edge[5] = {};
     //TODO: maybe hold a pointer back to the parent megaminx.
