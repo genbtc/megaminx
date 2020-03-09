@@ -68,7 +68,7 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 }
 
 //Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
-void Megaminx::bulkRotateShadowAndUpdate(Megaminx* shadowDom, std::vector<numdir> bulk) {
+void Megaminx::bulkShadowRotate(Megaminx* shadowDom, std::vector<numdir> bulk) {
     for (auto op : bulk)    //+1 the 0-11 faces
         shadowDom->shadowRotate(op.num + 1, op.dir);
 }
