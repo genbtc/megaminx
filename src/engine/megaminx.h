@@ -127,7 +127,7 @@ public:
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
     void DetectSolvedCorners(int startI, bool piecesSolved[5]);
     void DetectSolvedEdges(int startI, bool piecesSolved[5]);
-    bool checkPieceMatches(std::vector<int> &pieces, int a, int b, int c, int d, int e) {
+    bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) const {
         return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
     };
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
@@ -148,14 +148,14 @@ public:
     void bulkShadowRotate(Megaminx* shadowDom, std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
     bool shadowMultiRotate(int face, int &offby);
-    int getRotateQueueNum() { return (int)rotateQueue.size(); }
+    int getRotateQueueNum() const { return (int)rotateQueue.size(); }
 
     static const int numFaces = 12;
     static const int numCorners = 20;
     static const int numEdges = 30;
 
    template <typename T>
-    const int getMaxNumberOfPieces() {
+    const int getMaxNumberOfPieces() const {
         if (std::is_same<T, Edge>::value)
             return numEdges;
         else if (std::is_same<T, Corner>::value)
@@ -185,7 +185,10 @@ private:
     std::queue<numdir> shadowRotateQueue;
     friend class LayerAssist;    
 };
-
+static auto MM = [](int& over) { while (over >= 5) over -= 5; };
+static auto MMge = [](int& over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
+static auto MMg = [](int& over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
+//static auto MMgeI = [](int& over, int& stop) { while (over >= stop) over -= 5; };
 extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
 
 #endif
