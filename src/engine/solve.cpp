@@ -350,8 +350,8 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 turnface = cornerFaceNeighbors.b;
             else if (ontopB && ontopC)
                 turnface = cornerFaceNeighbors.a;
-            shadowDom->shadowRotate(turnface, defaultDir);
-            shadowDom->shadowRotate(turnface, defaultDir);
+            defaultDir *= 2;
+            shadowDom->shadowMultiRotate(turnface, defaultDir);
         }
         //Row 3 pieces go to gray face as temporary holding (1 CW turn) (ends up on row4)
         else if (isOnRow3) {
@@ -377,13 +377,13 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2
         else if (isOnRow4) {
-            int defaultDir = Face::CCW;
+            int defaultDir = Face::CW;
             int offby = sourceCornerIndex - i - 18;
             shadowDom->shadowMultiRotate(GRAY, offby);
             int x = PINK + (i);
             MMg(x, BEIGE);
-            shadowDom->shadowRotate(x, defaultDir);
-            shadowDom->shadowRotate(x, defaultDir);
+            defaultDir *= 2;
+            shadowDom->shadowMultiRotate(x, defaultDir);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
@@ -557,13 +557,13 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved
         else if (isOnRow4) {
-            int defaultDir = Face::CCW;
+            int defaultDir = Face::CW;
             int offby = sourceCornerIndex - (i - 5) - 18;
             shadowDom->shadowMultiRotate(GRAY, offby);
             int x = PINK + (i - 5);
             MMg(x, BEIGE);
-            shadowDom->shadowRotate(x, defaultDir);
-            shadowDom->shadowRotate(x, defaultDir);
+            defaultDir *= 2;
+            shadowDom->shadowMultiRotate(x, defaultDir);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
@@ -986,7 +986,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 
 //BUNNY 2+2SWAP
 // 2&3 + 4&5 (adjacent vertically)
-        else if (allCornersAlreadySolved &&
+        else if (// allCornersAlreadySolved && (//TT-69-2 TODO: when Corners arent solved we can skip more moves w/ E+C Algo.
              (solvedCount == 1 && piecesSolvedStrict[0] && pieceOrder[1] == 27 && pieceOrder[2] == 26 && pieceOrder[3] == 29 && pieceOrder[4] == 28) //TT65-2
           || (solvedCount == 1 && piecesSolvedStrict[1] && pieceOrder[0] == 29 && pieceOrder[2] == 28 && pieceOrder[3] == 27 && pieceOrder[4] == 25) //TT66-2
           || (solvedCount == 1 && piecesSolvedStrict[2] && pieceOrder[0] == 26 && pieceOrder[1] == 25 && pieceOrder[3] == 29 && pieceOrder[4] == 28) //TT67-2
@@ -1108,6 +1108,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
         }
+        else if (checkPieceMatches(pieceOrder, 26, 29, 28, 25, 27) && allEdgeColorsSolved && allCornersAlreadySolved) //TT49-2 
+        {   //(needs another mushroom- after this one to solve it)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE]);
+        }   //becomes "26 29 [27 28] 25"
 
 //MUSHROOM+
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && twoGraysUnsolved(2,3))
@@ -1174,6 +1178,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK]); //3e+ #33 same. (F/L safe tho)
         }
+        else if (checkPieceMatches(pieceOrder, 27, 29, 26, 25, 28) && allEdgeColorsSolved && allCornersAlreadySolved) //TT70-2 
+        {   //(needs another mushroom+ after this one to solve it)
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[BEIGE]); //3e+ #33 same. (F/L safe tho)
+        }   //becomes "29 [26 27] 25 29"
 
 //HORSEFACE-
         //5 (+) iterations also preserves corners, 2 (+) iterations does not, 1 opposite (-) iteration does not.
