@@ -84,8 +84,8 @@ void createMenu()
     glutAddMenuEntry("7LL-Edge37 2+2swap BUNNY BEST 2&5,3&4", 87);
     glutAddMenuEntry("7LL-Edge19 2+2swap BUNNY Adj. 2&3,4&5", 69);
     glutAddMenuEntry("7LL-Edge29 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
-    glutAddMenuEntry("7LL-Edge17 5-way CCW cycle by +2 all", 88);
-    glutAddMenuEntry("7LL-Edge38 5-way  CW cycle by -2 all", 67);
+    glutAddMenuEntry("7LL-Edge38 5-way CCW cycle by +2 all", 88);
+    glutAddMenuEntry("7LL-Edge17 5-way  CW cycle by -2 all", 67);
     glutAddMenuEntry("7LL-Edge18 5-way CCW cycle by 1,2,-1,2,1", 68);
     //
     glutAddMenuEntry("7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61);

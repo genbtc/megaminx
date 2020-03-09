@@ -1,8 +1,8 @@
 #include "megaminx.h"
-//A virtual verison of the cube that only exists in theory.
+//Shadow.cpp - A virtual verison of the cube that only exists in theory.
 //Can be created and destroyed at whim without affecting the main one,
 // and State can be cloned back and forth.
-//Useful for iterating moves into the future, then throwing them away. 4D Chess?
+//Useful for iterating moves into the future, then throwing them away
 
 //Load a new shadow cube up with the old ones edges
 void Megaminx::LoadNewEdgesFromOtherCube(Megaminx* source)

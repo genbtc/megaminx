@@ -305,8 +305,12 @@ void onSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_INSERT:
         break;
     case GLUT_KEY_F1:
-        menuHandler(300);        //Rotate_white_edges +
+        //menuHandler(300);        //Rotate_white_edges +
         //menuHandler(301);     //Rotate_white_corners
+        //manually call these, because the double clone cube call was messing it up.
+        MakeShadowCubeClone(); //init
+        megaminx->rotateSolveWhiteEdges(shadowDom);
+        megaminx->rotateSolveWhiteCorners(shadowDom);
         break; 
     case GLUT_KEY_F2:
         menuHandler(302); break; //rotate_2nd-layer-edges

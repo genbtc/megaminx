@@ -156,7 +156,7 @@ struct AlgoString {
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
-constexpr AlgoString g_AlgoStrings[40] = {
+constexpr AlgoString g_AlgoStrings[42] = {
     {0, ""},
 
     // most common one, suitable for white corners or any.
@@ -250,12 +250,12 @@ constexpr AlgoString g_AlgoStrings[40] = {
         //Unaffecteds(2) = stay safe on Right/R.Back sides. = 16 moves. edges cycle rotate = clockwise
     {16, "F' U' f U', f u F2' u, f U' f U', F' u2"},       //(mod existing by @   -2,0,0,1,1
 
-    // #7Last-Layer: Step 2: Edge 5-way star cycle+ , all by -2 //(mod existing by @ -2,-2,-2,-2,-2)
+    // #7Last-Layer: Step 2: Edge 5-way star cycle CW+ , all by -2 //(mod existing by @ -2,-2,-2,-2,-2)
         //Opposite Faces CW, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4 (new pieces @ 4,2,5,3,1)
         //60 moves total. copied from cube manual (turned upside down).
     {17, "L' u2 r U2' l u2 R' ", 6},
 
-    // #7Last-Layer: Step 2: Edge 5-way star cycle- , by 1,2,-1,2,1 //(mod existing by @ 1,2,-1,2,1)
+    // #7Last-Layer: Step 2: Edge 5-way star cycles, by 1,2,-1,2,1 //(mod existing by @ 1,2,-1,2,1)
         // Two halves, 1 to 2, 2 to 4, 4 to 3, 3 to 5, 5 to 1 //1,5,3,4,2  (new pieces @ 2,4,5,3,1)
         //60 moves total. (copied from cube manual)
     {18, "R' l U' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U' r L' "}, // 1,-1,1,-2,-2
@@ -347,8 +347,17 @@ constexpr AlgoString g_AlgoStrings[40] = {
 //TODO:  MOVE UP & Organize with related 
     {37, "r U2' R' U', r U' R' u, r U2' R' ", 5},
 
-    //Opposite direction of #17, 5-way edge cycle (+2,+2,+2,+2,+2)
-    { 38, "r U2' L' u2 R' U2' l", 6 },
+    //Opposite direction of #17, 5-way edge cycle CCW (+2,+2,+2,+2,+2)
+    {38, "r U2' L' u2 R' U2' l", 6 },
+
+    //Shorter version of #18 (32m vs 60m)
+    {39, "r u R' u, R' U' r2 U', R' u R' u, r U2' ,, u2 l', U' l U' l, u L2' u l, U' l U' L' " },
+
+    //Shorter version of #17 (Cycle -2) (48m vs 60m)
+    {40, "l u l' u, l' U' l2 U', l' u l' u, l U2' ,, f u F' u, F' U' f2 U', F' u F' u, f U2' ,, r u R' u, R' U' r2 U', R' u R' u, r U2' "},
+
+    //shorter verison of #38 (Cycle +2) (48m vs 60m) (opposite of above)
+    {41, "u2 R', U' r U' r, u R2' u r, U' r U' R' ,, u2 F', U' f U' f, u F2' u f, U' f U' f' ,, u2 l', U' l U' l, u l2' u l, U' l U' l' "},
 };
 
 #endif

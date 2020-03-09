@@ -155,10 +155,12 @@ constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
     { BEIGE, PINK, GRAY, LIGHT_BLUE, DARK_GREEN, RED, WHITE }
 };
 
+//Determine which direction those faces need to rotate to land the Edge on the white
+//Decides which directions the pieces will float back to their original homes
 constexpr int DirToWhiteFace[12][5] =
 {
     { 0, 0, 0, 0, 0 },
-    { -1, -1, 1, 1, -1 },
+    { -1, -1, 1, 1, -1 },  //e2&3 swapped @ D.Blue
     { -1, 1, -1, 1, -1 },
     { -1, 1, -1, 1, -1 },
     { -1, 1, -1, 1, -1 },
@@ -167,7 +169,7 @@ constexpr int DirToWhiteFace[12][5] =
     { -1, 1, 1, -1, -1 },
     { -1, 1, 1, -1, -1 },
     { -1, 1, 1, -1, -1 },
-    { -1, 1, -1, 1, -1 },
+    { -1, 1, -1, 1, -1 }, //e3&4 swapped @ Pink
     { -1, 1, 1, -1, -1 }
 };
 
