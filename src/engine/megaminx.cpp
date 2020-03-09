@@ -1,4 +1,4 @@
-/* MegaMinx v1.35 - 2017+2018+2019+2020 - genBTC edition
+/* MegaMinx v1.36 - 2017+2018+2019+2020 - genBTC edition
  * Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.

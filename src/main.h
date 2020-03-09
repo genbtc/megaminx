@@ -3,7 +3,7 @@
 #include "ui/camera.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-const char *title = "GenBTC's Megaminx Solver v1.35";
+const char *title = "GenBTC's Megaminx Solver v1.36";
 //testing framerate cap:
 //better for monitor with 60 Hz:
 double REFRESH_RATE = 60.0;
