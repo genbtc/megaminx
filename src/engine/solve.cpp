@@ -957,7 +957,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_GREEN]);
         }
 
-//BUNNY 4-COLOR-ONLY
+//BUNNY 4-COLOR-only (with 1 solved, covers all possibilities)
         else if (solvedCount == 1 && !allEdgeColorsSolved && allCornersAlreadySolved
              && twoGraysUnsolved(firstSolvedPiece + 1, firstSolvedPiece + 2)
              && twoGraysUnsolved(firstSolvedPiece + 3, firstSolvedPiece + 4))
@@ -965,24 +965,39 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece]);    //algo #29 Quad-Flip Colors
         }
 //BUNNY 2-COLOR: (OFF-COLOR OPPOSITES)
-        //If two opposite Pieces are colored wrong, Choose the face that places them @ 8' & 1' oclock and then Algo #20 to invert those
-        //algo #20 = INVERT colors on 8' & 1' oclock relative face
+        //If two opposite Pieces are colored wrong, Choose the face that places them @ 8' & 1' oclock and then run Algo #20 to invert those
         else if (twoOppositeOffColors && !allEdgeColorsSolved) {
             for (int op = LIGHT_BLUE; op <= BEIGE; ++op)
                 if (matchesOppoColor(op))
-                    bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[op]);
+                    bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[op]); //algo #20 = INVERT colors @ 8'/1'
         }
 //BUNNY 2+2SWAP
-// 2&5 + 3&4 (opposite across)
+// 2&5 + 3&4 (opposite horizontally)
         else if (allCornersAlreadySolved && 
-                 (offby == 3 && solvedCount == 1 && piecesSolvedStrict[4] && pieceOrder[0] == 28 && pieceOrder[1] == 27 && pieceOrder[2] == 26) //TT46-2
-             ||  (offby == 1 && solvedCount == 1 && piecesSolvedStrict[3] && pieceOrder[0] == 26 && pieceOrder[2] == 29 && pieceOrder[4] == 27)) //TT61-2
+                 (solvedCount == 1 && piecesSolvedStrict[4] && pieceOrder[0] == 28 && pieceOrder[1] == 27 && pieceOrder[2] == 26) //TT46-2
+             ||  (solvedCount == 1 && piecesSolvedStrict[3] && pieceOrder[0] == 26 && pieceOrder[2] == 29 && pieceOrder[4] == 27)) //TT61-2
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[37].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece]); //algo #37, 13*5=65 moves
             for (int i = 0; i < g_AlgoStrings[37].repeatX; ++i)
                 bulkShadowRotate(shadowDom, bulk);
             updateRotateQueueWithShadow(shadowDom);
             continue;
+        }
+
+//BUNNY 2+2SWAP
+// 2&3 + 4&5 (adjacent vertically)
+        else if (allCornersAlreadySolved &&
+             (solvedCount == 1 && piecesSolvedStrict[0] && pieceOrder[1] == 27 && pieceOrder[2] == 26 && pieceOrder[3] == 29 && pieceOrder[4] == 28) //TT65-2
+          || (solvedCount == 1 && piecesSolvedStrict[1] && pieceOrder[0] == 29 && pieceOrder[2] == 28 && pieceOrder[3] == 27 && pieceOrder[4] == 25) //TT66-2
+          || (solvedCount == 1 && piecesSolvedStrict[2] && pieceOrder[0] == 26 && pieceOrder[1] == 25 && pieceOrder[3] == 29 && pieceOrder[4] == 28) //TT67-2
+          || (solvedCount == 1 && piecesSolvedStrict[3] && pieceOrder[0] == 29 && pieceOrder[1] == 27 && pieceOrder[2] == 26 && pieceOrder[4] == 25) //TT64-2
+          || (solvedCount == 1 && piecesSolvedStrict[4] && pieceOrder[0] == 26 && pieceOrder[1] == 25 && pieceOrder[2] == 28 && pieceOrder[3] == 27) //TT68-2
+        ) {
+            //Streamlined previous algo19 from 44 moves to 32 :
+            //bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece]);    //algo #19 SWAP pieces 2/3 & 4/5 (colorsafe) (44 moves)
+            int start = LIGHT_BLUE + firstSolvedPiece + 1;
+            MMg(start, BEIGE);
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[42].algo, g_faceNeighbors[start]); //algo42=19
         }
 
 //MUSHROOM- //algo #14 3a-  (F/L Safe)
@@ -1253,12 +1268,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 bulkShadowRotate(shadowDom, bulk);
             updateRotateQueueWithShadow(shadowDom);
             continue;
-        }
-
-//BUNNY RE-POSITION
-        else if (offby == 1 && solvedCount == 1 && piecesSolvedStrict[0] && allEdgeColorsSolved) //TODO: vague but works
-        {
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[19].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #19 SWAP pieces 2/3 & 4/5 (colorsafe)
         }
 
 //Last Chance to do something. Solve off-colored blue.  //TT32-2

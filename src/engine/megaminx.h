@@ -188,7 +188,7 @@ private:
 static auto MM = [](int& over) { while (over >= 5) over -= 5; };
 static auto MMge = [](int& over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMg = [](int& over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
-//static auto MMgeI = [](int& over, int& stop) { while (over >= stop) over -= 5; };
+static auto MMgeI = [](int& over, int stop) { while (over >= stop) over -= 5; };
 extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
 
 #endif

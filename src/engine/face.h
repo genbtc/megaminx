@@ -156,7 +156,7 @@ struct AlgoString {
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
-constexpr AlgoString g_AlgoStrings[42] = {
+constexpr AlgoString g_AlgoStrings[44] = {
     {0, ""},
 
     // most common one, suitable for white corners or any.
@@ -358,6 +358,9 @@ constexpr AlgoString g_AlgoStrings[42] = {
 
     //shorter verison of #38 (Cycle +2) (48m vs 60m) (opposite of above)
     {41, "u2 R', U' r U' r, u R2' u r, U' r U' R' ,, u2 F', U' f U' f, u F2' u f, U' f U' f' ,, u2 l', U' l U' l, u l2' u l, U' l U' l' "},
+
+    //shorter version of #19 Bunny Adj Swap 2&3/4&5
+    {42, "u2 F', U' f U' f, u F2' u f, U' f U' F' ,, u2 R', U' r U' r, u R2' u r, U' r U' R' " }
 };
 
 #endif
