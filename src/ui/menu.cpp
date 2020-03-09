@@ -80,12 +80,13 @@ void createMenu()
 //  glutAddMenuEntry("7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
     glutAddMenuEntry("7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62);
     glutAddMenuEntry("7LL-Edge2+   CW x5 HORSE+ Fr./R.Back=Safe", 63);
-    glutAddMenuEntry("7LL-Edge37 2+2swap BUNNY BEST  2&5,3&4 (ColorSafe)", 87);
-    glutAddMenuEntry("7LL-Edge19 2+2swap BUNNY Adj. 2&3,4&5", 69);
     glutAddMenuEntry("7LL-Edge20 2+2swap BUNNY Opp. 2&4,3&5 + INVERT 8'/1'", 70);
+    glutAddMenuEntry("7LL-Edge37 2+2swap BUNNY BEST 2&5,3&4", 87);
+    glutAddMenuEntry("7LL-Edge19 2+2swap BUNNY Adj. 2&3,4&5", 69);
     glutAddMenuEntry("7LL-Edge29 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
-    glutAddMenuEntry("7LL-Edge28 5-way CCW cycle by 1,2,-1,2,1", 68);
-    glutAddMenuEntry("7LL-Edge27 5-way  CW cycle by -2 all", 67);
+    glutAddMenuEntry("7LL-Edge17 5-way CCW cycle by +2 all", 88);
+    glutAddMenuEntry("7LL-Edge38 5-way  CW cycle by -2 all", 67);
+    glutAddMenuEntry("7LL-Edge18 5-way CCW cycle by 1,2,-1,2,1", 68);
     //
     glutAddMenuEntry("7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61);
     glutAddMenuEntry("7LL-E+C #2 CCW MUSHEdge- Fr./L.=Safe", 60);
@@ -175,25 +176,25 @@ void createMenu()
     //Sublevel6 Menu - AutoSwap Piece
     submenu6_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Swap Edges 1 & 2", 125);
+    glutAddMenuEntry("Swap Edges 2 & 3", 129);
+    glutAddMenuEntry("Swap Edges 3 & 4", 132);
+    glutAddMenuEntry("Swap Edges 4 & 5", 134);
     glutAddMenuEntry("Swap Edges 1 & 3", 126);
     glutAddMenuEntry("Swap Edges 1 & 4", 127);
-    glutAddMenuEntry("Swap Edges 1 & 5", 128);
-    glutAddMenuEntry("Swap Edges 2 & 3", 129);
+    glutAddMenuEntry("Swap Edges 1 & 5", 128);    
     glutAddMenuEntry("Swap Edges 2 & 4", 130);
-    glutAddMenuEntry("Swap Edges 2 & 5", 131);
-    glutAddMenuEntry("Swap Edges 3 & 4", 132);
-    glutAddMenuEntry("Swap Edges 3 & 5", 133);
-    glutAddMenuEntry("Swap Edges 4 & 5", 134);
+    glutAddMenuEntry("Swap Edges 2 & 5", 131);    
+    glutAddMenuEntry("Swap Edges 3 & 5", 133);    
     glutAddMenuEntry("Swap Corners 1 & 2", 135);
+    glutAddMenuEntry("Swap Corners 2 & 3", 139);
+    glutAddMenuEntry("Swap Corners 3 & 4", 142);
+    glutAddMenuEntry("Swap Corners 4 & 5", 144);
     glutAddMenuEntry("Swap Corners 1 & 3", 136);
     glutAddMenuEntry("Swap Corners 1 & 4", 137);
-    glutAddMenuEntry("Swap Corners 1 & 5", 138);
-    glutAddMenuEntry("Swap Corners 2 & 3", 139);
+    glutAddMenuEntry("Swap Corners 1 & 5", 138);    
     glutAddMenuEntry("Swap Corners 2 & 4", 140);
-    glutAddMenuEntry("Swap Corners 2 & 5", 141);
-    glutAddMenuEntry("Swap Corners 3 & 4", 142);
-    glutAddMenuEntry("Swap Corners 3 & 5", 143);
-    glutAddMenuEntry("Swap Corners 4 & 5", 144);
+    glutAddMenuEntry("Swap Corners 2 & 5", 141);    
+    glutAddMenuEntry("Swap Corners 3 & 5", 143);    
 
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
@@ -203,8 +204,8 @@ void createMenu()
     glutAddSubMenu("Human.Solve Bulk", submenu1_id);
     glutAddSubMenu("Comp.Solve Layer", submenu3_id);
     glutAddSubMenu("Comp.Solve Face", submenu5_id);
-    glutAddSubMenu("Compu.Mod. Face", submenu2_id);
-    glutAddSubMenu("Compu.Mod. Piece", submenu6_id);
+    glutAddSubMenu("Compu.Mod Face", submenu2_id);
+    glutAddSubMenu("Compu.Mod Piece", submenu6_id);
     glutAddMenuEntry("Close Menu...", 9999);
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
@@ -296,7 +297,7 @@ void menuHandler(int num)
     case 85:
     case 86:
     case 87:
-    //case 88:
+    case 88:
     //case 89:
         megaminx->rotateAlgo(currentFace, num - 50); break;
     case 91:

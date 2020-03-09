@@ -534,9 +534,9 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
         if (ss >> word) {
             if (word.find("'") != npos)    //reverse direction if its a ' Prime
                 op.dir *= -1;
-            if ((word.find("dr") != npos) ||
-                (word.find("dR") != npos) ||
-                (word.find("DR") != npos))
+            if ((word.find("dr") != npos) ||    //lowercase means normal direction.
+                (word.find("dR") != npos) ||    //only humans care about capitals
+                (word.find("DR") != npos))      //capital implies ' Prime because we use SHIFT key for both
                 op.num = loc.downr - 1;
             else if ((word.find("dl") != npos) ||
                      (word.find("dL") != npos) ||

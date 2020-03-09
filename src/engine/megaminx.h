@@ -187,6 +187,5 @@ private:
 };
 
 extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
-extern void serializeVectorInt60(std::vector<int> list1, std::string filename);
 
 #endif

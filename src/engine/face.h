@@ -347,6 +347,8 @@ constexpr AlgoString g_AlgoStrings[40] = {
 //TODO:  MOVE UP & Organize with related 
     {37, "r U2' R' U', r U' R' u, r U2' R' ", 5},
 
+    //Opposite direction of #17, 5-way edge cycle (+2,+2,+2,+2,+2)
+    { 38, "r U2' L' u2 R' U2' l", 6 },
 };
 
 #endif
