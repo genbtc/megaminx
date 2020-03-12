@@ -156,7 +156,7 @@ struct AlgoString {
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
-constexpr AlgoString g_AlgoStrings[44] = {
+constexpr AlgoString g_AlgoStrings[45] = {
     {0, ""},
 
     // most common one, suitable for white corners or any.
@@ -250,13 +250,13 @@ constexpr AlgoString g_AlgoStrings[44] = {
         //Unaffecteds(2) = stay safe on Right/R.Back sides. = 16 moves. edges cycle rotate = clockwise
     {16, "F' U' f U', f u F2' u, f U' f U', F' u2"},       //(mod existing by @   -2,0,0,1,1
 
-    // #7Last-Layer: Step 2: Edge 5-way star cycle CW+ , all by -2 //(mod existing by @ -2,-2,-2,-2,-2)
-        //Opposite Faces CW, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 //1,3,5,2,4 (new pieces @ 4,2,5,3,1)
+    // #7Last-Layer: Step 2: Edge 5-way star cycle CW+ , // -2,-2,-2,-2,-2)
+        //Opposite Faces CW, 1 to 4, 4 to 2, 2 to 5, 5 to 3, 3 to 1 - //1,3,5,2,4 (new pieces @ 4,2,5,3,1)
         //60 moves total. copied from cube manual (turned upside down).
     {17, "L' u2 r U2' l u2 R' ", 6},
 
-    // #7Last-Layer: Step 2: Edge 5-way star cycles, by 1,2,-1,2,1 //(mod existing by @ 1,2,-1,2,1)
-        // Two halves, 1 to 2, 2 to 4, 4 to 3, 3 to 5, 5 to 1 //1,5,3,4,2  (new pieces @ 2,4,5,3,1)
+    // #7Last-Layer: Step 2: Edge 5-way star cycles , // 1,2,-1,2,1
+        // Two halves, 1 to 2, 2 to 4, 4 to 3, 3 to 5, 5 to 1 - //1,5,3,4,2  (new pieces @ 2,4,5,3,1)
         //60 moves total. (copied from cube manual)
     {18, "R' l U' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U2' r L' u2, R' l U' r L' "}, // 1,-1,1,-2,-2
 
@@ -307,12 +307,12 @@ constexpr AlgoString g_AlgoStrings[44] = {
 
     // #7LL: Step 2, Edge Permutation 1:  //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
-        //DUPLICATE: of #12 - except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
+        //clone of #12 - except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
     {30, "r2 U2' R2' U', r2 U2' R2' ", 1 },                 //(mod existing by @   0,-2,0,-2,-1
 
     // #7LL: Step 2, Edge Permutation 2: (opposite of previous; all the "up"s get reversed)
         //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
-        //DUPLICATE: of #13 - except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
+        //clone of #13 - except one repetition only    // 13 moves in 1 rep, CORNERS ARE AFFECTED
     {31, "r2 u2 R2' u, r2 u2 R2' ", 1 },                    //(mod existing by @   0,2,0,1,2
 
     // #7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
@@ -335,14 +335,14 @@ constexpr AlgoString g_AlgoStrings[44] = {
 //TODO:  MOVE UP & Organize with related 
     {35, "u l dl F', F' DL' L' " },
 
-    //#7LL-2/3- Edge Permute #6, 2+2 swap, swaps 2&5 + 3&4, (Color Safe) BUT AFFECTS CORNERS!
+    //#7LL-2/3- Edge Permute #6, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe) BUT AFFECTS CORNERS!
     //Swap an adjacent pair, and a non - adjacent pair of edges (U/R <-> U/L and U/BR <-> U/BL)
     //(R+ U+) (R- U+) (R+ U-) (R- U++) (R+ U++ R-)
     //repeating 2x becomes a corner-permutation algo only=(corners color flip in-place by 1), 6x Repetitions = Undo, go back to origin (+3 color flips)
 //TODO:  MOVE UP & Organize with related 
     {36, "r u R' u, r U' R' u2, r u2 R' ", 1},
 
-    //#7LL-2- BEST Bunny from ELL, 2+2 swap, swaps 2&5 + 3&4, (Color Safe), https://sites.google.com/site/permuteramera/other-methods/ell
+    //#7LL-2- BEST Bunny from ELL, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe), https://sites.google.com/site/permuteramera/other-methods/ell
     //one rep affects corners. 5 reps maintains corners. 13 moves * 5 = 65 moves total.
 //TODO:  MOVE UP & Organize with related 
     {37, "r U2' R' U', r U' R' u, r U2' R' ", 5},
@@ -350,17 +350,20 @@ constexpr AlgoString g_AlgoStrings[44] = {
     //Opposite direction of #17, 5-way edge cycle CCW (+2,+2,+2,+2,+2)
     {38, "r U2' L' u2 R' U2' l", 6 },
 
-    //Shorter version of #18 (32m vs 60m)
-    {39, "r u R' u, R' U' r2 U', R' u R' u, r U2' ,, u2 l', U' l U' l, u L2' u l, U' l U' L' " },
+    //Shorter version of #18 (5-way edge cycle 1,2,-1,2,1) (32m vs 60m) (#14+#33) (applicable face is changed by -2)
+    {39, "r u R' u, R' U' r2 U', R' u R' u, r U2'  ,, u2 L', U' l U' l, u L2' u l, U' l U' L' " },
 
-    //Shorter version of #17 (Cycle -2) (48m vs 60m)
-    {40, "l u l' u, l' U' l2 U', l' u l' u, l U2' ,, f u F' u, F' U' f2 U', F' u F' u, f U2' ,, r u R' u, R' U' r2 U', R' u R' u, r U2' "},
+    //Shorter version of #17 (5-way edge Cycle -2) (48m vs 60m) (#14+#14+#14)
+    {40, "l u l' u, l' U' l2 U', l' u l' u, l U2'  ,, f u F' u, F' U' f2 U', F' u F' u, f U2' ,, r u R' u, R' U' r2 U', R' u R' u, r U2' "},
 
-    //shorter verison of #38 (Cycle +2) (48m vs 60m) (opposite of above)
-    {41, "u2 R', U' r U' r, u R2' u r, U' r U' R' ,, u2 F', U' f U' f, u F2' u f, U' f U' f' ,, u2 l', U' l U' l, u l2' u l, U' l U' l' "},
+    //shorter verison of #38 (5-way edge Cycle +2) (48m vs 60m) (#33+#33+#33) (opposite of #40 above)
+    {41, "u2 R', U' r U' r, u R2' u r, U' r U' R'  ,, u2 F', U' f U' f, u F2' u f, U' f U' f' ,, u2 l', U' l U' l, u l2' u l, U' l U' l' "},
 
-    //shorter version of #19 Bunny Adj Swap 2&3/4&5
-    {42, "u2 F', U' f U' f, u F2' u f, U' f U' F' ,, u2 R', U' r U' r, u R2' u r, U' r U' R' " }
+    //shorter version of #19 Bunny Adj. Edge Swap 2&3/4&5 (#33+#33) (32m) (applicable face is changed by -2)
+    {42, "u2 F', U' f U' f, u F2' u f, U' f U' F'  ,, u2 R', U' r U' r, u R2' u r, U' r U' R' " },
+
+    //Shorter Opposite version of #39 (#18) (cycle -1,-2,1,-2,-1) (32m)  (applicable face is changed by -2)
+    { 43, "l u L' u, L' U' l2 U', L' u L' u, l U2' ,, u2 R', U' r U' r, u R2' u r, U' r U' R' " },
 };
 
 #endif

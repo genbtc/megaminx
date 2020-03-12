@@ -54,14 +54,14 @@ bool Megaminx::shadowMultiRotate(int face, int &offby)
 //Apply our shadow cube changes we put in the queue <- back to our main cube, one by one
 void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 {
-    size_t numsize = shadowDom->shadowRotateQueue.size();
+    const size_t numsize = shadowDom->shadowRotateQueue.size();
     if (numsize <= 0) return;
     undoStack.push({ -999, -999 });
     for (int q = 0; q < numsize; ++q) {
-        auto op = shadowDom->shadowRotateQueue.front();
+        auto& op = shadowDom->shadowRotateQueue.front();
         rotateQueue.push(op);
-        shadowDom->shadowRotateQueue.pop();
         undoStack.push(op);
+        shadowDom->shadowRotateQueue.pop();        
     }
     undoStack.push({ 999, 999 });
 }

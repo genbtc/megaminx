@@ -86,7 +86,9 @@ void createMenu()
     glutAddMenuEntry("7LL-Edge29 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
     glutAddMenuEntry("7LL-Edge38 5-way CCW cycle by +2 all", 88);
     glutAddMenuEntry("7LL-Edge17 5-way  CW cycle by -2 all", 67);
-    glutAddMenuEntry("7LL-Edge18 5-way CCW cycle by 1,2,-1,2,1", 68);
+    //glutAddMenuEntry("7LL-Edge18 5-way CCW cycle by 1,2,-1,2,1", 68);
+    glutAddMenuEntry("7LL-Edge39 5-way CCW cycle by 1,2,-1,2,1", 189);
+    glutAddMenuEntry("7LL-Edge43 5-way  CW cycle by -1,-2,1,-2,-1", 193);
     //
     glutAddMenuEntry("7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61);
     glutAddMenuEntry("7LL-E+C #2 CCW MUSHEdge- Fr./L.=Safe", 60);
@@ -298,8 +300,13 @@ void menuHandler(int num)
     case 86:
     case 87:
     case 88:
-    //case 89:
         megaminx->rotateAlgo(currentFace, num - 50); break;
+    case 189:
+    case 190:
+    case 191:
+    case 192:
+    case 193:
+        megaminx->rotateAlgo(currentFace, num - 150); break;
     case 91:
         megaminx->undo(); break;
     case 92:
@@ -422,14 +429,15 @@ void menuHandler(int num)
         megaminx->rotateSolveLayer4Edges(shadowDom);
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
+        //corners then edges, temporarily b4 4 stress test
+        megaminx->rotateSolve7thLayerCorners(shadowDom); 
         megaminx->rotateSolveLayer7Edges(shadowDom);
-        megaminx->rotateSolve7thLayerCorners(shadowDom); //end
         break;
     case 312:   //brute force checker for solver = F11
         for (int i = 0; i < 50000; ++i) {
             SaveCubetoFile(); //save
             menuHandler(309);   //solver
-            //produce a debug error immediately. hit Ignore, then cancel, close, restore.
+            //produce a debug error immediately, and Save. then hit Abort to close, and Restore.
             assert(shadowDom->isFullySolved()); //check
             if (shadowDom->isFullySolved()) {
                 sum += megaminx->getRotateQueueNum();
