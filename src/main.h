@@ -35,17 +35,17 @@ Megaminx* megaminx;
 Megaminx* shadowDom;
 
 // Glut function callbacks' prototypes
-void Idle(int);
-void RenderScene();
+void myglutIdle(int);
+void myglutRenderScene();
 void GetCurrentFace();
-void double_click(int x, int y);
-void mousePressed(int button, int state, int x, int y);
-void mousePressedMove(int x, int y);
-void onKeyboard(unsigned char key, int x, int y);
-void onSpecialKeyPress(int key, int x, int y);
+void doDoubleClickRotate(int x, int y);
+void myglutMousePressed(int button, int state, int x, int y);
+void myglutMousePressedMove(int x, int y);
+void myglutOnKeyboard(unsigned char key, int x, int y);
+void myglutOnSpecialKeyPress(int key, int x, int y);
 void createMenu();
 void menuHandler(int num);
-void menuVisible(int status, int x, int y);
+void myglutMenuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
 static int window, submenu0_id, submenu1_id, submenu2_id, submenu3_id,
           menu_id, submenu4_id, submenu5_id, submenu6_id;

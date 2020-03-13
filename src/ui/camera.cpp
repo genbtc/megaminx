@@ -101,7 +101,7 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
             const int dy = abs(y - prev_left_y);
 
             if (msec - prev_left_click < DOUBLE_CLICK_INTERVAL && dx < 2 && dy < 2) {
-                double_click(x, y);
+                doDoubleClickRotate(x, y);
                 prev_left_click = 0;
             }
             else {

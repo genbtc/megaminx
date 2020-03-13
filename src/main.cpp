@@ -2,8 +2,9 @@
 /* MegaMinx2 - v1.3 October24 - December12 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
+             - v1.3.7 Mar 13, 2020
 * Uses some code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
-* genBTC 2017 + 2018 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
+* genBTC 2017-2020 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
 // Headers
 int main(int argc, char *argv[]);
@@ -20,47 +21,49 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include "main.h"
 
 //Resize Window glut callBack function passthrough to the camera class
-void ChangeSize(int x, int y)
+void myglutChangeWindowSize(int x, int y)
 {
     g_camera.ChangeViewportSize(x, y);
 }
 
 //Camera - init/reset camera and vars, set view angles, etc.
-void resetCameraView()
+void resetCameraViewport()
 {
     g_camera = Camera();
     g_camera.m_zoom = -ZDIST;
     g_camera.m_angleY = START_ANGLE;
     g_camera.m_forced_aspect_ratio = 1;
     g_camera.g_areWeDraggingPoint = false;
-    ChangeSize((int)WIDTH, (int)HEIGHT);
+    myglutChangeWindowSize((int)WIDTH, (int)HEIGHT);
 }
+
 //Megaminx Dodecahedron. Creates object class and resets camera.
 void createMegaMinx()
 {
     if (megaminx)
         delete megaminx;
     megaminx = new Megaminx();
-    resetCameraView();
+    resetCameraViewport();
 }
 
-//Entire Program is 28 lines,sorta.
 int main(int argc, char *argv[])
 {
     srand((int)time(nullptr));
-    sprintf_s(lastface, 32, "%ws", L"STARTUPTITLE");
+    sprintf_s(lastface, 32, "%ws", L"DEFAULTSTARTUPTITLE");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize((int)WIDTH, (int)HEIGHT);
     window = glutCreateWindow(title);
+
     createMegaMinx();   //also includes glViewport(0,0,w,h);
+
     glClearColor(0.22f, 0.2f, 0.2f, 1.0f);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
     gluPerspective(view_distance_view_angle, 1.0, 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //Set up GL Params in main so we dont have to recall them over and over in RenderScene()
+    //Set up GL Params in main so we dont have to recall them over and over in myglutRenderScene()
     glEnable(GLUT_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -69,33 +72,32 @@ int main(int argc, char *argv[])
     glPointSize(5);
     //Right click menu:
     createMenu();
-    glutMenuStatusFunc(menuVisible);
+    glutMenuStatusFunc(myglutMenuVisible);
     //Glut Functs:
-    glutReshapeFunc(ChangeSize);
-    glutMouseFunc(mousePressed);
-    glutMotionFunc(mousePressedMove);
+    glutReshapeFunc(myglutChangeWindowSize);
+    glutMouseFunc(myglutMousePressed);
+    glutMotionFunc(myglutMousePressedMove);
     //glutPassiveMotionFunc(processMousePassiveMotion);
-    glutKeyboardFunc(onKeyboard);
-    glutSpecialFunc(onSpecialKeyPress);
+    glutKeyboardFunc(myglutOnKeyboard);
+    glutSpecialFunc(myglutOnSpecialKeyPress);
     //Idle func, tracks frame-rate
-    Idle(0);
+    myglutIdle(0);
     //Main: Display Render and Loop forever
-    glutDisplayFunc(RenderScene);
+    glutDisplayFunc(myglutRenderScene);
     glutMainLoop();
     return 0;
 }
 
 //Wait for Refresh Rate, FrameRate Cap.
-void Idle(int) {
+void myglutIdle(int) {
     glutPostRedisplay();
-    glutTimerFunc(REFRESH_WAIT - 1, Idle, 0);
+    glutTimerFunc(REFRESH_WAIT - 1, myglutIdle, 0);
 }
 
-//OpenGL Render Func
-void RenderScene()
+//OpenGL World Render Main Scene Function:
+void myglutRenderScene()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glPushMatrix();
     {
         // spinning can be toggled w/ spacebar
@@ -161,12 +163,12 @@ int GetDirFromSpecialKey()
 }
 
 //Double click Rotates Current Face with Shift Modifier.
-void double_click(int , int )
+void doDoubleClickRotate(int , int )
 {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
 
-void mousePressed(int button, int state, int x, int y)
+void myglutMousePressed(int button, int state, int x, int y)
 {
     g_camera.ProcessMouse(button, state, x, y);
 }
@@ -174,7 +176,7 @@ void mousePressed(int button, int state, int x, int y)
 //FIXED BUG: stop cube rotate from happening right after we come back from right click menu visible then drag
 int OldmenuVisibleState = 0;
 int oldmenux = 0, oldmenuy = 0;
-void menuVisible(int status, int x, int y)
+void myglutMenuVisible(int status, int x, int y)
 {
     g_camera.menuVisibleState = (status == GLUT_MENU_IN_USE);
     if (g_camera.menuVisibleState) {
@@ -183,7 +185,7 @@ void menuVisible(int status, int x, int y)
         oldmenuy = y;
     }
 }
-void mousePressedMove(int x, int y)
+void myglutMousePressedMove(int x, int y)
 {
     if (!g_camera.menuVisibleState && !OldmenuVisibleState)
         g_camera.ProcessMouseMotion(x, y, true);
@@ -194,7 +196,7 @@ void mousePressedMove(int x, int y)
 }
 
 //Main Keyboard Handler
-void onKeyboard(unsigned char key, int x, int y)
+void myglutOnKeyboard(unsigned char key, int x, int y)
 {
     const auto specialKey = glutGetModifiers();
     if (specialKey == GLUT_ACTIVE_CTRL) {
@@ -224,7 +226,7 @@ void onKeyboard(unsigned char key, int x, int y)
         help = !help;
         break;
     case 8:   //backspace
-        resetCameraView();
+        resetCameraViewport();
         break;
     case 13:    //enter
         megaminx->resetFace(currentFace);
@@ -289,7 +291,7 @@ void onKeyboard(unsigned char key, int x, int y)
     }
 }
 //Secondary Keyboard Handler (Special Keys)
-void onSpecialKeyPress(int key, int x, int y)
+void myglutOnSpecialKeyPress(int key, int x, int y)
 {
     //TODO maybe make a Lua console to input these commands
     const int dir = GetDirFromSpecialKey();

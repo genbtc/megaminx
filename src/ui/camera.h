@@ -45,7 +45,7 @@ public:
 int getCurrentFaceFromAngles(int x, int y);
 
 //in main.h
-extern void double_click(int, int);
+extern void doDoubleClickRotate(int, int);
 
 //#include "utils_math.h"
 /*

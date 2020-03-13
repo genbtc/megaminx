@@ -7,7 +7,7 @@ extern int currentFace;
 extern bool spinning;
 extern double solveravg;
 void createMegaMinx();
-void resetCameraView();
+void resetCameraViewport();
 static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
 submenu3_id, submenu4_id, submenu5_id, submenu6_id;
 void menuHandler(int num);
@@ -312,7 +312,7 @@ void menuHandler(int num)
     case 92:
         createMegaMinx(); break;
     case 93:
-        resetCameraView(); break;
+        resetCameraViewport(); break;
     case 94:
         megaminx->undoDouble(); break;
     case 95:
