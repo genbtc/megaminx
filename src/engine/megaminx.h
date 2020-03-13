@@ -63,7 +63,8 @@ public:
     int LoadNewPiecesFromVector(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
-    const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, colordirs loc);
+    const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc);
+    const std::vector<numdir> ParseStoredAlgorithmString(AlgoString algorithmString, const colordirs &loc);
    template <typename T>
     int findPiece(int pieceNum);
     int findEdge(int pieceNum);

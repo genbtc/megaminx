@@ -188,7 +188,7 @@ void Megaminx::undoQuad()
 void Megaminx::undoBulk()
 {
     if (undoStack.empty()) return;
-    auto &end = undoStack.top();
+    const auto &end = undoStack.top();
     if (end.num == 999 && end.dir == 999) {
         undoStack.pop();
         while (!undoStack.empty()) {
@@ -407,7 +407,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
         while (activeFace.edge[j]->data.flipStatus != 0)
             activeFace.edge[j]->flip();
         //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
-        auto &pIndex = activeFace.edge[j]->data.pieceNum;
+        int pIndex = activeFace.edge[j]->data.pieceNum;
         if (pIndex != defaultEdges[j]) {
             edges[pIndex].swapdata(edges[defaultEdges[j]].data);
             j = -1;
@@ -455,7 +455,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
         while (activeFace.corner[j]->data.flipStatus != 0)
             activeFace.corner[j]->flip();
         //Maybe Pieces got loaded in the wrong place on the face. (secondary colors dont match)
-        auto &pIndex = activeFace.corner[j]->data.pieceNum;
+        int pIndex = activeFace.corner[j]->data.pieceNum;
         if (pIndex != defaultCorners[j]) {
             corners[pIndex].swapdata(corners[defaultCorners[j]].data);
             j = -1;
@@ -468,7 +468,8 @@ template <typename T>
 int Megaminx::findPiece(int pieceNum)
 {
     Piece* piece = getPieceArray<T>(0);
-    for (int i = 0; i < getMaxNumberOfPieces<T>(); ++i)
+    int maxpcs = getMaxNumberOfPieces<T>();
+    for (int i = 0; i < maxpcs; ++i)
         if (piece[i].data.pieceNum == pieceNum)
             return i;
     return -1;
@@ -524,7 +525,7 @@ void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v);
 void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
 
 //A letter/notation parser to manipulate the cube with algo strings
-const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, colordirs loc)
+const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc)
 {
     std::vector<numdir> readVector;
     std::stringstream ss(algorithmString); // create a stringstream to iterate over
@@ -566,5 +567,59 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
             }
         }
     }
+    return readVector;
+}
+
+//A letter/notation parser to manipulate the cube with algo strings
+const std::vector<numdir> Megaminx::ParseStoredAlgorithmString(AlgoString algorithmString, const colordirs &loc)
+{
+    std::vector<numdir> readVector;
+    std::stringstream ss(algorithmString.algo); // create a stringstream to iterate over
+    if (algorithmString.bulk != nullptr)
+        return *algorithmString.bulk;
+    auto npos = std::string::npos;
+    while (ss) {                           // while the stream is good
+        std::string word;                  // parse first word
+        numdir op = { -1, Face::Clockwise };
+        if (ss >> word) {
+            if (word.find("'") != npos)    //reverse direction if its a ' Prime
+                op.dir *= -1;
+            if ((word.find("dr") != npos) ||    //lowercase means normal direction.
+                (word.find("dR") != npos) ||    //only humans care about capitals
+                (word.find("DR") != npos))      //capital implies ' Prime because we use SHIFT key for both
+                op.num = loc.downr - 1;
+            else if ((word.find("dl") != npos) ||
+                (word.find("dL") != npos) ||
+                (word.find("DL") != npos))
+                op.num = loc.downl - 1;
+            else if ((word.find("r") != npos) ||
+                (word.find("R") != npos))
+                op.num = loc.right - 1;
+            else if ((word.find("l") != npos) ||
+                (word.find("L") != npos))
+                op.num = loc.left - 1;
+            else if ((word.find("f") != npos) ||
+                (word.find("F") != npos))
+                op.num = loc.front - 1;
+            else if ((word.find("u") != npos) ||
+                (word.find("U") != npos))
+                op.num = loc.up - 1;
+            else if ((word.find("b") != npos) ||
+                (word.find("B") != npos))
+                op.num = loc.bottom - 1;
+            if (op.num > -1)
+                readVector.push_back(op);
+            if (word.find("2") != npos) {
+                assert(readVector.size() > 0);
+                readVector.push_back(readVector.back());
+            }
+        }
+    }
+    if (algorithmString.repeatX) {
+        const auto &old_count = readVector.size();
+        readVector.resize(algorithmString.repeatX * old_count);
+        std::copy_n(readVector.begin(), old_count, (readVector.begin() + old_count));
+    }
+    algorithmString.bulk = &readVector;
     return readVector;
 }

@@ -37,7 +37,7 @@ void Face::initAxis(int n)
 }
 
 /** \brief connect the right matching Edge pieces to the face. and store the list. */
-void Face::attachEdgePieces(const Megaminx* megaminx, Edge& edgesPTR)
+void Face::attachEdgePieces(const Megaminx* megaminx, Edge &edgesPTR)
 {
     defaultEdges = megaminx->findPiecesOfFace(thisNum+1, edgesPTR, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
@@ -47,7 +47,7 @@ void Face::attachEdgePieces(const Megaminx* megaminx, Edge& edgesPTR)
 }
 
 /** \brief connect the right matching Corner pieces to the face. and store the list. */
-void Face::attachCornerPieces(const Megaminx* megaminx, Corner& cornersPTR)
+void Face::attachCornerPieces(const Megaminx* megaminx, Corner &cornersPTR)
 {
     defaultCorners = megaminx->findPiecesOfFace(thisNum+1, cornersPTR, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
@@ -311,7 +311,7 @@ bool Face::render()
 {
     glPushMatrix();
     //8 is the current rotational turnspeed for turnDir
-    constexpr int turnspeed = 113; //16 is fastmode
+    constexpr int turnspeed = 120; //16 is fastmode
     if (rotating)
         angle += turnDir * turnspeed;
     //Slow down once its 75% complete (and angle == 56 == 56 % 8 == 0)
