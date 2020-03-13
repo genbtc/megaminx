@@ -34,9 +34,9 @@ public:
     bool isRotating;
     void rotate(int num, int dir);    
     void rotateAlgo(int face, int id);
-    void rotateBulkAlgoVector(std::vector<numdir> &bulk);
+    void rotateBulkAlgoVector(const std::vector<numdir> &bulk);
     void rotateBulkAlgoString(std::string algoString);
-    void rotateBulkAlgoString(std::string algoString, const colordirs & loc);
+    void rotateBulkAlgoString(std::string algoString, const colordirs &loc);
     void resetQueue();
     void resetFace(int n);
    template <typename T>
@@ -68,7 +68,7 @@ public:
     int findPiece(int pieceNum);
     int findEdge(int pieceNum);
     int findCorner(int pieceNum);
-    std::vector<int> findPiecesOfFace(int face, Piece& pieceRef, int times) const;
+    std::vector<int> findPiecesOfFace(int face, Piece &pieceRef, int times) const;
    template <typename T>
     std::vector<int> findPiecesOrder(int face) const;
     std::vector<int> findCornersOrder(int face) const;
@@ -82,9 +82,9 @@ public:
     std::vector<int> findEdgePieces(const int pieceNums[5]);
     std::vector<int> findCornerPieces(const int pieceNums[5]);
    template <typename T>
-    std::vector<int> findFivePieces(std::vector<int> &v);
-    std::vector<int> findEdgePieces(std::vector<int> &v);
-    std::vector<int> findCornerPieces(std::vector<int> &v);
+    std::vector<int> findFivePieces(const std::vector<int> &v);
+    std::vector<int> findEdgePieces(const std::vector<int> &v);
+    std::vector<int> findCornerPieces(const std::vector<int> &v);
    template<typename T>
     void resetFivePieces(const int indexes[5]);
     void resetFiveEdges(const int indexes[5]);
@@ -186,10 +186,10 @@ private:
     friend class EdgeLayerAssist;
     friend class CornerLayerAssist;
 };
-static auto MM = [](int& over) { while (over >= 5) over -= 5; };
-static auto MMge = [](int& over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
-static auto MMg = [](int& over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
-static auto MMgeI = [](int& over, int stop) { while (over >= stop) over -= 5; };
+static auto MM = [](int &over) { while (over >= 5) over -= 5; };
+static auto MMge = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
+static auto MMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
+static auto MMgeI = [](int &over, int stop) { while (over >= stop) over -= 5; };
 extern int getCurrentFaceFromAngles(int x, int y); //defined as extern free function in megaminx.cpp for use in main.cpp
 
 #endif

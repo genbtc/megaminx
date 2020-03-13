@@ -143,13 +143,13 @@ void Megaminx::rotateBulkAlgoString(std::string algoString)
     rotateBulkAlgoString(algoString, g_faceNeighbors[g_currentFace->getNum() + 1]);
 }
 //Takes an Algo String and parses it, vectorizes it, then rotates it. (loc is passed in)
-void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs& loc)
+void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc)
 {
     std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc);
     rotateBulkAlgoVector(bulk);
 }
 //Adds entire vector of numdirs to the Rotate queue one by one.
-void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
+void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
 {
     undoStack.push({ -999,-999 });  //begin flag
     for (auto one : bulk) {
@@ -163,7 +163,7 @@ void Megaminx::rotateBulkAlgoVector(std::vector<numdir> &bulk)
 void Megaminx::undo()
 {
     if (undoStack.empty()) return;
-    auto op = undoStack.top();
+    auto &op = undoStack.top();
     //skip any of the flag values
     if (op.num == 999 || op.dir == 999 || op.num == -999 || op.dir == -999) {
         undoStack.pop();
@@ -188,11 +188,11 @@ void Megaminx::undoQuad()
 void Megaminx::undoBulk()
 {
     if (undoStack.empty()) return;
-    auto end = undoStack.top();
+    auto &end = undoStack.top();
     if (end.num == 999 && end.dir == 999) {
         undoStack.pop();
         while (!undoStack.empty()) {
-            auto begin = undoStack.top();
+            auto &begin = undoStack.top();
             if (begin.num == -999 && begin.dir == -999) {
                 undoStack.pop();
                 break;
@@ -207,9 +207,9 @@ void Megaminx::undoBulk()
 //Clear the Queue and stop any repeated rotating actions.
 void Megaminx::resetQueue()
 {
-    isRotating = false;
-    rotateQueue = std::queue<numdir>();
-    undoStack = std::stack<numdir>();
+    isRotating = { };
+    rotateQueue = { };
+    undoStack = { };
 }
 
 //Scramble by Rotating 1400-2700 times (137 x 12 x 2?)
@@ -279,7 +279,7 @@ std::vector<int> Megaminx::findEdgesOrder(int face) const { return findPiecesOrd
  * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
  * NOTE: Finds pieces before they are attached to a face.
  */
-std::vector<int> Megaminx::findPiecesOfFace(int face, Piece& pieceRef, int times) const
+std::vector<int> Megaminx::findPiecesOfFace(int face, Piece &pieceRef, int times) const
 {
     std::vector<int> pieceList;
     const int color = faces[face - 1].center->data._colorNum[0];
@@ -329,9 +329,10 @@ void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(fa
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesPosition() 
 {
-    std::vector<int> allPiecesPos;
-    for (int r = 0; r < getMaxNumberOfPieces<T>(); ++r) {
-        allPiecesPos.push_back(getPieceArray<T>(0)[r].data.pieceNum);
+    int maxpcs = getMaxNumberOfPieces<T>();
+    std::vector<int> allPiecesPos(maxpcs);
+    for (int r = 0; r < maxpcs; ++r) {
+        allPiecesPos[r] = getPieceArray<T>(0)[r].data.pieceNum;
     }
     return allPiecesPos;
 }
@@ -344,9 +345,10 @@ std::vector<int> Megaminx::getAllEdgePiecesPosition()  { return getAllPiecesPosi
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesColorFlipStatus() 
 {
-    std::vector<int> allPiecesPos;
-    for (int r = 0; r < getMaxNumberOfPieces<T>(); ++r) {
-        allPiecesPos.push_back(getPieceArray<T>(0)[r].data.flipStatus);
+    int maxpcs = getMaxNumberOfPieces<T>();
+    std::vector<int> allPiecesPos(maxpcs);
+    for (int r = 0; r < maxpcs; ++r) {
+        allPiecesPos[r] = getPieceArray<T>(0)[r].data.flipStatus;
     }
     return allPiecesPos;
 } //where T = Corner or Edge
@@ -475,25 +477,24 @@ int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
 int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
 
 template <typename T>
-std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
+std::vector<int> Megaminx::findFivePieces(const int pieceNums[5]) 
 {
-    std::vector<int> pieceList;
+    std::vector<int> pieceList(5);
     for (int i = 0; i < 5; i++)
-        pieceList.push_back(findPiece<T>(pieceNums[i]));
+        pieceList[i] = findPiece<T>(pieceNums[i]);
     return pieceList;
 } //where T = Corner or Edge
-std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findFivePieces<Edge>(pieceNums); }
-std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
-
 template <typename T>
-std::vector<int> Megaminx::findFivePieces(std::vector<int> &v)
+std::vector<int> Megaminx::findFivePieces(const std::vector<int> &v)
 {
     assert(v.size() == 5);
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
     return findFivePieces<T>(vecPieceNums);
 } //where T = Corner or Edge
-std::vector<int> Megaminx::findEdgePieces(std::vector<int> &v) { return findFivePieces<Edge>(v); }
-std::vector<int> Megaminx::findCornerPieces(std::vector<int> &v) { return findFivePieces<Corner>(v); }
+std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findFivePieces<Edge>(pieceNums); }
+std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
+std::vector<int> Megaminx::findEdgePieces(const std::vector<int> &v) { return findFivePieces<Edge>(v); }
+std::vector<int> Megaminx::findCornerPieces(const std::vector<int> &v) { return findFivePieces<Corner>(v); }
 
 template <typename T>
 void Megaminx::resetFivePieces(const int indexes[5]) {
