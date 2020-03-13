@@ -183,7 +183,8 @@ private:
     std::queue<numdir> rotateQueue;
     std::stack<numdir> undoStack;
     std::queue<numdir> shadowRotateQueue;
-    friend class LayerAssist;    
+    friend class EdgeLayerAssist;
+    friend class CornerLayerAssist;
 };
 static auto MM = [](int& over) { while (over >= 5) over -= 5; };
 static auto MMge = [](int& over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };

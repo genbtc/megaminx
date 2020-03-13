@@ -429,9 +429,8 @@ void menuHandler(int num)
         megaminx->rotateSolveLayer4Edges(shadowDom);
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
-        //corners then edges, temporarily b4 4 stress test
-        megaminx->rotateSolve7thLayerCorners(shadowDom); 
         megaminx->rotateSolveLayer7Edges(shadowDom);
+        megaminx->rotateSolve7thLayerCorners(shadowDom);         
         break;
     case 312:   //brute force checker for solver = F11
         for (int i = 0; i < 50000; ++i) {
