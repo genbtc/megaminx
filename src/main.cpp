@@ -1,8 +1,9 @@
+const char *title = "GenBTC's Megaminx Solver v1.37";
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.3 October24 - December12 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
-             - v1.3.7 Mar 13, 2020
+             - v1.37 Mar 13, 2020
 * Uses some code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * genBTC 2017-2020 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
@@ -46,17 +47,18 @@ void createMegaMinx()
     resetCameraViewport();
 }
 
+//Begin Main Program.
 int main(int argc, char *argv[])
 {
-    srand((int)time(nullptr));
+    srand((int)time(nullptr));  //seed rand()
     sprintf_s(lastface, 32, "%ws", L"DEFAULTSTARTUPTITLE");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize((int)WIDTH, (int)HEIGHT);
     window = glutCreateWindow(title);
 
-    createMegaMinx();   //also includes glViewport(0,0,w,h);
-
+    createMegaMinx();
+    //also ^ calls glViewport(0,0,w,h);
     glClearColor(0.22f, 0.2f, 0.2f, 1.0f);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
@@ -70,18 +72,20 @@ int main(int argc, char *argv[])
     glEnable(GL_ALPHA);
     glLineWidth(4);
     glPointSize(5);
+
     //Right click menu:
     createMenu();
     glutMenuStatusFunc(myglutMenuVisible);
-    //Glut Functs:
+
+    //Glut Callbacks:
     glutReshapeFunc(myglutChangeWindowSize);
     glutMouseFunc(myglutMousePressed);
     glutMotionFunc(myglutMousePressedMove);
     //glutPassiveMotionFunc(processMousePassiveMotion);
     glutKeyboardFunc(myglutOnKeyboard);
     glutSpecialFunc(myglutOnSpecialKeyPress);
-    //Idle func, tracks frame-rate
-    myglutIdle(0);
+    myglutIdle(0);  //Idle func tracks frame-rate
+
     //Main: Display Render and Loop forever
     glutDisplayFunc(myglutRenderScene);
     glutMainLoop();
