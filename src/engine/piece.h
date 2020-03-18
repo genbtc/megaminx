@@ -123,36 +123,24 @@ public:
                 data._colorNum[2] == color;
     }
 
+    // Function to left rotate an array by r positions, n length
+    template <typename T>
+    void leftRotate(T arr[], int r, int n)
+    {
+        for (int i = 0; i < r; i++) {
+            T first = arr[0];
+            for (int i = 0; i < n - 1; i++)
+                arr[i] = arr[i + 1];
+            arr[n - 1] = first;
+        }
+    }
+
     //Changes colors. Flip/rotate/switches colors for current piece.
     void flip() {
+        leftRotate<double>(data._color[0], 3, numSides * 3);
+        leftRotate<int>(data._colorNum, 1, numSides);
+        leftRotate<const wchar_t *>(data._colorName, 1, numSides);
         const bool isCorner = (numSides == 3);
-        double buf[3];
-        for (int i = 0; i < 3; ++i) buf[i] = data._color[0][i];
-        for (int i = 0; i < 3; ++i) data._color[0][i] = data._color[1][i];
-        for (int i = 0; i < 3; ++i) data._color[1][i] = buf[i];
-        if (isCorner) {
-            for (int i = 0; i < 3; ++i) buf[i] = data._color[1][i];
-            for (int i = 0; i < 3; ++i) data._color[1][i] = data._color[2][i];
-            for (int i = 0; i < 3; ++i) data._color[2][i] = buf[i];
-        }
-        const wchar_t *namebuf;
-        namebuf = data._colorName[0];
-        data._colorName[0] = data._colorName[1];
-        data._colorName[1] = namebuf;
-        if (isCorner) {
-            namebuf = data._colorName[1];
-            data._colorName[1] = data._colorName[2];
-            data._colorName[2] = namebuf;
-        }
-        int numbuff;
-        numbuff = data._colorNum[0];
-        data._colorNum[0] = data._colorNum[1];
-        data._colorNum[1] = numbuff;
-        if (isCorner) {
-            numbuff = data._colorNum[1];
-            data._colorNum[1] = data._colorNum[2];
-            data._colorNum[2] = numbuff;
-        }
         if (isCorner && data.flipStatus < 2 || !isCorner && data.flipStatus == 0)
             data.flipStatus++;
         else
@@ -337,42 +325,3 @@ static void EdgeGrp6(double* target, piecepack &pack) {
     rotateVertex(target, pack.axis2, PI);
     axis1multi(target, pack);
 }
-
-//class Node {
-//public:
-//    int data = 0;
-//    Node *prev, *next;
-//};
-//
-//class LinkedFace {
-//public:
-//    Node head, tail;
-//    LinkedFace() {
-//        head.next = head.prev = &tail;
-//        tail.next = tail.prev = &head;
-//    };
-//    ~LinkedFace() {
-//        Node *curr = head.next, *tmp;
-//        while (curr->next && (curr != &tail))
-//            tmp = curr, curr = curr->next, delete tmp;
-//    };
-//    void add(int ldata) {
-//        if (head.data == 0) {
-//            head.data = ldata;
-//            return;
-//        }
-//        if (tail.data == 0) {
-//            tail.data = ldata;
-//            return;
-//        }
-//        Node *nnode = new Node();
-//        nnode->data = tail.data;
-//        tail.data = ldata;
-//        (tail.prev)->next = nnode;
-//        nnode->prev = tail.prev;
-//        nnode->next = &tail;
-//        tail.prev = nnode;
-//    }
-//    //LinkedFace(const LinkedFace& other);
-//    //LinkedFace& operator=(const LinkedFace& other);
-//};

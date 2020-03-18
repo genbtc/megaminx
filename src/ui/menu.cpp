@@ -433,7 +433,7 @@ void menuHandler(int num)
         megaminx->rotateSolve7thLayerCorners(shadowDom);         
         break;
     case 312:   //brute force checker for solver = F11
-        for (int i = 0; i < 5000; ++i) {
+        for (int i = 0; i < 50000; ++i) {
             SaveCubetoFile(); //save
             menuHandler(309);   //solver
             //produce a debug error immediately, and Save. then hit Abort to close, and Restore.
@@ -446,7 +446,7 @@ void menuHandler(int num)
             else
                 continue;
         }
-        solveravg = sum / 5000.;
+        solveravg = sum / 50000.;
         break;
     default:
         break;

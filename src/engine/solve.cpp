@@ -1009,12 +1009,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[42].algo, g_faceNeighbors[start]); //algo#42=algo#19
         }
 
-//twoAdjacentOffColors, then mushroom starting from there.
-        else if (twoAdjacentOffColors) //TT-85-2,  //TT63-2
-        {
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece]);  //algo #14 3a-  (F/L Safe)
-        }
-
 //MUSHROOM- //algo #14 3a-  (F/L Safe)
 
         else if (offby == 0 && solvedCount == 3 && !allEdgeColorsSolved && (twoGraysUnsolved(1, 2) || twoGraysUnsolved(2, 3))) //TT62-2
@@ -1257,10 +1251,12 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #12 (3.1- CCW)
         }
 
-//Last Chance to do something. Solve off-colored blue?  //TT32-2
-        else if (offby != 0 && !piecesSolvedStrict[0] && !currentpieceFlipStatusOK && !allCornersAllSolved) {
-            shadowDom->shadowMultiRotate(GRAY, offby);
+//twoAdjacentOffColors, then mushroom starting from there.
+        else if (twoAdjacentOffColors) //TT-85-2,  //TT63-2
+        {
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece]);  //algo #14 3a-  (F/L Safe)
         }
+
         else
             unknownloop++;
         //DO IT:
@@ -1826,6 +1822,9 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         }
 
+//DO IT:
+        bulkShadowRotate(shadowDom, bulk);
+
 startColorFlippingCorners:
         //Do R'DR'rdr to color-flip each corner. (Dirties the lower rows) Each piece flip takes 2x, and each line resets at 6x.
         if (fullySolvedOrder && offby == 0 && g_dirtyCountRDRD != 6 && !currentpieceFlipStatusOK) {
@@ -1854,8 +1853,6 @@ startColorFlippingCorners:
             g_dirtyFaceRDRD = 0;
             g_dirtyCountRDRD = 0;
         }
-        //DO IT:
-        bulkShadowRotate(shadowDom, bulk);
 
         loopcount++;
     } while (!allSolved);
@@ -1885,14 +1882,13 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         std::vector<int> foundEdges(5);
         auto defaultEdges = faces[GRAY - 1].defaultEdges;
         for (int k = 0; k < 5; ++k) {
-            const auto piece = shadowDom->faces[GRAY - 1].getFacePiece<Edge>(k);
+            const auto &piece = shadowDom->faces[GRAY - 1].getFacePiece<Edge>(k);
             foundEdges[k] = piece->data.pieceNum;
         }
         //output the difference as an int.
         std::vector<int> newDifference(5);
-        for (int k = 0; k < 5; ++k) {
+        for (int k = 0; k < 5; ++k)
             newDifference[k] = foundEdges[k] - defaultEdges[k];
-        }
         int printfbreakpoint = 0;   //break on this and inspect.
     }
     updateRotateQueueWithShadow(shadowDom); //actually output the algo's changes to main cube's GUI

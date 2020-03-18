@@ -74,7 +74,7 @@ void Megaminx::render()
     if (invisible) return;
     //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
-        const auto op = rotateQueue.front();
+        const auto &op = rotateQueue.front();
         isRotating = true;
         _rotatingFaceIndex = op.num;
         faces[_rotatingFaceIndex].rotate(op.dir);
@@ -567,59 +567,11 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
             }
         }
     }
+    //if (algorithmString.repeatX) {
+    //    const auto &old_count = readVector.size();
+    //    readVector.resize(algorithmString.repeatX * old_count);
+    //    std::copy_n(readVector.begin(), old_count, (readVector.begin() + old_count));
+    //}
     return readVector;
 }
 
-//A letter/notation parser to manipulate the cube with algo strings
-const std::vector<numdir> Megaminx::ParseStoredAlgorithmString(AlgoString algorithmString, const colordirs &loc)
-{
-    std::vector<numdir> readVector;
-    std::stringstream ss(algorithmString.algo); // create a stringstream to iterate over
-    if (algorithmString.bulk != nullptr)
-        return *algorithmString.bulk;
-    auto npos = std::string::npos;
-    while (ss) {                           // while the stream is good
-        std::string word;                  // parse first word
-        numdir op = { -1, Face::Clockwise };
-        if (ss >> word) {
-            if (word.find("'") != npos)    //reverse direction if its a ' Prime
-                op.dir *= -1;
-            if ((word.find("dr") != npos) ||    //lowercase means normal direction.
-                (word.find("dR") != npos) ||    //only humans care about capitals
-                (word.find("DR") != npos))      //capital implies ' Prime because we use SHIFT key for both
-                op.num = loc.downr - 1;
-            else if ((word.find("dl") != npos) ||
-                (word.find("dL") != npos) ||
-                (word.find("DL") != npos))
-                op.num = loc.downl - 1;
-            else if ((word.find("r") != npos) ||
-                (word.find("R") != npos))
-                op.num = loc.right - 1;
-            else if ((word.find("l") != npos) ||
-                (word.find("L") != npos))
-                op.num = loc.left - 1;
-            else if ((word.find("f") != npos) ||
-                (word.find("F") != npos))
-                op.num = loc.front - 1;
-            else if ((word.find("u") != npos) ||
-                (word.find("U") != npos))
-                op.num = loc.up - 1;
-            else if ((word.find("b") != npos) ||
-                (word.find("B") != npos))
-                op.num = loc.bottom - 1;
-            if (op.num > -1)
-                readVector.push_back(op);
-            if (word.find("2") != npos) {
-                assert(readVector.size() > 0);
-                readVector.push_back(readVector.back());
-            }
-        }
-    }
-    if (algorithmString.repeatX) {
-        const auto &old_count = readVector.size();
-        readVector.resize(algorithmString.repeatX * old_count);
-        std::copy_n(readVector.begin(), old_count, (readVector.begin() + old_count));
-    }
-    algorithmString.bulk = &readVector;
-    return readVector;
-}
