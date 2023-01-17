@@ -247,7 +247,7 @@ void Megaminx::setCurrentFaceActive(int i)
 }
 
 /**
- * \brief Reset all the pieces on a face and set it to active.
+ * \brief Reset all the pieces on [Face] and set it to active.
  * \param n Nth-face number color (1-12)
  */
 void Megaminx::resetFace(int n)
@@ -309,8 +309,8 @@ std::vector<int> Megaminx::findEdges(int face) { return findPieces<Edge>(face); 
 
 /**
  * \brief Flip, Changes the colors of a piece (either Edge or Corner piece)
- * \param face Nth-face number (1-12)
- * \param num  Nth-piece number (1-5)
+ * \param face  Nth-face number (1-12)
+ * \param num   Nth-piece number (1-5)
  */
 template <typename T>
 void Megaminx::flipPieceColor(int face, int num)
@@ -324,7 +324,7 @@ void Megaminx::flipCornerColor(int face, int num) { return flipPieceColor<Corner
 void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(face, num); }
 
 /**
- * \brief Get a list of all pieces Color status (either Edge or Corner Piece)
+ * \brief Get a list of all pieces Position Status (either Edge or Corner piece)
  */
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesPosition()
@@ -335,12 +335,12 @@ std::vector<int> Megaminx::getAllPiecesPosition()
         allPiecesPos[r] = getPieceArray<T>(0)[r].data.pieceNum;
     }
     return allPiecesPos;
-}
-//} //where T = Corner or Edge
+} //where T = Corner or Edge
 std::vector<int> Megaminx::getAllCornerPiecesPosition()  { return getAllPiecesPosition<Corner>(); }
 std::vector<int> Megaminx::getAllEdgePiecesPosition()  { return getAllPiecesPosition<Edge>(); }
+
 /**
- * \brief Get a list of all pieces Color status (either Edge or Corner Piece)
+ * \brief Get a list of all pieces Color status (either Edge or Corner piece)
  */
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
@@ -355,7 +355,12 @@ std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
 std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Corner>(); }
 std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Edge>(); }
 
-//Generic template to Reset all the pieces to their default value. simple.
+
+/**
+ * \brief Generic template to Reset all the Face pieces to their default value.
+ * \param color_n N'th Face/Color Number (1-12)
+ * \return 1 if anything moved, 0 if not
+ */
 template <typename T>
 int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
 {
@@ -464,6 +469,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
     return 1;
 }
 
+/** \brief Find a single numbered piece (int 1-60) */
 template <typename T>
 int Megaminx::findPiece(int pieceNum)
 {
@@ -477,6 +483,7 @@ int Megaminx::findPiece(int pieceNum)
 int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
 int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
 
+/** \brief Find a specific five-piece chunk (index array) */
 template <typename T>
 std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
 {
@@ -485,6 +492,7 @@ std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
         pieceList[i] = findPiece<T>(pieceNums[i]);
     return pieceList;
 } //where T = Corner or Edge
+/** \brief Find a specific five-piece chunk (vector) */
 template <typename T>
 std::vector<int> Megaminx::findFivePieces(const std::vector<int> &v)
 {
@@ -497,6 +505,7 @@ std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return fin
 std::vector<int> Megaminx::findEdgePieces(const std::vector<int> &v) { return findFivePieces<Edge>(v); }
 std::vector<int> Megaminx::findCornerPieces(const std::vector<int> &v) { return findFivePieces<Corner>(v); }
 
+/** \brief Reset any five-piece chunk (index array) to defaults  */
 template <typename T>
 void Megaminx::resetFivePieces(const int indexes[5]) {
     Piece* pieces = getPieceArray<T>(0);
@@ -514,7 +523,7 @@ void Megaminx::resetFivePieces(const int indexes[5]) {
 } //where T = Corner or Edge
 void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(indexes); }
 void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
-
+/** \brief Reset any five-piece chunk (vector) to defaults  */
 template <typename T>
 void Megaminx::resetFivePiecesV(std::vector<int> &v) {
     assert(v.size() == 5);
@@ -524,7 +533,8 @@ void Megaminx::resetFivePiecesV(std::vector<int> &v) {
 void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
 void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
 
-//A letter/notation parser to manipulate the cube with algo strings
+
+/** \brief A letter/notation parser to manipulate the cube with algo strings */
 const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc)
 {
     std::vector<numdir> readVector;
@@ -537,8 +547,8 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
             if (word.find("'") != npos)    //reverse direction if its a ' Prime
                 op.dir *= -1;
             if ((word.find("dr") != npos) ||    //lowercase means normal direction.
-                (word.find("dR") != npos) ||    //only humans care about capitals
-                (word.find("DR") != npos))      //capital implies ' Prime because we use SHIFT key for both
+                (word.find("dR") != npos) ||    //parser doesnt care about capitals, humans do tho.
+                (word.find("DR") != npos))      //capital means ' Prime because we use SHIFT key
                 op.num = loc.downr - 1;
             else if ((word.find("dl") != npos) ||
                      (word.find("dL") != npos) ||
