@@ -150,7 +150,7 @@ constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
 struct AlgoString {
     int num;
     const char * algo;
-    int repeatX;
+    int repeatX=0;
 };
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]

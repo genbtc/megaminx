@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <cstring>
 #include "color.h"
 #include "../ui/opengl.h"
 
@@ -27,7 +28,7 @@ static const long double EDGEFIFTH = DODESIZE / sin(pim(2));            //105.14
 static const long double COSPIM35 = INS_CIRCLE_RAD * cos(pim(3.5));     //-50.000004917867173
 static const long double COSPIM15 = INS_CIRCLE_RAD * cos(pim(1.5));     //49.999998901510480
 static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
-void rotateVertex(double *vertex, char axis, double angle);
+static void rotateVertex(double *vertex, char axis, double angle);
 
 struct piecepack {
     char axis1, axis2;
@@ -41,7 +42,7 @@ public:
     //Coords for GL vertex (up to 7, not all used)
     double _vertex[7][3] = {};
     //Keeps the default number in the piece. do not swap.
-    int defaultPieceNum = NULL;
+    int defaultPieceNum;
 
     //data-members we can swap out
     struct _data {
@@ -53,7 +54,7 @@ public:
     } data = {};
 
     //Center has 1, Edge has 2, Corner has 3
-    int numSides = NULL;
+    int numSides;
 
     //Swaps current data with the &out_param
     void swapdata(_data &out) {

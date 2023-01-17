@@ -51,7 +51,11 @@ void createMegaMinx()
 int main(int argc, char *argv[])
 {
     srand((int)time(nullptr));  //seed rand()
+#ifdef _WINDOWS
     sprintf_s(lastface, 32, "%ws", L"DEFAULTSTARTUPTITLE");
+#else
+    sprintf(lastface, "%ls", L"DEFAULTSTARTUPTITLE");
+#endif
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize((int)WIDTH, (int)HEIGHT);
@@ -125,11 +129,11 @@ void myglutRenderScene()
         if (!help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, (char*)"[H]elp");
         if (megaminx->isFullySolved() && !help)
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "SOLVED!");
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, (char*)"SOLVED!");
         else
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "[F9] = SOLVER");
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, (char*)"[F9] = SOLVER");
         shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
             static char rotquestr[21];
@@ -153,7 +157,11 @@ void GetCurrentFace()
     const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX, (int)g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
+#ifdef _WINDOWS
         sprintf_s(lastface, 32, "%ws", g_colorRGBs[currentFace].name);
+#else
+        sprintf(lastface, "%ls", g_colorRGBs[currentFace].name);
+#endif
         //Save it into the viewmodel (sync view)
         megaminx->setCurrentFaceActive(currentFace);
     }
@@ -245,7 +253,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y)
         break;
     }
     //Switch for routing directional key commands - rotate neighbors of current face
-    //call the megaminx specific key functions 
+    //call the megaminx specific key functions
     const int dir = GetDirFromSpecialKey();
     const auto face = g_faceNeighbors[currentFace];
     switch (key) {
@@ -317,7 +325,7 @@ void myglutOnSpecialKeyPress(int key, int x, int y)
         MakeShadowCubeClone(); //init
         megaminx->rotateSolveWhiteEdges(shadowDom);
         megaminx->rotateSolveWhiteCorners(shadowDom);
-        break; 
+        break;
     case GLUT_KEY_F2:
         menuHandler(302); break; //rotate_2nd-layer-edges
     case GLUT_KEY_F3:
@@ -325,7 +333,7 @@ void myglutOnSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F4:
         menuHandler(304); break; //rotate_4th_layer-edges
     case GLUT_KEY_F5:
-        menuHandler(305); break; //rotate_5th_layer-corners 
+        menuHandler(305); break; //rotate_5th_layer-corners
     case GLUT_KEY_F6:
         menuHandler(306); break; //rotate_6th_layer-edges
     case GLUT_KEY_F7:
@@ -333,7 +341,7 @@ void myglutOnSpecialKeyPress(int key, int x, int y)
     case GLUT_KEY_F8:
         menuHandler(308); break; //rotate_7th_layer-corners
     case GLUT_KEY_F9:
-        menuHandler(309); break; //Layers 1-7 all at once 
+        menuHandler(309); break; //Layers 1-7 all at once
     case GLUT_KEY_F10:
     case GLUT_KEY_F11:
         //break;

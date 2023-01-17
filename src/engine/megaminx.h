@@ -32,7 +32,7 @@ public:
     void setCurrentFaceActive(int i);
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
     bool isRotating;
-    void rotate(int num, int dir);    
+    void rotate(int num, int dir);
     void rotateAlgo(int face, int id);
     void rotateBulkAlgoVector(const std::vector<numdir> &bulk);
     void rotateBulkAlgoString(std::string algoString);
@@ -102,20 +102,20 @@ public:
     constexpr static int m_sixthLayerEdges[5]   = { 20, 21, 22, 23, 24 };
     constexpr static int m_seventhLayerEdges[5] = { 25, 26, 27, 28, 29 };
 
-    void Megaminx::secondLayerEdges() {        
+    void secondLayerEdges() {
         resetFiveEdges(m_secondLayerEdges);
     }
-    void Megaminx::fourthLayerEdges() {        
-        resetFiveEdges(m_fourthLayerEdgesA);        
+    void fourthLayerEdges() {
+        resetFiveEdges(m_fourthLayerEdgesA);
         resetFiveEdges(m_fourthLayerEdgesB);
     }
-    void Megaminx::sixthLayerEdges() {        
+    void sixthLayerEdges() {
         resetFiveEdges(m_sixthLayerEdges);
     }
-    void Megaminx::lowYmiddleW() {        
+    void lowYmiddleW() {
         resetFiveCorners(m_secondLayerEdges);
     }
-    void Megaminx::highYmiddleW() {        
+    void highYmiddleW() {
         resetFiveCorners(m_fourthLayerEdgesA);
     }
 
@@ -144,7 +144,7 @@ public:
 
     //in Shadow.CPP
     void LoadNewEdgesFromOtherCube(Megaminx* source);
-    void LoadNewCornersFromOtherCube(Megaminx* source);    
+    void LoadNewCornersFromOtherCube(Megaminx* source);
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
     void bulkShadowRotate(Megaminx* shadowDom, std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
@@ -172,7 +172,7 @@ public:
             return &corners[i];
         return &centers[i];
     };
-    
+
 private:
     Face   faces[numFaces];
     Center centers[numFaces];

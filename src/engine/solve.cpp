@@ -118,14 +118,14 @@ public:
         assert(edgeFaceLocB != -1); //should not happen
         EdgeItselfA = shadowDom->faces[edgeFaceNeighbors.a - 1].edge[edgeFaceLocA];
         EdgeItselfB = shadowDom->faces[edgeFaceNeighbors.b - 1].edge[edgeFaceLocB];
-        assert(EdgeItselfA == EdgeItselfB); //sanity check.        
+        assert(EdgeItselfA == EdgeItselfB); //sanity check.
         //Determine which direction those faces need to rotate to land the Edge on the white
         dirToWhiteA = DirToWhiteFace[edgeFaceNeighbors.a - 1][edgeFaceLocA];
         dirToWhiteB = DirToWhiteFace[edgeFaceNeighbors.b - 1][edgeFaceLocB];
         //Use reference table to check edge internal color data struct-order.
         whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a - 1][edgeFaceLocA];
         whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b - 1][edgeFaceLocB];
-        assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.        
+        assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.
         //Determine which color half-edge is on each face
         edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];
         edgeHalfColorB = EdgeItselfB->data._colorNum[whichcolorEdgeB];
@@ -294,7 +294,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved); //redundant.
         }
     }
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -390,7 +390,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.b;
             }
-            int result = max(x, y);
+            int result = std::max(x, y);
             if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                 result = LIGHT_BLUE;
             shadowDom->shadowRotate(result, defaultDir);
@@ -409,7 +409,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             unknownloop++;
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -488,7 +488,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
             unknownloop++;
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -551,12 +551,12 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.b;
             }
-            //The loop point crosses over at the Pink 
+            //The loop point crosses over at the Pink
             if (x < PINK)
                 x += 5;
             if (y < PINK)
                 y += 5;
-            int result = max(x, y);
+            int result = std::max(x, y);
             MMg(result, BEIGE);
             shadowDom->shadowRotate(result, defaultDir);
         }
@@ -574,7 +574,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
             unknownloop++;
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -621,8 +621,8 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             }
             //obtain the non-gray face neighbor we need to be rotating
             else if (l.isOnRow34)
-                loc = g_faceNeighbors[max(l.edgeFaceNeighbors.b, l.edgeFaceNeighbors.a)];
-            //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6            
+                loc = g_faceNeighbors[std::max(l.edgeFaceNeighbors.b, l.edgeFaceNeighbors.a)];
+            //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6
             if ((l.isOnRow7 && l.isLeft) || (l.isOnRow4)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow4))
                     bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[23].algo, loc); // {23, "F' R' F', F' r f"},
@@ -654,7 +654,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             unknownloop++;
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -698,7 +698,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.b;
             }
-            int result = min(x, y);
+            int result = std::min(x, y);
             if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                 result = BEIGE;
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[result]); // "r u R' U' "
@@ -717,7 +717,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             unknownloop++;
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -771,12 +771,12 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
                 isRight = (loc.right == l.edgeHalfColorA);
             }
             else if (l.isOnRow6) {
-                result = min(x, y);
+                result = std::min(x, y);
                 if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                     result = BEIGE;
                 loc = g_faceNeighbors[result]; //loc.front
                 isRight = true;
-            }             
+            }
             //Check left/right faces for which direction to drop-in with isLeft/isRight
             int algo = isLeft ? 25 : isRight ? 26 : 25;
             //works to insert pieces from row7 to 6 and also pops wrong pieces out from 6 to 7
@@ -788,7 +788,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
             unknownloop++;
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -798,7 +798,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
 void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 {
     //Loop management:
-    bool allSolved = false;    
+    bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
     //Loop:
@@ -859,10 +859,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
              (twoSolvedPieces(0, 2)) || (twoSolvedPieces(1, 3)) || (twoSolvedPieces(2, 4)) || (twoSolvedPieces(3, 0)) || (twoSolvedPieces(4, 1));
         //twoGraysUnsolved(a,b) - Lambda for Unsolved pieces
         auto twoGraysUnsolved = [grayFaceColorSolved](int a, int b) { MM(a); MM(b); return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); }; //MM=overrotation support
-        bool twoAdjacentOffColors = 
+        bool twoAdjacentOffColors =
              (twoGraysUnsolved(0, 1)) || (twoGraysUnsolved(1, 2)) || (twoGraysUnsolved(2, 3)) || (twoGraysUnsolved(3, 4)) || (twoGraysUnsolved(4, 0));
-        bool twoOppositeOffColors = 
-             (twoGraysUnsolved(0, 2)) || (twoGraysUnsolved(1, 3)) || (twoGraysUnsolved(2, 4)) || (twoGraysUnsolved(3, 0)) || (twoGraysUnsolved(4, 1));        
+        bool twoOppositeOffColors =
+             (twoGraysUnsolved(0, 2)) || (twoGraysUnsolved(1, 3)) || (twoGraysUnsolved(2, 4)) || (twoGraysUnsolved(3, 0)) || (twoGraysUnsolved(4, 1));
         auto matchesOppoColor = [twoGraysUnsolved](int face) {
             face -= LIGHT_BLUE;
             return twoGraysUnsolved(face + 2, face + 4);
@@ -996,7 +996,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 //BUNNY 2+2SWAP
 // 2&3 + 4&5 (adjacent vertically)
         else if (// allCornersAllSolved && (//TT-69-2 TODO: when Corners arent solved we can skip more moves w/ E+C Algo.
-               solvedCount == 1 && 
+               solvedCount == 1 &&
               (checkPieceMatches(pieceOrder, 25, 27, 26, 29, 28) //TT65-2 (25)
             || checkPieceMatches(pieceOrder, 29, 26, 28, 27, 25) //TT66-2 (26)
             || checkPieceMatches(pieceOrder, 26, 25, 27, 29, 28) //TT67-2 (27)
@@ -1267,7 +1267,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         loopcount++;
     } while (!allSolved);
 
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
 }
@@ -1345,7 +1345,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //int safeStart = hasTwoAdjacentSolved ? adjacentStart : offby;
 
 //START MAIN
-        
+
         //skip to the end if positioned correctly
         if (fullySolvedOrder)
             goto startColorFlippingCorners;
@@ -1405,7 +1405,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //continues with --> "15 17 16 19 18" below (no pairs yet)
 
-        //(15 19 18 17 16) - TestCube28-1 
+        //(15 19 18 17 16) - TestCube28-1
         else if (checkPieceMatches(pieceOrder, 15, 19, 18, 17, 16))
         {
             int safeStart = 3;
@@ -1413,7 +1413,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //  --> continues with "19 18 15 17 16" below (no pairs yet)
 
-        //(19 18 15 17 16) - TestCube27-1 
+        //(19 18 15 17 16) - TestCube27-1
         else if (checkPieceMatches(pieceOrder, 19, 18, 15, 17, 16))
         {
             int safeStart = 3;
@@ -1421,7 +1421,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //  --> continues with "18 15 19 17 16" below (no pairs yet)
 
-        //(17 18 19 15 16) - TestCube18-1 
+        //(17 18 19 15 16) - TestCube18-1
         else if (checkPieceMatches(pieceOrder, 17, 18, 19, 15, 16))
         {
             int safeStart = 1;
@@ -1438,7 +1438,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         } //continues with --> "15 19 17 16 18" belo (no pairs yet)
 
 //39 cases to make pairs:
-        //(18 15 19 17 16) - TestCube25-1 
+        //(18 15 19 17 16) - TestCube25-1
         else if (checkPieceMatches(pieceOrder, 18, 15, 19, 17, 16))
         {
             int safeStart = 2;
@@ -1446,7 +1446,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //  --> continues with "15 16 19 17 18" below && hasTwoAdjacentSolved now - 15/16
 
-        //(17 16 19 18 15) - TestCube26-2 
+        //(17 16 19 18 15) - TestCube26-2
         else if (checkPieceMatches(pieceOrder, 17, 16, 19, 18, 15))
         {
             int safeStart = 1;
@@ -1454,7 +1454,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         } //  --> continues with "15 16 19 17 18" below && hasTwoAdjacentSolved now - 15/16
 
-        //(15 19 17 16 18) - TestCube20-2 
+        //(15 19 17 16 18) - TestCube20-2
         else if (checkPieceMatches(pieceOrder, 15, 19, 17, 16, 18))
         {
             int safeStart = 4;
@@ -1494,14 +1494,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //  --> continues with "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
-        //(15 18 17 19 16) - TestCube22-3 
+        //(15 18 17 19 16) - TestCube22-3
         else if (checkPieceMatches(pieceOrder, 15, 18, 17, 19, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } // --> continues with "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
-        
+
         //(18 19 17 15 16)
         else if (checkPieceMatches(pieceOrder, 18, 19, 17, 15, 16))
         {
@@ -1570,7 +1570,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);       
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //continues with --> "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
         //(19 17 18 15 16)
@@ -1685,7 +1685,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
 
-        //(17 15 18 19 16) 
+        //(17 15 18 19 16)
         else if (checkPieceMatches(pieceOrder, 17, 15, 18, 19, 16))
         {
             int safeStart = 0;
@@ -1708,14 +1708,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
-                
+
         //(16 15 18 17 19)
         else if (checkPieceMatches(pieceOrder, 16, 15, 18, 17, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);            
-        } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19 
+            bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+        } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(19 18 16 15 17)
         else if (checkPieceMatches(pieceOrder, 19, 18, 16, 15, 17))
@@ -1831,7 +1831,7 @@ startColorFlippingCorners:
             //only do this if the piece is mis-colored.
             int offset = (i - 15) - 1;
             if (offset == -1) offset = 4;
-            const int target = LIGHT_BLUE + offset;               
+            const int target = LIGHT_BLUE + offset;
             g_dirtyBitRDRD = 1;
             g_dirtyFaceRDRD = g_dirtyFaceRDRD ? g_dirtyFaceRDRD : target;
             //rotateOffset is how we rotate gray top to move unsolved piece back over top of our dirty face
@@ -1856,7 +1856,7 @@ startColorFlippingCorners:
 
         loopcount++;
     } while (!allSolved);
-    //After all loops, load the shadow Queue into the real queue    
+    //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
 }
 
@@ -1873,7 +1873,7 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
     {
         AlgoString a = g_AlgoStrings[algo];
         colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //front-face (adjustable)
-        int repeat = (a.repeatX != NULL) ? a.repeatX : 1;
+        int repeat = a.repeatX ? a.repeatX : 1;
         for (int n = 0; n < repeat; ++n) {
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString(a.algo, loc);
             bulkShadowRotate(shadowDom, bulk);

@@ -34,15 +34,15 @@ void utDrawText3D(float x, float y, float z, void * font, char * string);
 // simplier version for default font...
 inline void utDrawText2D(float x, float y, char *string)
 {
-    utDrawText2D(x, y, (void *)0x0003, string);
+    utDrawText2D(x, y, GLUT_BITMAP_8_BY_13, string);
 }
 // simplier version for default font...
 inline void utDrawText3D(float x, float y, float z, const char *string)
 {
-    utDrawText3D(x, y, z, (void *)0x0003, (char *)string);
+    utDrawText3D(x, y, z, GLUT_BITMAP_8_BY_13, (char *)string);
 }
 
 void utCalculateAndPrintFps(float x, float y);
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1);
 
-extern inline void makeGLpentagon(const double(&_vertex)[7][3], double scale, int shape);
+extern void makeGLpentagon(const double(&_vertex)[7][3], double scale, int shape);

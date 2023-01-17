@@ -7,7 +7,7 @@
  */
 #include "opengl.h"
 #include "camera.h"
-
+#include <algorithm>
 //////////////////////////////////////////////////////////////////////////
 // Camera
 //////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ void Camera::ChangeViewportSize(int w, int h)
 
     //Turn on forced aspect ratio of 1.0
     if (m_forced_aspect_ratio == 1) {
-        const auto minx = min((double)w, h*m_forced_aspect_ratio);
+        const auto minx = std::min((double)w, h*m_forced_aspect_ratio);
         h = w = (int)minx;
     }
     m_screenWidth = w;

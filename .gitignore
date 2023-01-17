@@ -43,3 +43,5 @@ CMakeBuilds*
 vc140.pdb
 /enc_temp_folder/822fe0486f97ca2351f4bb56f9b2382c/solve.cpp
 /enc_temp_folder/e311f84a53397d17e8eec0126cb04248/solve.cpp
+.ninja_log
+.ninja_deps
