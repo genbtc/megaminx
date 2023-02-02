@@ -9,6 +9,10 @@
 #include "megaminx.h"
 #include <algorithm>
 
+// global main Megaminx object (pointer, managed)
+Megaminx* megaminx;
+Megaminx* shadowDom;
+
 //simple constructor.
 //Solve Puzzle, aka Reset, aka the real constructor.
 Megaminx::Megaminx()

@@ -1,21 +1,167 @@
-#include "../ui/opengl.h"
-#include "../engine/megaminx.h"
-
+#include "../main.h"
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
-extern int currentFace;
-extern bool spinning;
-extern double solveravg;
-void createMegaMinx();
-void resetCameraViewport();
-static int window, menu_id, submenu0_id, submenu1_id, submenu2_id,
-submenu3_id, submenu4_id, submenu5_id, submenu6_id;
-void menuHandler(int num);
-void serializeVectorInt60(std::vector<int> list1, std::string filename);
-const std::vector<int> ReadPiecesFileVector(std::string filename);
-void SaveCubetoFile();
-void RestoreCubeFromFile();
-void MakeShadowCubeClone();
+
+// Main Keyboard Handler
+void myglutOnKeyboard(unsigned char key, int x, int y) {
+	//Ctrl + keys first
+    const auto specialKey = glutGetModifiers();
+    if (specialKey == GLUT_ACTIVE_CTRL) {
+        switch (key) {
+        case 3: // Ctrl+C
+            glutDestroyWindow(1);
+            exit(0);
+            break;
+        case 26: // Ctrl+Z
+            megaminx->undo();
+            break;
+        case 19: // CTRL+S //Save Game State
+            SaveCubetoFile();
+            break;
+        case 18: // CTRL+R //Restore Game State
+            RestoreCubeFromFile();
+            break;
+        default:
+            break;
+        }
+    }
+    //Game commands
+    switch (key) {
+    case ' ':	// spacebar 32
+        spinning = !spinning;
+        break;
+    case 'h':
+    case 'H':	// help
+        help = !help;
+        break;
+    case 8:		// backspace
+        resetCameraViewport();
+        break;
+    case 13:	// enter
+        megaminx->resetFace(currentFace);
+        break;
+    case 27:	// escape
+        megaminx->resetQueue();
+        break;
+    case 127:	// delete
+        megaminx->scramble();
+        break;
+    default:
+        break;
+    }
+    // Cube Rotation commands
+    // rotate neighbors of current face (call relational rotation function)
+    const int dir = GetDirFromSpecialKey();
+    const auto face = g_faceNeighbors[currentFace];
+    switch (key) {
+    case 'w': // Upper(Top)
+    case 'W':
+        megaminx->rotate(face.up, dir);
+        break;
+    case 's': // Front
+    case 'S':
+        megaminx->rotate(face.front, dir);
+        break;
+    case 'a': // Left
+    case 'A':
+        megaminx->rotate(face.left, dir);
+        break;
+    case 'd': // Right
+    case 'D':
+        megaminx->rotate(face.right, dir);
+        break;
+    case 'z': // Diagonal/Corner Left
+    case 'Z':
+        megaminx->rotate(face.downl, dir);
+        break;
+    case 'c': // Diagonal/Corner Right
+    case 'C':
+        megaminx->rotate(face.downr, dir);
+        break;
+    case 'x': // Bottom
+    case 'X':
+        megaminx->rotate(face.bottom, dir);
+        break;
+	//These are admin cheater functions, and nobody should be able to 
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+        megaminx->flipCornerColor(currentFace, (int)key - 48);
+        break;
+    case '!':
+    case '#':
+    case '$':
+    case '%':
+        megaminx->flipEdgeColor(currentFace, (int)key - 32);
+        break;
+    case '@':
+        megaminx->flipEdgeColor(currentFace, (int)key - 62);
+        break;
+    default:
+        break;
+    }
+}
+// Secondary Keyboard Handler (Special Keys)
+void myglutOnSpecialKeyPress(int key, int x, int y) {
+    const int dir = GetDirFromSpecialKey();
+    switch (key) {
+    case GLUT_KEY_PAGE_UP:
+        break;
+    case GLUT_KEY_PAGE_DOWN:
+        break;
+    case GLUT_KEY_HOME:
+        break;
+    case GLUT_KEY_END:
+        break;
+    case GLUT_KEY_INSERT:
+        break;
+	// THESE FUNC KEYS HAVE TO BE HANDLED IN HERE (even though this file is not for cubing)
+    case GLUT_KEY_F1:
+        // menuHandler(300);	//Rotate_white_edges +
+        // menuHandler(301);	//Rotate_white_corners
+        // manually call these (the double clone cube call was messing up)
+        MakeShadowCubeClone();	// init
+        megaminx->rotateSolveWhiteEdges(shadowDom);
+        megaminx->rotateSolveWhiteCorners(shadowDom);
+        break;
+    case GLUT_KEY_F2:
+        menuHandler(302);
+        break; // rotate_2nd-layer-edges
+    case GLUT_KEY_F3:
+        menuHandler(303);
+        break; // rotate_3rd_layer-corners
+    case GLUT_KEY_F4:
+        menuHandler(304);
+        break; // rotate_4th_layer-edges
+    case GLUT_KEY_F5:
+        menuHandler(305);
+        break; // rotate_5th_layer-corners
+    case GLUT_KEY_F6:
+        menuHandler(306);
+        break; // rotate_6th_layer-edges
+    case GLUT_KEY_F7:
+        menuHandler(307);
+        break; // rotate_7th_layer-edges
+    case GLUT_KEY_F8:
+        menuHandler(308);
+        break; // rotate_7th_layer-corners
+    case GLUT_KEY_F9:
+        menuHandler(309);
+        break; // Layers 1-7 all at once
+    case GLUT_KEY_F10:
+    case GLUT_KEY_F11:
+        // break;
+    case GLUT_KEY_F12:
+        menuHandler(312);
+        break; // Brute-Force Checker for solver. stomps on savefile.
+    default:
+        break;
+    }
+    // Route the arrow keys to the camera for motion
+    g_camera.PressSpecialKey(key, x, y);
+}
 
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
@@ -54,11 +200,11 @@ void createMenu()
 {
     //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Camera Home Pos.", 93);
+    glutAddMenuEntry("Camera go Home", 93);
     glutAddMenuEntry("Edit.Undo [^Z]", 91);
     glutAddMenuEntry("Edit.Undo*2", 94);
     glutAddMenuEntry("Edit.Undo*4", 95);
-    glutAddMenuEntry("Edit.Undo*Bulk", 96);
+    glutAddMenuEntry("Edit.Undo-Seq", 96);
     glutAddMenuEntry("Scramble! [Del]", 100);
     glutAddMenuEntry("New Cube...", 92);
     glutAddMenuEntry("Save Cube...", 98);
@@ -74,7 +220,7 @@ void createMenu()
     //
     glutAddMenuEntry("7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64);
     glutAddMenuEntry("7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83);
-//I consider these 3 below redundant to the 2 above:
+//NOTE:I consider these 3 below redundant to the 2 above:
 //  glutAddMenuEntry("7LL-Edge3d- CCW MUSHROOM- Both+Backs=Safe", 82);
 //  glutAddMenuEntry("7LL-Edge3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
 //  glutAddMenuEntry("7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
@@ -99,11 +245,9 @@ void createMenu()
     glutAddMenuEntry("7LL-E+C x1  CW HORSEdge+ Fr./R.Back=Safe", 80);
     //
     glutAddMenuEntry("7LL Corner: R' D' r dr (Permute) C2+Safe", 55);
-    //  glutAddMenuEntry("R' D' r dr [x2]", 55);
-    //  glutAddMenuEntry("R' D' r dr [x4]", 55);
     glutAddMenuEntry("7LL Corners: Cycle- CCW FrontLine=Safe", 57);
     glutAddMenuEntry("7LL Corners: Cycle+  CW RightLine=Safe", 77);
-//I consider these 2 below redundant to the 2 above:
+//NOTE:I consider these 2 below redundant to the 2 above:
 //  glutAddMenuEntry("LL Corners: Cycle- CCW L.Back=Safe", 56);
 //  glutAddMenuEntry("LL Corners: Cycle- CCW Left=Safe", 78);
 
@@ -117,7 +261,7 @@ void createMenu()
     glutAddMenuEntry("6th Layer, Place Edge (Left)", 75);
     glutAddMenuEntry("6th Layer, Place Edge (Right)",76);
 
-    //Sublevel Z = Human Rotate Bulk-Solve by whole layer routines with Solve.cpp
+    //Sublevel1 Menu = Human Rotate Bulk-Solve using best layer routines (Solve.cpp)
     submenu1_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("1st Layer: White Edges (Rotate)", 300);
     glutAddMenuEntry("1st Layer: White Corners (Rotate)", 301);
@@ -128,10 +272,12 @@ void createMenu()
     glutAddMenuEntry("6th Layer: All Edges (Rotate)", 306);
     glutAddMenuEntry("7th Layer: Gray Edges (Rotate)", 307);
     glutAddMenuEntry("7th Layer: Gray Corners (Rotate)", 308);
-    glutAddMenuEntry("ALL Layers: #1 - #7 (Rotate)", 309);
+    glutAddMenuEntry("ALL Layers: #1 - #7 (Rotate)", 309); // 309 = Solve All
 
-    //SubLevel3 Menu - Computer InstaSolve by Layer (internally "pops-out"=aka cheating)
+    //SubLevel3 Menu - Computer Auto-InstaSolve - Layer by Layer using Teleport
+    //                 (internally "pops-out" pieces to move them, aka cheating)
     submenu3_id = glutCreateMenu(menuHandler);
+    //TODO: This algo is good but need a non-teleport version built 
     glutAddMenuEntry("1st Layer: White Star (Teleport)", 40);
     glutAddMenuEntry("1st Layer: White Corners (Teleport)", 41);
     glutAddMenuEntry("2nd Layer: Edges (Teleport)", 42);
@@ -142,7 +288,8 @@ void createMenu()
     glutAddMenuEntry("7th Layer: Grey Star (Teleport)", 47);
     glutAddMenuEntry("7th Layer: Grey Corners (Teleport)", 48);
 
-    //SubLevel5 Menu - Computer InstaSolve by Faces (Reset to solved position)
+    //SubLevel5 Menu - Computer InstaSolve by Faces - Single
+    //                 (return to solved position = "reset")
     submenu5_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry(" 1 WHITE", 171);
     glutAddMenuEntry(" 2 DARK_BLUE", 172);
@@ -157,10 +304,11 @@ void createMenu()
     glutAddMenuEntry("11 PINK", 181);
     glutAddMenuEntry("12 BEIGE", 182);
 
-    //SubLevel2 Menu - Current Face Modifications
+    //SubLevel2 Menu - Current Face Method Manipulatations
     submenu2_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Rotate CounterClockwise <<", 19);
     glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20);
+    //the rest of these are for cheating
     glutAddMenuEntry("Insta-Solve Entire Face", 21);
     glutAddMenuEntry("Insta-Solve Five Edges", 22);
     glutAddMenuEntry("Insta-Solve Five Corners", 23);
@@ -175,17 +323,17 @@ void createMenu()
     glutAddMenuEntry("Flip Color: Corner  [4]", 32);
     glutAddMenuEntry("Flip Color: Corner  [5]", 33);
 
-    //Sublevel6 Menu - AutoSwap Piece
+    //Sublevel6 Menu - AutoSwap Piece w/ Teleport
     submenu6_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Swap Edges 1 & 2", 125);
-    glutAddMenuEntry("Swap Edges 2 & 3", 129);
-    glutAddMenuEntry("Swap Edges 3 & 4", 132);
-    glutAddMenuEntry("Swap Edges 4 & 5", 134);
-    glutAddMenuEntry("Swap Edges 1 & 3", 126);
-    glutAddMenuEntry("Swap Edges 1 & 4", 127);
-    glutAddMenuEntry("Swap Edges 1 & 5", 128);    
+    glutAddMenuEntry("Swap Edges 1 & 2", 125); //note:
+    glutAddMenuEntry("Swap Edges 2 & 3", 129); //the
+    glutAddMenuEntry("Swap Edges 3 & 4", 132); //order
+    glutAddMenuEntry("Swap Edges 4 & 5", 134); //is so
+    glutAddMenuEntry("Swap Edges 1 & 3", 126); //humans
+    glutAddMenuEntry("Swap Edges 1 & 4", 127); //will
+    glutAddMenuEntry("Swap Edges 1 & 5", 128); //enjoy
     glutAddMenuEntry("Swap Edges 2 & 4", 130);
-    glutAddMenuEntry("Swap Edges 2 & 5", 131);    
+    glutAddMenuEntry("Swap Edges 2 & 5", 131);
     glutAddMenuEntry("Swap Edges 3 & 5", 133);    
     glutAddMenuEntry("Swap Corners 1 & 2", 135);
     glutAddMenuEntry("Swap Corners 2 & 3", 139);
@@ -260,53 +408,12 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(GRAY); break;
     case 48:  //Last Layer GRAY Corners
         megaminx->resetFacesCorners(GRAY); break;
-    //case 49:
-    //case 50:
-    case 51:
-    case 52:
-    case 53:
-    case 54:
-    case 55:
-    case 56:
-    case 57:
-    case 58:
-    case 59:
-    case 60:
-    case 61:
-    case 62:
-    case 63:
-    case 64:
-    case 65:
-    case 66:
-    case 67:
-    case 68:
-    case 69:
-    case 70:
-    case 71:
-    case 72:
-    case 73:
-    case 74:
-    case 75:
-    case 76:
-    case 77:
-    case 78:
-    case 79:
-    case 80:
-    case 81:
-    case 82:
-    case 83:
-    case 84:
-    case 85:
-    case 86:
-    case 87:
-    case 88:
+	//
+    case 51 ... 88:
         megaminx->rotateAlgo(currentFace, num - 50); break;
-    case 189:
-    case 190:
-    case 191:
-    case 192:
-    case 193:
+    case 189 ... 193:
         megaminx->rotateAlgo(currentFace, num - 150); break;
+	//utils (move to end)
     case 91:
         megaminx->undo(); break;
     case 92:
@@ -324,60 +431,27 @@ void menuHandler(int num)
     case 102:
         glutDestroyWindow(1);
         exit(0); break;
-    case 125: //Edge Piece Swaps
-        megaminx->g_currentFace->swapEdges(0, 1); break;
-    case 126:
-        megaminx->g_currentFace->swapEdges(0, 2); break;
-    case 127:
-        megaminx->g_currentFace->swapEdges(0, 3); break;
-    case 128:
-        megaminx->g_currentFace->swapEdges(0, 4); break;
-    case 129:
-        megaminx->g_currentFace->swapEdges(1, 2); break;
-    case 130:
-        megaminx->g_currentFace->swapEdges(1, 3); break;
-    case 131:
-        megaminx->g_currentFace->swapEdges(1, 4); break;
-    case 132:
-        megaminx->g_currentFace->swapEdges(2, 3); break;
-    case 133:
-        megaminx->g_currentFace->swapEdges(2, 4); break;
+    //Edge Piece Swaps
+	case 125 ... 128:
+		megaminx->g_currentFace->swapEdges(0, 1+num-125); break;
+    case 129 ... 131:
+        megaminx->g_currentFace->swapEdges(1, 2+num-129); break;
+    case 132 ... 133:
+        megaminx->g_currentFace->swapEdges(2, 3+num-132); break;
     case 134:
         megaminx->g_currentFace->swapEdges(3, 4); break;
-    case 135: //Corner Piece Swaps
-        megaminx->g_currentFace->swapCorners(0, 1); break;
-    case 136:
-        megaminx->g_currentFace->swapCorners(0, 2); break;
-    case 137:
-        megaminx->g_currentFace->swapCorners(0, 3); break;
-    case 138:
-        megaminx->g_currentFace->swapCorners(0, 4); break;
-    case 139:
-        megaminx->g_currentFace->swapCorners(1, 2); break;
-    case 140:
-        megaminx->g_currentFace->swapCorners(1, 3); break;
-    case 141:
-        megaminx->g_currentFace->swapCorners(1, 4); break;
-    case 142:
-        megaminx->g_currentFace->swapCorners(2, 3); break;
-    case 143:
-        megaminx->g_currentFace->swapCorners(2, 4); break;
+	//Corner Piece Swaps
+    case 135 ... 138:
+        megaminx->g_currentFace->swapCorners(0, 1+num-135); break;
+    case 139 ... 141:
+        megaminx->g_currentFace->swapCorners(1, 2+num-139); break;
+    case 142 ... 143:
+        megaminx->g_currentFace->swapCorners(2, 3+num-142); break;
     case 144:
         megaminx->g_currentFace->swapCorners(3, 4); break;
-        //Solve Faces (Reset) 1-12:
-    case 171:
-    case 172:
-    case 173:
-    case 174:
-    case 175:
-    case 176:
-    case 177:
-    case 178:
-    case 179:
-    case 180:
-    case 181:
-    case 182:
-        megaminx->resetFace(num - 170); break;
+	//Solve a Face (Reset) any one 1-12:
+    case 171 ... 182:
+        megaminx->resetFace(1+num-171); break;
     case 98: //Save Cube State to File
         SaveCubetoFile();
         break;

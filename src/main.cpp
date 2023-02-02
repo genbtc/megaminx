@@ -1,4 +1,4 @@
-const char *title = "GenBTC's Megaminx Solver v1.37";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.37";
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.3 October24 - December12 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
@@ -10,7 +10,6 @@ const char *title = "GenBTC's Megaminx Solver v1.37";
 * genBTC 2017-2020 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
 // Headers
-int main(int argc, char *argv[]);
 #ifdef _WINDOWS
 #include <windows.h>
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
@@ -22,6 +21,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include "main.h"
 #include <time.h>
 
+int currentFace = 0;
+char lastface[32];
+wchar_t lastfacew[32];
 // Resize Window glut callBack function passthrough to the camera class
 void myglutChangeWindowSize(int x, int y) { g_camera.ChangeViewportSize(x, y); }
 
@@ -32,7 +34,7 @@ void resetCameraViewport() {
     g_camera.m_angleY = START_ANGLE;
     g_camera.m_forced_aspect_ratio = 1;
     g_camera.g_areWeDraggingPoint = false;
-    myglutChangeWindowSize((int)WIDTH, (int)HEIGHT);
+    myglutChangeWindowSize(WIDTH, HEIGHT);
 }
 
 // Megaminx Dodecahedron. Creates object class and resets camera.
@@ -51,13 +53,16 @@ int main(int argc, char *argv[]) {
 #else
     sprintf(lastface, "%ls", L"DEFAULTSTARTUPTITLE");
 #endif
+	wcscpy(lastfacew,L"DEFAULTSTARTUPTITLE");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
-    glutInitWindowSize((int)WIDTH, (int)HEIGHT);
-    window = glutCreateWindow(title);
+    glutInitWindowSize(WIDTH, HEIGHT);
+    // create window
+    window = glutCreateWindow(myglutTitle);
 
+    // new megaminx
     createMegaMinx();
-    // new minx ^ also handles calls to glViewport(0,0,w,h);
+    //    ^ also handles /calls\ to glViewport(0,0,w,h);
     glClearColor(0.22f, 0.2f, 0.2f, 1.0f);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
@@ -81,9 +86,10 @@ int main(int argc, char *argv[]) {
     glutMouseFunc(myglutMousePressed);
     glutMotionFunc(myglutMousePressedMove);
     // glutPassiveMotionFunc(processMousePassiveMotion);
-    glutKeyboardFunc(myglutOnKeyboard);
-    glutSpecialFunc(myglutOnSpecialKeyPress);
     myglutIdle(0); // Idle func tracks frame-rate
+    // menu.cpp
+	glutKeyboardFunc(myglutOnKeyboard);
+    glutSpecialFunc(myglutOnSpecialKeyPress);
 
     // Main: Display Render and Loop forever
     glutDisplayFunc(myglutRenderScene);
@@ -121,14 +127,15 @@ void myglutRenderScene() {
         GetCurrentFace();
         utDrawText2D(10.f, HEIGHT - 40.f, lastface);
         // Print out Text (Help display)
-        if (!help)
+        if (help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
-        else
+        else {
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, (char *)"[H]elp");
-        if (megaminx->isFullySolved() && !help)
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, (char *)"SOLVED!");
-        else
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, (char *)"[F9] = SOLVER");
+			if (megaminx->isFullySolved() && help)
+				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, (char *)"SOLVED!");
+			else
+				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, (char *)"[F9] = SOLVER");
+		}
         shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
             static char rotquestr[21];
@@ -201,164 +208,4 @@ void myglutMousePressedMove(int x, int y) {
         OldmenuVisibleState = 0;
         g_camera.ProcessMouseMotion(oldmenux, oldmenuy, false);
     }
-}
-
-// Main Keyboard Handler
-void myglutOnKeyboard(unsigned char key, int x, int y) {
-	//Ctrl + keys first
-    const auto specialKey = glutGetModifiers();
-    if (specialKey == GLUT_ACTIVE_CTRL) {
-        switch (key) {
-        case 3: // Ctrl+C
-            glutDestroyWindow(1);
-            exit(0);
-            break;
-        case 26: // Ctrl+Z
-            megaminx->undo();
-            break;
-        case 19: // CTRL+S //Save Game State
-            SaveCubetoFile();
-            break;
-        case 18: // CTRL+R //Restore Game State
-            RestoreCubeFromFile();
-            break;
-        default:
-            break;
-        }
-    }
-    //Game commands
-    switch (key) {
-    case ' ':	// spacebar 32
-        spinning = !spinning;
-        break;
-    case 'h':
-    case 'H':	// help
-        help = !help;
-        break;
-    case 8:		// backspace
-        resetCameraViewport();
-        break;
-    case 13:	// enter
-        megaminx->resetFace(currentFace);
-        break;
-    case 27:	// escape
-        megaminx->resetQueue();
-        break;
-    case 127:	// delete
-        megaminx->scramble();
-        break;
-    default:
-        break;
-    }
-    // Cube Rotation commands
-    // rotate neighbors of current face (call relational rotation function)
-    const int dir = GetDirFromSpecialKey();
-    const auto face = g_faceNeighbors[currentFace];
-    switch (key) {
-    case 'w': // Upper(Top)
-    case 'W':
-        megaminx->rotate(face.up, dir);
-        break;
-    case 's': // Front
-    case 'S':
-        megaminx->rotate(face.front, dir);
-        break;
-    case 'a': // Left
-    case 'A':
-        megaminx->rotate(face.left, dir);
-        break;
-    case 'd': // Right
-    case 'D':
-        megaminx->rotate(face.right, dir);
-        break;
-    case 'z': // Diagonal/Corner Left
-    case 'Z':
-        megaminx->rotate(face.downl, dir);
-        break;
-    case 'c': // Diagonal/Corner Right
-    case 'C':
-        megaminx->rotate(face.downr, dir);
-        break;
-    case 'x': // Bottom
-    case 'X':
-        megaminx->rotate(face.bottom, dir);
-        break;
-	//These are admin cheater functions, and nobody should be able to 
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-        megaminx->flipCornerColor(currentFace, (int)key - 48);
-        break;
-    case '!':
-    case '#':
-    case '$':
-    case '%':
-        megaminx->flipEdgeColor(currentFace, (int)key - 32);
-        break;
-    case '@':
-        megaminx->flipEdgeColor(currentFace, (int)key - 62);
-        break;
-    default:
-        break;
-    }
-}
-// Secondary Keyboard Handler (Special Keys)
-void myglutOnSpecialKeyPress(int key, int x, int y) {
-    const int dir = GetDirFromSpecialKey();
-    switch (key) {
-    case GLUT_KEY_PAGE_UP:
-        break;
-    case GLUT_KEY_PAGE_DOWN:
-        break;
-    case GLUT_KEY_HOME:
-        break;
-    case GLUT_KEY_END:
-        break;
-    case GLUT_KEY_INSERT:
-        break;
-    case GLUT_KEY_F1:
-        // menuHandler(300);	//Rotate_white_edges +
-        // menuHandler(301);	//Rotate_white_corners
-        // manually call these (the double clone cube call was messing up)
-        MakeShadowCubeClone();	// init
-        megaminx->rotateSolveWhiteEdges(shadowDom);
-        megaminx->rotateSolveWhiteCorners(shadowDom);
-        break;
-    case GLUT_KEY_F2:
-        menuHandler(302);
-        break; // rotate_2nd-layer-edges
-    case GLUT_KEY_F3:
-        menuHandler(303);
-        break; // rotate_3rd_layer-corners
-    case GLUT_KEY_F4:
-        menuHandler(304);
-        break; // rotate_4th_layer-edges
-    case GLUT_KEY_F5:
-        menuHandler(305);
-        break; // rotate_5th_layer-corners
-    case GLUT_KEY_F6:
-        menuHandler(306);
-        break; // rotate_6th_layer-edges
-    case GLUT_KEY_F7:
-        menuHandler(307);
-        break; // rotate_7th_layer-edges
-    case GLUT_KEY_F8:
-        menuHandler(308);
-        break; // rotate_7th_layer-corners
-    case GLUT_KEY_F9:
-        menuHandler(309);
-        break; // Layers 1-7 all at once
-    case GLUT_KEY_F10:
-    case GLUT_KEY_F11:
-        // break;
-    case GLUT_KEY_F12:
-        menuHandler(312);
-        break; // Brute-Force Checker for solver. stomps on savefile.
-    default:
-        break;
-    }
-    // Route the arrow keys to the camera for motion
-    g_camera.PressSpecialKey(key, x, y);
 }

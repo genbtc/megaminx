@@ -16,12 +16,9 @@
 
 /** logging will be by using simple "printf" function */
 #define UT_LOG_WITH_PRINTF
-
 #ifdef UT_LOG_WITH_PRINTF
 #define utLOG(msg, ...) { printf("%s: ", __FUNCTION__); printf(msg, __VA_ARGS__); printf("\n"); }
 #define utLOG_ERROR(msg, ...) { printf("ERR in %s, %d: ", __FUNCTION__, __LINE__); printf(msg, __VA_ARGS__); printf("\n"); }
-#else
-// TODO: implement
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

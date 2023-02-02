@@ -1,37 +1,37 @@
 GenBTC's Megaminx Solver v1.37 (March 13, 2020)
 ========
 ![Current129](https://puu.sh/yyfd7/525320ef95.png)
-<p>It's a working simulator of a Rubik's ~~cube~~ Dodecahedron puzzle called the <b>Megaminx</b>!<br />
+<p>It's a working simulator of a <b>Megaminx</b>, a Rubik's ~~cube~~ Dodecahedron puzzle!<br />
 <p>You can test your moves by rotating a virtual cube, that works just like the real thing. <br/>
-<p>Comes preloaded with over 35 Megaminx algorithms, known sequences of moves that save you time.<br/>
-<p>It also solves itself from scratch!<br />
+<p>Comes preloaded with over 100+ Megaminx algorithms, known sequences of moves that save you time.<br/>
+<p>It also can auto-solve itself now, and print out the moves!<br />
 <p>Using this program will make you a Megaminx EXPERT!<br/>
+<p>
 <h2>Usage:</h2>
 <br>press H for on-screen Help (shown above): </br>
 <br>Right click for Menu</br>
-<br>Double click rotates. Hold Shift for reverse.</br>
+<br>Double click to rotate the current face clockwise. (+Shift to reverse).</br>
 <br>Default Front Face is Blue</br>
-<br>Left drag changes Camera (arrow keys too). MouseWheel Zooms</br>
+<br>Left drag spins Camera / spin Viewport (arrow keys too). MouseWheel Zooms</br>
 <br>Supports SaveFiles, Save & Restore</br>
+<br>Supports instanciating a virtual Shadow Cube for experimental branching</br>
 <br>Full List of Keyboard commands shown below:</br>
-<br>Code made in C++ and fully std=c++17 compliant<br>
-<br>Open source, and editable, customizable. I am taking suggestions also.<br>
-<h2>Compatible out of the box with Visual Studio 2017 Open Folder w/ CMake.</h2>
-<h2>Build & run (Linux)</h2>
-You'll need the pre-requisities: `g++ make freeglut3-dev`<br />
-Build with `make`, run with `./megaminx`
-<h2>Builds on Windows too</h2>
-Requires Freeglut(mingw), OpenGL(windows), GLU(windows)
-Download and Install MSYS2/MingW64 environment, and from the shell run: 
+<br>Code made in C++ to be std=c++17 compliant, some C still used.<br>
+<br>Open source, and editable, customizable. I am open and taking suggestions also.<br>
+<H2>Compatible with Linux, Windows, (mac untested, PR's accepted)
+<h2>Compile, Build & run (Linux)</h2>
+You'll need the pre-requisities: `apt-get install g++ make freeglut3-dev`<br />
+Build with `make`, run with `./megaminx`<br />
+<br>Compatible out of the box with Visual Studio 2017 "Open Folder w/ CMake".</br>
+<h2>Builds on Linux for Windows (MSYS2/MingW)</h2>
+Requires Freeglut(mingw), OpenGL(windows), GLU(windows)<br />
+Download and Install MSYS2/MingW64 environment, and from the shell run: <br />
 Install pre-reqs: `pacman -S base-devel freeglut`<br />
 Re-Generate the project with cmake: `cmake -G "MSYS Makefiles" .` <br />
 `cmake --build .` or regular `make` if no CMake<br />
 Easily Builds using CMake. (make sure its installed) <br />
 Alternatively, default MSYS Makefile provided. <br />
 When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, libstdc++-6.dll, libwinpthread-1.dll (from MSYS) if you want to redistribute the binaries afterward.<br />
-<h2>For Developers:</h2>
-========
-![ClassDiagram](https://puu.sh/yycv0/5032380248.png)
 <p>
 <h2>Main Menu:</h2>
 "Toggle Spinning"<br>
@@ -91,6 +91,53 @@ When using MingW freeglut, only requires libfreeglut.dll, libgcc_s_dw2-1.dll, li
 "Edge Permutation 3":  r u R' F', r  u  R' U', R' f r2 U' R' (5 to 1, 1 to 2, 2 to 5) MUSHROOM<br>
 "Edge Permutation 4":  r u R' u , R' U' r2 U', R' u R' u, r U2' (5 to 2, 2 to 1, 1 to 5) MUSHROOM<br>
 "Edge Permutation 5":  l r u2, L' u R', l U' r u2, L' u2 R' (5 and 3 swap, 1 and 2 swap) BUNNY<br>
+
+<h2>For Developers:</h2>
+Very simple project: <br />
+	g++ -c src/main.cpp <br />
+	g++ -c src/engine/center.cpp <br />
+	g++ -c src/engine/edge.cpp <br />
+	g++ -c src/engine/corner.cpp <br />
+	g++ -c src/engine/face.cpp <br />
+	g++ -c src/engine/utils.cpp <br />
+	g++ -c src/engine/megaminx.cpp <br />
+	g++ -c src/engine/shadow.cpp <br />
+	g++ -c src/engine/solve.cpp <br />
+	g++ -c src/engine/load.cpp <br />
+	g++ -c src/ui/camera.cpp <br />
+	g++ -c src/ui/opengl.cpp <br />
+	g++ -c src/ui/menu.cpp <br />
+
+main.cpp	-	Main() entry point, GLUT callbacks, render function, keyboard handler. "backend" foundation. the kernal <br />
+engine/megaminx.cpp	-	OpenGL render function, Main puzzle. construct draw calls according to puzzle rules. mediate function call I/O between front and back end. <br />
+engine/shadow.cpp	-	a virtual version of the cube that only exists in theory. a Shadow Cube. Can be created and destroyed at whim without affecting the main one, and State can be "cloned" back and forth. Useful for iterating moves into the future, then throwing them away. SNAPSHOTS. <br />
+engine/solve.cpp	-	longest function, all the actual cube transforms, that describe all the algorithms <br />
+engine/face.cpp	    -	Conceptual heart of how the puzzle part is turned into code logic <br />
+engine/piece.h		-	base class common definitions for basing the following on: <br />
+engine/center.cpp	-	center primitive. Very simple openGL geometry. simple case statement abstracts important draw algorithm logic <br />
+engine/corner.cpp	-	corner primitive. a little bit more openGL geometry, same thing. <br />
+engine/edge.cpp		-	edge primitive. a little bit less openGL geometry, same thing. <br />
+engine/load.cpp		-	Saves State. save/restore from File support, and clone/destroy virtual shadow cube <br />
+ui/opengl.cpp		-	main orthographic viewport projection setup and various GL helpers <br />
+ui/camera.cpp		-	the viewport. everything moves by shifting the camera's projected view (code feels like a mirror) <br />
+ui/menu.cpp			-	on screen display text. GUI. maps C functions to every human desires from low to high to impossible levels <br />
+Headers:
+	bytes	-	headers filename
+	19326	-	./src/engine/face.h
+	11120	-	./src/engine/piece.h
+	7999	-	./src/engine/megaminx.h
+	5643	-	./src/engine/color.h
+	2096	-	./src/ui/camera.h
+	1683	-	./src/main.h
+	1513	-	./src/ui/opengl.h
+	311		-	./src/engine/corner.h
+	299		-	./src/engine/edge.h
+	269		-	./src/engine/center.h
+
+==============
+ClassDiagram.png not fullly updated.
+
 <h2> Programming Credits </h2>
 genBTC - genBTC@gmx.com - December 2017, all of 2018, and January 2019 and October 2019 - February 2020(C)<br>
+Updated README 2023 and tried to make better.
 Uses forked code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com<br>

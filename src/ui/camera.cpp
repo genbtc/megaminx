@@ -18,6 +18,8 @@ Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_isLeftPressed(false),
 {
 }
 
+void doDoubleClickRotate(int x, int y);
+
 void Camera::ChangeViewportSize(int w, int h)
 {
     // Prevent a divide by zero, when window is too short

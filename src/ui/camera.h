@@ -44,9 +44,6 @@ public:
 
 int getCurrentFaceFromAngles(int x, int y);
 
-//in main.h
-extern void doDoubleClickRotate(int, int);
-
 //#include "utils_math.h"
 /*
 ** simple class that can calculate ray into scene from mouse position
