@@ -18,7 +18,7 @@ Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_isLeftPressed(false),
 {
 }
 
-void doDoubleClickRotate(int x, int y);
+void doDoubleClickRotate(int x, int y); //main.cpp
 
 void Camera::ChangeViewportSize(int w, int h)
 {
@@ -191,7 +191,8 @@ int getCurrentFaceFromAngles(int x, int y)
     const bool y3 = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
     const bool y4a = y >= (0 - d) && y <= (0 + d);                //0
     const bool y4b = y >= (360 - d) && y <= (360 + d);              //360
-    //Edited so horizontal mouse-movement isnt backwards anymore when cube is vertically inverted (white face up), reliant on fix w/ Camera.cpp@Line126
+    //Edited so horizontal mouse-movement isnt backwards anymore when cube 
+    // is vertically inverted (white face up), reliant on fix w/ Camera.cpp@Line126
     constexpr int toplistA[5] = { 12,11,10,9,8 };
     constexpr int toplistB[5] = { 3,4,5,6,2 };
     constexpr int botlistA[5] = { 11,12,8,9,10 };
@@ -219,10 +220,10 @@ int getCurrentFaceFromAngles(int x, int y)
             if (face) return face;
         }
     }
-    if (y3 && !face)    //Bottom {1}
-        face = 1;
-    else if ((y4a || y4b) && !face) //Top {7}
-        face = 7;
+    if (y3 && !face)
+        face = 1;	//Bottom {1}
+    else if ((y4a || y4b) && !face)
+        face = 7;	//Top {7}
     return face;
 }
 

@@ -43,24 +43,24 @@ void utResetPerspectiveProjection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void utDrawText2D(float x, float y, void *font, char *string)
+void utDrawText2D(float x, float y, void *font, const char *string)
 {
     char *c;
-    // set position to start drawing fonts
+    // set position to start drawing fonts 2D
     glRasterPos2f(x, y);
     // loop all the characters in the string
-    for (c=string; *c != '\0'; c++) {
+    for (c=(char*)string; *c != '\0'; c++) {
         glutBitmapCharacter(font, *c);
     }
 }
 
-void utDrawText3D(float x, float y, float z, void *font, char *string)
+void utDrawText3D(float x, float y, float z, void *font, const char *string)
 {
     char *c;
-    // set position to start drawing fonts
+    // set position to start drawing fonts 3D
     glRasterPos3f(x, y, z);
     // loop all the characters in the string
-    for (c = string; *c != '\0'; c++) {
+    for (c=(char*)string; *c != '\0'; c++) {
         glutBitmapCharacter(font, *c);
     }
 }

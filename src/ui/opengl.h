@@ -25,18 +25,18 @@
 // 2D and TEXT MODE
 void utSetOrthographicProjection(float scrW, float scrH);
 void utResetPerspectiveProjection();
-void utDrawText2D(float x, float y, void *font, char *string);
-void utDrawText3D(float x, float y, float z, void * font, char * string);
+void utDrawText2D(float x, float y, void *font, const char *string);
+void utDrawText3D(float x, float y, float z, void *font, const char *string);
 
 // simplier version for default font...
-inline void utDrawText2D(float x, float y, char *string)
+inline void utDrawText2D(float x, float y, const char *string)
 {
     utDrawText2D(x, y, GLUT_BITMAP_8_BY_13, string);
 }
 // simplier version for default font...
 inline void utDrawText3D(float x, float y, float z, const char *string)
 {
-    utDrawText3D(x, y, z, GLUT_BITMAP_8_BY_13, (char *)string);
+    utDrawText3D(x, y, z, GLUT_BITMAP_8_BY_13, string);
 }
 
 void utCalculateAndPrintFps(float x, float y);

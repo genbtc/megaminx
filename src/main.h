@@ -10,34 +10,33 @@ const double REFRESH_RATE = 60.0;
 const double REFRESH_IN_MS = (1000.0 / REFRESH_RATE);
 const unsigned int REFRESH_WAIT = (const unsigned int)REFRESH_IN_MS;
 // initial window screen size
-const int WIDTH = 700;
-const int HEIGHT = 700;
+const int WIDTH = 640;
+const int HEIGHT = 640;
 const double ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
 const double START_ANGLE = 60.0f;
 const double view_distance_view_angle = 20;
 ////////////////////////////////////////////////////////////////////////
 
-// global main Megaminx object (pointer, managed)
-extern Megaminx* megaminx;
-extern Megaminx* shadowDom;
-
-// global vars
-static double g_appRenderTimeTotal = 0.0;
-static double g_appIdleTime = 0.0;
-static bool spinning = false;
-static bool help = false;
-extern int currentFace;
-extern char lastface[32];
-extern wchar_t lastfacew[32];
-static int shadowQueueLength = 0;
-static double solveravg = 0.;
-
 // global camera.cpp
 static Camera g_camera;
+
+// global main.cpp
+char lastface[32];
+int currentFace;
+bool spinning = false;
+bool help = false;
+double g_appRenderTimeTotal = 0.0;
+double g_appIdleTime = 0.0;
+int shadowQueueLength = 0;
+double solveravg = 0.;
 
 // main main.cpp
 int main(int argc, char *argv[]);
 void createMegaMinx();
+
+//global megaminx.cpp
+extern Megaminx* megaminx;
+extern Megaminx* shadowDom;
 
 // GLUT main.cpp - Glut function callbacks prototypes
 void resetCameraViewport();
