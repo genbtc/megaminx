@@ -84,15 +84,23 @@ target_link_libraries(${PACKAGE_NAME} PRIVATE GLUT::GLUT)
 
 if(UNIX OR LINUX OR MINGW)
 	message("checking confirmation of working GL subsystems...")
-#  OpenGL_GL_PREFERENCE has not been set to "GLVND" or "LEGACY", so for
-#  compatibility with CMake 3.10 and below the legacy GL library will be used
-#legacy=
-#    OPENGL_gl_LIBRARY: /usr/lib64/libGL.so
-#glvnd=
-#    OPENGL_opengl_LIBRARY: /usr/lib64/libOpenGL.so
-#    OPENGL_glx_LIBRARY: /usr/lib64/libGLX.so
-#Either works
-#	set(OpenGL_GL_PREFERENCE "GLVND")
+#    CMake Warning (dev) at /usr/share/cmake/Modules/FindOpenGL.cmake:315
+#    (message):Policy CMP0072 is not set: FindOpenGL prefers GLVND by default when
+#    available.  Run "cmake --help-policy CMP0072" for policy details.  Use the
+#    cmake_policy command to set the policy and suppress this warning.
+#    
+#    FindOpenGL found both a legacy GL library:
+#      OPENGL_gl_LIBRARY: /usr/lib64/libGL.so
+#    
+#    and GLVND libraries for OpenGL and GLX:
+#      OPENGL_opengl_LIBRARY: /usr/lib64/libOpenGL.so
+#      OPENGL_glx_LIBRARY: /usr/lib64/libGLX.so
+#    
+#    OpenGL_GL_PREFERENCE has not been set to "GLVND" or "LEGACY", so for
+#    compatibility with CMake 3.10 and below the legacy GL library will be used.
+#Either works.
+	set(OpenGL_GL_PREFERENCE "GLVND")
+    message("OpenGL Preference set to GLVND instead of legacy...")
     # Find Library, _need_ a OpenGL (or Xmesa)
     find_package(OpenGL REQUIRED)
     if(NOT OPENGL_FOUND) #(or OPENGL_XMESA_FOUND)
