@@ -196,8 +196,10 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         //basic overflow protection:
         if (loopcount > 101)
             break;
+        //initialize arrays to hold pieces that are already solved
         bool facesSolved[12] = { false };
         bool piecesSolved[5] = { false };
+        //Start detecting what pieces are solved
         shadowDom->DetectSolvedEdgesUnOrdered(0, piecesSolved);
         bool areEdgesFullySolved[5] = { false };
         shadowDom->DetectSolvedEdges(0, &areEdgesFullySolved[0]);
@@ -207,22 +209,28 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             if (firstSolvedPiece == -1 && piecesSolved[a] == true)
                 firstSolvedPiece = a;
         }
+        //if its solved early <5, increase loop to continue to next piece
         while (i < 5 && areEdgesFullySolved[i] == true)
             i++;
+        //if everything is solved, its done
         auto allSolved1 = std::all_of(std::begin(piecesSolved), std::end(piecesSolved), [](bool j) { return j; });
         auto allSolved2 = std::all_of(std::begin(areEdgesFullySolved), std::end(areEdgesFullySolved), [](bool j) { return j; }); //TT88-2
         if (i >= 5 && allSolved1 && allSolved2) {
             allSolved = true;   //TT12-huh
             break;
         }
-        //means we got to the end but something else came undone, go back and fix it.
+        //means we got to the end of the first pass,
+        // but something else came undone, go back and fix it, one more pass.
         else if (i >= 5) {
             i = 0;
             continue;
         }
+        //solving detection is done.
+        //By this point its theoretically solved, stored in the shadowDom,
         EdgeLayerAssist l{ shadowDom, i };
         assert(l.colormatchA != l.colormatchB); //sanity check.
 
+        //Start manipulating the cube:
         //Rotates the white face to its solved position, first solved edge matches up to its face.
         if (firstSolvedPiece != -1) {
             //NOTE: Doing this over and over is wasting moves solving the partial-solved top every time.
@@ -232,6 +240,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             if (findIfPieceSolved > 0 && findIfPieceSolved < 5 && offby > 0) {
                 offby *= -1;
                 shadowDom->shadowMultiRotate(WHITE, offby);
+                //this resets our starting point reset loop too.
                 continue;
             }
         }
@@ -240,6 +249,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA) : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
             //Set up Rotated White top to be in-line with the face we want to spin in.
             shadowDom->shadowMultiRotate(WHITE, offby);
+            //rotate pieces in
             if (l.isOnRow34 && l.colormatchA) {
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
@@ -291,11 +301,13 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         int findIfPieceSolved = shadowDom->findEdge(0); //always piece 0
         if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
             findIfPieceSolved *= -1;
-            shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved); //redundant.
+            shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved); //redundant, line243 reverses this
         }
     }
-    //After all loops, load the shadow Queue into the real queue
+    //After all loops, load the shadow Queue into the real megaminx queue,
+    // commit solved state.
     updateRotateQueueWithShadow(shadowDom);
+    //Error Checking, make sure we don't progress past any ambiguous states during development
     assert(unknownloop == 0);
 }
 
