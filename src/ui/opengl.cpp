@@ -65,6 +65,13 @@ void utDrawText3D(float x, float y, float z, void *font, const char *string)
     }
 }
 
+inline void utDrawText2D(float x, float y, const char *string) {
+    utDrawText2D(x, y, GLUT_BITMAP_8_BY_13, string);
+}
+inline void utDrawText3D(float x, float y, float z, const char *string) {
+    utDrawText3D(x, y, z, GLUT_BITMAP_8_BY_13, string);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {

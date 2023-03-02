@@ -1,10 +1,11 @@
-/* MegaMinx v1.37 - 2017+2018+2019+2020 - genBTC edition
+/* MegaMinx v1.38 - 2017+2018+2019+2020+2023 - genBTC edition
  * Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
  * genBTC January 2019 - human rotate auto solve layers 1-6
    genBTC October 2019 - fixup code. started gray layer 7 solver
    genBTC February 2020 - completed gray layer 7 solver
+   genBTC February 2023 - taking another look at old code
  */
 #include "megaminx.h"
 #include <algorithm>
@@ -516,7 +517,7 @@ void Megaminx::resetFivePieces(const int indexes[5]) {
     for (int i = 0; i < 5; ++i) {
         auto &destpiece = pieces[indexes[i]];
         auto &sourcepiece = pieces[findPiece<T>(indexes[i])];
-        if (sourcepiece.data.pieceNum == destpiece.defaultPieceNum)
+        if (sourcepiece.data.pieceNum == destpiece._defaultPieceNum)
             destpiece.swapdata(sourcepiece.data);
     }
     //Pieces are in the right place but maybe wrong orientation, so flip the colors:
