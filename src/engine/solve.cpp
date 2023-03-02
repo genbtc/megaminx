@@ -1,4 +1,4 @@
-#include "megaminx.h"
+#include "megaminx.hpp"
 
 
 //the most flexible
@@ -361,8 +361,8 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
         else if (l.isOnRow2) {
             int defaultDir = Face::CW;
-            int offby = l.sourceCornerIndex - i - 5;
-            megaminxColor turnface;
+            //int offby = l.sourceCornerIndex - i - 5;
+            megaminxColor turnface=BLACK;
             //2nd rotation puts them on the gray face.
             if (l.ontopA && l.ontopB)
                 turnface = l.cornerFaceNeighbors.c;
@@ -376,7 +376,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         //Row 3 pieces go to gray face as temporary holding (1 CW turn) (ends up on row4)
         else if (l.isOnRow3) {
             int defaultDir = Face::CW;
-            int offby = l.sourceCornerIndex - i - 10;
+            //int offby = l.sourceCornerIndex - i - 10;
             int x, y;
             if (l.ontopA) {
                 x = l.cornerFaceNeighbors.b;
@@ -518,8 +518,8 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
         if (l.isOnRow2) {
             int defaultDir = Face::CW;
-            int offby = l.sourceCornerIndex - i - 5;
-            megaminxColor turnface;
+            //int offby = l.sourceCornerIndex - i - 5;
+            megaminxColor turnface=BLACK;
             //2nd rotation puts them on the gray face.
             if (l.ontopA && l.ontopB)
                 turnface = l.cornerFaceNeighbors.c;
@@ -537,7 +537,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         //Row 3 pieces go to gray face as temporary holding (1 CCW turn) (ends up on row4)
         else if (l.isOnRow3) {
             int defaultDir = Face::CCW;
-            int offby = l.sourceCornerIndex - i - 10;
+            //int offby = l.sourceCornerIndex - i - 10;
             int x = 0, y = 0;
             if (l.ontopA) {
                 x = l.cornerFaceNeighbors.b;
@@ -900,7 +900,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             }
         }
 //5-way cycle -2
-         if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 29, 25, 26, 27)) //TT55-3
+        if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 29, 25, 26, 27)) //TT55-3
         {
             bulk = shadowDom->ParseAlgorithmString(g_AlgoStrings[40].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo17@Blue (60 moves to 48)
         }
@@ -1323,14 +1323,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //iterate through the piece/color lists and make some easy compound conditional aliases
         bool fullySolvedOrder = checkPieceMatches(pieceOrder, 15, 16, 17, 18, 19);
         bool hasTwoAdjacentSolved = false;
-        int adjacentStart = 0;
+        //int adjacentStart = 0;
         for (int k = 0; k < 5; ++k) {
             if ((k + 15 == pieceOrder[k]) &&
                 ((k < 4 && pieceOrder[k] + 1 == pieceOrder[k + 1]) ||
                 (k == 4 && pieceOrder[4] == 19 && pieceOrder[0] == 15)))
             {
                 hasTwoAdjacentSolved = true;
-                adjacentStart = k;
+                //adjacentStart = k;
             }
         }
 //Not Needed. L7-Edges is mandatorily run as a pre-requisite.

@@ -7,7 +7,7 @@
    genBTC February 2020 - completed gray layer 7 solver
    genBTC February 2023 - taking another look at old code
  */
-#include "megaminx.h"
+#include "megaminx.hpp"
 #include <algorithm>
 
 // global main Megaminx object (pointer, managed)

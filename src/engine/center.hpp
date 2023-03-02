@@ -1,6 +1,6 @@
 #ifndef __CENTER_H__
 #define __CENTER_H__
-#include "piece.h"
+#include "piece.hpp"
 
 class Center : public Piece {
 public:

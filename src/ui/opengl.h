@@ -2,7 +2,7 @@
  *  @brief useful utilities for opengl based apps
  *  @author Bartlomiej Filipek
  *  @date March 2011
-  * @author genBTC Edited 2017*
+  * @author genBTC Edited 2017+2023*
  */
 
 #pragma once

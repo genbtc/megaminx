@@ -1,4 +1,4 @@
-#include "megaminx.h"
+#include "megaminx.hpp"
 //Shadow.cpp - A virtual verison of the cube that only exists in theory.
 //Can be created and destroyed at whim without affecting the main one,
 // and State can be cloned back and forth.
@@ -70,4 +70,31 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 void Megaminx::bulkShadowRotate(Megaminx* shadowDom, std::vector<numdir> bulk) {
     for (auto op : bulk)    //+1 the 0-11 faces
         shadowDom->shadowRotate(op.num + 1, op.dir);
+}
+
+//Create megaminx array, from pieces read from a file, and put into shadow array.
+template <typename T>
+int Megaminx::createMegaMinxFromShadowVec(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors, Megaminx* shadowDom)
+{
+    const auto megaminxArray = this->getPieceArray<T>(0);
+    const auto shadowArray = shadowDom->getPieceArray<T>(0);
+    const auto arrsize = getMaxNumberOfPieces<T>();
+    for (int i = 0; i < arrsize; ++i) {
+        auto &p = readPieces[i];
+        megaminxArray[i].data = shadowArray[p].data;
+    }
+    for (int i = 0; i < readPieceColors.size(); ++i) {
+        auto &p = readPieces[i];
+        auto &c = readPieceColors[i];
+        //Pieces are in the right place but maybe wrong orientation, so Flip the colors:
+        while (megaminxArray[i].data.flipStatus != c)
+            megaminxArray[i].flip();
+    }
+    return 0;
+} //where T = Corner or Edge
+int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors, Megaminx* shadowDom) {
+    return createMegaMinxFromShadowVec<Corner>(readCorners, readCornerColors, shadowDom);
+}
+int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors, Megaminx* shadowDom) {
+    return createMegaMinxFromShadowVec<Edge>(readEdges, readEdgeColors, shadowDom);
 }

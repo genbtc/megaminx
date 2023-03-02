@@ -1,4 +1,4 @@
-#include "center.h"
+#include "center.hpp"
 
 void Center::createAxis(int n, double* target)
 {

@@ -1,4 +1,4 @@
-#include "edge.h"
+#include "edge.hpp"
 
 void Edge::createAxis(int n, double* target)
 {

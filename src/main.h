@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __MAIN_H__
 #define __MAIN_H__
-#include "engine/megaminx.h"
+#include "engine/megaminx.hpp"
 #include "ui/camera.hpp"
 
 ////////////////////////////////////////////////////////////////////////

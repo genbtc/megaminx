@@ -1,9 +1,9 @@
 #ifndef __FACE_H__
 #define __FACE_H__
 
-#include "center.h"
-#include "edge.h"
-#include "corner.h"
+#include "center.hpp"
+#include "edge.hpp"
+#include "corner.hpp"
 #include <vector>
 #include <variant>
 #include <type_traits>

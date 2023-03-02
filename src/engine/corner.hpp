@@ -1,6 +1,6 @@
 #ifndef __CORNER_H__
 #define __CORNER_H__
-#include "piece.h"
+#include "piece.hpp"
 
 class Corner : public Piece {
 public:

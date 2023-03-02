@@ -1,4 +1,4 @@
-#include "megaminx.h"
+#include "megaminx.hpp"
 
 Face::Face()
 {

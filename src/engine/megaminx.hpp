@@ -1,7 +1,7 @@
 #ifndef __MEGAMINX_H__
 #define __MEGAMINX_H__
 
-#include "face.h"
+#include "face.hpp"
 #include <vector>
 #include <stack>
 #include <queue>
@@ -59,10 +59,6 @@ public:
     std::vector<int> getAllPiecesColorFlipStatus();
     std::vector<int> getAllCornerPiecesColorFlipStatus();
     std::vector<int> getAllEdgePiecesColorFlipStatus();
-   template <typename T>
-    int LoadNewPiecesFromVector(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors);
-    int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
-    int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc);
     const std::vector<numdir> ParseStoredAlgorithmString(AlgoString algorithmString, const colordirs &loc);
    template <typename T>
@@ -118,6 +114,11 @@ public:
     void highYmiddleW() {
         resetFiveCorners(m_fourthLayerEdgesA);
     }
+    //In Shadow.cpp
+   template <typename T>
+    int createMegaMinxFromShadowVec(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors, Megaminx* shadowDom);
+    int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors, Megaminx* shadowDom);
+    int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors, Megaminx* shadowDom);
 
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);

@@ -1,4 +1,4 @@
-#include "corner.h"
+#include "corner.hpp"
 
 void Corner::createAxis(int n, double* target)
 {
