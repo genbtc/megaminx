@@ -4,17 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
-            "name": "(Windows) Launch",
-            "type": "cppvsdbg",
+            "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/megaminx.exe",
+            "name": "Debug",
+            "program": "${workspaceFolder}/Megaminx",
             "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/",
-            "environment": [],
-            "externalConsole": true
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

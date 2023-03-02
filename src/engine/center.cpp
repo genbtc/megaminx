@@ -39,7 +39,7 @@ void Center::init(int n)
 void Center::render() const
 {
     glColor3dv(data._color[0]);
-    makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
+    makeGLpentagon(_vertex, 1.0, GL_POLYGON);
     glLineWidth(4);
     glColor3d(0, 0, 0);
     makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);

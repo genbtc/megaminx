@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.8)
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 # Confirmed to work on Linux 2023
 set(PACKAGE_NAME "Megaminx")
-set(PACKAGE_VERSION "1.3.7")
+set(PACKAGE_VERSION "1.3.8")
 project(${PACKAGE_NAME})
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME ${PACKAGE_NAME})
@@ -55,7 +55,7 @@ add_executable(${PACKAGE_NAME} WIN32
     src/main.cpp
     src/ui/camera.cpp
     src/ui/opengl.cpp
-    src/ui/menu.cpp
+#    src/ui/menu.cpp
     src/engine/center.cpp
     src/engine/corner.cpp
     src/engine/edge.cpp

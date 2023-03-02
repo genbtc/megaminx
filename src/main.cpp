@@ -1,9 +1,10 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.37";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.3.8";
 ///////////////////////////////////////////////////////////////////////////////
-/* MegaMinx2 - v1.3 October24 - December12 2017 - genBTC mod
+/* MegaMinx2 - v1.3 October24 - December12, 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
-             - v1.37 Mar 13, 2020
+             - v1.3.7 Mar 13, 2020
+             - v1.3.8 Feb 03, 2023
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:
@@ -301,7 +302,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
 }
 // Secondary Keyboard Handler (Special Keys)
 void myglutOnSpecialKeyPress(int key, int x, int y) {
-    const int dir = GetDirFromSpecialKey();
+    //const int dir = GetDirFromSpecialKey();
     switch (key) {
     case GLUT_KEY_PAGE_UP:
         break;

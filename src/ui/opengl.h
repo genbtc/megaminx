@@ -1,9 +1,8 @@
 /** @file opengl.h
  *  @brief useful utilities for opengl based apps
- *
  *  @author Bartlomiej Filipek
  *  @date March 2011
-  * @Edited by genBTC 2017*
+  * @author genBTC Edited 2017*
  */
 
 #pragma once
@@ -14,14 +13,6 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
-/** logging will be by using simple "printf" function */
-#define UT_LOG_WITH_PRINTF
-#ifdef UT_LOG_WITH_PRINTF
-#define utLOG(msg, ...) { printf("%s: ", __FUNCTION__); printf(msg, __VA_ARGS__); printf("\n"); }
-#define utLOG_ERROR(msg, ...) { printf("ERR in %s, %d: ", __FUNCTION__, __LINE__); printf(msg, __VA_ARGS__); printf("\n"); }
-#endif
-
-///////////////////////////////////////////////////////////////////////////////
 // 2D and TEXT MODE
 void utSetOrthographicProjection(float scrW, float scrH);
 void utResetPerspectiveProjection();

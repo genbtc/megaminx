@@ -2,7 +2,7 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 #include "engine/megaminx.h"
-#include "ui/camera.h"
+#include "ui/camera.hpp"
 
 ////////////////////////////////////////////////////////////////////////
 //framerate cap for monitor with 60 Hz:
@@ -57,11 +57,18 @@ void myglutMenuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
 static int window;
 static int submenu0_id, submenu1_id, submenu2_id, submenu3_id,
-          menu_id, submenu4_id, submenu5_id, submenu6_id;
+           submenu4_id, submenu5_id, submenu6_id, menu_id;
 
 // load.cpp
 void SaveCubetoFile();
 void RestoreCubeFromFile();
 void MakeShadowCubeClone();
+
+/** logging will be by using simple "printf" function */
+#define UT_LOG_WITH_PRINTF
+#ifdef UT_LOG_WITH_PRINTF
+#define utLOG(msg, ...) { printf("%s: ", __FUNCTION__); printf(msg, __VA_ARGS__); printf("\n"); }
+#define utLOG_ERROR(msg, ...) { printf("ERR in %s, %d: ", __FUNCTION__, __LINE__); printf(msg, __VA_ARGS__); printf("\n"); }
+#endif
 
 #endif //__MAIN_H__

@@ -1,16 +1,15 @@
-/** @file camera.cpp
- *  @brief common camera & input functions
- *
- *  @author Bartlomiej Filipek
- *  @date April 2011
- *  @Edited //by genBTC 2017 for megaminx
- */
-#include "opengl.h"
-#include "camera.h"
+/** \file camera.cpp
+ *  \brief common camera & input functions
+ *  \author Bartlomiej Filipek - April 2011
+ *  \author genBTC - 2017 - edited for megaminx
+ *  \date 2023
+**/
+
+#include "camera.hpp"
+#include <GL/gl.h>
+#include <GL/glut.h>
 #include <algorithm>
-//////////////////////////////////////////////////////////////////////////
-// Camera
-//////////////////////////////////////////////////////////////////////////
+
 Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0), m_isLeftPressed(false),
     m_isMiddlePressed(false), m_mouseX(0),
     m_mouseY(0), m_screenRatio(0), m_forced_aspect_ratio(0), m_screenWidth(0), m_screenHeight(0),
@@ -226,42 +225,3 @@ int getCurrentFaceFromAngles(int x, int y)
         face = 7;	//Top {7}
     return face;
 }
-
-
-//////////////////////////////////////////////////////////////////////////
-// MouseRayTestData
-//////////////////////////////////////////////////////////////////////////
-/*
-MouseRayTestData::MouseRayTestData()
-    : m_start(0.0)
-    , m_end(0.0)
-    , m_lastT(0.0)
-    , m_hit(false)
-{
-}
-
-void MouseRayTestData::CalculateRay(const Camera &cam)
-{
-    double matModelView[16], matProjection[16];
-    int viewport[4];
-
-    glGetDoublev( GL_MODELVIEW_MATRIX, matModelView );
-    glGetDoublev( GL_PROJECTION_MATRIX, matProjection );
-    glGetIntegerv( GL_VIEWPORT, viewport );
-
-    const double winX = (double)cam.m_mouseX;
-    const double winY = viewport[3] - (double)cam.m_mouseY;
-
-    gluUnProject(winX, winY, 0.0, matModelView, matProjection, viewport, &m_start.x, &m_start.y,
-                 &m_start.z);
-    gluUnProject(winX, winY, 1.0, matModelView, matProjection, viewport, &m_end.x, &m_end.y, &m_end.z);
-
-    const Vec3d v2 = m_end - m_start;
-    const Vec3d pt2 = m_start + v2*m_lastT;
-
-    m_point = pt2;
-
-    m_dir = m_end - m_start;
-    m_dir.Normalize();
-}
-*/
