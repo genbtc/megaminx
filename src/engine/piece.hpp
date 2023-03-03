@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include "color.hpp"
+#include "piece-color.hpp"
 #include "../ui/opengl.h"
 
 using std::acos;
