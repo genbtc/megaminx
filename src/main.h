@@ -3,6 +3,7 @@
 #define __MAIN_H__
 #include "engine/megaminx.hpp"
 #include "ui/camera.hpp"
+#include "engine/load.hpp"
 
 ////////////////////////////////////////////////////////////////////////
 //framerate cap for monitor with 60 Hz:
@@ -58,11 +59,6 @@ void utPrintHelpMenu(float w, float h);
 static int window;
 static int submenu0_id, submenu1_id, submenu2_id, submenu3_id,
            submenu4_id, submenu5_id, submenu6_id, menu_id;
-
-// load.cpp
-void SaveCubetoFile();
-void RestoreCubeFromFile();
-void MakeShadowCubeClone();
 
 /** logging will be by using simple "printf" function */
 #define UT_LOG_WITH_PRINTF

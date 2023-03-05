@@ -10,17 +10,27 @@ extern Megaminx* shadowDom;
 #define EDGEFILECOLORS "EdgeColors30.dat"
 #define CORNERFILE "CornerPositions20.dat" 
 #define CORNERFILECOLORS "CornerColors20.dat"
+#define MEGAMINXBLOB "Megaminx.SAVEGAME.txt"
 //TODO: combine into 1 file-format, its un-human un-readable un-correlatable numbers as is.
-
-//Save/Store Cube - (Write VectorFile)
-void SaveCubetoFile() {
-    serializeVectorInt5(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
-    serializeVectorInt5(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
-    serializeVectorInt5(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
-    serializeVectorInt5(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
+//DONE!
+//Save/Store Cube - (Write 1 File with 4 lines)
+void SaveCubetoFileMonolithic() {
+    std::ofstream file(MEGAMINXBLOB);
+    file << "EdgePiecesPosition: " << serializeVectorIntToString(megaminx->getAllEdgePiecesPosition()) << "\n";
+    file << "CornerPiecesPosition: " << serializeVectorIntToString(megaminx->getAllCornerPiecesPosition()) << "\n";
+    file << "EdgePiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllEdgePiecesColorFlipStatus()) << "\n";
+    file << "CornerPiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllCornerPiecesColorFlipStatus()) << "\n";
 }
 
-//Restore/Load Cube - (Read VectorFile)
+//Save/Store Cube - (Write 4 Vector Files)
+void SaveCubetoFile() {
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
+    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
+    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
+}
+
+//Restore/Load Cube - (Read 4 Vector Files)
 void RestoreCubeFromFile() {
     if (shadowDom)
         delete shadowDom;
@@ -42,8 +52,8 @@ void MakeShadowCubeClone() {
     shadowDom->LoadNewCornersFromOtherCube(megaminx);
 }
 
-//helper function takes a vector of any length and writes 5 elements per line to a text file
-void serializeVectorInt5(std::vector<int> vec, std::string filename) {
+//write file - Input: a vector of any length / Output: 5 elements per line to a text file
+void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename) {
     std::ofstream file(filename);
     int count = 0;
     for (auto &v : vec) {
@@ -53,6 +63,18 @@ void serializeVectorInt5(std::vector<int> vec, std::string filename) {
             file << "\n";
     }
     file.close();
+}
+
+//write file - Input: a vector of any length / Output: 5 elements per line to a text file
+std::string serializeVectorIntToString(std::vector<int> vec) {
+    std::ostringstream vectorString;
+    int count = 0;
+    for (auto &v : vec) {
+        vectorString << " " << v << " ";
+        count++;
+    }
+    assert(count==vec.size());
+    return vectorString.str();
 }
 
 //basic parser for reading vectors from file.

@@ -3,7 +3,14 @@
 #include <vector>
 #include <string>
 
-void serializeVectorInt5(std::vector<int> vec, std::string filename);
+// load.cpp
+void SaveCubetoFileMonolithic();
+void SaveCubetoFile();
+void RestoreCubeFromFile();
+void MakeShadowCubeClone();
+
+void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename);
+std::string serializeVectorIntToString(std::vector<int> vec);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
 
-#endif
+#endif //__LOAD_H__
