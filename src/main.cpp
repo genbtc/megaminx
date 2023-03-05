@@ -21,6 +21,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include <cstdlib>
 #include <time.h>
 #include "main.h"
+#include "engine/load.hpp"
+
+// global main.cpp
+char lastface[32];
+int currentFace;
+bool spinning = false;
+bool help = false;
+double g_appRenderTimeTotal = 0.0;
+double g_appIdleTime = 0.0;
+int shadowQueueLength = 0;
+double solveravg = 0.;
 
 // Resize Window glut callBack function passthrough to the camera class
 void myglutChangeWindowSize(int x, int y) { g_camera.ChangeViewportSize(x, y); }
@@ -51,7 +62,7 @@ int main(int argc, char *argv[]) {
     glutInitWindowSize(WIDTH, HEIGHT);
     // create window
     window = glutCreateWindow(myglutTitle);
-	sprintf(lastface,"%ls",L"ssssssssssssssssS");
+	sprintf(lastface, "%s", "01234567890123456789");
     // new megaminx
     createMegaMinx();
     //    ^ also handles /calls\ to glViewport(0,0,w,h);
@@ -92,7 +103,7 @@ int main(int argc, char *argv[]) {
 // Wait for Refresh Rate, FrameRate Cap.
 void myglutIdle(int) {
     glutPostRedisplay();
-    glutTimerFunc(REFRESH_WAIT - 1, myglutIdle, 0);
+    glutTimerFunc(REFRESH_WAIT_TIME - 1, myglutIdle, 0);
 }
 
 // OpenGL World Render Main Scene Function:
