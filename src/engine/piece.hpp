@@ -93,6 +93,17 @@ public:
                 data._colorNum[2] == color;
     }
 
+
+    //Function to reverse the Array.
+    template <typename T>
+    void arrayReverse(T arr[], int r, int n) {
+        for(int i = i; i<n/2; ++i) {
+            int temp = arr[i];
+            arr[i] = arr[n-i-1];
+            arr[n-i-1] = temp;        
+        }
+    }
+
     // Function to Left rotate an array by r positions, n length
     template <typename T>
     void leftRotate(T arr[], int r, int n)
