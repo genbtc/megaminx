@@ -197,7 +197,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         if (loopcount > 101)
             break;
         //initialize arrays to hold pieces that are already solved
-        bool facesSolved[12] = { false };
+        bool facesSolved[numFaces] = { false };
         bool piecesSolved[5] = { false };
         //Start detecting what pieces are solved
         shadowDom->DetectSolvedEdgesUnOrdered(0, piecesSolved);
@@ -353,7 +353,8 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             if (offby > 6)
                 offby -= 5;
             if (offby >= 2) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[offby]); // "R' DR' r dr"
+                //bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[offby], 5); // "R' DR' r dr"
+                bulkAlgo = shadowDom->ParseAlgorithmString(5, offby); // "R' DR' r dr"
                 bulkShadowRotate(shadowDom, bulkAlgo);
             }
         }
@@ -451,11 +452,11 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
 
         if ((l.isOnRow2 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0))) ||
             (l.isOnRow34 && l.ontopA && l.edgeFaceLocA == 4 && l.edgeFaceNeighbors.a == l.edgeHalfColorA)) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[21].algo, g_faceNeighbors[l.edgeFaceNeighbors.a]);    // "dl l dl L', dL' F' dL' f"
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[21].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 21);    // "dl l dl L', dL' F' dL' f"
             bulkShadowRotate(shadowDom, bulkAlgo);
         }
         else if (l.isOnRow34 && l.ontopA && l.edgeFaceLocA == 3 && l.edgeFaceNeighbors.a == l.edgeHalfColorA) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[22].algo, g_faceNeighbors[l.edgeFaceNeighbors.a]);    //"dR' R' dR' r, dr f dr F' "
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[22].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 22);    //"dR' R' dR' r, dr f dr F' "
             bulkShadowRotate(shadowDom, bulkAlgo);
         }
         //BUG?: Pieces still go the long-way around from 7->6->3->(skip)4->6->7->6->4 then algo....
@@ -637,15 +638,15 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6
             if ((l.isOnRow7 && l.isLeft) || (l.isOnRow4)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow4))
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[23].algo, loc); // {23, "F' R' F', F' r f"},
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[23].algo, loc, 23); // {23, "F' R' F', F' r f"},
                 else
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[34].algo, loc); // {34, "U' R' DR' F F DR R" },
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[34].algo, loc, 34); // {34, "U' R' DR' F F DR R" },
             }
             else if ((l.isOnRow7 && l.isRight) || (l.isOnRow3)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow3))
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[24].algo, loc); // {24, "f l f, f L' F' "},
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[24].algo, loc, 24); // {24, "f l f, f L' F' "},
                 else
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[35].algo, loc); // {35, "u l dl F' F' DL' L' "}
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[35].algo, loc, 35); // {35, "u l dl F' F' DL' L' "}
             }
             bulkShadowRotate(shadowDom, bulkAlgo);
         }
@@ -713,7 +714,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             int result = std::min(x, y);
             if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                 result = BEIGE;
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[result]); // "r u R' U' "
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[result], 1); // "r u R' U' "
             bulkShadowRotate(shadowDom, bulkAlgo);
         }
         else if (l.isOnRow4) {
@@ -722,7 +723,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             shadowDom->shadowMultiRotate(GRAY, offby);
             //quick shortcut to know which face we're working on.
             int front = BEIGE - (i - 10);
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[front]); // "r u R' U' "
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[front], 1); // "r u R' U' "
             bulkShadowRotate(shadowDom, bulkAlgo);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
@@ -914,64 +915,64 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 //5-way cycle -2
         if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 29, 25, 26, 27)) //TT55-3
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[40].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo17@Blue (60 moves to 48)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[40].algo, g_faceNeighbors[LIGHT_BLUE], 40);    //algo17@Blue (60 moves to 48)
         }
 //5-way cycle +2
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 28, 29, 25, 26)) //TT53-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[41].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo38@Blue (60 moves to 48)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[41].algo, g_faceNeighbors[LIGHT_BLUE], 41);    //algo38@Blue (60 moves to 48)
         }
 //TODO: Combine these 5 better
 //5-way cycle (+1,+2,-1,+2,+1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 27, 28, 25, 26)) //TT54-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_BLUE]);   //algo18@Green (60 moves to 32)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_BLUE], 39);   //algo18@Green (60 moves to 32)
         }
 //5-way cycle (+1,+2,-1,+2,+1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 25, 28, 29, 26)) //TT58-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[ORANGE]);    //algo18@Pink (60 moves to 32)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[ORANGE], 39);    //algo18@Pink (60 moves to 32)
         }
 //5-way cycle (+1,+2,-1,+2,+1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 28, 26, 29, 25)) //TT59-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_GREEN]);  //algo18@Beige (60 moves to 32)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_GREEN], 39);  //algo18@Beige (60 moves to 32)
         }
 //5-way cycle (+1,+2,-1,+2,+1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 28, 29, 27, 25)) //TT56-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[PINK]);  //algo18@Blue (60 moves to 32)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[PINK], 39);  //algo18@Blue (60 moves to 32)
         }
 //5-way cycle (+1,+2,-1,+2,+1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 27, 29, 25, 28)) //TT57-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[BEIGE]); //algo18@Orange (60 moves to 32)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[BEIGE], 39); //algo18@Orange (60 moves to 32)
         }
 //TODO: Combine these 5 also
 //5-way Reverse cycle (-1,-2,+1,-2,-1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25)) //TT86-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_BLUE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_BLUE], 43);
         }
 //5-way Reverse cycle (-1,-2,+1,-2,-1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 29, 25, 27, 28))
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[ORANGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[ORANGE], 43);
         }
 //5-way Reverse cycle (-1,-2,+1,-2,-1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 27, 25, 26, 28))
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_GREEN]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_GREEN], 43);
         }
 //5-way Reverse cycle (-1,-2,+1,-2,-1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 25, 28, 26, 27))
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[PINK]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[PINK], 43);
         }
 //5-way Reverse cycle (-1,-2,+1,-2,-1)
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 25, 26, 29, 27))
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[BEIGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[BEIGE], 43);
         }
 
 //BUNNY 4-COLOR-only (with 1 solved, covers all possibilities)
@@ -979,14 +980,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
              && twoGraysUnsolved(firstSolvedPiece + 1, firstSolvedPiece + 2)
              && twoGraysUnsolved(firstSolvedPiece + 3, firstSolvedPiece + 4)
         ) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece]);    //algo #29 Quad-Flip Colors
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 29);    //algo #29 Quad-Flip Colors
         }
 //BUNNY 2-COLOR: (OFF-COLOR OPPOSITES)
         //If two opposite Pieces are colored wrong, Choose the face that places them @ 8' & 1' oclock and then run Algo #20 to invert those
         else if (twoOppositeOffColors && !allEdgeColorsSolved) {
             for (int op = LIGHT_BLUE; op <= BEIGE; ++op)
                 if (matchesOppoColor(op))
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[op]); //algo #20 = INVERT colors @ 8'/1'
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[20].algo, g_faceNeighbors[op], 20); //algo #20 = INVERT colors @ 8'/1'
         }
 //BUNNY 2+2SWAP
 // 2&5 + 3&4 (opposite horizontally)
@@ -998,7 +999,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             || checkPieceMatches(pieceOrder, 28, 27, 26, 25, 29)) //TT46-2 (29)
 
         ) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[37].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece]); //algo #37, 13*5=65 moves
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[37].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 37); //algo #37, 13*5=65 moves
             for (int i = 0; i < g_AlgoStrings[37].repeatX; ++i)
                 bulkShadowRotate(shadowDom, bulkAlgo);
             updateRotateQueueWithShadow(shadowDom);
@@ -1018,22 +1019,22 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             //Streamlined previous algo19 from 44 moves to 32 :
             int start = LIGHT_BLUE + firstSolvedPiece + 1;
             MMg(start, BEIGE);
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[42].algo, g_faceNeighbors[start]); //algo#42=algo#19
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[42].algo, g_faceNeighbors[start], 42); //algo#42=algo#19
         }
 
 //MUSHROOM- //algo #14 3a-  (F/L Safe)
 
         else if (offby == 0 && solvedCount == 3 && !allEdgeColorsSolved && (twoGraysUnsolved(1, 2) || twoGraysUnsolved(2, 3))) //TT62-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece]);  //algo #14 3a-  (F/L Safe)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
         }
         else if (offby == 4 && solvedCount == 1 && !allEdgeColorsSolved && twoGraysUnsolved(3, 4)) //TT-84-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece]);  //algo #14 3a-  (F/L Safe)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
         }
         else if (offby == 3 && solvedCount == 1 && !allEdgeColorsSolved && twoGraysUnsolved(3, 4)) //TT-85-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece]);  //algo #14 3a-  (F/L Safe)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
         }
         //first and second piece solved for sure, attached
         else if (
@@ -1052,73 +1053,73 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             ||(offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && twoGraysUnsolved(3, 4))   //TestCube22-2Edges
             ||(offby == 1 && solvedCount == 1 && !currentpieceFlipStatusOK && piecesSolvedStrict[0] && twoGraysUnsolved(2, 3)) //TT20-2
         ) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece], 14);
         }
         else if (offby == 0 && solvedCount == 3 && twoAdjacentPieces && twoSolvedPieces(0,1) && piecesSolvedStrict[2] && twoGraysUnsolved(3,4))
         {                                                                                 //TestCube15-2-Edgesstuck
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE], 14);
         }
         else if ((offby == 2 || offby == 3) && solvedCount == 1 && piecesSolvedStrict[4] && twoGraysUnsolved(2,3))
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
         }
         else if (offby == 0 && !currentpieceFlipStatusOK && twoGraysUnsolved(0,1))
         { 
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
         }
         else if (offby == 3 && solvedCount == 0 && allCornersAllSolved && !piecesSolvedStrict[0] && twoGraysUnsolved(1,2)) //TT35-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + offby]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + offby], 14);
         }
         else if (offby == 2 && solvedCount == 0 && allCornersAllSolved && allEdgeColorsSolved)  //TT38-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
         }
         else if (offby == 2 && solvedCount == 1 && allCornersAllSolved && piecesSolvedStrict[1] && twoGraysUnsolved(2,3)) //TT43-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
         }
         else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && !currentpieceFlipStatusOK && twoGraysUnsolved(4,0)) //TT45-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
         }
         else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(2,3)) //TT48-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
         }
         else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && pieceOrder[0] == 26) //TT50-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK], 14);
         }
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[1] && allCornersAllSolved && twoGraysUnsolved(3,4) && pieceOrder[0] == 28) //TT51-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK], 14);
         }
         else if (offby == 2 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(4,0) && pieceOrder[0] == 26) //TT52-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_GREEN]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_GREEN], 14);
         }
         else if (offby == 1 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(3,4) && pieceOrder[0] == 28) //TT60-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
         }
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 26, 29, 28, 25, 27) && allEdgeColorsSolved && allCornersAllSolved) //TT49-2 
         {   //(needs another mushroom- after this one to solve it)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE], 14);
         }   //becomes "26 29 [27 28] 25"
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 28, 27, 29, 26, 25) && allEdgeColorsSolved && allCornersAllSolved) //TT73-2 
         {   //(needs another mushroom- after this one to solve it)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
         }   //becomes "28 [26 27] 29 25"
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 27, 29, 28, 26, 25) && allEdgeColorsSolved && allCornersAllSolved) //TT87-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK]);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK], 14);
         } //becomes "25] 27 28 26 [29"
 
 //MUSHROOM+
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && twoGraysUnsolved(2,3))
         {                                                                                    //TestCube14-2
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[ORANGE]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[ORANGE], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (
               (offby == 1 && solvedCount == 2 && twoAdjacentPieces && twoSolvedPieces(0,1) && (allEdgeColorsSolved || twoGraysUnsolved(2, 3)))  //test4-p2 ->(blue/orange)=PASS //TestCube6-2
@@ -1134,43 +1135,43 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             ||(offby  < 5 && solvedCount == 1 && piecesSolvedStrict[0] && !currentpieceFlipStatusOK && twoGraysUnsolved(1, 2)) //TT13   //TT19-2
             ||(offby == 2 && solvedCount == 1 && piecesSolvedStrict[4] && twoGraysUnsolved(0, 1)) //TT81-2
         ) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (offby == 3 && solvedCount == 1 && piecesSolvedStrict[4] && allCornersAllSolved && twoGraysUnsolved(1,2)) //TT36-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (offby == 1 && solvedCount == 0 && allCornersAllSolved && allEdgeColorsSolved && pieceOrder[0] == 29) //TT44-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + offby + 2]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + offby + 2], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(3,4)) //TT47-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (offby == 3 && solvedCount == 1 && allCornersAllSolved && twoGraysUnsolved(2, 3)) //TT80-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_GREEN]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_GREEN], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 27, 29, 26, 25, 28) && allEdgeColorsSolved && allCornersAllSolved) //TT70-2 
         {   //(needs another mushroom+ after this one to solve it)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[BEIGE]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[BEIGE], 33); //3e+ #33 same. (F/L safe tho)
         }   //becomes "29 [26 27] 25 28"
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 29, 28, 26, 25, 27) && allEdgeColorsSolved && allCornersAllSolved) //TT72-2 
         {   //(needs another mushroom+ after this one to solve it)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_GREEN]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_GREEN], 33); //3e+ #33 same. (F/L safe tho)
         }   //becomes "25] 28 26 27 [29"
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25) && allEdgeColorsSolved && allCornersAllSolved) //TT75-2 
         {   //(needs another mushroom- after this one to solve it)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE], 33); //3e+ #33 same. (F/L safe tho)
         }   //becomes "28 [26 27] 29 25 "
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 27, 25, 29, 26, 28) && allEdgeColorsSolved && allCornersAllSolved) //TT82-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[ORANGE]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[ORANGE], 33); //3e+ #33 same. (F/L safe tho)
         }
         else if (solvedCount == 0 && checkPieceMatches(pieceOrder, 28, 25, 29, 27, 26) && allEdgeColorsSolved && allCornersAllSolved) //TT83-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK]); //3e+ #33 same. (F/L safe tho)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK], 33); //3e+ #33 same. (F/L safe tho)
         }
 
 //HORSEFACE-
@@ -1191,31 +1192,31 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 loc = g_faceNeighbors[BEIGE];
             //5 iterations goes "+" and preserves corners, 1 iteration goes "-" and does not.
             if (allCornersAllSolved) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3.1- CCW)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc, 12);    //algo #12 (3.1- CCW)
                 for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
                     bulkShadowRotate(shadowDom, bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
             else
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc, 13);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
         }
         else if (offby == 3 && piecesSolvedStrict[0] && !piecesSolvedStrict[1])
         {
             //5 iterations goes "+" and preserves corners, 1 iteration goes "-" and does not.
             if (allCornersAllSolved) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #12 (3.1- CCW)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE], 12);    //algo #12 (3.1- CCW)
                 for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
                     bulkShadowRotate(shadowDom, bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
             else
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE], 13);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
         }
         else if (offby == 3 && solvedCount == 2 && twoSolvedPieces(2, 4) && allCornersAllSolved) //TT-40-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_GREEN]);    //algo #12 (3.1- CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_GREEN], 12);    //algo #12 (3.1- CCW)
             for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
                 bulkShadowRotate(shadowDom, bulkAlgo);
             updateRotateQueueWithShadow(shadowDom);
@@ -1238,14 +1239,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 loc = g_faceNeighbors[BEIGE];
             //5 iterations goes "+" and preserves corners, 1 iteration goes "-" and does not.
             if (allCornersAllSolved) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc);    //algo #13 (3.2+ CW)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc, 13);    //algo #13 (3.2+ CW)
                 for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i)
                     bulkShadowRotate(shadowDom, bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
             else
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc);    //algo #12 (3.1- CCW)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc, 12);    //algo #12 (3.1- CCW)
         }
         else if ((offby == 3 && solvedCount == 1 && piecesSolvedStrict[0] && twoGraysUnsolved(1, 2) && grayFaceColorSolved[3] && grayFaceColorSolved[4])
             || (offby == 0 && !piecesSolvedStrict[0] && twoGraysUnsolved(4, 0))
@@ -1253,20 +1254,20 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         ) {
             //5 iterations goes "+" and preserves corners, 1 iteration goes "-" and does not.
             if (allCornersAllSolved) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #13 (3.2+ CW)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE], 13);    //algo #13 (3.2+ CW)
                 for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i)
                     bulkShadowRotate(shadowDom, bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
             else
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE]);    //algo #12 (3.1- CCW)
+                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE], 12);    //algo #12 (3.1- CCW)
         }
 
 //twoAdjacentOffColors, then mushroom starting from there.
         else if (twoAdjacentOffColors) //TT-85-2,  //TT63-2
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece]);  //algo #14 3a-  (F/L Safe)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
         }
 
         else
@@ -1374,7 +1375,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with  --> "15 16 18 19 17" below (no pairs yet)
 
         //(16 15 19 18 17)
@@ -1382,7 +1383,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "17 16 19 18 15" below (no pairs yet)
 
         //(17 16 15 19 18) (swap 1&3+4/5)
@@ -1390,7 +1391,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "18 16 15 17 19" below (no pairs yet)
 
         //(18 17 15 19 16)
@@ -1398,7 +1399,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "17 15 18 19 16" below (no pairs yet)
 
         //(18 19 15 16 17)
@@ -1406,7 +1407,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "18 15 16 19 17" below. (no pairs yet)
 
         //(18 17 16 15 19)
@@ -1414,7 +1415,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 17 16 19 18" below (no pairs yet)
 
         //(15 19 18 17 16) - TestCube28-1
@@ -1422,7 +1423,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //  --> continues with "19 18 15 17 16" below (no pairs yet)
 
         //(19 18 15 17 16) - TestCube27-1
@@ -1430,7 +1431,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //  --> continues with "18 15 19 17 16" below (no pairs yet)
 
         //(17 18 19 15 16) - TestCube18-1
@@ -1438,7 +1439,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 18 19 16 17" below (no pairs yet)
 
         //(19 18 17 16 15) - TT21-2
@@ -1446,7 +1447,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "15 19 17 16 18" belo (no pairs yet)
 
 //39 cases to make pairs:
@@ -1455,7 +1456,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //  --> continues with "15 16 19 17 18" below && hasTwoAdjacentSolved now - 15/16
 
         //(17 16 19 18 15) - TestCube26-2
@@ -1463,7 +1464,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //  --> continues with "15 16 19 17 18" below && hasTwoAdjacentSolved now - 15/16
 
         //(15 19 17 16 18) - TestCube20-2
@@ -1471,7 +1472,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } // --> continues with "15 16 19 17 18" below && hasTwoAdjacentSolved now - 15/16
 
         //(18 15 16 19 17)
@@ -1479,7 +1480,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 16 18 19 17" below && hasTwoAdjacentSolved now - 15/16
 
         //(16 18 15 19 17)
@@ -1487,7 +1488,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "15 16 18 19 17" below && hasTwoAdjacentSolved now - 15/16
 
         //(15 19 16 18 17)
@@ -1495,7 +1496,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 16 18 19 17" below && hasTwoAdjacentSolved now - 15/16
 
         //TestCube25-2 (17 18 16 19 15)
@@ -1503,7 +1504,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //  --> continues with "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
         //(15 18 17 19 16) - TestCube22-3
@@ -1511,7 +1512,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } // --> continues with "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
         //(18 19 17 15 16)
@@ -1519,7 +1520,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } // --> continues with "19 16 17 15 18" below && hasTwoAdjacentSolved now - 16/17
 
         //(17 19 16 15 18)
@@ -1527,7 +1528,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "19 16 17 15 18" below && hasTwoAdjacentSolved now - 16/17
 
         //(18 16 15 17 19)
@@ -1535,7 +1536,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
         //(19 16 18 17 15)
@@ -1543,7 +1544,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "19 16 17 15 18" below && hasTwoAdjacentSolved now - 16/17
 
         //(18 17 19 16 15)
@@ -1551,14 +1552,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
         //(18 16 19 15 17)
         else if (checkPieceMatches(pieceOrder, 18, 16, 19, 15, 17))
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
         //(19 16 15 18 17)
@@ -1566,7 +1567,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "19 16 17 15 18" below && hasTwoAdjacentSolved now - 16/17
 
         //(19 17 15 16 18)
@@ -1574,7 +1575,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "19 16 17 15 18" below && hasTwoAdjacentSolved now - 16/17
 
         //(18 19 16 17 15) - TT16-2
@@ -1582,7 +1583,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "18 16 17 19 15" below && hasTwoAdjacentSolved now - 16/17
 
         //(19 17 18 15 16)
@@ -1590,7 +1591,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with  --> "19 15 17 18 16" below && hasTwoAdjacentSolved now - 17/18
 
         //(16 19 18 15 17)
@@ -1598,7 +1599,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } // continues with  --> "16 19 17 18 15" below && hasTwoAdjacentSolved now - 17/18
 
         //(16 18 19 17 15)
@@ -1606,7 +1607,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "16 19 17 18 15" below && hasTwoAdjacentSolved now - 17/18
 
         //(16 15 17 19 18)
@@ -1614,7 +1615,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "19 15 17 18 16" below && hasTwoAdjacentSolved now - 17/18
 
         //(19 17 16 18 15)
@@ -1622,7 +1623,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "16 19 17 18 15" below && hasTwoAdjacentSolved now - 17/18
 
         //(19 15 18 16 17)
@@ -1630,7 +1631,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "19 15 17 18 16" below && hasTwoAdjacentSolved now - 17/18
 
         //(18 15 17 16 19)
@@ -1638,7 +1639,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "19 15 17 18 16" below && hasTwoAdjacentSolved now - 17/18
 
         //(16 19 15 17 18)
@@ -1646,7 +1647,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "16 19 17 18 15" below && hasTwoAdjacentSolved now - 17/18
 
         //(17 15 19 16 18)
@@ -1654,7 +1655,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(19 15 16 17 18) (all off by 1)
@@ -1662,7 +1663,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(16 17 18 19 15) (all off by 1 in other direction)
@@ -1670,7 +1671,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(16 17 19 15 18)
@@ -1678,7 +1679,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(17 19 15 18 16)
@@ -1686,7 +1687,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(17 16 18 15 19)
@@ -1694,7 +1695,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(17 15 18 19 16)
@@ -1702,7 +1703,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(16 18 17 15 19)
@@ -1710,7 +1711,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(17 18 15 16 19) swap 1&3+2&4
@@ -1718,7 +1719,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "17 15 16 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(16 15 18 17 19)
@@ -1726,7 +1727,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "16 17 15 18 19" below && hasTwoAdjacentSolved now - 18/19
 
         //(19 18 16 15 17)
@@ -1734,7 +1735,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 18 16 17 19" below && hasTwoAdjacentSolved now - 19/15
 
         //(15 17 19 18 16)
@@ -1742,7 +1743,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 17 18 16 19" below && hasTwoAdjacentSolved now - 19/15
 
         //(15 17 16 19 18)
@@ -1750,7 +1751,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "15 17 18 16 19" below && hasTwoAdjacentSolved now - 19/15
 
         //(17 19 18 16 15)
@@ -1758,7 +1759,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "15 17 18 16 19" below && hasTwoAdjacentSolved now - 19/15
 
     haveTwoAdjacentSolved:
@@ -1768,70 +1769,70 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         {
             int safeStart = 0;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         }
         //([15 16] 19 17 18) - 15/16 ok
         else if (checkPieceMatches(pieceOrder, 15, 16, 19, 17, 18))
         {
             int safeStart = 0; safeStart = 5;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         }
         //(18 [16 17] 19 15) - 16/17 ok
         else if (checkPieceMatches(pieceOrder, 18, 16, 17, 19, 15))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         }
         //(19 [16 17] 15 18) - 16/17 ok
         else if (checkPieceMatches(pieceOrder, 19, 16, 17, 15, 18))
         {
             int safeStart = 1;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         }
         //(16 19 [17 18] 15) - 17/18 ok
         else if (checkPieceMatches(pieceOrder, 16, 19, 17, 18, 15))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         }
         //(19 15 [17 18] 16) - 17/18 ok
         else if (checkPieceMatches(pieceOrder, 19, 15, 17, 18, 16))
         {
             int safeStart = 2;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         }
         //(16 17 15 [18 19]) - 18/19 ok
         else if (checkPieceMatches(pieceOrder, 16, 17, 15, 18, 19))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         }
         //(17 15 16 [18 19]) - 18/19 ok
         else if (checkPieceMatches(pieceOrder, 17, 15, 16, 18, 19))
         {
             int safeStart = 3;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         }
         //(15] 17 18 16 [19) - 19/15 ok
         else if (checkPieceMatches(pieceOrder, 15, 17, 18, 16, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart];        //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         }
         //(15] 18 16 17 [19) - 19/15 ok
         else if (checkPieceMatches(pieceOrder, 15, 18, 16, 17, 19))
         {
             int safeStart = 4;
             colordirs loc = g_faceNeighbors[LIGHT_BLUE + safeStart - 1];    //Algo#27 Cycle+ (Clockwise)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         }
 
 //DO IT:
@@ -1850,7 +1851,7 @@ startColorFlippingCorners:
             int rotateOffset = (target - g_dirtyFaceRDRD);
             if (g_dirtyCountRDRD != 0)
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD]); //algo #5 "R' DR' r dr"
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD], 5); //algo #5 "R' DR' r dr"
             bulkShadowRotate(shadowDom, bulkAlgo);
             bulkShadowRotate(shadowDom, bulkAlgo);
             rotateOffset *= -1;

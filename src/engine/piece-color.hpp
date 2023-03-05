@@ -1,5 +1,6 @@
 #pragma once
 
+//define color names in order
 typedef enum {
     BLACK = 0,
     WHITE,
@@ -14,19 +15,17 @@ typedef enum {
     LIGHT_GREEN,
     PINK,
     BEIGE,
-    COLOR_STATES
+    MAX_COLOR_STATES
 } megaminxColor;
 
 struct colorpack {
     int i;
-    double r;
-    double g;
-    double b;
+    double r,g,b;
     const wchar_t* name;
 };
 
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
-constexpr colorpack g_colorRGBs[COLOR_STATES] = {
+constexpr colorpack g_colorRGBs[MAX_COLOR_STATES] = {
     { 0, 0.0, 0.0, 0.0, L"BLACK" },
     { 1, 1.0, 1.0, 1.0, L"WHITE" },
     { 2, 0.0, 0.0, 1.0, L"DARK_BLUE" },
@@ -47,16 +46,14 @@ struct colorpiece {
     megaminxColor a = BLACK;
     megaminxColor b = BLACK;
     megaminxColor c = BLACK;
-    //To convert the 1-12 colors into 0-11 colors:
-    void subtract() {
-        a = (megaminxColor)((int)a - 1);
-        b = (megaminxColor)((int)b - 1);
-        c = (megaminxColor)((int)c - 1);
-    }
 };
 
+static const int numFaces = 12;
+static const int numCorners = 20;
+static const int numEdges = 30;
+
 //Defines the 30 edge pieces.
-constexpr colorpiece g_edgePiecesColors[30] = {
+constexpr colorpiece g_edgePiecesColors[numEdges] = {
     // 0 - 4
     { WHITE, DARK_BLUE },
     { WHITE, RED },
@@ -96,7 +93,7 @@ constexpr colorpiece g_edgePiecesColors[30] = {
 };
 
 //Defines the 20 corner Pieces.
-constexpr colorpiece g_cornerPiecesColors[20] = {
+constexpr colorpiece g_cornerPiecesColors[numCorners] = {
     // 0 - 4
     { WHITE, RED, DARK_BLUE },
     { WHITE, DARK_GREEN, RED },
@@ -124,8 +121,9 @@ constexpr colorpiece g_cornerPiecesColors[20] = {
 };
 
 //struct that holds the relative position & direction for colors in g_faceNeighbors below
+//Initialized to BLACK (0)
 struct colordirs {
-    //Starting from face,then 9-oclock and going CW right around.
+    //order: Start from front face, then 9-oclock and going CW right around and down
     megaminxColor front = BLACK;
     megaminxColor left  = BLACK;
     megaminxColor up    = BLACK;
@@ -136,8 +134,8 @@ struct colordirs {
 };
 
 //Defines which faces are touching each other. For Human Algo Rotate.
-constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
-    //fill up the 0 slot
+constexpr colordirs g_faceNeighbors[MAX_COLOR_STATES] = {
+    //Initialize the 0 slot to BLACK invalid
     { BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK },
     //bottom/white 1-6
     { WHITE, DARK_BLUE, RED, DARK_GREEN, PURPLE, YELLOW, ORANGE },
@@ -156,8 +154,8 @@ constexpr colordirs g_faceNeighbors[COLOR_STATES] = {
 };
 
 //Determine which direction those faces need to rotate to land the Edge on the white
-//Decides which directions the pieces will float back to their original homes
-constexpr int DirToWhiteFace[12][5] =
+//Decides which direction, up or down, for the pieces to passively float to their original home
+constexpr int DirToWhiteFace[numFaces][5] =
 {
     { 0, 0, 0, 0, 0 },
     { -1, -1, 1, 1, -1 },  //e2&3 swapped @ D.Blue
@@ -173,9 +171,9 @@ constexpr int DirToWhiteFace[12][5] =
     { -1, 1, 1, -1, -1 }
 };
 
-//BlackEdgesNumber2[12][5] lists the pattern of edges that have their solved-Face-Color
-// in the color[1] index (marked by 1's), instead of the color[0] index. (marked by 0's)
-constexpr int BlackEdgesNumber2[12][5] =
+//Edges that have their solved-Face-Color in the color[1] index. (marked by 1's),
+//                                instead of the color[0] index. (marked by 0's)
+constexpr int BlackEdgesNumber2[numFaces][5] =
 {
     { 0, 0, 0, 0, 0 },
     { 1, 0, 1, 0, 0 },

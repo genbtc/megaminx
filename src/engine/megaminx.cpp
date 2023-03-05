@@ -540,14 +540,15 @@ void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>
 
 
 /** \brief A letter/notation parser to manipulate the cube with algo strings */
-const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc)
+const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo)
 {
+    std::wcout << "ParseAlgorithmString: # " << algo << " : " << algorithmString.c_str() << " @ Face: " << g_colorRGBs[loc.front].name << std::endl;
     std::vector<numdir> readVector;
     std::stringstream ss(algorithmString); // create a stringstream to iterate over
     auto npos = std::string::npos;
     while (ss) {                           // while the stream is good
         std::string word;                  // parse first word
-        numdir op = { -1, Face::Clockwise };
+        numdir op = { -1, Face::Clockwise, algo };
         if (ss >> word) {
             if (word.find("'") != npos)    //reverse direction if its a ' Prime
                 op.dir *= -1;
@@ -590,3 +591,11 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
     return readVector;
 }
 
+/** \brief A letter/notation parser to manipulate the cube by algo#  */
+const std::vector<numdir> Megaminx::ParseAlgorithmString(int algo, int startLoc)
+{
+    const std::string algorithmString = g_AlgoStrings[algo].algo;
+    const colordirs loc = g_faceNeighbors[startLoc];
+    std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString;
+    return ParseAlgorithmString(algorithmString, loc, algo);
+}

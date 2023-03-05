@@ -149,13 +149,14 @@ constexpr static int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
 
 struct AlgoString {
     int num;
-    const char * algo;
+    const char* algo;
     int repeatX=0;
 };
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
 constexpr AlgoString g_AlgoStrings[45] = {
+    // Initialize 0 with empty blank
     {0, ""},
 
     // most common one, suitable for white corners or any.

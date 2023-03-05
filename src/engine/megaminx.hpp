@@ -59,8 +59,9 @@ public:
     std::vector<int> getAllPiecesColorFlipStatus();
     std::vector<int> getAllCornerPiecesColorFlipStatus();
     std::vector<int> getAllEdgePiecesColorFlipStatus();
-    const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc);
-    const std::vector<numdir> ParseStoredAlgorithmString(AlgoString algorithmString, const colordirs &loc);
+    const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo=0);
+    const std::vector<numdir> ParseAlgorithmString(AlgoString algorithm, const colordirs &loc);
+    const std::vector<numdir> ParseAlgorithmString(int algo, int startLoc);
    template <typename T>
     int findPiece(int pieceNum);
     int findEdge(int pieceNum);
@@ -149,6 +150,7 @@ public:
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
     void bulkShadowRotate(Megaminx* shadowDom, std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
+    void shadowRotate(numdir op);
     bool shadowMultiRotate(int face, int &offby);
     int getRotateQueueNum() const { return (int)rotateQueue.size(); }
 
