@@ -21,24 +21,24 @@ typedef enum {
 struct colorpack {
     int i;
     double r,g,b;
-    const wchar_t* name;
+    const char* name;
 };
 
 //list of the 12 colors in R,G,B from 0.0-1.0(0-255)
 constexpr colorpack g_colorRGBs[MAX_COLOR_STATES] = {
-    { 0, 0.0, 0.0, 0.0, L"BLACK" },
-    { 1, 1.0, 1.0, 1.0, L"WHITE" },
-    { 2, 0.0, 0.0, 1.0, L"DARK_BLUE" },
-    { 3, 1.0, 0.0, 0.0, L"RED" },
-    { 4, 0.0, 0.4, 0.0, L"DARK_GREEN" },
-    { 5, 0.5, 0.0, 1.0, L"PURPLE" },
-    { 6, 1.0, 1.0, 0.0, L"YELLOW" },
-    { 7, 0.5, 0.5, 0.5, L"GRAY" },
-    { 8, 0.2, 0.5, 1.0, L"LIGHT_BLUE" },
-    { 9, 1.0, 0.4, 0.1, L"ORANGE" },
-    { 10, 0.4, 1.0, 0.4, L"LIGHT_GREEN" },
-    { 11, 0.9, 0.4, 1.0, L"PINK" },
-    { 12, 1.0, 0.9, 0.65, L"BEIGE" }
+    { 0, 0.0, 0.0, 0.0, "BLACK" },
+    { 1, 1.0, 1.0, 1.0, "WHITE" },
+    { 2, 0.0, 0.0, 1.0, "DARK_BLUE" },
+    { 3, 1.0, 0.0, 0.0, "RED" },
+    { 4, 0.0, 0.4, 0.0, "DARK_GREEN" },
+    { 5, 0.5, 0.0, 1.0, "PURPLE" },
+    { 6, 1.0, 1.0, 0.0, "YELLOW" },
+    { 7, 0.5, 0.5, 0.5, "GRAY" },
+    { 8, 0.2, 0.5, 1.0, "LIGHT_BLUE" },
+    { 9, 1.0, 0.4, 0.1, "ORANGE" },
+    { 10, 0.4, 1.0, 0.4, "LIGHT_GREEN" },
+    { 11, 0.9, 0.4, 1.0, "PINK" },
+    { 12, 1.0, 0.9, 0.65, "BEIGE" }
 };
 
 //Struct that can hold up to 3 Colors for Center/Edge/Corner

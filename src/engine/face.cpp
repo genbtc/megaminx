@@ -126,8 +126,10 @@ void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
 template <typename T>
 void Face::QuadSwapPieces(const int pack[8])
 {
-    for (int i = 0; i < 8; ++i)
-        swapPieces<T>(pack[i], pack[i++]);
+    for (int i = 0; i < 4; ++i) {
+        int pair = 2*i;
+        swapPieces<T>(pack[pair], pack[pair+1]);
+    }
 } //where T = Corner or Edge
 void Face::QuadSwapCorners(const int pack[8]) { QuadSwapPieces<Corner>(pack); }
 void Face::QuadSwapEdges(const int pack[8]) { QuadSwapPieces<Edge>(pack); }
@@ -310,6 +312,7 @@ bool Face::placeParts(int dir)
 bool Face::render()
 {
     glPushMatrix();
+    //TODO: put these into some config file
     //8 is the current rotational turnspeed for turnDir
     constexpr int turnspeed = 120; //16 is fastmode
     if (rotating)

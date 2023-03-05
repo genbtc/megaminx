@@ -1,39 +1,8 @@
 #pragma once
-#include <cmath>
-#include <iostream>
-#include <string>
-#include <cstring>
+#include "piece-static.hpp"
 #include "piece-color.hpp"
 #include "../ui/opengl.h"
 
-using std::acos;
-using std::atan;
-using std::cos;
-using std::sin;
-using std::sqrt;
-
-//common geometric constants
-static const long double DODESIZE = 100;
-static const long double PI = acos(-1.f);           //3.1415927410125732
-//Golden Ratio (Phi) (also The ratio between the side length of a regular pentagon and one of its diagonals.)
-static const long double FI = (1 + sqrt(5.f)) / 2;  //1.6180340051651001
-static const long double SIDE_ANGLE = 2 * atan(FI); //2.0344439448698051
-//inscribed sphere radius ( ri = a / 2 * √ ( 25 + 11 * √5 ) / 10 )
-static const long double INS_SPHERE_RAD = DODESIZE * sqrt(10+22 / sqrt(5.f)) / 4;   //111.35163307189941 
-static const long double INS_CIRCLE_RAD = DODESIZE / sqrt((5 - sqrt(5.f)) / 2);     // 85.065082037033278
-#define pim(x) x*PI/5
-//megaminx vertex shortcuts
-static const long double TWOFIFTHS = (double)2/5;
-static const long double EDGEFIFTH = DODESIZE / sin(pim(2));            //105.14622122913930
-static const long double COSPIM35 = INS_CIRCLE_RAD * cos(pim(3.5));     //-50.000004917867173
-static const long double COSPIM15 = INS_CIRCLE_RAD * cos(pim(1.5));     //49.999998901510480
-static const long double SINPIM35 = INS_CIRCLE_RAD * sin(pim(3.5));     //68.819093936061520
-static void rotateVertex(double *vertex, char axis, double angle);
-
-struct piecepack {
-    char axis1, axis2;
-    int multi;
-};
 class Piece {
 public:
     //virtual destructor
@@ -48,7 +17,7 @@ public:
     struct _data {
         double _color[3][3];
         int _colorNum[3];
-        const wchar_t* _colorName[3];
+        const char* _colorName[3];
         int pieceNum;
         int flipStatus;
     } data = {};
@@ -124,15 +93,34 @@ public:
                 data._colorNum[2] == color;
     }
 
-    // Function to left rotate an array by r positions, n length
+    // Function to Left rotate an array by r positions, n length
     template <typename T>
     void leftRotate(T arr[], int r, int n)
     {
-        for (int i = 0; i < r; i++) {
+        for (int j = 0; j < r; j++) {
+            /* Store first element of array */
             T first = arr[0];
+            /* Move each array element to its LEFT */
             for (int i = 0; i < n - 1; i++)
                 arr[i] = arr[i + 1];
+            /* Copy first element of array to last */
             arr[n - 1] = first;
+        }
+    }
+
+    // Function to Right rotate an array by r positions, n length
+    template <typename T>
+    void rightRotate(T arr[], int r, int n)
+    {
+        int rotations = r % n;
+        for(int j = 0; j < rotations; j++) {
+            /* Store last element of array */
+            T last = arr[n - 1];
+            /* Move each array element to its RIGHT */
+            for(int i = n - 1; i > 0; i--)
+                arr[i] = arr[i - 1];
+            /* Copy last element of array to first */
+            arr[0] = last;
         }
     }
 
@@ -140,7 +128,7 @@ public:
     void flip() {
         leftRotate<double>(data._color[0], 3, numSides * 3);
         leftRotate<int>(data._colorNum, 1, numSides);
-        leftRotate<const wchar_t *>(data._colorName, 1, numSides);
+        leftRotate<const char*>(data._colorName, 1, numSides);
         const bool isCorner = (numSides == 3);
         if (isCorner && data.flipStatus < 2 || !isCorner && data.flipStatus == 0)
             data.flipStatus++;
@@ -230,6 +218,7 @@ public:
         }
         return &_vertex[0][0];
     }
+    
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
         numSides = 0;
@@ -249,80 +238,3 @@ public:
         return &_vertex[0][0];
     }
 };
-
-static void rotateVertex(double &vx, double &vy, double angle)
-{
-    const double r = sqrt(vx * vx + vy * vy);
-    double a = vy > 0 ? acos(vx / r) : 2 * PI - acos(vx / r);
-    a += angle;
-    vx = r * cos(a);
-    vy = r * sin(a);
-}
-
-static void rotateVertex(double *vertex, char axis, double angle)
-{
-    switch (axis) {
-    case 'x':
-        rotateVertex(vertex[1], vertex[2], angle);
-        break;
-    case 'y':
-        rotateVertex(vertex[0], vertex[2], angle);
-        break;
-    case 'z':
-        rotateVertex(vertex[0], vertex[1], angle);
-        break;
-    default:
-        break;
-    }
-}
-
-//main transform: used in almost every other algo
-static void axis1multi(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis1, pim(pack.multi));
-}
-static void CenterSide1(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis1, pim(1));
-    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
-    axis1multi(target, pack);
-}
-static void CenterCenter(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis1, PI);
-}
-static void CenterSide2(double* target, piecepack &pack) {
-    CenterCenter(target, pack);
-    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
-    rotateVertex(target, 'z', pim(pack.multi));
-    //This is always z, because axis1/2 are usually y/x and
-    //is re-used by face, where it is Z.
-}
-static void CornerGrp3(double* target, piecepack &pack) {
-    CenterSide1(target, pack);
-    rotateVertex(target, pack.axis2, PI);
-}
-static void CornerGrp4(double* target, piecepack &pack) {
-    CenterCenter(target, pack);
-    rotateVertex(target, pack.axis2, pim(pack.multi));
-}
-static void EdgeGrp2(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis1, pim(3));
-    rotateVertex(target, pack.axis2, PI - SIDE_ANGLE);
-    axis1multi(target, pack);
-}
-static void EdgeGrp3(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis1, pim(6));
-    EdgeGrp2(target, pack);
-}
-static void EdgeGrp4(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis1, pim(8));
-    EdgeGrp2(target, pack);
-}
-static void EdgeGrp5(double* target, piecepack &pack) {
-    pack.multi += 1;
-    rotateVertex(target, pack.axis1, pim(2));
-    rotateVertex(target, pack.axis2, SIDE_ANGLE);
-    axis1multi(target, pack);
-}
-static void EdgeGrp6(double* target, piecepack &pack) {
-    rotateVertex(target, pack.axis2, PI);
-    axis1multi(target, pack);
-}

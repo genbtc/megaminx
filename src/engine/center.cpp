@@ -42,5 +42,7 @@ void Center::render() const
     makeGLpentagon(_vertex, 1.0, GL_POLYGON);
     glLineWidth(4);
     glColor3d(0, 0, 0);
-    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
+    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);   //label the piece with a string, floating as a tag
+    utDrawText3D(_vertex[3][0],_vertex[3][1],_vertex[2][2],GLUT_BITMAP_HELVETICA_18, data._colorName[0]);
+    //TODO: Crude coords, aesthetics of text string. Option: Disable
 }

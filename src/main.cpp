@@ -145,13 +145,14 @@ void myglutRenderScene() {
     glutSwapBuffers();
 }
 
-// query Megaminx for what face we're looking at?
+// Query Megaminx - what face we are looking at?
+//TODO: NOTE: This executes a lot. TODO: How to Skip when not moving ?
 void GetCurrentFace() {
     const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX,
                                                   (int)g_camera.m_angleY);
     if (tempFace != 0) {
         currentFace = tempFace;
-		sprintf(lastface,"%ls", g_colorRGBs[currentFace].name);
+		sprintf(lastface, "%s", g_colorRGBs[currentFace].name);
         // Save it into the viewmodel (sync view)
         megaminx->setCurrentFaceActive(currentFace);
     }
@@ -160,7 +161,7 @@ void GetCurrentFace() {
 // Shift key Directional Shortcut, Shift On = CounterClockwise.
 int GetDirFromSpecialKey() {
     return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? (int)Face::CCW
-/*  (CAPS LOCK cannot work). */                      : (int)Face::CW;
+/*  (CAPS LOCK cannot scan here). */                 : (int)Face::CW;
 }
 
 // Double click Rotates Current Face with Shift Modifier.

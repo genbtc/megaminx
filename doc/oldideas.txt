@@ -54,7 +54,7 @@
 //Layer 6: Edges source from Gray layer 7 and drop in a short 1/5th sideways. same idea applies from Layer#4
 // the source is always at 12 o clock. drops into either 3 / 9 o'clock (Right/Left)
 
-//Layer 7: from what I can tell, do Corners first, because some of the corner algos affect the edges also, and some of the edge algos affect the corners, so those can be used too...
+//Layer 7: alternate idea maybe do Corners first, because some of the corner algos affect the edges also, and some of the edge algos affect the corners, so those can be used too...
 // So do corners with the intention of corrupting the edges but making ultimate progress on getting the edges all facing downwards at least.
 //Coloring the corners involves multiple moves of R/D/R'/D' until they color correctly. This corrupts the lines you use for the transformation, "Z",
 // Repeats and reverts in cycles of 6. So after one corner is solved, the temporary lines may still be corrupted, if they are,
@@ -62,20 +62,12 @@
 // This may approach a catch 22, where everything is solved but only one gray corner is 1 flip away, if this is the case, I don't know what to do...
 //Theres a lot of last-layer algorithms to choose from. Choose wisely!
 //
-//TODO: Uncovered a bug in the original .swap() algo where it swaps 90% of the elements Out and then is left with a parity error, for example:
-//A = { 22, 11, 10, 22, 3, 26, 28, 26,  }
-//B = { 26, 3, 28, 26, 11, 22, 10, 22, }
-//It thinks swapping A[0] with B[0] and so on, amounts to a net change of 0. And its right. But why am i wrong?
-//This also occurs down to 3 pieces: such like: A = { 1, 2, 4 } and B = { 2, 4, 1 }, or even just two: {0,4}/{4,0}
-//? Maybe try reducing the dupes if possible
-//DID: Introduced new 0-30 swap instead of 0-60 with pairs
+//DONE: Introduced new 0-30 swap instead of 0-60 with pairs
 
 //some LAYER 7 SOLVE TACTICS:
-
-        
-/*----------PSEUDOCODE - EDGES (first)
-    Last Layer includes both sides of the edge and all corners.
-    EDGES = (phase one):
+Last Layer includes both sides of the edge and all corners.    
+/*---------- PSEUDOCODE ----------------
+EDGES = (first phase one):
     Start finding out which Edges are OK
     OK means multiple correct pieces in order, or  1 piece's color facing correctly (gray),
     Does it Need to be rotated? must be considered...
@@ -86,8 +78,7 @@
     If solved >=3/5 find out if #3 is attached?: NO: IDK
                                                     YES: ie: Algo #206 to invert the other 2 corners
     Can go from 2/5 to all 5/5 at once OR go from 3/5 to 5/5.
-*/
-/*        PSEUDOCODE - CORNERS = (phase two) :
+CORNERS = (phase two) :
     Corners must keep the edges in place, we will know solved rotation by having the offby = 0 as a query to solved findEdges above.
     If solved 1 / 5, determine if better to skip and start at 0 or continue with this.
     1pt2 : check next piece, find out if its capable of being moved in 1 move, or if its 2 moves.
