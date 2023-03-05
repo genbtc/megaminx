@@ -24,7 +24,7 @@ void Megaminx::shadowRotate(int num, int dir)
 {
     assert(num > 0 && num <= numFaces);
     assert(dir == Face::Clockwise || dir == Face::CCW);
-    std::wcout << "Rotate Face: # " << num << " : "  << g_colorRGBs[num].name  << "  Dir: " << dir << std::endl;
+    //std::wcout << "Rotate Face: # " << num << " : "  << g_colorRGBs[num].name  << "  Dir: " << dir << std::endl;
     num -= 1; //Convert 1-12 Faces into array [0-11]
     shadowRotateQueue.push({ num, dir });
     faces[num].placeParts(dir);

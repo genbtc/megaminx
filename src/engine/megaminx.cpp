@@ -596,6 +596,6 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(int algo, int startLoc)
 {
     const std::string algorithmString = g_AlgoStrings[algo].algo;
     const colordirs loc = g_faceNeighbors[startLoc];
-    std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString;
+    std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString << std::endl;
     return ParseAlgorithmString(algorithmString, loc, algo);
 }

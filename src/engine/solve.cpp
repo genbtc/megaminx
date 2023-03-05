@@ -309,6 +309,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     updateRotateQueueWithShadow(shadowDom);
     //Error Checking, make sure we don't progress past any ambiguous states during development
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolveWhiteEdges 1 1" << std::endl;
 }
 
 //Layer 1 part 2 - White Corners
@@ -425,6 +426,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolveWhiteCorners 1 2" << std::endl;
 }
 
 //Layer 2 - Edges
@@ -504,6 +506,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolveLayer2Edges 2" << std::endl;
 }
 
 //Layer 3 - Corners
@@ -590,6 +593,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolve3rdLayerCorners 3" << std::endl;
 }
 
 //Layer 4 - Edges
@@ -670,6 +674,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolveLayer4Edges 4" << std::endl;
 }
 
 //Layer 5 - Corners
@@ -733,6 +738,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolve5thLayerCorners 5" << std::endl;
 }
 
 //Layer 6 - Edges
@@ -804,6 +810,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolveLayer6Edges 6" << std::endl;
 }
 
 //Last Layer = Layer 7 EDGES (GRAY top)
@@ -1283,6 +1290,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
+    std::cout << "Solved rotateSolveLayer7Edges 7 1" << std::endl;
 }
 
 static int g_dirtyBitRDRD = 0;
@@ -1871,6 +1879,7 @@ startColorFlippingCorners:
     } while (!allSolved);
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
+    std::cout << "Solved rotateSolve7thLayerCorners 7 2" << std::endl;
 }
 
 void Megaminx::testingAlgostrings(Megaminx* shadowDom)
