@@ -268,12 +268,12 @@ void Megaminx::resetFace(int n)
  * \param face Nth-face number (1-12)
  */
 template <typename T>
-std::vector<int> Megaminx::findPiecesOrder(int face) const
+std::vector<int> Megaminx::findFacePiecesOrder(int face) const
 {
     return faces[face - 1].findPiecesOrder<T>();
 } //where T = Corner or Edge
-std::vector<int> Megaminx::findCornersOrder(int face) const { return findPiecesOrder<Corner>(face); };
-std::vector<int> Megaminx::findEdgesOrder(int face) const { return findPiecesOrder<Edge>(face); };
+std::vector<int> Megaminx::findFaceCornersOrder(int face) const { return findFacePiecesOrder<Corner>(face); };
+std::vector<int> Megaminx::findFaceEdgesOrder(int face) const { return findFacePiecesOrder<Edge>(face); };
 
 /**
  * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
@@ -328,9 +328,11 @@ void Megaminx::flipPieceColor(int face, int num)
 void Megaminx::flipCornerColor(int face, int num) { return flipPieceColor<Corner>(face, num); }
 void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(face, num); }
 
+
+//used by load.cpp Save/Restore Cube to capture state
 /**
  * \brief Get a list of all pieces Position Status (either Edge or Corner piece)
- */
+  */
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesPosition()
 {
@@ -344,6 +346,7 @@ std::vector<int> Megaminx::getAllPiecesPosition()
 std::vector<int> Megaminx::getAllCornerPiecesPosition()  { return getAllPiecesPosition<Corner>(); }
 std::vector<int> Megaminx::getAllEdgePiecesPosition()  { return getAllPiecesPosition<Edge>(); }
 
+//used by load.cpp Save/Restore Cube to capture state
 /**
  * \brief Get a list of all pieces Color status (either Edge or Corner piece)
  */
@@ -366,6 +369,7 @@ std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()  { return getAllPie
  * \param color_n N'th Face/Color Number (1-12)
  * \return 1 if anything moved, 0 if not
  */
+ /*
 template <typename T>
 int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
 {
@@ -377,6 +381,7 @@ int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPiece
 } //where T = Corner or Edge
 int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }
 int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }
+*/
 
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.
@@ -596,6 +601,6 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(int algo, int startLoc)
 {
     const std::string algorithmString = g_AlgoStrings[algo].algo;
     const colordirs loc = g_faceNeighbors[startLoc];
-    std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString << std::endl;
+    //std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString << std::endl;
     return ParseAlgorithmString(algorithmString, loc, algo);
 }

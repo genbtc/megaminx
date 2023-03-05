@@ -1,22 +1,29 @@
-	Face
-	attachCenter
-	initAxis
-	attachEdgePieces
-	attachCornerPieces
-	findPiecesOrder
-	findCornersOrder
-	findEdgesOrder
-	find5PieceLoc
-	find5EdgeLoc
-	find5CornerLoc
-	TwoEdgesFlip
-	FlipCorners
-	swapPieces
-	swapCorners
-	swapEdges
-	QuadSwapPieces
-	QuadSwapCorners
-	QuadSwapEdges
-	rotate
-	placeParts
-	render
+Face::Face()
+void Face::attachCenter(Center *c, double* centerVertexBase)
+void Face::initAxis(int n)
+void Face::attachEdgePieces(const Megaminx* megaminx, Edge &edgesPTR)
+void Face::attachCornerPieces(const Megaminx* megaminx, Corner &cornersPTR)
+
+std::vector<int> Face::findPiecesOrder() const
+std::vector<int> Face::findCornersOrder() const { return findPiecesOrder<Corner>(); };
+std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); };
+
+int Face::find5PieceLoc(int pieceNum) const
+int Face::find5EdgeLoc(int pieceNum) const { return find5PieceLoc<Edge>(pieceNum); }
+int Face::find5CornerLoc(int pieceNum) const { return find5PieceLoc<Corner>(pieceNum); }
+
+void Face::TwoEdgesFlip(int a,int b)
+
+void Face::FlipCorners(int a, int b, int c, int d, const int* pack)
+
+void Face::swapPieces(int a, int b)
+void Face::swapCorners(int a, int b) { swapPieces<Corner>(a, b); }
+void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
+
+void Face::QuadSwapPieces(const int pack[8])
+void Face::QuadSwapCorners(const int pack[8]) { QuadSwapPieces<Corner>(pack); }
+void Face::QuadSwapEdges(const int pack[8]) { QuadSwapPieces<Edge>(pack); }
+
+void Face::rotate(int direction)
+bool Face::placeParts(int dir)
+bool Face::render()

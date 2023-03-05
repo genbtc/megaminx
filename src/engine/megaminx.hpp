@@ -68,9 +68,9 @@ public:
     int findCorner(int pieceNum);
     std::vector<int> findPiecesOfFace(int face, Piece &pieceRef, int times) const;
    template <typename T>
-    std::vector<int> findPiecesOrder(int face) const;
-    std::vector<int> findCornersOrder(int face) const;
-    std::vector<int> findEdgesOrder(int face) const;
+    std::vector<int> findFacePiecesOrder(int face) const;
+    std::vector<int> findFaceCornersOrder(int face) const;
+    std::vector<int> findFaceEdgesOrder(int face) const;
    template <typename T>
     std::vector<int> findPieces(int face);
     std::vector<int> findCorners(int face);
