@@ -356,7 +356,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             if (offby >= 2) {
                 //bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[offby], 5); // "R' DR' r dr"
                 bulkAlgo = shadowDom->ParseAlgorithmString(5, offby); // "R' DR' r dr"
-                bulkShadowRotate(shadowDom, bulkAlgo);
+                shadowDom->bulkShadowRotate(bulkAlgo);
             }
         }
         //Move correct corners straight up and in from 5-9 to 0-4
@@ -369,7 +369,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                     bulkAlgo = shadowDom->ParseAlgorithmString("f dr F' ", g_faceNeighbors[offby]);
                 else
                     bulkAlgo = shadowDom->ParseAlgorithmString("R' DR' R", g_faceNeighbors[offby]);
-                bulkShadowRotate(shadowDom, bulkAlgo);
+                shadowDom->bulkShadowRotate(bulkAlgo);
             }
         }
         //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
@@ -455,11 +455,11 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
         if ((l.isOnRow2 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0))) ||
             (l.isOnRow34 && l.ontopA && l.edgeFaceLocA == 4 && l.edgeFaceNeighbors.a == l.edgeHalfColorA)) {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[21].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 21);    // "dl l dl L', dL' F' dL' f"
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else if (l.isOnRow34 && l.ontopA && l.edgeFaceLocA == 3 && l.edgeFaceNeighbors.a == l.edgeHalfColorA) {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[22].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 22);    //"dR' R' dR' r, dr f dr F' "
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
         }
         //BUG?: Pieces still go the long-way around from 7->6->3->(skip)4->6->7->6->4 then algo....
         //TODO: Need to detect when the face matches up then go backwards.
@@ -652,7 +652,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 else
                     bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[35].algo, loc, 35); // {35, "u l dl F' F' DL' L' "}
             }
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
         }
         //Row 6 - flip piece up to GRAY, then return the moved faces to unharm the low corners.
         else if (l.isOnRow6) {
@@ -720,7 +720,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                 result = BEIGE;
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[result], 1); // "r u R' U' "
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else if (l.isOnRow4) {
             //Orient Gray Top layer (index goes in reverse)
@@ -729,7 +729,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             //quick shortcut to know which face we're working on.
             int front = BEIGE - (i - 10);
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[front], 1); // "r u R' U' "
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
@@ -801,7 +801,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
             //works to insert pieces from row7 to 6 and also pops wrong pieces out from 6 to 7
                                                                                     //{25, "U' L' u l, u f U' F' "},
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[algo].algo, loc);  //{26, "u r U' R', U' F' u f "},
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
@@ -1008,7 +1008,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         ) {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[37].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 37); //algo #37, 13*5=65 moves
             for (int i = 0; i < g_AlgoStrings[37].repeatX; ++i)
-                bulkShadowRotate(shadowDom, bulkAlgo);
+                shadowDom->bulkShadowRotate(bulkAlgo);
             updateRotateQueueWithShadow(shadowDom);
             continue;
         }
@@ -1201,7 +1201,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (allCornersAllSolved) {
                 bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc, 12);    //algo #12 (3.1- CCW)
                 for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
-                    bulkShadowRotate(shadowDom, bulkAlgo);
+                    shadowDom->bulkShadowRotate(bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
@@ -1214,7 +1214,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (allCornersAllSolved) {
                 bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE], 12);    //algo #12 (3.1- CCW)
                 for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
-                    bulkShadowRotate(shadowDom, bulkAlgo);
+                    shadowDom->bulkShadowRotate(bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
@@ -1225,7 +1225,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_GREEN], 12);    //algo #12 (3.1- CCW)
             for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
-                bulkShadowRotate(shadowDom, bulkAlgo);
+                shadowDom->bulkShadowRotate(bulkAlgo);
             updateRotateQueueWithShadow(shadowDom);
             continue;
         }
@@ -1248,7 +1248,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (allCornersAllSolved) {
                 bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, loc, 13);    //algo #13 (3.2+ CW)
                 for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i)
-                    bulkShadowRotate(shadowDom, bulkAlgo);
+                    shadowDom->bulkShadowRotate(bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
@@ -1263,7 +1263,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (allCornersAllSolved) {
                 bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE], 13);    //algo #13 (3.2+ CW)
                 for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i)
-                    bulkShadowRotate(shadowDom, bulkAlgo);
+                    shadowDom->bulkShadowRotate(bulkAlgo);
                 updateRotateQueueWithShadow(shadowDom);
                 continue;
             }
@@ -1280,7 +1280,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else
             unknownloop++;
         //DO IT:
-        bulkShadowRotate(shadowDom, bulkAlgo);
+        shadowDom->bulkShadowRotate(bulkAlgo);
         updateRotateQueueWithShadow(shadowDom);
         //break; //break stops it after only one round
 
@@ -1844,7 +1844,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         }
 
 //DO IT:
-        bulkShadowRotate(shadowDom, bulkAlgo);
+        shadowDom->bulkShadowRotate(bulkAlgo);
 
 startColorFlippingCorners:
         //Do R'DR'rdr to color-flip each corner. (Dirties the lower rows) Each piece flip takes 2x, and each line resets at 6x.
@@ -1860,8 +1860,8 @@ startColorFlippingCorners:
             if (g_dirtyCountRDRD != 0)
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD], 5); //algo #5 "R' DR' r dr"
-            bulkShadowRotate(shadowDom, bulkAlgo);
-            bulkShadowRotate(shadowDom, bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
+            shadowDom->bulkShadowRotate(bulkAlgo);
             rotateOffset *= -1;
             if (g_dirtyCountRDRD != 0 )
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);
@@ -1898,7 +1898,7 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         int repeat = a.repeatX ? a.repeatX : 1;
         for (int n = 0; n < repeat; ++n) {
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString(a.algo, loc);
-            bulkShadowRotate(shadowDom, bulk);
+            shadowDom->bulkShadowRotate(bulk);
         }
         //find where pieces actually are vs. where they're supposed to be
         std::vector<int> foundEdges(5);

@@ -148,7 +148,7 @@ public:
     void LoadNewEdgesFromOtherCube(Megaminx* source);
     void LoadNewCornersFromOtherCube(Megaminx* source);
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
-    void bulkShadowRotate(Megaminx* shadowDom, std::vector<numdir> bulk);
+    void bulkShadowRotate(std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
     void shadowRotate(numdir op);
     bool shadowMultiRotate(int face, int &offby);
