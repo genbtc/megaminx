@@ -5,7 +5,6 @@ CMakeFiles
 Debug
 lib
 log*.txt
-Makefile
 obj/
 Release
 Thumbs.db
