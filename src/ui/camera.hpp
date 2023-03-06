@@ -1,4 +1,3 @@
-#pragma once
 /** @file camera.h
  *  @brief camera and input functions and getCurrentFaceFromAngles()
  *  @author Bartlomiej Filipek

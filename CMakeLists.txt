@@ -64,7 +64,7 @@ add_executable(${PACKAGE_NAME} WIN32
     src/engine/shadow.cpp
     src/engine/load.cpp
     src/main.cpp
-    src/main-menu.cpp    
+    src/main-menu.cpp
     src/Res.rc
 )
 

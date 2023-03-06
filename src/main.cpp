@@ -21,7 +21,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include <cstdlib>
 #include <time.h>
 #include "main.h"
-#include "engine/load.hpp"
 
 // global main.cpp
 char lastface[32];
@@ -32,19 +31,6 @@ double g_appRenderTimeTotal = 0.0;
 double g_appIdleTime = 0.0;
 int shadowQueueLength = 0;
 double solveravg = 0.;
-
-// Resize Window glut callBack function passthrough to the camera class
-void myglutChangeWindowSize(int x, int y) { g_camera.ChangeViewportSize(x, y); }
-
-// Camera - init/reset camera and vars, set view angles, etc.
-void resetCameraViewport() {
-    g_camera = Camera();
-    g_camera.m_zoom = -ZDIST;
-    g_camera.m_angleY = START_ANGLE;
-    g_camera.m_forced_aspect_ratio = 1;
-    g_camera.g_areWeDraggingPoint = false;
-    myglutChangeWindowSize(WIDTH, HEIGHT);
-}
 
 // Megaminx Dodecahedron. Creates object class and resets camera.
 void createMegaMinx() {
@@ -180,11 +166,27 @@ void doDoubleClickRotate(int, int) {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
 
+// Camera - init/reset camera and vars, set view angles, etc.
+void resetCameraViewport() {
+    g_camera = Camera();
+    g_camera.m_zoom = -ZDIST;
+    g_camera.m_angleY = START_ANGLE;
+    g_camera.m_forced_aspect_ratio = 1;
+    g_camera.g_areWeDraggingPoint = false;
+    myglutChangeWindowSize(WIDTH, HEIGHT);
+}
+
+// from main-menu.cpp : Route the arrow keys to the camera for motion
+void doCameraMotionSpecial(int key, int x, int y) {
+    g_camera.PressSpecialKey(key, x, y);
+}
+
+// handle mouse/rotation camera movement
 void myglutMousePressed(int button, int state, int x, int y) {
     g_camera.ProcessMouse(button, state, x, y);
 }
 
-// additional Right click menu handling
+// additional Right click handling for menu
 int OldmenuVisibleState = 0;
 int oldmenux = 0, oldmenuy = 0;
 void myglutMenuVisible(int status, int x, int y) {
@@ -195,7 +197,7 @@ void myglutMenuVisible(int status, int x, int y) {
         oldmenux = x;
         oldmenuy = y;
     }
-}
+} //continued:
 //stops cube rotate from happening after right click menu visible then drag
 void myglutMousePressedMove(int x, int y) {
 	//if the menu is visible, do nothing 
@@ -210,5 +212,11 @@ void myglutMousePressedMove(int x, int y) {
         g_camera.ProcessMouseMotion(oldmenux, oldmenuy, false);
     }
 }
+
+// Resize Window glut callBack function passthrough to the camera class
+void myglutChangeWindowSize(int x, int y) {
+    g_camera.ChangeViewportSize(x, y);
+}
+
 
 //see main-menu.cpp for rest of main program

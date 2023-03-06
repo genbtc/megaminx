@@ -1,9 +1,9 @@
-#include "main.h"
+#include "engine/megaminx.hpp"
 #include "engine/load.hpp"
+#include "main-menu.hpp"
 
-extern int currentFace;
-extern bool spinning;
-extern double solveravg;
+extern Megaminx* megaminx;
+extern Megaminx* shadowDom;
 
 // Main Keyboard Handler
 void myglutOnKeyboard(unsigned char key, int x, int y) {
@@ -118,7 +118,7 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         break;
     }
     // Route the arrow keys to the camera for motion
-    g_camera.PressSpecialKey(key, x, y);
+    doCameraMotionSpecial(key, x, y);
 }
 
 //Help menu with Glut commands and line by line iteration built in.
