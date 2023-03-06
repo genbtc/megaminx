@@ -55,7 +55,6 @@ add_executable(${PACKAGE_NAME} WIN32
     src/main.cpp
     src/ui/camera.cpp
     src/ui/opengl.cpp
-#    src/ui/menu.cpp
     src/engine/center.cpp
     src/engine/corner.cpp
     src/engine/edge.cpp
@@ -65,6 +64,7 @@ add_executable(${PACKAGE_NAME} WIN32
     src/engine/shadow.cpp
     src/engine/load.cpp
     src/main.cpp
+    src/main-menu.cpp    
     src/Res.rc
 )
 
