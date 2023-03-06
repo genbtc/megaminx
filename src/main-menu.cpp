@@ -7,6 +7,51 @@ extern Megaminx* shadowDom;
 
 // Main Keyboard Handler
 void myglutOnKeyboard(unsigned char key, int x, int y) {
+	//Ctrl + keys first
+    const auto specialKey = glutGetModifiers();
+    if (specialKey == GLUT_ACTIVE_CTRL) {
+        switch (key) {
+        case 3: // Ctrl+C
+            glutDestroyWindow(1);
+            exit(0);
+            break;
+        case 26: // Ctrl+Z
+            megaminx->undo();
+            break;
+        case 19: // CTRL+S //Save Game State
+            SaveCubetoFile();
+            break;
+        case 18: // CTRL+R //Restore Game State
+            RestoreCubeFromFile();
+            break;
+        default:
+            break;
+        }
+    }
+    //Game commands
+    switch (key) {
+    case ' ':	// spacebar 32
+        spinning = !spinning;
+        break;
+    case 'h':
+    case 'H':	// help
+        help = !help;
+        break;
+    case 8:		// backspace
+        resetCameraViewport();
+        break;
+    case 13:	// enter
+        megaminx->resetFace(currentFace);
+        break;
+    case 27:	// escape
+        megaminx->resetQueue();
+        break;
+    case 127:	// delete
+        megaminx->scramble();
+        break;
+    default:
+        break;
+    }
     // Cube Rotation commands
     // rotate neighbors of current face (call relational rotation function)
     const int dir = GetDirFromSpecialKey();

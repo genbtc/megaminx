@@ -9,6 +9,7 @@ static int submenu0_id, submenu1_id, submenu2_id, submenu3_id,
 
 extern int currentFace;
 extern bool spinning;
+extern bool help;
 extern double solveravg;
 
 void createMegaMinx();
