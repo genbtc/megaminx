@@ -35,7 +35,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
         break;
     case 'h':
     case 'H':	// help
-        help = !help;
+        g_help = !g_help;
         break;
     case 8:		// backspace
         resetCameraViewport();
@@ -525,7 +525,7 @@ void menuHandler(int num)
             else
                 continue;
         }
-        solveravg = sum / 50000.;
+        g_solveravg = sum / 50000.;
         break;
     default:
         break;

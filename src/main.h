@@ -21,7 +21,6 @@ void createMegaMinx();
 void GetCurrentFace();
 
 // global camera main / camera.cpp
-static Camera g_camera;
 void doCameraMotionSpecial(int key, int x, int y);
 void resetCameraViewport();
 void isSpinning();
@@ -37,7 +36,6 @@ void myglutMousePressedMove(int x, int y);
 void myglutChangeWindowSize(int x, int y);
 
 // main-menu.cpp
-static int window;
 void createMenu();
 void myglutOnKeyboard(unsigned char key, int x, int y);
 void myglutOnSpecialKeyPress(int key, int x, int y);

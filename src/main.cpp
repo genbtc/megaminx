@@ -1,6 +1,6 @@
 static const char *myglutTitle = "GenBTC's Megaminx Solver v1.3.8";
 ///////////////////////////////////////////////////////////////////////////////
-/* MegaMinx2 - v1.3 October24 - December12, 2017 - genBTC mod
+/* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
              - v1.3.7 Mar 13, 2020
@@ -8,7 +8,7 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.3.8";
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:
-* genBTC 2017-2020 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
+* genBTC 2017-2020+2023 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
 */
 // Headers
 #ifdef _WINDOWS
@@ -22,13 +22,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include <time.h>
 #include "main.h"
 
-// global main.cpp
+// global vars main
+static int g_window;
 char lastface[32];
 int currentFace;
-bool help = false;
+bool g_help = false;
+static Camera g_camera;
 double g_appRenderTimeTotal = 0.0;
 double g_appIdleTime = 0.0;
-double solveravg = 0.;
+double g_solveravg = 0.;
 
 // Megaminx Dodecahedron. Creates object class and resets camera.
 void createMegaMinx() {
@@ -42,10 +44,11 @@ void createMegaMinx() {
 int main(int argc, char *argv[]) {
     srand((int)time(nullptr)); // seed rand()
     glutInit(&argc, argv);
+    // set GL render modes
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
     // create window
-    window = glutCreateWindow(myglutTitle);
+    g_window = glutCreateWindow(myglutTitle);
 	sprintf(lastface, "%s", "01234567890123456789");
     // new megaminx
     createMegaMinx();
@@ -115,11 +118,11 @@ void myglutRenderScene() {
         utDrawText2D(10.f, HEIGHT - 40.f, (const char*)lastface);
         
         // Print out Text (Help display)
-        if (help)
+        if (g_help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else {
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
-			if (megaminx->isFullySolved() && help)
+			if (megaminx->isFullySolved() && g_help)
 				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "SOLVED!");
 			else
 				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "[F9] = SOLVER");
@@ -130,9 +133,9 @@ void myglutRenderScene() {
             snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
         }
-        if (solveravg > 0) {
+        if (g_solveravg > 0) {
             static char solvquestr[21];
-            snprintf(solvquestr, 21, "Solver Avg: %5g", solveravg);
+            snprintf(solvquestr, 21, "Solver Avg: %5g", g_solveravg);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, solvquestr);
         }
     }
@@ -157,13 +160,13 @@ void isSpinning() {
     g_camera.isSpinning = !g_camera.isSpinning;
 }
 
-// Shift key Directional Shortcut, Shift On = CounterClockwise.
+// main-menu.cpp - Shift key Directional Shortcut, Shift On = CounterClockwise.
 int GetDirFromSpecialKey() {
     return (glutGetModifiers() & GLUT_ACTIVE_SHIFT) ? (int)Face::CCW
 /*  (CAPS LOCK cannot scan here). */                : (int)Face::CW;
 }
 
-// Double click Rotates Current Face with Shift Modifier.
+// Camera.cpp - Double click Rotates Current Face with Shift Modifier.
 void doDoubleClickRotate(int, int) {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
