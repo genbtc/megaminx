@@ -1,10 +1,11 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.3.8";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.3.9";
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
              - v1.3.7 Mar 13, 2020
              - v1.3.8 Feb 03, 2023
+             - v1.3.9 Mar 06, 2023
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:
@@ -24,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 
 // global vars main
 static int g_window;
-char lastface[32];
+char lastface[32] = {};
 int currentFace;
 bool g_help = false;
 static Camera g_camera;
@@ -47,47 +48,48 @@ int main(int argc, char *argv[]) {
     // set GL render modes
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
+
     // create window
     g_window = glutCreateWindow(myglutTitle);
-	sprintf(lastface, "%s", "01234567890123456789");
-    // new megaminx
-    createMegaMinx();
-    //    ^ also handles /calls\ to glViewport(0,0,w,h);
+    // *new megaminx
+    createMegaMinx(); //also handles /calls\ to glViewport(0,0,w,h);
+
+    // Setup of GL Params
     glClearColor(0.22f, 0.2f, 0.2f, 1.0f);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
     gluPerspective(view_distance_view_angle, 1.0, 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Set up each of GL Params in main
+    // Enable each GL Params
     glEnable(GLUT_MULTISAMPLE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_ALPHA);
+    // Stylistic thick lines
     glLineWidth(4);
-    glPointSize(5);
-
-    // Right click menu:
-    createMenu();
-    glutMenuStatusFunc(myglutMenuVisible);
+    glPointSize(4);
 
     // Glut Callbacks:
     glutReshapeFunc(myglutChangeWindowSize);
     glutMouseFunc(myglutMousePressed);
     glutMotionFunc(myglutMousePressedMove);
-    // glutPassiveMotionFunc(processMousePassiveMotion);
-    myglutIdle(0); // Idle func tracks frame-rate
-    // menu.cpp
+    
+    // Right click menu:
+    createMenu();
+    glutMenuStatusFunc(myglutMenuVisible);
+    // main-menu.cpp
 	glutKeyboardFunc(myglutOnKeyboard);
     glutSpecialFunc(myglutOnSpecialKeyPress);
 
     // Main: Display Render and Loop forever
+    myglutIdle(0);  // Idle func tracks frame-rate
     glutDisplayFunc(myglutRenderScene);
-    glutMainLoop();
+    glutMainLoop(); // Run
     return 0;
 }
 
-// Wait for Refresh Rate, FrameRate Cap.
+// idle, Wait for Refresh Rate, FrameRate Cap. save CPU
 void myglutIdle(int) {
     glutPostRedisplay();
     glutTimerFunc(REFRESH_WAIT_TIME - 1, myglutIdle, 0);
@@ -107,15 +109,15 @@ void myglutRenderScene() {
         megaminx->render();
     }
     glPopMatrix();
-    // Print out Text (FPS display + Angles + face Name)
-    glColor3f(0, 1, 0); // ...in green.
     utSetOrthographicProjection(WIDTH, HEIGHT);
-    {
+    { //scoped { ... for OrthographicProjection context ... }
+        // Print out Green Text, FPS display + Angles + face Name
+        glColor3f(0, 1, 0); // ...in green.
         utCalculateAndPrintFps(10.f, 20.f);
         utCalculateAndPrintAngles(10.f, HEIGHT - 20.f,
 								  g_camera.m_angleX, g_camera.m_angleY);
         GetCurrentFace();
-        utDrawText2D(10.f, HEIGHT - 40.f, (const char*)lastface);
+        utDrawText2D(10.f, HEIGHT - 40.f, lastface);
         
         // Print out Text (Help display)
         if (g_help)
@@ -127,18 +129,20 @@ void myglutRenderScene() {
 			else
 				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "[F9] = SOLVER");
 		}
+        // Footer
         int shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
-            static char rotquestr[21];
-            snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
+            static char rotquestr[32];
+            snprintf(rotquestr, 32, "Rotate Queue: %5d", shadowQueueLength);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
         }
         if (g_solveravg > 0) {
-            static char solvquestr[21];
-            snprintf(solvquestr, 21, "Solver Avg: %5g", g_solveravg);
+            static char solvquestr[32];
+            snprintf(solvquestr, 32, "Solver Avg: %5g", g_solveravg);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, solvquestr);
         }
     }
+    //Reset ortho scoped text and present backbuffer
     utResetPerspectiveProjection();
     glutSwapBuffers();
 }
@@ -156,37 +160,38 @@ void GetCurrentFace() {
     }
 }
 
+// camera spin movement - convenience toggle function
 void isSpinning() {
     g_camera.isSpinning = !g_camera.isSpinning;
 }
 
-// main-menu.cpp - Shift key Directional Shortcut, Shift On = CounterClockwise.
+// main-menu.cpp - Shift key controls Directional rotation: On = CounterClockwise.
 int GetDirFromSpecialKey() {
     return (glutGetModifiers() & GLUT_ACTIVE_SHIFT) ? (int)Face::CCW
 /*  (CAPS LOCK cannot scan here). */                : (int)Face::CW;
 }
 
-// Camera.cpp - Double click Rotates Current Face with Shift Modifier.
+// Camera.cpp - Double click Rotates Current Face with Shift Modifier too.
 void doDoubleClickRotate(int, int) {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
 
-// Camera - init/reset camera and vars, set view angles, etc.
+// Camera - init/reset Camera+vars to default, set view angles, etc. (and spin) 
 void resetCameraViewport() {
     g_camera = Camera();
     g_camera.m_zoom = -ZDIST;
     g_camera.m_angleY = START_ANGLE;
     g_camera.m_forced_aspect_ratio = 1;
     g_camera.g_areWeDraggingPoint = false;
-    myglutChangeWindowSize(WIDTH, HEIGHT);
+    myglutChangeWindowSize(WIDTH, HEIGHT); //GLUT resize window to default
 }
 
-// from main-menu.cpp : Route the arrow keys to the camera for motion
+// from main-menu.cpp : Route keyboard arrow keys to the camera for motion
 void doCameraMotionSpecial(int key, int x, int y) {
     g_camera.PressSpecialKey(key, x, y);
 }
 
-// handle mouse/rotation camera movement
+// GLUT callback - handle mouse/rotation camera movement
 void myglutMousePressed(int button, int state, int x, int y) {
     g_camera.ProcessMouse(button, state, x, y);
 }
@@ -194,6 +199,7 @@ void myglutMousePressed(int button, int state, int x, int y) {
 // additional Right click handling for menu
 int OldmenuVisibleState = 0;
 int oldmenux = 0, oldmenuy = 0;
+// GLUT callback - display right-click menu
 void myglutMenuVisible(int status, int x, int y) {
 	//check for Menu first, otherwise bug from click/drag through past it
     g_camera.menuVisibleState = (status == GLUT_MENU_IN_USE);
@@ -218,10 +224,10 @@ void myglutMousePressedMove(int x, int y) {
     }
 }
 
-// Resize Window glut callBack function passthrough to the camera class
+// GLUT callback - Resize Window function passthrough to the camera class
 void myglutChangeWindowSize(int x, int y) {
     g_camera.ChangeViewportSize(x, y);
 }
 
 
-//see main-menu.cpp for rest of main program
+//see main-menu.cpp for rest of main GUI program

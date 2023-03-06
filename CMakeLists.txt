@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.8)
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 # Confirmed to work on Linux 2023
 set(PACKAGE_NAME "Megaminx")
-set(PACKAGE_VERSION "1.3.8")
+set(PACKAGE_VERSION "1.3.9")
 project(${PACKAGE_NAME})
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME ${PACKAGE_NAME})
