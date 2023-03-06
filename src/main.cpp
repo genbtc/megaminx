@@ -25,11 +25,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 // global main.cpp
 char lastface[32];
 int currentFace;
-bool spinning = false;
 bool help = false;
 double g_appRenderTimeTotal = 0.0;
 double g_appIdleTime = 0.0;
-int shadowQueueLength = 0;
 double solveravg = 0.;
 
 // Megaminx Dodecahedron. Creates object class and resets camera.
@@ -97,12 +95,12 @@ void myglutRenderScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
     {
-        // spinning can be toggled w/ spacebar
-        if (spinning)
+        // Spinning can be toggled w/ spacebar
+        if (g_camera.isSpinning)
             g_camera.m_angleX += 0.5;
-        // Rotate the Cube into View
+        // Rotate the Camera so cube is in View
         g_camera.RotateGLCameraView();
-        // Render it.
+        // Render Megaminx.
         megaminx->render();
     }
     glPopMatrix();
@@ -126,7 +124,7 @@ void myglutRenderScene() {
 			else
 				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "[F9] = SOLVER");
 		}
-        shadowQueueLength = megaminx->getRotateQueueNum();
+        int shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
             static char rotquestr[21];
             snprintf(rotquestr, 21, "Rotate Queue: %5d", shadowQueueLength);
@@ -155,10 +153,14 @@ void GetCurrentFace() {
     }
 }
 
+void isSpinning() {
+    g_camera.isSpinning = !g_camera.isSpinning;
+}
+
 // Shift key Directional Shortcut, Shift On = CounterClockwise.
 int GetDirFromSpecialKey() {
-    return (glutGetModifiers() == GLUT_ACTIVE_SHIFT) ? (int)Face::CCW
-/*  (CAPS LOCK cannot scan here). */                 : (int)Face::CW;
+    return (glutGetModifiers() & GLUT_ACTIVE_SHIFT) ? (int)Face::CCW
+/*  (CAPS LOCK cannot scan here). */                : (int)Face::CW;
 }
 
 // Double click Rotates Current Face with Shift Modifier.

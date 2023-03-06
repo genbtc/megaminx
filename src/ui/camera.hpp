@@ -28,6 +28,7 @@ public:
     //from main.h
     int menuVisibleState = 0;
     bool g_areWeDraggingPoint;
+    bool isSpinning = false;
 
     Camera();
     ~Camera() = default;

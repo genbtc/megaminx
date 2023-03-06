@@ -9,7 +9,7 @@ extern Megaminx* shadowDom;
 void myglutOnKeyboard(unsigned char key, int x, int y) {
 	//Ctrl + keys first
     const auto specialKey = glutGetModifiers();
-    if (specialKey == GLUT_ACTIVE_CTRL) {
+    if (specialKey & GLUT_ACTIVE_CTRL) {
         switch (key) {
         case 3: // Ctrl+C
             glutDestroyWindow(1);
@@ -31,7 +31,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     //Game commands
     switch (key) {
     case ' ':	// spacebar 32
-        spinning = !spinning;
+        isSpinning();
         break;
     case 'h':
     case 'H':	// help
@@ -172,7 +172,6 @@ void utPrintHelpMenu(float w, float h)
     constexpr char helpStrings[18][32] = { "[H]elp Menu:",
                                            "[Right Click]  Actions Menu",
                                            "[Dbl Click]  Rotate Current CW>",
-//                                           "[F1-F12]     Rotate Face #  >>",
                                            "  +Shift  CounterClockwise <<",
                                            "1,2,3,4,5 Flip Curr. Corner #",
                                            "!,@,#,$,% Flip Curr. Edge  #",
@@ -188,6 +187,7 @@ void utPrintHelpMenu(float w, float h)
                                            "[Delete]  Scramble Puzzle",
                                            "[Enter] Solve Current Face",
                                            "[F1-F8=F9] Layer# Auto Solve",
+//                                              "[F1-F12]     Rotate Face #  >>",
     };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
@@ -254,15 +254,16 @@ void createMenu()
 //  glutAddMenuEntry("LL Corners: Cycle- CCW L.Back=Safe", 56);
 //  glutAddMenuEntry("LL Corners: Cycle- CCW Left=Safe", 78);
 
+    submenu7_id = glutCreateMenu(menuHandler);
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)
-    glutAddMenuEntry("2nd Layer, Place Edge (Left)", 71);
-    glutAddMenuEntry("2nd Layer, Place Edge (Right)",72);
-    glutAddMenuEntry("4th Layer, Place Edge (Left)", 73);
-    glutAddMenuEntry("4th Layer, Place Edge (Left+Flip)", 84);
-    glutAddMenuEntry("4th Layer, Place Edge (Right)", 74);
-    glutAddMenuEntry("4th Layer, Place Edge (Right+Flip)",85);
-    glutAddMenuEntry("6th Layer, Place Edge (Left)", 75);
-    glutAddMenuEntry("6th Layer, Place Edge (Right)",76);
+    glutAddMenuEntry("2nd Layer, 1 Edge (Left drop)", 71);
+    glutAddMenuEntry("2nd Layer, 1 Edge (Right drop)",72);
+    glutAddMenuEntry("4th Layer, 1 Edge (Left drop)", 73);
+    glutAddMenuEntry("4th Layer, 1 Edge (Right drop)",74);    
+    glutAddMenuEntry("4th Layer, 1 Edge (Left+Flip)", 84);
+    glutAddMenuEntry("4th Layer, 1 Edge (Right+Flip)",85);
+    glutAddMenuEntry("6th Layer, 1 Edge (Left drop)", 75);
+    glutAddMenuEntry("6th Layer, 1 Edge (Right drop)",76);
 
     //Sublevel1 Menu = Human Rotate Bulk-Solve using best layer routines (Solve.cpp)
     submenu1_id = glutCreateMenu(menuHandler);
@@ -312,9 +313,9 @@ void createMenu()
     glutAddMenuEntry("Rotate CounterClockwise <<", 19);
     glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20);
     //the rest of these are for cheating
-    glutAddMenuEntry("Insta-Solve Entire Face", 21);
-    glutAddMenuEntry("Insta-Solve Five Edges", 22);
-    glutAddMenuEntry("Insta-Solve Five Corners", 23);
+    glutAddMenuEntry("Compu.Solve Current Face", 21);
+    glutAddMenuEntry("Compu.Solve Cur 5 Edges", 22);
+    glutAddMenuEntry("Compu.Solve Cur 5 Corners", 23);
     glutAddMenuEntry("Flip Color: Edge [Shift+1]", 24);
     glutAddMenuEntry("Flip Color: Edge [Shift+2]", 25);
     glutAddMenuEntry("Flip Color: Edge [Shift+3]", 26);
@@ -329,32 +330,33 @@ void createMenu()
     //Sublevel6 Menu - AutoSwap Piece w/ Teleport
     submenu6_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Swap Edges 1 & 2", 125); //note:
-    glutAddMenuEntry("Swap Edges 2 & 3", 129); //the
-    glutAddMenuEntry("Swap Edges 3 & 4", 132); //order
-    glutAddMenuEntry("Swap Edges 4 & 5", 134); //is so
     glutAddMenuEntry("Swap Edges 1 & 3", 126); //humans
     glutAddMenuEntry("Swap Edges 1 & 4", 127); //will
     glutAddMenuEntry("Swap Edges 1 & 5", 128); //enjoy
-    glutAddMenuEntry("Swap Edges 2 & 4", 130);
+    glutAddMenuEntry("Swap Edges 2 & 3", 129); //the
+    glutAddMenuEntry("Swap Edges 2 & 4", 130); //order
     glutAddMenuEntry("Swap Edges 2 & 5", 131);
+    glutAddMenuEntry("Swap Edges 3 & 4", 132);
     glutAddMenuEntry("Swap Edges 3 & 5", 133);    
+    glutAddMenuEntry("Swap Edges 4 & 5", 134);
     glutAddMenuEntry("Swap Corners 1 & 2", 135);
-    glutAddMenuEntry("Swap Corners 2 & 3", 139);
-    glutAddMenuEntry("Swap Corners 3 & 4", 142);
-    glutAddMenuEntry("Swap Corners 4 & 5", 144);
     glutAddMenuEntry("Swap Corners 1 & 3", 136);
     glutAddMenuEntry("Swap Corners 1 & 4", 137);
     glutAddMenuEntry("Swap Corners 1 & 5", 138);    
+    glutAddMenuEntry("Swap Corners 2 & 3", 139);
     glutAddMenuEntry("Swap Corners 2 & 4", 140);
     glutAddMenuEntry("Swap Corners 2 & 5", 141);    
-    glutAddMenuEntry("Swap Corners 3 & 5", 143);    
+    glutAddMenuEntry("Swap Corners 3 & 4", 142);
+    glutAddMenuEntry("Swap Corners 3 & 5", 143);
+    glutAddMenuEntry("Swap Corners 4 & 5", 144);
 
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning..", 1);
     glutAddSubMenu("Main Menu", submenu0_id);
     glutAddSubMenu("Algorithms ---->", submenu4_id);
-    glutAddSubMenu("Human.Solve Bulk", submenu1_id);
+    glutAddSubMenu("Place #Layer Edge", submenu7_id);
+    glutAddSubMenu("Human.Solve Layer", submenu1_id);
     glutAddSubMenu("Comp.Solve Layer", submenu3_id);
     glutAddSubMenu("Comp.Solve Face", submenu5_id);
     glutAddSubMenu("Compu.Mod Face", submenu2_id);
@@ -370,7 +372,7 @@ void menuHandler(int num)
     double sum = 0;
     switch (num) {
     case 1:
-        spinning = !spinning; break;
+        isSpinning(); break;
     case 19:
         megaminx->rotate(currentFace, Face::CCW); break;
     case 20:

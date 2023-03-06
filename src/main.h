@@ -14,34 +14,36 @@ const double START_ANGLE = 60.0f;
 const double view_distance_view_angle = 20;
 ////////////////////////////////////////////////////////////////////////
 
-//global megaminx.cpp
+//global refs - megaminx.cpp
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
 void createMegaMinx();
+void GetCurrentFace();
 
-// global camera.cpp
+// global camera main / camera.cpp
 static Camera g_camera;
 void doCameraMotionSpecial(int key, int x, int y);
 void resetCameraViewport();
+void isSpinning();
 
-// main main.cpp
+// main / main.cpp
 int main(int argc, char *argv[]);
 
-//glut callbacks:
+// glut callbacks:
 void myglutIdle(int);
 void myglutRenderScene();
 void myglutMousePressed(int button, int state, int x, int y);
 void myglutMousePressedMove(int x, int y);
 void myglutChangeWindowSize(int x, int y);
-void GetCurrentFace();
 
-// menu.cpp
+// main-menu.cpp
 static int window;
 void createMenu();
 void myglutOnKeyboard(unsigned char key, int x, int y);
 void myglutOnSpecialKeyPress(int key, int x, int y);
 void myglutMenuVisible(int status, int x, int y);
 void utPrintHelpMenu(float w, float h);
+int GetDirFromSpecialKey();
 
 /** logging will be done by using simple "printf" function */
 #define UT_LOG_WITH_PRINTF
