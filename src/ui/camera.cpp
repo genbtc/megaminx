@@ -116,14 +116,14 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
     else if (state == GLUT_UP)
         return;
 
-    //  Mouse Wheels - starts on 0, (usually 4 & 5) now are 3 & 4 
+    //  Mouse Wheel Zoom
     if (button == 3) {
         //Mouse wheel up
-        m_zoom += 5;
+        m_zoom += 10;
     }
     else if (button == 4) {
         //Mouse wheel down
-        m_zoom -= 5;
+        m_zoom -= 10;
     }
 }
 
@@ -165,7 +165,6 @@ void Camera::RotateGLCameraView()
     else //default:
         glRotated(m_angleX, 0, 0, 1);
 }
-
 
 
 /**

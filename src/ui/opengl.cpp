@@ -1,9 +1,8 @@
 /** @file opengl.cpp
  *  @brief implementation of useful utilities for opengl based apps
- *
- *  @author Bartlomiej Filipek
- *  @date March 2011
- *  @Edited by genBTC 2017
+ *  @author Bartlomiej Filipek = March 2011
+ *  @author genBTC = 2017
+ *  @date 2023
  */
 #include <cstdio>
 #include "opengl.h"
@@ -45,22 +44,20 @@ void utResetPerspectiveProjection()
 ///////////////////////////////////////////////////////////////////////////////
 void utDrawText2D(float x, float y, void *font, const char *string)
 {
-    char *c;
     // set position to start drawing fonts 2D
     glRasterPos2f(x, y);
     // loop all the characters in the string
-    for (c=(char*)string; *c != '\0'; c++) {
+    for (char *c=(char*)string; *c != '\0'; c++) {
         glutBitmapCharacter(font, *c);
     }
 }
 
 void utDrawText3D(float x, float y, float z, void *font, const char *string)
 {
-    char *c;
     // set position to start drawing fonts 3D
     glRasterPos3f(x, y, z);
     // loop all the characters in the string
-    for (c=(char*)string; *c != '\0'; c++) {
+    for (char *c=(char*)string; *c != '\0'; c++) {
         glutBitmapCharacter(font, *c);
     }
 }
@@ -98,7 +95,7 @@ void utCalculateAndPrintFps(float x, float y)
     utDrawText2D(x, y, fpsStr);
 }
 
-
+///////////////////////////////////////////////////////////////////////////////
 void makeGLpentagon(const double(&_vertex)[7][3], double scale, int shape)
 {
     glBegin(shape);

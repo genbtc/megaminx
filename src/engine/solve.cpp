@@ -96,13 +96,14 @@ public:
     int edgeHalfColorA, edgeHalfColorB;
     bool colormatchA, colormatchB;
     bool isOnRow1, isOnRow2, isOnRow3, isOnRow34;
-    bool isOnRow4, isOnRow5, isOnRow6, isOnRow7;
+    bool isOnRow4, isOnRow5, isOnRow6;
     bool ontopA, ontopB;
     bool graymatchA, graymatchB;
     bool isRight, isLeft;
     Piece* currentPiece;
     bool currentpieceFlipStatusOK;
-    Megaminx* shadowDom;
+    int row1, row2, row3, row4, row5, row6, rowLAST;
+    
 
     EdgeLayerAssist(Megaminx* shadowDom, int i) {
         sourceEdgeIndex = shadowDom->findEdge(i);
@@ -132,21 +133,23 @@ public:
         colormatchA = edgeHalfColorA != WHITE;
         colormatchB = edgeHalfColorB != WHITE;
         //Line up things that are solved on the top face.
-        isOnRow1 = (sourceEdgeIndex >= 0 && sourceEdgeIndex < 5);
-        isOnRow2 = (sourceEdgeIndex >= 5 && sourceEdgeIndex < 10);
-        isOnRow3 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 15);
-        isOnRow34 = (sourceEdgeIndex >= 10 && sourceEdgeIndex < 20); //Middle W
-        isOnRow4 = (sourceEdgeIndex >= 15 && sourceEdgeIndex < 20);
-        isOnRow6 = (sourceEdgeIndex >= 20 && sourceEdgeIndex < 25);
-        isOnRow7 = (sourceEdgeIndex >= 25 && sourceEdgeIndex < 30);
+        row1 = 0;        row2 = 5;        row3 = 10;        row4 = 15;
+        row5 = 20;       row6 = 25;       rowLAST = 30;
+        isOnRow1 = (sourceEdgeIndex >= row1 && sourceEdgeIndex < row2);
+        isOnRow2 = (sourceEdgeIndex >= row2 && sourceEdgeIndex < row3);
+        isOnRow3 = (sourceEdgeIndex >= row3 && sourceEdgeIndex < row4);
+        isOnRow34 = (sourceEdgeIndex >= row3 && sourceEdgeIndex < row5); //Middle W
+        isOnRow4 = (sourceEdgeIndex >= row4 && sourceEdgeIndex < row5);
+        isOnRow5 = (sourceEdgeIndex >= row5 && sourceEdgeIndex < row6);
+        isOnRow6 = (sourceEdgeIndex >= row6 && sourceEdgeIndex < rowLAST);
         //Check if the faces we have are considered as the Top half of the cube.
         ontopA = (edgeFaceNeighbors.a > 1 && edgeFaceNeighbors.a < 7);
         ontopB = (edgeFaceNeighbors.b > 1 && edgeFaceNeighbors.b < 7);
         graymatchA = edgeFaceNeighbors.a == GRAY;
         graymatchB = edgeFaceNeighbors.b == GRAY;
         //drop-in directions: left is row 4, right is row 3 (determined from original I, not sourceEdgeIndex)
-        isRight = (i >= 10 && i < 15);
-        isLeft = (i >= 15 && i < 20);
+        isRight = (i >= row3 && i < row4);
+        isLeft = (i >= row4 && i < row5);
     }
 };
 
@@ -158,6 +161,7 @@ public:
     Corner *CornerItselfA;
     bool isOnRow1, isOnRow2, isOnRow3, isOnRow4;
     bool ontopA, ontopB, ontopC;
+    int row1, row2, row3, row4, rowLAST;
 
     CornerLayerAssist(Megaminx* shadowDom, int i) {
         sourceCornerIndex = shadowDom->findCorner(i);
@@ -173,10 +177,11 @@ public:
         assert(cornerFaceLocC != -1); //should not happen
         CornerItselfA = shadowDom->faces[cornerFaceNeighbors.a - 1].corner[cornerFaceLocA];
         //Line up things that are solved on the top face.
-        isOnRow1 = (sourceCornerIndex >= 0 && sourceCornerIndex < 5);
-        isOnRow2 = (sourceCornerIndex >= 5 && sourceCornerIndex < 10);
-        isOnRow3 = (sourceCornerIndex >= 10 && sourceCornerIndex < 15);
-        isOnRow4 = (sourceCornerIndex >= 15 && sourceCornerIndex < 20);
+        row1 = 0;        row2 = 5;        row3 = 10;        row4 = 15;        rowLAST = 20;
+        isOnRow1 = (sourceCornerIndex >= row1 && sourceCornerIndex < row2);
+        isOnRow2 = (sourceCornerIndex >= row2 && sourceCornerIndex < row3);
+        isOnRow3 = (sourceCornerIndex >= row3 && sourceCornerIndex < row4);
+        isOnRow4 = (sourceCornerIndex >= row4 && sourceCornerIndex < rowLAST);
         //New breakthrough idea, any matching pieces that end up on its matching face can be spun in 2 moves or 1.
         ontopA = (cornerFaceNeighbors.a > 1 && cornerFaceNeighbors.a < 7);
         ontopB = (cornerFaceNeighbors.b > 1 && cornerFaceNeighbors.b < 7);
@@ -278,9 +283,9 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                     if (edgeFaceNeighborsNext.a == g_faceNeighbors[l.edgeFaceNeighbors.a].right)
                         shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         }
-        else if (l.isOnRow6 || l.isOnRow7 && l.dirToWhiteA != 0)
+        else if (l.isOnRow5 || l.isOnRow6 && l.dirToWhiteA != 0)
             shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-        else if (l.isOnRow6 || l.isOnRow7 && l.dirToWhiteB != 0)
+        else if (l.isOnRow5 || l.isOnRow6 && l.dirToWhiteB != 0)
             shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         //These can still trigger if the top pieces are in the top row but the wrong slot (or are color-flipped)
         else if (l.isOnRow1 && l.dirToWhiteA != 0 && !facesSolved[l.edgeFaceNeighbors.a - 1])
@@ -376,7 +381,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         else if (l.isOnRow2) {
             int defaultDir = Face::CW;
             //int offby = l.sourceCornerIndex - i - 5;
-            megaminxColor turnface=BLACK;
+            megaminxColor turnface = {};
             //2nd rotation puts them on the gray face.
             if (l.ontopA && l.ontopB)
                 turnface = l.cornerFaceNeighbors.c;
@@ -477,14 +482,14 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         }
         //Layer 6 pieces are moved down to gray layer 7
-        else if (l.isOnRow6) {
+        else if (l.isOnRow5) {
             if (l.dirToWhiteA != 0)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, -1 * l.dirToWhiteA);
             else if (l.dirToWhiteB != 0)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.b, -1 * l.dirToWhiteB);
         }
         //Layer 7 is an intermediate buffer
-        else if (l.isOnRow7) {
+        else if (l.isOnRow6) {
             int row7 = l.sourceEdgeIndex - 28 - i;
             bool moved = shadowDom->shadowMultiRotate(GRAY, row7);
             //Align the GRAY layer 7 to be directly underneath the intended solve area
@@ -623,9 +628,9 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
 
         //Get ready for algorithms
         if ((l.isOnRow34 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0)))
-            || (l.isOnRow7)) {
+            || (l.isOnRow6)) {
             colordirs loc;
-            if (l.isOnRow7) {
+            if (l.isOnRow6) {
                 //Align GRAY top to the exact position for pre-drop-in.
                 int offby = l.sourceEdgeIndex - 27 - i;
                 if (l.isLeft) //row 4B's B-half is +1 from row4A's B-half (DARK_BLUE,LIGHT_GREEN) vs (DARK_BLUE,PINK)
@@ -640,13 +645,13 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             else if (l.isOnRow34)
                 loc = g_faceNeighbors[std::max(l.edgeFaceNeighbors.b, l.edgeFaceNeighbors.a)];
             //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6
-            if ((l.isOnRow7 && l.isLeft) || (l.isOnRow4)) {
+            if ((l.isOnRow6 && l.isLeft) || (l.isOnRow4)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow4))
                     bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[23].algo, loc, 23); // {23, "F' R' F', F' r f"},
                 else
                     bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[34].algo, loc, 34); // {34, "U' R' DR' F F DR R" },
             }
-            else if ((l.isOnRow7 && l.isRight) || (l.isOnRow3)) {
+            else if ((l.isOnRow6 && l.isRight) || (l.isOnRow3)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow3))
                     bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[24].algo, loc, 24); // {24, "f l f, f L' F' "},
                 else
@@ -655,7 +660,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
         //Row 6 - flip piece up to GRAY, then return the moved faces to unharm the low corners.
-        else if (l.isOnRow6) {
+        else if (l.isOnRow5) {
             if (l.dirToWhiteA != 0) {
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, -1 * l.dirToWhiteA);
                 shadowDom->shadowRotate(GRAY, l.dirToWhiteA);
@@ -766,9 +771,9 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
         std::vector<numdir> bulkAlgo;
 
         //Get ready for algorithms
-        if ((l.isOnRow6 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0)))
-            || (l.isOnRow7)) {
-            if (l.isOnRow7) {
+        if ((l.isOnRow5 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0)))
+            || (l.isOnRow6)) {
+            if (l.isOnRow6) {
                 //assert(l.dirToWhiteA == 0);
                 int offby = l.graymatchA ? (l.edgeFaceNeighbors.b - l.edgeHalfColorB) : (l.edgeFaceNeighbors.a - l.edgeHalfColorA);
                 //Align GRAY top to the exact position for pre-drop-in.
@@ -783,13 +788,13 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
             int y = l.edgeFaceNeighbors.b;
             bool isLeft = false, isRight = false;
             colordirs loc;
-            if (l.isOnRow7) {
+            if (l.isOnRow6) {
                 result = (l.graymatchA) ? y : x;
                 loc = g_faceNeighbors[result]; //loc.front
                 isLeft = (loc.left == l.edgeHalfColorA);
                 isRight = (loc.right == l.edgeHalfColorA);
             }
-            else if (l.isOnRow6) {
+            else if (l.isOnRow5) {
                 result = std::min(x, y);
                 if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
                     result = BEIGE;
@@ -799,8 +804,8 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
             //Check left/right faces for which direction to drop-in with isLeft/isRight
             int algo = isLeft ? 25 : isRight ? 26 : 25;
             //works to insert pieces from row7 to 6 and also pops wrong pieces out from 6 to 7
-                                                                                    //{25, "U' L' u l, u f U' F' "},
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[algo].algo, loc);  //{26, "u r U' R', U' F' u f "},
+            //{25, "U' L' u l, u f U' F' "},    //{26, "u r U' R', U' F' u f "},
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[algo].algo, loc, algo);
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
@@ -832,7 +837,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         bool piecesSolvedStrict[5] = { false };
         shadowDom->DetectSolvedEdges(i, &piecesSolvedStrict[0]);
         //Iterate past any already completely solved pieces in order.
-        while (i < 30 && piecesSolvedStrict[i - 25] == true)
+        while (i < 30 && piecesSolvedStrict[i - startingPiece] == true)
             i++;
         //Skip loop if we are completely solved.
         if (i >= 30) {
@@ -1302,14 +1307,6 @@ static int g_dirtyCountRDRD = 0;
 //Cube should have gray side on top, layer 1+2+3+4+5+6 Solved
 void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
 {
-//COMMENTED OUT TEMPORARILY
-    //bool areEdgesSolved[5] = { false };
-    //shadowDom->DetectSolvedEdges(25, &areEdgesSolved[0]);
-    //for (int k = 0; k < 5; ++k) {
-    //    if (!areEdgesSolved[k])
-    //        return;
-    //}
-
     //Loop management:
     bool allSolved = false;
     int loopcount = 0;
