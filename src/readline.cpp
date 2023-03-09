@@ -3,7 +3,9 @@
 #include <string.h>
 #include "ui/linenoise.h"
 
-void completion(const char *buf, linenoiseCompletions *lc) {
+void menuHandler(int num);
+
+void readlineCompletion(const char *buf, linenoiseCompletions *lc) {
     if (buf[0] == 'h') {
         linenoiseAddCompletion(lc,"hello");
         linenoiseAddCompletion(lc,"hello there");
@@ -11,9 +13,11 @@ void completion(const char *buf, linenoiseCompletions *lc) {
 }
 void readlineShell() {
     char *line;    
-    linenoiseSetCompletionCallback(completion);
+    linenoiseSetCompletionCallback(readlineCompletion);
     linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
-    while((line = linenoise("hello> ")) != NULL) {
+    printf("Megaminx Command Line Internals - \n");
+    printf("Readline Shell, starting...\n");
+    while((line = linenoise("megaminx> ")) != NULL) {
         /* Do something with the string. */
         if (line[0] != '\0' && line[0] != '/') {
             printf("echo: '%s'\n", line);
@@ -25,9 +29,22 @@ void readlineShell() {
             linenoiseHistorySetMaxLen(len);
         } else if (!strncmp(line,"/hello",6)) {
             printf("Hello world!\n");
+        } else if (!strncmp(line,"/menu",5)) {
+            int len = atoi(line+5);
+            printf("Executing Menu #%d\n", len);
+            menuHandler(len);
+        } else if (!strncmp(line,"/exit",5)) {
+            printf("Exiting shell, returning to GUI\n");
+            free(line);
+            return;
+        } else if (!strncmp(line,"/quit",5)) {
+            printf("Exiting shell, returning to GUI\n");
+            free(line);
+            return;
         } else if (line[0] == '/') {
-            printf("Unreconized command: %s\n", line);
+            printf("Unrecognized command: %s\n", line);
         }
         free(line);
-    }    
+    }
+    return;
 }
