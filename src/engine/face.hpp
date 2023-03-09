@@ -15,10 +15,10 @@ public:
     Face();
     virtual ~Face() = default;
 
+//TODO: maybe hold a pointer back to the parent megaminx.
     Center *center = {};
     Corner *corner[5] = {};
     Edge   *edge[5] = {};
-    //TODO: maybe hold a pointer back to the parent megaminx.
 
     int getNum() const { return thisNum; }
     void initAxis(int n);
@@ -155,7 +155,7 @@ struct AlgoString {
 
 //AlgoStrings                                       //name  //foundOrder - defaultOrder [i]
 //commented description is ^ above the described command
-constexpr AlgoString g_AlgoStrings[45] = {
+constexpr AlgoString g_AlgoStrings[50] = {
     // Initialize 0 with empty blank
     {0, ""},
 
@@ -350,13 +350,13 @@ constexpr AlgoString g_AlgoStrings[45] = {
     //Opposite direction of #17, 5-way edge cycle CCW (+2,+2,+2,+2,+2)
     {38, "r U2' L' u2 R' U2' l", 6 },
 
-    //Shorter version of #18 (5-way edge cycle 1,2,-1,2,1) (32m vs 60m) (#14+#33) (applicable face is changed by -2)
+    //Shorter version of #18 (5-way edge cycle 1,2,-1,2,1) (32m vs 60m) (combines algo #14+#33) (applicable face is changed by -2)
     {39, "r u R' u, R' U' r2 U', R' u R' u, r U2'  ,, u2 L', U' l U' l, u L2' u l, U' l U' L' " },
 
-    //Shorter version of #17 (5-way edge Cycle -2) (48m vs 60m) (#14+#14+#14)
+    //Shorter version of #17 (5-way edge Cycle -2) (48m vs 60m) (repeats algo #14+#14+#14) (opposite is #41 below)
     {40, "l u l' u, l' U' l2 U', l' u l' u, l U2'  ,, f u F' u, F' U' f2 U', F' u F' u, f U2' ,, r u R' u, R' U' r2 U', R' u R' u, r U2' "},
 
-    //shorter verison of #38 (5-way edge Cycle +2) (48m vs 60m) (#33+#33+#33) (opposite of #40 above)
+    //shorter verison of #38 (5-way edge Cycle +2) (48m vs 60m) (repeats algo #33+#33+#33) (opposite of #40 above)
     {41, "u2 R', U' r U' r, u R2' u r, U' r U' R'  ,, u2 F', U' f U' f, u F2' u f, U' f U' f' ,, u2 l', U' l U' l, u l2' u l, U' l U' l' "},
 
     //shorter version of #19 Bunny Adj. Edge Swap 2&3/4&5 (#33+#33) (32m) (applicable face is changed by -2)
@@ -364,6 +364,21 @@ constexpr AlgoString g_AlgoStrings[45] = {
 
     //Shorter Opposite version of #39 (#18) (cycle -1,-2,1,-2,-1) (32m)  (applicable face is changed by -2)
     { 43, "l u L' u, L' U' l2 U', L' u L' u, l U2' ,, u2 R', U' r U' r, u R2' u r, U' r U' R' " },
+
+    //Left  (drop in edge) - Third layer edges and corners
+    { 44 , "F' R' F'2 R F" },
+    //Right  (drop in edge) - Third layer edges and corners
+    { 45 , "F L F2 L' F' " },
+
+    //Top star Yellow Cross First case (flips F and R edges): 
+    {46, "F U R U' R' F'" },
+    //Top star Yellow Cross Second case (flips F and B edges): 
+    {47, "F R U R' U' F'" },
+    //cycle edges, clockwise
+    { 48, "R U R' U, R U U U R' U"},
+    //cycle edges, AntiClockwise
+    { 49, "U' R U2 R' U' R U' R'"},
+
 };
 
 #endif

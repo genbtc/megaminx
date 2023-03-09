@@ -127,33 +127,29 @@ void Megaminx::rotate(int num, int dir)
 }
 
 /**
- * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops to happen
- * in accordance with how a player would want to achieve certain moves.
+ * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops
  * \param face from 1 - 12
  * \param id Index into g_AlgoStrings[] struct
  */
-void Megaminx::rotateAlgo(int face, int id)
+void Megaminx::rotateAlgo(int algoID, int face)
 {
+    if (face == -1)
+        face = g_currentFace->getNum()+1;
     assert(face > 0 && face <= numFaces);
     //Either rotate 1 time, or however many repeatX says, if it exists.
-    int repeat = g_AlgoStrings[id].repeatX ? g_AlgoStrings[id].repeatX : 1;
+    int repeat = g_AlgoStrings[algoID].repeatX ? g_AlgoStrings[algoID].repeatX : 1;
     for (int n = 0; n < repeat; ++n) {
-        rotateBulkAlgoString(g_AlgoStrings[id].algo, g_faceNeighbors[face]);
+        rotateBulkAlgoString(g_AlgoStrings[algoID].algo, g_faceNeighbors[face], algoID);
     }
 }
 
-//Takes an Algo String and parses it, vectorizes it, then rotates it. (based off current-face)
-void Megaminx::rotateBulkAlgoString(std::string algoString)
+//Takes an Algo String and parses it, vectorizes it, then rotates it. (Algo ID is tracked)
+void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc, int algoID)
 {
-    rotateBulkAlgoString(algoString, g_faceNeighbors[g_currentFace->getNum() + 1]);
-}
-//Takes an Algo String and parses it, vectorizes it, then rotates it. (loc is passed in)
-void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc)
-{
-    std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc);
+    std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc, algoID);
     rotateBulkAlgoVector(bulk);
 }
-//Adds entire vector of numdirs to the Rotate queue one by one.
+//Adds entire vector of numdirs to the Rotate queue one by one. 
 void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
 {
     undoStack.push({ -999,-999 });  //begin flag

@@ -45,5 +45,5 @@ void Center::render() const
     makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);   //label the piece with a string, floating as a tag
     //TODO: Crude coords, aesthetics of text string. Option: Disable
     if (textGLCenterLabels)
-        utDrawText3D(_vertex[3][0],_vertex[3][1],_vertex[2][2],GLUT_BITMAP_HELVETICA_18, data._colorName[0]);
+        utDrawText3D(_vertex[4][0]*1.1,_vertex[4][1]*1.1,_vertex[4][2]*1.1,GLUT_BITMAP_HELVETICA_18, data._colorName[0]);    
 }

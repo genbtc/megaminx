@@ -14,7 +14,7 @@
 #include <GL/glut.h>
 
 // optional bool:
-static int textGLCenterLabels = 0;
+static int textGLCenterLabels = 1;
 
 // 2D and TEXT MODE
 void utSetOrthographicProjection(float scrW, float scrH);

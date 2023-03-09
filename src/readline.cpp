@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ui/linenoise.h"
+#include "engine/megaminx.hpp"
 
+// include prototypes
 void menuHandler(int num);
 
 void readlineCompletion(const char *buf, linenoiseCompletions *lc) {
@@ -30,9 +32,12 @@ void readlineShell() {
         } else if (!strncmp(line,"/hello",6)) {
             printf("Hello world!\n");
         } else if (!strncmp(line,"/menu",5)) {
-            int len = atoi(line+5);
-            printf("Executing Menu #%d\n", len);
-            menuHandler(len);
+            int num = atoi(line+5);
+            printf("Executing Menu #%d\n", num);
+            menuHandler(num);
+        } else if (!strncmp(line,"/algo",5)) {
+            int num = atoi(line+5);
+            megaminx->rotateAlgo(num);
         } else if (!strncmp(line,"/exit",5)) {
             printf("Exiting shell, returning to GUI\n");
             free(line);

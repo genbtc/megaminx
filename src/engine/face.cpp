@@ -126,9 +126,8 @@ void Face::swapEdges(int a, int b) { swapPieces<Edge>(a, b); }
 template <typename T>
 void Face::QuadSwapPieces(const int pack[8])
 {
-    for (int i = 0; i < 4; ++i) {
-        int pair = 2*i;
-        swapPieces<T>(pack[pair], pack[pair+1]);
+    for (int i = 0; i < 8; i+=2) {
+        swapPieces<T>(pack[i], pack[i+1]);
     }
 } //where T = Corner or Edge
 void Face::QuadSwapCorners(const int pack[8]) { QuadSwapPieces<Corner>(pack); }
