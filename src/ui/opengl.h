@@ -13,6 +13,9 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+// optional bool:
+static int textGLCenterLabels = 0;
+
 // 2D and TEXT MODE
 void utSetOrthographicProjection(float scrW, float scrH);
 void utResetPerspectiveProjection();
