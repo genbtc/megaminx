@@ -1,6 +1,5 @@
-#include "engine/megaminx.hpp"
-#include "ui/camera.hpp"
-
+#ifndef __MAIN_H__
+#define __MAIN_H__
 ///////////////////////////////////////////////////////////////////////
 //framerate cap for monitor with 60 Hz:
 const double REFRESH_RATE = 60.0;
@@ -15,8 +14,6 @@ const double view_distance_view_angle = 20;
 ////////////////////////////////////////////////////////////////////////
 
 //global refs - megaminx.cpp
-extern Megaminx* megaminx;
-extern Megaminx* shadowDom;
 void createMegaMinx();
 void GetCurrentFace();
 
@@ -49,3 +46,5 @@ int GetDirFromSpecialKey();
 #define utLOG(msg, ...) { printf("%s: ", __FUNCTION__); printf(msg, __VA_ARGS__); printf("\n"); }
 #define utLOG_ERROR(msg, ...) { printf("ERR in %s, %d: ", __FUNCTION__, __LINE__); printf(msg, __VA_ARGS__); printf("\n"); }
 #endif
+
+#endif // __MAIN_H__

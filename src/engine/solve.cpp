@@ -197,6 +197,8 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 0;
+    int endingPiece = startingPiece + 5;
     do {
         //basic overflow protection:
         if (loopcount > 101)
@@ -205,9 +207,9 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         bool facesSolved[numFaces] = { false };
         bool piecesSolved[5] = { false };
         //Start detecting what pieces are solved
-        shadowDom->DetectSolvedEdgesUnOrdered(0, piecesSolved);
+        shadowDom->DetectSolvedEdgesUnOrdered(startingPiece, piecesSolved);
         bool areEdgesFullySolved[5] = { false };
-        shadowDom->DetectSolvedEdges(0, &areEdgesFullySolved[0]);
+        shadowDom->DetectSolvedEdges(startingPiece, &areEdgesFullySolved[0]);
         int firstSolvedPiece = -1;
         for (int a = 0; a < 5; ++a) {
             facesSolved[1 + a] = piecesSolved[a];
@@ -215,19 +217,19 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 firstSolvedPiece = a;
         }
         //if its solved early <5, increase loop to continue to next piece
-        while (i < 5 && areEdgesFullySolved[i] == true)
+        while (i < endingPiece && areEdgesFullySolved[i] == true)
             i++;
         //if everything is solved, its done
         auto allSolved1 = std::all_of(std::begin(piecesSolved), std::end(piecesSolved), [](bool j) { return j; });
         auto allSolved2 = std::all_of(std::begin(areEdgesFullySolved), std::end(areEdgesFullySolved), [](bool j) { return j; }); //TT88-2
-        if (i >= 5 && allSolved1 && allSolved2) {
+        if (i >= endingPiece && allSolved1 && allSolved2) {
             allSolved = true;   //TT12-huh
             break;
         }
         //means we got to the end of the first pass,
         // but something else came undone, go back and fix it, one more pass.
-        else if (i >= 5) {
-            i = 0;
+        else if (i >= endingPiece) {
+            i = startingPiece;
             continue;
         }
         //solving detection is done.
@@ -303,7 +305,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     } while (!allSolved);
     //If its solved, get top white face spun oriented back to normal
     if (allSolved) {
-        int findIfPieceSolved = shadowDom->findEdge(0); //always piece 0
+        int findIfPieceSolved = shadowDom->findEdge(startingPiece); //always piece 0
         if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
             findIfPieceSolved *= -1;
             shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved); //redundant, line243 reverses this
@@ -324,16 +326,18 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 0;
+    int endingPiece = startingPiece + 5;
     do {
         //basic overflow protection:
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false };
-        shadowDom->DetectSolvedCorners(0, piecesSolved);
-        int i = 0; //the starting piece
-        while (i < 5 && piecesSolved[i] == true)
+        shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
+        int i = startingPiece; //the starting piece
+        while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
-        if (i >= 5) {
+        if (i >= endingPiece) {
             allSolved = true;
             continue;
         }
@@ -342,7 +346,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
 
         //Rotates the white face to its solved position, first solved EDGE matches up to its face.
         //Edges should already be solved, if not, get top white face spun oriented back to normal
-        int edgesOffBy = shadowDom->findEdge(0); //always piece 0
+        int edgesOffBy = shadowDom->findEdge(startingPiece); //always piece 0
         if (edgesOffBy > 0 && edgesOffBy < 5) {
             edgesOffBy *= -1;
             shadowDom->shadowMultiRotate(WHITE, edgesOffBy);
@@ -441,16 +445,18 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 5;
+    int endingPiece = startingPiece + 5;
     do {
         //basic overflow protection:
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false };
-        shadowDom->DetectSolvedEdges(5, piecesSolved);
-        int i = 5; //the starting piece
-        while (i < 10 && piecesSolved[i - 5] == true)
+        shadowDom->DetectSolvedEdges(startingPiece, piecesSolved);
+        int i = startingPiece; //the starting piece
+        while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
-        if (i >= 10) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }
@@ -493,7 +499,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
             int row7 = l.sourceEdgeIndex - 28 - i;
             bool moved = shadowDom->shadowMultiRotate(GRAY, row7);
             //Align the GRAY layer 7 to be directly underneath the intended solve area
-            if (moved == false) {
+            if (!moved) {
                 if (l.dirToWhiteA != 0) {
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
@@ -521,16 +527,18 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 5;
+    int endingPiece = startingPiece + 5;
     do {
         //basic overflow protection:
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false };
-        shadowDom->DetectSolvedCorners(5, piecesSolved);
-        int i = 5; //the starting piece
-        while (i < 10 && piecesSolved[i - 5] == true)
+        shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
+        int i = startingPiece; //the starting piece
+        while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
-        if (i >= 10) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }
@@ -609,17 +617,20 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 10;
+    int middlePiece = startingPiece + 5; //second row
+    int endingPiece = startingPiece + 10; //two rows end
     do {
         //basic overflow protection:
         if (loopcount > 101)
             break;
         bool piecesSolved[10] = { false };
-        shadowDom->DetectSolvedEdges(10, piecesSolved);
-        shadowDom->DetectSolvedEdges(15, &piecesSolved[5]);
-        int i = 10; //the piece
-        while (i < 20 && piecesSolved[i - 10] == true)
+        shadowDom->DetectSolvedEdges(startingPiece, piecesSolved);
+        shadowDom->DetectSolvedEdges(middlePiece, &piecesSolved[5]);
+        int i = startingPiece; //the piece
+        while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
-        if (i >= 20) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }
@@ -689,16 +700,18 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 10;
+    int endingPiece = startingPiece + 5;
     do {
         //basic overflow protection:
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false };
-        shadowDom->DetectSolvedCorners(10, piecesSolved);
-        int i = 10; //the starting piece
-        while (i < 15 && piecesSolved[i - 10] == true)
+        shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
+        int i = startingPiece; //the starting piece
+        while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
-        if (i >= 15) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }
@@ -732,7 +745,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             int offby = l.sourceCornerIndex - i * -1;
             shadowDom->shadowMultiRotate(GRAY, offby);
             //quick shortcut to know which face we're working on.
-            int front = BEIGE - (i - 10);
+            int front = BEIGE - (i - startingPiece);
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[front], 1); // "r u R' U' "
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
@@ -754,16 +767,18 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int unknownloop = 0;
+    int startingPiece = 20;
+    int endingPiece = startingPiece + 5;
     do {
         //basic overflow protection:
         if (loopcount > 101)
             break;
         bool piecesSolved[5] = { false };
-        shadowDom->DetectSolvedEdges(20, piecesSolved);
-        int i = 20; //the starting piece
-        while (i < 25 && piecesSolved[i - 20] == true)
+        shadowDom->DetectSolvedEdges(startingPiece, piecesSolved);
+        int i = startingPiece; //the starting piece
+        while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
-        if (i >= 25) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }
@@ -827,6 +842,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
     int loopcount = 0;
     int unknownloop = 0;
     int startingPiece = 25;
+    int endingPiece = startingPiece + 5;
     //Loop:
     do {
         //basic overflow protection:
@@ -837,10 +853,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         bool piecesSolvedStrict[5] = { false };
         shadowDom->DetectSolvedEdges(i, &piecesSolvedStrict[0]);
         //Iterate past any already completely solved pieces in order.
-        while (i < 30 && piecesSolvedStrict[i - startingPiece] == true)
+        while (i < endingPiece && piecesSolvedStrict[i - startingPiece] == true)
             i++;
         //Skip loop if we are completely solved.
-        if (i >= 30) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }
@@ -1311,6 +1327,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
     bool allSolved = false;
     int loopcount = 0;
     int startingPiece = 15;
+    int endingPiece = startingPiece + 5;
     //Loop:
     do {
         //basic overflow protection:
@@ -1318,11 +1335,11 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             break;
         bool grayFaceColorSolved[5] = { false };
         bool piecesSolvedStrict[5] = { false };
-        shadowDom->DetectSolvedCorners(15, piecesSolvedStrict);
+        shadowDom->DetectSolvedCorners(startingPiece, piecesSolvedStrict);
         int i = startingPiece; //the starting piece
-        while (i < 20 && piecesSolvedStrict[i - startingPiece] == true)
+        while (i < endingPiece && piecesSolvedStrict[i - startingPiece] == true)
             i++;
-        if (i >= 20) {
+        if (i >= endingPiece) {
             allSolved = true;
             break;
         }

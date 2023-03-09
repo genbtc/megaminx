@@ -127,7 +127,6 @@ void Camera::ProcessMouse(int button, int state, int x, int y)
     }
 }
 
-extern int menuVisibleState;
 void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
 {
     m_mouseX = x;

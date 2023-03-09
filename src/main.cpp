@@ -16,19 +16,19 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.3.9";
 #include <windows.h>
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <cstdlib>
 #include <time.h>
 #include "main.h"
+#include "ui/opengl.h"
+#include "ui/camera.hpp"
+#include "engine/megaminx.hpp"
 
 // global vars main
-static int g_window;
+int g_window;
 char lastface[32] = {};
 int currentFace;
 bool g_help = false;
-static Camera g_camera;
+Camera g_camera;
 double g_appRenderTimeTotal = 0.0;
 double g_appIdleTime = 0.0;
 double g_solveravg = 0.;

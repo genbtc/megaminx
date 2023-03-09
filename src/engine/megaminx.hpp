@@ -190,6 +190,10 @@ private:
     friend class EdgeLayerAssist;
     friend class CornerLayerAssist;
 };
+// global main Megaminx object (pointer, managed)
+extern Megaminx* megaminx;
+extern Megaminx* shadowDom;
+
 static auto MM = [](int &over) { while (over >= 5) over -= 5; };
 static auto MMge = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };

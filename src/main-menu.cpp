@@ -1,9 +1,6 @@
+#include "main-menu.hpp"
 #include "engine/megaminx.hpp"
 #include "engine/load.hpp"
-#include "main-menu.hpp"
-
-extern Megaminx* megaminx;
-extern Megaminx* shadowDom;
 
 // Main Keyboard Handler
 void myglutOnKeyboard(unsigned char key, int x, int y) {
@@ -212,6 +209,7 @@ void createMenu()
     glutAddMenuEntry("New Cube...", 92);
     glutAddMenuEntry("Save Cube...", 98);
     glutAddMenuEntry("Restore Cube...", 99);
+    glutAddMenuEntry("Readline Shell:>", 101);
     glutAddMenuEntry("Exit!", 102);
 
     //SubLevel4 Menu - Human Bulk Rotate Algos
@@ -433,6 +431,8 @@ void menuHandler(int num)
         megaminx->undoBulk(); break;
     case 100:
         megaminx->scramble(); break;
+    case 101:
+        readlineShell(); break;
     case 102:
         glutDestroyWindow(1);
         exit(0); break;

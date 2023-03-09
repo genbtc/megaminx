@@ -1,10 +1,6 @@
 #include "megaminx.hpp"
 #include "load.hpp"
 
-extern Megaminx* megaminx;
-extern Megaminx* shadowDom;
-//pre-declarations (^ these should be passed as params, no need for extern globals)
-
 //Cube SaveState filenames
 #define EDGEFILE "EdgePositions30.dat"
 #define EDGEFILECOLORS "EdgeColors30.dat"
