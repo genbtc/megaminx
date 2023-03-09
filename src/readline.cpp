@@ -21,10 +21,14 @@ void readlineShell() {
     printf("Readline Shell, starting...\n");
     while((line = linenoise("megaminx> ")) != NULL) {
         /* Do something with the string. */
+        linenoiseHistoryAdd(line); /* Add to the history. */
+        linenoiseHistorySave("history.txt"); /* Save the history on disk. */
         if (line[0] != '\0' && line[0] != '/') {
             printf("echo: '%s'\n", line);
-            linenoiseHistoryAdd(line); /* Add to the history. */
-            linenoiseHistorySave("history.txt"); /* Save the history on disk. */
+        } else if (line[0] == '\0') {
+            printf("No Input, returning to GUI.\n");
+            free(line);
+            return;            
         } else if (!strncmp(line,"/historylen",11)) {
             /* The "/historylen" command will change the history len. */
             int len = atoi(line+11);
@@ -37,12 +41,13 @@ void readlineShell() {
             menuHandler(num);
         } else if (!strncmp(line,"/algo",5)) {
             int num = atoi(line+5);
+            printf("Executing Algo #%d\n", num);
             megaminx->rotateAlgo(num);
-        } else if (!strncmp(line,"/exit",5)) {
             printf("Exiting shell, returning to GUI\n");
             free(line);
             return;
-        } else if (!strncmp(line,"/quit",5)) {
+        } else if ((!strncmp(line,"/exit",5))
+                || (!strncmp(line,"/quit",5))) {
             printf("Exiting shell, returning to GUI\n");
             free(line);
             return;

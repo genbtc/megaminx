@@ -189,7 +189,7 @@ public:
     }
 };
 
-//Layer 1 part 1 - White Edges
+//Layer 1 part 1 - White Edges ( )
 void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
 {
     int i = 0;
@@ -253,7 +253,8 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         }
         //Any matching pieces that end up on its matching face can be spun in with just 2 or 1 moves.
         if (l.ontopA && ((l.isOnRow34 && l.colormatchA) || l.isOnRow2)) {
-            int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA) : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
+            int offby = l.colormatchA ? (l.edgeFaceNeighbors.a - l.edgeHalfColorA)
+                                      : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
             //Set up Rotated White top to be in-line with the face we want to spin in.
             shadowDom->shadowMultiRotate(WHITE, offby);
             //rotate pieces in
@@ -303,7 +304,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         updateRotateQueueWithShadow(shadowDom);
 
     } while (!allSolved);
-    //If its solved, get top white face spun oriented back to normal
+    //Not needed. If its solved, get top white face spun oriented back to normal
     if (allSolved) {
         int findIfPieceSolved = shadowDom->findEdge(startingPiece); //always piece 0
         if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
@@ -316,10 +317,10 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     updateRotateQueueWithShadow(shadowDom);
     //Error Checking, make sure we don't progress past any ambiguous states during development
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolveWhiteEdges 1 1" << std::endl;
+    std::cout << "Solved rotateSolveWhiteEdges 1 1 in " << loopcount << " loops" << std::endl;
 }
 
-//Layer 1 part 2 - White Corners
+//Layer 1 part 2 - White Corners ( #5, #0 )
 void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
 {
     //Loop management:
@@ -435,7 +436,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolveWhiteCorners 1 2" << std::endl;
+    std::cout << "Solved rotateSolveWhiteCorners 1 2 in " << loopcount << " loops" << std::endl;
 }
 
 //Layer 2 - Edges
@@ -517,10 +518,10 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolveLayer2Edges 2" << std::endl;
+    std::cout << "Solved rotateSolveLayer2Edges 2 in " << loopcount << " loops" << std::endl;
 }
 
-//Layer 3 - Corners
+//Layer 3 - Corners ( )
 void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
 {
     //Loop management:
@@ -606,10 +607,10 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolve3rdLayerCorners 3" << std::endl;
+    std::cout << "Solved rotateSolve3rdLayerCorners 3 in " << loopcount << " loops" << std::endl;
 }
 
-//Layer 4 - Edges
+//Layer 4 - Edges ( #35, #23, #24 , #34 )
 //Cube must have gray side on top, layer 1+2+3 Solved and rest of puzzle Unsolved
 void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
 {
@@ -690,10 +691,10 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolveLayer4Edges 4" << std::endl;
+    std::cout << "Solved rotateSolveLayer4Edges 4 in " << loopcount << " loops" << std::endl;
 }
 
-//Layer 5 - Corners
+//Layer 5 - Corners ( #1 )
 void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
 {
     //Loop management:
@@ -756,10 +757,10 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolve5thLayerCorners 5" << std::endl;
+    std::cout << "Solved rotateSolve5thLayerCorners 5 in " << loopcount << " loops" << std::endl;
 }
 
-//Layer 6 - Edges
+//Layer 6 - Edges ( #26, #25 )
 //Cube must have gray side on top, layer 1+2+3+4+5 Solved, and rest of puzzle Unsolved
 void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
 {
@@ -830,10 +831,10 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolveLayer6Edges 6" << std::endl;
+    std::cout << "Solved rotateSolveLayer6Edges 6 in " << loopcount << " loops" << std::endl;
 }
 
-//Last Layer = Layer 7 EDGES (GRAY top)
+//Last Layer = Layer 7 EDGES (GRAY top) ( #14, #20, #13, #14 )
 //Cube must have gray side on top, layer 1+2+3+4+5+6 Solved
 void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 {
@@ -1312,14 +1313,14 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
     assert(unknownloop == 0);
-    std::cout << "Solved rotateSolveLayer7Edges 7 1" << std::endl;
+    std::cout << "Solved rotateSolveLayer7Edges 7 1 in " << loopcount << " loops" << std::endl;
 }
 
 static int g_dirtyBitRDRD = 0;
 static int g_dirtyFaceRDRD = 0;
 static int g_dirtyCountRDRD = 0;
 
-//Last Layer = Layer 7 CORNERS (GRAY top)
+//Last Layer = Layer 7 CORNERS (GRAY top) (#7 , #27, #5)
 //Cube should have gray side on top, layer 1+2+3+4+5+6 Solved
 void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
 {
@@ -1417,6 +1418,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
         } //continues with --> "18 16 15 17 19" below (no pairs yet)
 
+        //(19 18 17 16 15) - TT21-2
+        else if (checkPieceMatches(pieceOrder, 19, 18, 17, 16, 15))
+        {
+            int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#7 Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
+        } //continues with --> "15 19 17 16 18" belo (no pairs yet)
+
         //(18 17 15 19 16)
         else if (checkPieceMatches(pieceOrder, 18, 17, 15, 19, 16))
         {
@@ -1464,14 +1473,6 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 18 19 16 17" below (no pairs yet)
-
-        //(19 18 17 16 15) - TT21-2
-        else if (checkPieceMatches(pieceOrder, 19, 18, 17, 16, 15))
-        {
-            int startFace = LIGHT_BLUE + 2;
-            colordirs loc = g_faceNeighbors[startFace];    //Algo#7 Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[7].algo, loc, 7);
-        } //continues with --> "15 19 17 16 18" belo (no pairs yet)
 
 //39 cases to make pairs:
         //(18 15 19 17 16) - TestCube25-1
@@ -1894,7 +1895,7 @@ startColorFlippingCorners:
     } while (!allSolved);
     //After all loops, load the shadow Queue into the real queue
     updateRotateQueueWithShadow(shadowDom);
-    std::cout << "Solved rotateSolve7thLayerCorners 7 2" << std::endl;
+    std::cout << "Solved rotateSolveLayer7Corners 7 2 in " << loopcount << " loops" << std::endl;
 }
 
 void Megaminx::testingAlgostrings(Megaminx* shadowDom)

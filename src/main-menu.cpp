@@ -8,21 +8,22 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     const auto specialKey = glutGetModifiers();
     if (specialKey & GLUT_ACTIVE_CTRL) {
         switch (key) {
-        case 3: // Ctrl+C
+        case 'c': // Ctrl+C
             glutDestroyWindow(1);
             exit(0);
             break;
-        case 26: // Ctrl+Z
+        case 'z': // Ctrl+Z
             megaminx->undo();
             break;
-        case 19: // CTRL+S //Save Game State
+        case 's': // CTRL+S //Save Game State
             SaveCubetoFile();
             break;
-        case 18: // CTRL+R //Restore Game State
+        case 'r': // CTRL+R //Restore Game State
             RestoreCubeFromFile();
             break;
         default:
             break;
+            
         }
     }
     //Game commands
@@ -38,7 +39,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
         resetCameraViewport();
         break;
     case 13:	// enter
-        megaminx->resetFace(currentFace);
+        readlineShell();
         break;
     case 27:	// escape
         megaminx->resetQueue();
@@ -233,7 +234,7 @@ void createMenu()
     glutAddMenuEntry("29. 7LL-Edge 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);    
     glutAddMenuEntry("38. 7LL-Edge 5-way CCW cycle by +2 all", 88);
     glutAddMenuEntry("17. 7LL-Edge 5-way  CW cycle by -2 all", 67);
-    //glutAddMenuEntry("7LL-Edge18 5-way CCW cycle by 1,2,-1,2,1", 68);
+    //glutAddMenuEntry("18. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
     glutAddMenuEntry("39. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 189);
     glutAddMenuEntry("43. 7LL-Edge 5-way  CW cycle by -1,-2,1,-2,-1", 193);
     //
@@ -249,8 +250,8 @@ void createMenu()
     glutAddMenuEntry("07. 7LL Corners: Cycle- CCW FrontLine=Safe", 57);
     glutAddMenuEntry("27. 7LL Corners: Cycle+  CW RightLine=Safe", 77);
 //NOTE:I consider these 2 below redundant to the 2 above:
-//  glutAddMenuEntry("LL Corners: Cycle- CCW L.Back=Safe", 56);
-//  glutAddMenuEntry("LL Corners: Cycle- CCW Left=Safe", 78);
+//  glutAddMenuEntry("06. LL Corners: Cycle- CCW L.Back=Safe", 56);
+//  glutAddMenuEntry("28. LL Corners: Cycle- CCW Left=Safe", 78);
 
     submenu7_id = glutCreateMenu(menuHandler);
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)
