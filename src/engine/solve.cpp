@@ -335,7 +335,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             break;
         bool piecesSolved[5] = { false };
         shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
-        int i = startingPiece; //the starting piece
+        int i = startingPiece;
         while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
         if (i >= endingPiece) {
@@ -454,7 +454,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
             break;
         bool piecesSolved[5] = { false };
         shadowDom->DetectSolvedEdges(startingPiece, piecesSolved);
-        int i = startingPiece; //the starting piece
+        int i = startingPiece;
         while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
         if (i >= endingPiece) {
@@ -536,7 +536,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
             break;
         bool piecesSolved[5] = { false };
         shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
-        int i = startingPiece; //the starting piece
+        int i = startingPiece;
         while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
         if (i >= endingPiece) {
@@ -709,7 +709,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             break;
         bool piecesSolved[5] = { false };
         shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
-        int i = startingPiece; //the starting piece
+        int i = startingPiece;
         while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
         if (i >= endingPiece) {
@@ -776,7 +776,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
             break;
         bool piecesSolved[5] = { false };
         shadowDom->DetectSolvedEdges(startingPiece, piecesSolved);
-        int i = startingPiece; //the starting piece
+        int i = startingPiece;
         while (i < endingPiece && piecesSolved[i - startingPiece] == true)
             i++;
         if (i >= endingPiece) {
@@ -849,8 +849,8 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         //basic overflow protection:
         if (loopcount > 101)
             break;
-        int i = startingPiece; //the starting piece
-        //Stores piece and color status from the gray face, as detected by the functions
+        int i = startingPiece;
+        //Stores piece and color status from the gray face
         bool piecesSolvedStrict[5] = { false };
         shadowDom->DetectSolvedEdges(i, &piecesSolvedStrict[0]);
         //Iterate past any already completely solved pieces in order.
@@ -864,8 +864,9 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         bool grayFaceColorSolved[5] = { false };
         bool piecesSolvedMaybe[5] = { false };
         shadowDom->DetectSolvedEdgesUnOrdered(i, &piecesSolvedMaybe[0]);
+        //Populate the current order state:
+        //auto pieceOrder = megaminx->face->findEdgesOrder();
         std::vector<int> pieceOrder(5);
-        //Compile the accurate color solved maybe list.  (if rotated)
         for (int k = 0; k < 5; ++k) {
             Edge* EdgeItselfNext = shadowDom->faces[GRAY - 1].edge[k];
             if (EdgeItselfNext->data.flipStatus == 0)
@@ -1337,7 +1338,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         bool grayFaceColorSolved[5] = { false };
         bool piecesSolvedStrict[5] = { false };
         shadowDom->DetectSolvedCorners(startingPiece, piecesSolvedStrict);
-        int i = startingPiece; //the starting piece
+        int i = startingPiece;
         while (i < endingPiece && piecesSolvedStrict[i - startingPiece] == true)
             i++;
         if (i >= endingPiece) {
@@ -1345,13 +1346,14 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             break;
         }
         //Set up main loop vars
+        std::vector<numdir> bulkAlgo;
         int sourceCornerIndex = shadowDom->findCorner(i);
         auto currentPiece = shadowDom->getPieceArray<Corner>(sourceCornerIndex);
         bool currentpieceFlipStatusOK = currentPiece->data.flipStatus == 0;
         int offby = sourceCornerIndex - i;
-        std::vector<numdir> bulkAlgo;
+        //Populate the current order state:
+        //auto pieceOrder = megaminx->face->findEdgesOrder();
         std::vector<int> pieceOrder (5);
-        //Compile the accurate color solved maybe list.  (if rotated)
         for (int k = 0; k < 5; ++k) {
             Corner* CornerItselfNext = shadowDom->faces[GRAY - 1].corner[k];
             if (CornerItselfNext->data.flipStatus == 0)
@@ -1382,18 +1384,16 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         }
 
 //START MAIN
-
         //skip to the end if positioned correctly
         if (fullySolvedOrder)
             goto startColorFlippingCorners;
-
         //skip to the middle if we can, starting with pairs
         else if (hasTwoAdjacentSolved)
             goto haveTwoAdjacentSolved;
 
 //49 Testcases Total:
 
-//10 "no visible progress" cases
+//10 "no visible pairs progress" cases
         //(15 18 19 16 17)
         else if (checkPieceMatches(pieceOrder, 15, 18, 19, 16, 17))
         {
@@ -1875,9 +1875,9 @@ startColorFlippingCorners:
             int rotateOffset = (target - g_dirtyFaceRDRD);
             if (g_dirtyCountRDRD != 0)
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD], 5); //algo #5 "R' DR' r dr"
-            shadowDom->bulkShadowRotate(bulkAlgo);
-            shadowDom->bulkShadowRotate(bulkAlgo);
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD], 5);
+            shadowDom->bulkShadowRotate(bulkAlgo);   //Algo#7 "R' DR' r dr"
+            shadowDom->bulkShadowRotate(bulkAlgo);   //Algo#7 "R' DR' r dr"
             rotateOffset *= -1;
             if (g_dirtyCountRDRD != 0 )
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);
@@ -1907,7 +1907,7 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         shadowDom->LoadNewCornersFromOtherCube(this);
     }
     //for (; ;)   //call one at a time for now
-    int algo = 12;
+    for (int algo=1; algo<50; ++algo)
     {
         AlgoString a = g_AlgoStrings[algo];
         colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //front-face (adjustable)
@@ -1925,8 +1925,11 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         }
         //output the difference as an int.
         std::vector<int> newDifference(5);
-        for (int k = 0; k < 5; ++k)
+        for (int k = 0; k < 5; ++k) {
             newDifference[k] = foundEdges[k] - defaultEdges[k];
+            std::cout << newDifference[k] << " ";
+        }
+        std::cout << " = Algo " << algo << std::endl;
         int printfbreakpoint = 0;   //break on this and inspect.
     }
     updateRotateQueueWithShadow(shadowDom); //actually output the algo's changes to main cube's GUI

@@ -19,33 +19,49 @@ void readlineShell() {
     linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
     printf("Megaminx Command Line Internals - \n");
     printf("Readline Shell, starting...\n");
+    /* Interactive Prompt: megaminx> */
     while((line = linenoise("megaminx> ")) != NULL) {
-        /* Do something with the string. */
-        linenoiseHistoryAdd(line); /* Add to the history. */
+        linenoiseHistoryAdd(line);  /* Add input line to the history file. */
         linenoiseHistorySave("history.txt"); /* Save the history on disk. */
-        if (line[0] != '\0' && line[0] != '/') {
-            printf("echo: '%s'\n", line);
-        } else if (line[0] == '\0') {
+        if (line[0] == '\0') {
             printf("No Input, returning to GUI.\n");
             free(line);
             return;            
+        } else if (line[0] != '\0' && line[0] != '/') {
+            printf("echo: '%s'\n", line);
         } else if (!strncmp(line,"/historylen",11)) {
-            /* The "/historylen" command will change the history len. */
             int len = atoi(line+11);
-            linenoiseHistorySetMaxLen(len);
+            linenoiseHistorySetMaxLen(len); /* change the history length. */
+            printf("Changed History Length to #%d lines\n", len);            
         } else if (!strncmp(line,"/hello",6)) {
             printf("Hello world!\n");
         } else if (!strncmp(line,"/menu",5)) {
             int num = atoi(line+5);
             printf("Executing Menu #%d\n", num);
             menuHandler(num);
+        } else if (!strncmp(line,"/algotest",9)) {
+            printf("Testing All Algorithms 1-50! ...\n");
+            megaminx->testingAlgostrings(shadowDom);
+            free(line);
+            return;
+        } else if (!strncmp(line,"/algodiff",9)) {
+            int num = atoi(line+9);
+            for (int i=1;i<50;i++) {
+                auto algo = megaminx->ParseAlgorithmString(i, LIGHT_BLUE);
+                printf("Number of Moves: #%ld\n", algo.size() );
+                printf("Executing Algo #%d\n", i);
+                megaminx->rotateAlgo(i);                
+            }
+            printf("Exiting shell, returning to GUI\n");
+            free(line);
+            return;
         } else if (!strncmp(line,"/algo",5)) {
             int num = atoi(line+5);
             printf("Executing Algo #%d\n", num);
             megaminx->rotateAlgo(num);
             printf("Exiting shell, returning to GUI\n");
             free(line);
-            return;
+            return;            
         } else if ((!strncmp(line,"/exit",5))
                 || (!strncmp(line,"/quit",5))) {
             printf("Exiting shell, returning to GUI\n");
