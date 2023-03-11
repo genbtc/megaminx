@@ -1,0 +1,53 @@
+//output of Megaminx::testingAlgostrings() @ solve.cpp
+//This is the result of a solved cube + algorithm and then testing the gray faces' EDGES 
+"Testing All Algorithms 1-50! ..."
+0, -1, 0, 0, 0   = modby, Algo # 1
+0, 0, 0, 0, -1   = modby, Algo # 2
+0, 0, 0, -1, 0   = modby, Algo # 3
+0, 0, 1, 0, 0   = modby, Algo # 4
+0, 0, 0, 0, 0   = modby, Algo # 5
+0, 0, 0, 0, 0   = modby, Algo # 6
+0, 0, 0, 0, 0   = modby, Algo # 7
+0, -2, 1, 1, 0   = modby, Algo # 8
+1, -2, 0, 2, -1   = modby, Algo # 9
+0, -1, -1, 2, 0   = modby, Algo # 10
+0, -2, 0, -1, -2   = modby, Algo # 11
+0, -2, 0, -1, -2   = modby, Algo # 12
+0, 2, 0, 2, 1   = modby, Algo # 13
+0, -1, -1, 2, 0   = modby, Algo # 14
+1, 1, 0, 0, -2   = modby, Algo # 15
+1, 0, 0, -2, 1   = modby, Algo # 16
+2, 2, 2, 2, 2   = modby, Algo # 17
+-1, -2, -2, 1, -1   = modby, Algo # 18
+0, -1, 1, -1, 1   = modby, Algo # 19
+0, -2, -2, 2, 2   = modby, Algo # 20
+0, 0, 0, 0, 0   = modby, Algo # 21
+0, 0, 0, 0, 0   = modby, Algo # 22
+0, 1, 0, 0, 0   = modby, Algo # 23
+0, 0, 0, 0, -1   = modby, Algo # 24
+0, 1, 0, -1, -2   = modby, Algo # 25
+0, 2, 1, 0, -1   = modby, Algo # 26
+0, 0, 0, 0, 0   = modby, Algo # 27
+0, 0, 0, 0, 0   = modby, Algo # 28
+0, 0, 0, 0, 0   = modby, Algo # 29
+0, 2, 0, 2, 1   = modby, Algo # 30
+0, -2, 0, -1, -2   = modby, Algo # 31
+-1, 2, 0, 0, -1   = modby, Algo # 32
+0, -2, 1, 1, 0   = modby, Algo # 33
+0, -1, -1, -1, 0   = modby, Algo # 34
+0, 0, 1, 1, 1   = modby, Algo # 35
+0, 2, -1, 1, -2   = modby, Algo # 36
+0, 2, -1, 1, -2   = modby, Algo # 37
+-2, -2, -2, -2, -2   = modby, Algo # 38
+1, -1, -1, -2, -2   = modby, Algo # 39
+2, 2, 2, 2, 2   = modby, Algo # 40
+-2, -2, -2, -2, -2   = modby, Algo # 41
+-1, 1, -1, 1, 0   = modby, Algo # 42
+2, 2, 1, 1, -1   = modby, Algo # 43
+-2, 1, 1, 0, 0   = modby, Algo # 44
+-1, -1, 2, 0, 0   = modby, Algo # 45
+1, 0, 0, -2, 1   = modby, Algo # 46
+2, 0, 0, -1, -1   = modby, Algo # 47
+0, 0, 0, 0, 0   = modby, Algo # 48
+0, 0, 0, 0, 0   = modby, Algo # 49
+genr8eofl@genr8too ~/src/megaminx $ 

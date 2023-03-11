@@ -1898,39 +1898,52 @@ startColorFlippingCorners:
     std::cout << "Solved rotateSolveLayer7Corners 7 2 in " << loopcount << " loops" << std::endl;
 }
 
+//This is the result of a solved cube + algorithm and then testing the gray faces' EDGES 
 void Megaminx::testingAlgostrings(Megaminx* shadowDom)
 {
-    if (!shadowDom) {
+    for (int algo=1; algo<MAXIMUM_ALGORITHMS; ++algo) {
         shadowDom = new Megaminx();
-        //load in *this, instead of initializing with MakeShadowCubeClone().
-        shadowDom->LoadNewEdgesFromOtherCube(this);
-        shadowDom->LoadNewCornersFromOtherCube(this);
-    }
-    //for (; ;)   //call one at a time for now
-    for (int algo=1; algo<50; ++algo)
-    {
         AlgoString a = g_AlgoStrings[algo];
         colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //front-face (adjustable)
         int repeat = a.repeatX ? a.repeatX : 1;
         for (int n = 0; n < repeat; ++n) {
-            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString(a.algo, loc);
+            std::vector<numdir> bulk = shadowDom->ParseAlgorithmString(a.algo, loc, algo);
             shadowDom->bulkShadowRotate(bulk);
         }
-        //find where pieces actually are vs. where they're supposed to be
-        std::vector<int> foundEdges(5);
-        auto defaultEdges = faces[GRAY - 1].defaultEdges;
-        for (int k = 0; k < 5; ++k) {
-            const auto &piece = shadowDom->faces[GRAY - 1].getFacePiece<Edge>(k);
-            foundEdges[k] = piece->data.pieceNum;
-        }
+        //find where pieces actually are
+        std::vector<int> foundEdges = shadowDom->findFaceEdgesOrder(GRAY);
+        // vs. where they're supposed to be
+        std::vector<int> defaultEdges = faces[GRAY - 1].defaultEdges;
         //output the difference as an int.
         std::vector<int> newDifference(5);
         for (int k = 0; k < 5; ++k) {
             newDifference[k] = foundEdges[k] - defaultEdges[k];
-            std::cout << newDifference[k] << " ";
+            MMno3(newDifference[k]);
+            //Print the difference:
+            //std::cout << newDifference[k] << ", ";
         }
-        std::cout << " = Algo " << algo << std::endl;
-        int printfbreakpoint = 0;   //break on this and inspect.
+        std::vector<int> modby(5);
+        for (int k = 0; k < 5; ++k) {
+//            std::cout << foundEdges[k] << ", ";
+            if (foundEdges[k] == 25)
+                modby[0]=newDifference[k];
+            if (foundEdges[k] == 26)
+                modby[1]=newDifference[k];
+            if (foundEdges[k] == 27)
+                modby[2]=newDifference[k];
+            if (foundEdges[k] == 28)
+                modby[3]=newDifference[k];
+            if (foundEdges[k] == 29)
+                modby[4]=newDifference[k];                                                                
+        }
+//        std::cout << "  = foundEdges:  # " << algo << std::endl;
+        for (int k = 0; k < 5; ++k) {
+            std::cout << modby[k] << ", ";
+        }
+        std::cout << "  = modby, Algo # " << algo << std::endl;
+
+        //also, not all of these are valid conceptually, do not trust, verify.
+        delete shadowDom;
     }
-    updateRotateQueueWithShadow(shadowDom); //actually output the algo's changes to main cube's GUI
+//    updateRotateQueueWithShadow(shadowDom); //actually output the algo's changes to main cube's GUI
 }

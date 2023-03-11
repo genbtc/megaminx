@@ -539,11 +539,12 @@ void Megaminx::resetFivePiecesV(std::vector<int> &v) {
 void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
 void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
 
-
+bool debugAlgorithmString = false;
 /** \brief A letter/notation parser to manipulate the cube with algo strings */
 const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo)
 {
-    std::wcout << "ParseAlgorithmString: # " << algo << " : " << algorithmString.c_str() << " @ Face: " << g_colorRGBs[loc.front].name << std::endl;
+    if (debugAlgorithmString)
+        std::cout << "ParseAlgorithmString: # " << algo << " : " << algorithmString << " @ Face: " << g_colorRGBs[loc.front].name << std::endl;
     std::vector<numdir> readVector;
     std::stringstream ss(algorithmString); // create a stringstream to iterate over
     auto npos = std::string::npos;

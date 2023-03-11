@@ -154,7 +154,8 @@ struct AlgoString {
     int modby[5];
 };
 
-constexpr AlgoString g_AlgoStrings[55] = {
+constexpr int MAXIMUM_ALGORITHMS = 50;
+constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     // Initialize 0 with empty blank
     {0, ""},
 
@@ -199,18 +200,19 @@ constexpr AlgoString g_AlgoStrings[55] = {
     //repeat four times
     //{ 5, "R' DR' r dr", 4},
 
-    // #7Last Layer: Step 3 - Orient bottom Corners #1,2,3 CCW (DUPE) // Put the corners into their correct positions. 
+    // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions. 
         //ONLY affects Corners. //3rd Repetition = Undo
         //BACK-LEFT (9:00 to 12:00) 2corners+3edges will stay the SAME.
         //the 3, 5 and 7 o clock corners will rotate with each other  (Counter-clockwise also)
 //DUPLICATE: Algo 6 and 7 operate in the same direction, just different face of reference. dont really need both.
 //TODO: organize: dupe: Dupes Should be removed. can remove.
+//NOTE: 6 is shorter than 7 by two moves. 
     { 
         .num = 6,
         .algo = "u l U' R' , u L' U' r"
     },
 
-    // #7Last-Layer: Step 3 - Orient rear Corners #3,5,4 CCW // Put the corners into their correct positions. 
+    // #7Last-Layer: Step 3 - Orient rear Corners #3, 5, 4 CCW // Put the corners into their correct positions. 
         //ONLY affects Corners. //3rd Repetition = Undo
         // FRONT FACE corners (1&2) @ (5'o and 7 o'clock) will stay the SAME,
         // The 3 affected corners will cycle rotate around (counter-clockwise also).
@@ -227,7 +229,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 8,
         .algo = "r u R' F' , r  u  R' U' , R' f r2 U' R' ",
-        .modby = { 0,1,1,-2,0 }
+        .modby = { 0, -2, 1, 1, 0 }
     },
 
     // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 5: //R.Back=Safe
@@ -236,9 +238,9 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 9,
         .algo = "l r u2, L' u R' , l U' r u2, L' u2 R' ",
-        .modby = { -1,2,0,-2,1 }
+        .modby = { 1, -2, 0, 2, -1 }
     },
-    // #7Last-Layer: Step 2/3 : main - SUNE
+    // #7Last-Layer: Step 2/3 : Corner+Edge main - SUNE
         // Rotates the far 3 Star/Edge pieces into their correct position + (Affects corners too)
         //The nearest 1 corner and 2 edges stay the same (Corner 1 and Edge 1/5 remain untouched)
         // (The 6 and 8 o'clock pieces will remain unaffected and in their same position)
@@ -247,26 +249,26 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 10,
         .algo = "r u R' u, r U2' R' ",
-        .modby = { 0,2,-1,-1,0 }
+        .modby = { 0, -1, -1, 2, 0}
     },
 
-    // #7Last-Layer: Step 2/3: , continued
+    // #7Last-Layer: Step 2/3: , Corner+Edge continued HORSEFACE- (corners very affected)
         //#1. Two Edges Solved : (Solved edge in the front & upper right)
         //#3. One Edge is Permuted : (Permuted edge in the front) this algo + then go back do the previous algo)
     {
         .num = 11,
         .algo = "r u2 R' u, r u2 R' ",
-        .modby = { 0,-2,0,-2,- 1 }
+        .modby = { 0, -2, 0, -1, -2 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 1+: HORSEFACE- //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
-        // 13 moves * Repeated 5 times = Total 65 moves!
+        // 13 moves * Repeated 5 times = Total 65 moves! (similar to 11 but preserves Corners)
     {
         .num = 12,
         .algo = "r2 U2' R2' U' , r2 U2' R2' ",
         .repeatX = 5,
-        .modby = { 0,-2,0,-2,-1 }
+        .modby = { 0, -2, 0, -1, -2 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 2-: HORSEFACE+ (opposite of previous; all the "up"s get reversed)
@@ -276,7 +278,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
         .num = 13,
         .algo = "r2 u2 R2' u, r2 u2 R2' ",
         .repeatX = 5,
-        .modby = { 0,2,0,1,2 }
+        .modby = { 0, 2, 0, 2, 1 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 3a-:  MUSHROOM- //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock (4 to 2, 2 to 3, 3 to 4)
@@ -285,7 +287,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 14,
         .algo = "r u R' u, R' U' r2 U' , R' u R' u, r U2' ",
-        .modby = { 0,2,-1,-1,0 }
+        .modby = { 0, -1, -1, 2, 0 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 3b+: MUSHROOM+
@@ -296,7 +298,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 15,
         .algo = "R' U' r U' , r u R2' u, r U' r U' , R' u2",
-        .modby = { 1,-2,0,0,1 }
+        .modby = { 1, 1, 0, 0, -2 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 3c+: MUSHROOM+
@@ -306,7 +308,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 16,
         .algo = "F' U' f U' , f u F2' u, f U' f U' , F' u2",
-        .modby = { -2,0,0,1,1 }
+        .modby = { -2, 0, 0, 1, 1 }
     },
 
     // #7Last-Layer: Step 2: Edge 5-way star cycle CW+ , Opposite Faces CW
@@ -315,7 +317,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
         .num = 17,
         .algo = "L' u2 r U2' l u2 R' ",
         .repeatX = 6,
-        .modby = {-2,-2,-2,-2,-2 }
+        .modby = { 2, 2, 2, 2, 2 }
     },
 
     // #7Last-Layer: Step 2: Edge 5-way star cycles, Two Halves
@@ -323,7 +325,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 18,
         .algo = "R' l U' , r L' u2, R' l U2' , r L' u2 ,, R' l U2,' r L' u2 ,, R' l U2' , r L' u2 ,, R' l U2' , r L' u2 ,, R' l U2' , r L' u2 ,, R' l U2' , r L' u2 , R' l U' , r L' ",
-        .modby = { 1,2,2,-1,1 }
+        .modby = { -1, -2, -2, 1, -1 }
     },
 
     // #7Last-Layer: Step 2: Edge two adjacent swaps,
@@ -332,7 +334,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 19,
         .algo = "U2' L2' U2' l2 U' L2' U2' l2 U' ,, L2' U2' l2 U' L2' U2' l2 U' ,, L2' U2' l2 U' L2' U2' l2 u",
-        .modby = {0,1,-1,1,-1 }
+        .modby = { 0, -1, 1, -1, 1 }
     },
 
     // #7Last-Layer: Step 2: Edge opposite swaps & flip/Invert,
@@ -341,7 +343,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 20,
         .algo = "R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2' ",
-        .modby = {  0,2,2,-2,-2 }
+        .modby = {  0, -2, -2, 2, 2, }
     },
 
     // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
@@ -417,7 +419,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 30,
         .algo = "r2 U2' R2' U' , r2 U2' R2' ",
-        .modby = { 0,-2,0,-2,-1 }
+        .modby = { 0, 2, 0, 2, 1}
     },
 
     // #7LL: Step 2, Edge Permutation 2: (opposite of previous; all the "up"s get reversed)
@@ -427,7 +429,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 31,
         .algo = "r2 u2 R2' u, r2 u2 R2' ",
-        .modby = { 0,2,0,1,2 }
+        .modby = { 0, -2, 0, -1, -2 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
@@ -437,7 +439,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 32,
         .algo = "U2' r, u R' u R' , U' r2 U' R' , u R' u r",
-        .modby = { 0,2,-1,-1,0 }
+        .modby = { -1, 2, 0, 0, -1 }
     },
 
     // #7Last-Layer: Step 2: Edge Permutation 3e- //"LL Edge 3e+  CW Front/Left=Safe"
@@ -447,7 +449,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 33,
         .algo = "u2 R' , U' r U' r, u R2' u r, U' r U' R' ",
-        .modby = { 1,-2,0,0,1 }
+        .modby = { 0, -2, 1, 1, 0 }
     },
 
     // #4th-Layer Edges(LEFT+INVERT)
@@ -465,13 +467,14 @@ constexpr AlgoString g_AlgoStrings[55] = {
     },
 
     //#7LL-2/3- Edge Permute #6, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe) BUT AFFECTS CORNERS!
-        //Swap an adjacent pair, and a non - adjacent pair of edges (U/R <-> U/L and U/BR <-> U/BL)
+        //Swap an adjacent pair, and a non - adjacent pair of edges (U/R <-> U/L and U/BR <-> U/BL) (13 moves)
         //repeating 2x becomes a corner-permutation algo only=(corners color flip in-place by 1), 6x Repetitions = Undo, go back to origin (+3 color flips)
     //TODO: organize: MOVE UP w/ related
     {
         .num = 36,
         .algo = "r u R' u, r U' R' u2, r u2 R' ",
-        .repeatX = 1 
+        .repeatX = 1,
+        .modby = { 0, 2, -1, 1, -2 } 
     },
 
     //#7LL-2- BEST Bunny from ELL, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe),
@@ -481,7 +484,8 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 37,
         .algo = "r U2' R' U' , r U' R' u, r U2' R' ",
-        .repeatX = 5 
+        .repeatX = 5,
+        .modby = { 0, 2, -1, 1, -2 } 
     },
 
     // 5-way edge cycle CCW
@@ -490,7 +494,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
         .num = 38,
         .algo = "r U2' L' u2 R' U2' l",
         .repeatX = 6,
-        .modby = { 2,2,2,2,2 }
+        .modby = { -2, -2, -2, -2, -2 }
     },
 
     //(5-way edge cycle  (32 vs 60 moves) (combines algo #14+#33)
@@ -506,7 +510,8 @@ constexpr AlgoString g_AlgoStrings[55] = {
     //TODO: organize: Shorter version of #17
     {
         .num = 40,
-        .algo = "l u l' u, l' U' l2 U' , l' u l' u, l U2' ,, f u F' u, F' U' f2 U' , F' u F' u, f U2' ,, r u R' u, R' U' r2 U' , R' u R' u, r U2' "
+        .algo = "l u l' u, l' U' l2 U' , l' u l' u, l U2' ,, f u F' u, F' U' f2 U' , F' u F' u, f U2' ,, r u R' u, R' U' r2 U' , R' u R' u, r U2' ",
+        .modby = { 2, 2, 2, 2, 2 }
     },
 
     //(5-way edge Cycle +2) (48 vs 60 moves) (repeats algo #33+#33+#33)
@@ -514,7 +519,8 @@ constexpr AlgoString g_AlgoStrings[55] = {
     //TODO: organize: shorter version of #38 
     {
         .num = 41,
-        .algo = "u2 R' , U' r U' r, u R2' u r, U' r U' R' ,, u2 F' , U' f U' f, u F2' u f, U' f U' f' ,, u2 l' , U' l U' l, u l2' u l, U' l U' l' "
+        .algo = "u2 R' , U' r U' r, u R2' u r, U' r U' R' ,, u2 F' , U' f U' f, u F2' u f, U' f U' f' ,, u2 l' , U' l U' l, u l2' u l, U' l U' l' ",
+        .modby = { -2, -2, -2, -2, -2 }
     },
 
     //Bunny Adjacent Edge Swap 2&3/4&5 (#33+#33) (32 moves)
@@ -522,7 +528,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 42,
         .algo = "u2 F' , U' f U' f, u F2' u f, U' f U' F' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R' ", 
-        .modby = { -2,-2,-2,-2,-2 } 
+        .modby = { -1, 1, -1, 1, 0 } 
     },
 
     //Bunny Opposite of above (32 moves)
@@ -530,7 +536,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
     {
         .num = 43,
         .algo = "l u L' u, L' U' l2 U' , L' u L' u, l U2' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R' ",
-        .modby = { -1,-2,1,-2,-1 } 
+        .modby = { 2, 2, 1, 1, -1 } 
     },
 
     //Top star Yellow Cross First case (flips F and R edges): 
@@ -565,7 +571,7 @@ constexpr AlgoString g_AlgoStrings[55] = {
         .num = 49, 
         .algo = "R U'2 L' U2 , R' U'2 L U2"
     },
-
 };
+//see docs/algo-test-modBy.txt for the list of how these modify the gray face only
 
 #endif

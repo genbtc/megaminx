@@ -24,22 +24,23 @@ void Megaminx::shadowRotate(int num, int dir)
 {
     assert(num > 0 && num <= numFaces);
     assert(dir == Face::Clockwise || dir == Face::CCW);
-    //std::wcout << "Rotate Face: # " << num << " : "  << g_colorRGBs[num].name  << "  Dir: " << dir << std::endl;
+    //std::cout << "Rotate Face: # " << num << " : "  << g_colorRGBs[num].name  << "  Dir: " << dir << std::endl;
     num -= 1; //Convert 1-12 Faces into array [0-11]
     shadowRotateQueue.push({ num, dir });
     faces[num].placeParts(dir);
 }
 
-//Same as above, take struct as parameter, no need to subtract 1.
+//Same as above, take struct as parameter, no need to subtract 1. unused.
 void Megaminx::shadowRotate(numdir op)
 {
     shadowRotate(op.num, op.dir);
+    //TODO: FIX
     assert(op.num > 0 && op.num <= numFaces);
     assert(op.dir == Face::Clockwise || op.dir == Face::CCW);
     shadowRotateQueue.push({ op.num, op.dir });
     faces[op.num].placeParts(op.dir);
     //same as above, but prints out the action to the console.
-    std::wcout << "Rotate Face: # " << op.num << " : "  << g_colorRGBs[op.num].name  << "  Dir: " << op.dir << "  Algo: # " << op.algo  << std::endl;
+    std::cout << "Rotate Face: # " << op.num << " : "  << g_colorRGBs[op.num].name  << "  Dir: " << op.dir << "  Algo: # " << op.algo  << std::endl;
 }
 
 //Rotate one face by multiple rotations. Converts any out of bound numbers to the most efficient.

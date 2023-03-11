@@ -1,6 +1,7 @@
 #include "main-menu.hpp"
 #include "engine/megaminx.hpp"
 #include "engine/load.hpp"
+#include "main.h"
 
 // Main Keyboard Handler
 void myglutOnKeyboard(unsigned char key, int x, int y) {
@@ -20,6 +21,9 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
             break;
         case 'r': // CTRL+R //Restore Game State
             RestoreCubeFromFile();
+            break;
+        case 8:		// Ctrl+backspace
+            createMegaMinx();
             break;
         default:
             break;
@@ -180,17 +184,17 @@ void utPrintHelpMenu(float w, float h)
                                            "[Z/z]  Rotate DownLeft   </>",
                                            "[C/c]  Rotate DownRight  </>",
                                            "[X/x]  Rotate Bottom Face </>",
+                                           "[BackSpace] Default Camera Pos",
                                            "[Space]  Toggle Auto-Spinning",
-                                           "[BackSpace]  Reset Camera Pos",
                                            "[Delete]  Scramble Puzzle",
-                                           "[Enter] Solve Current Face",
-                                           "[F1-F8=F9] Layer# Auto Solve",
+                                           "[Enter]  Default Current Face",
+                                           "[F1-F8=F9] Layer'# Human Solver",
 //                                              "[F1-F12]     Rotate Face #  >>",
     };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
     for (int i = 0; i < 18; i++) {
-        utDrawText2D(w, incrementHeight, (char *)helpStrings[i]);
+        utDrawText2D(w, incrementHeight, helpStrings[i]);
         incrementHeight += 15;
     }
 }
@@ -280,7 +284,6 @@ void createMenu()
     //SubLevel3 Menu - Computer Auto-InstaSolve - Layer by Layer using Teleport
     //                 (internally "pops-out" pieces to move them, aka cheating)
     submenu3_id = glutCreateMenu(menuHandler);
-    //TODO: This algo is good but need a non-teleport version built 
     glutAddMenuEntry("1st Layer: White Star (Teleport)", 40);
     glutAddMenuEntry("1st Layer: White Corners (Teleport)", 41);
     glutAddMenuEntry("2nd Layer: Edges (Teleport)", 42);
