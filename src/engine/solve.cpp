@@ -1002,7 +1002,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
 
 //BUNNY 4-COLOR-only (with 1 solved, covers all possibilities)
-//#7LL: Step 1, Edge Orientation, Flip Colors only (Invert 4 in place)
+//#7LL: Step 1, Edge Orientation, 2&3 and 4&5, Flip Colors only (Invert 4 in place)
         else if (solvedCount == 1 && !allEdgeColorsSolved && allCornersAllSolved
              && twoGraysUnsolved(firstSolvedPiece + 1, firstSolvedPiece + 2)
              && twoGraysUnsolved(firstSolvedPiece + 3, firstSolvedPiece + 4)

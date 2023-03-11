@@ -250,11 +250,11 @@ void createMenu()
     glutAddMenuEntry("31. 7LL-E+C x1 CCW HORSEdge- Fr./R.Back=Safe", 81);
     glutAddMenuEntry("30. 7LL-E+C x1  CW HORSEdge+ Fr./R.Back=Safe", 80);
     //
-    glutAddMenuEntry("05. 7LL Corner: R' D' r dr (Permute) C2+Safe", 55);
-    glutAddMenuEntry("07. 7LL Corners: Cycle- CCW FrontLine=Safe", 57);
+    glutAddMenuEntry("50. 7LL Corner: R' D' r dr (Permute) C2+Safe", 100);
+    glutAddMenuEntry("26. 7LL Corners: Cycle- CCW FrontLine=Safe", 76);
     glutAddMenuEntry("27. 7LL Corners: Cycle+  CW RightLine=Safe", 77);
 //NOTE:I consider these 2 below redundant to the 2 above:
-//  glutAddMenuEntry("06. LL Corners: Cycle- CCW L.Back=Safe", 56);
+//  glutAddMenuEntry("25. LL Corners: Cycle- CCW L.Back=Safe", 75);
 //  glutAddMenuEntry("28. LL Corners: Cycle- CCW Left=Safe", 78);
 
     submenu7_id = glutCreateMenu(menuHandler);
@@ -375,6 +375,34 @@ void menuHandler(int num)
     switch (num) {
     case 1:
         isSpinning(); break;
+    //menu submenu0_id: Main Menu
+    case 91:
+        megaminx->undo(); break;
+    case 92:
+        createMegaMinx(); break;
+    case 93:
+        resetCameraViewport(); break;
+    case 94:
+        megaminx->undoDouble(); break;
+    case 95:
+        megaminx->undoQuad(); break;
+    case 96:
+        megaminx->undoBulk(); break;
+    case 100:
+        megaminx->scramble(); break;
+    case 101:
+        readlineShell(); break;
+    case 102:
+        glutDestroyWindow(1);
+        exit(0); break;
+    case 98: //Save Cube State to File
+        SaveCubetoFile();
+        break;
+    case 99: //Restore Cube State to File
+        RestoreCubeFromFile();
+        break;
+    
+    //menu submenu2_id: Compu.Mod Current Face
     case 19:
         megaminx->rotate(currentFace, Face::CCW); break;
     case 20:
@@ -397,6 +425,33 @@ void menuHandler(int num)
     case 32:  //color flip corner piece 4
     case 33:  //color flip corner piece 5
         megaminx->flipCornerColor(currentFace, num - 28); break;
+
+    //menu submenu6_id:
+    // Edge Piece Swaps
+	case 125 ... 128:
+		megaminx->g_currentFace->swapEdges(0, 1+num-125); break;
+    case 129 ... 131:
+        megaminx->g_currentFace->swapEdges(1, 2+num-129); break;
+    case 132 ... 133:
+        megaminx->g_currentFace->swapEdges(2, 3+num-132); break;
+    case 134:
+        megaminx->g_currentFace->swapEdges(3, 4); break;
+	// Corner Piece Swaps
+    case 135 ... 138:
+        megaminx->g_currentFace->swapCorners(0, 1+num-135); break;
+    case 139 ... 141:
+        megaminx->g_currentFace->swapCorners(1, 2+num-139); break;
+    case 142 ... 143:
+        megaminx->g_currentFace->swapCorners(2, 3+num-142); break;
+    case 144:
+        megaminx->g_currentFace->swapCorners(3, 4); break;
+
+    //menu submenu5_id:
+	// Solve a Face (Reset) any selected face 1-12:
+    case 171 ... 182:
+        megaminx->resetFace(1+num-171); break;
+    
+    //menu SubLevel3: Teleport Reset by Layer
     case 40:  //1st Layer = WHITE Edges
         megaminx->resetFacesEdges(WHITE); break;
     case 41:  //1st Layer = WHITE Corners
@@ -415,58 +470,14 @@ void menuHandler(int num)
         megaminx->resetFacesEdges(GRAY); break;
     case 48:  //Last Layer GRAY Corners
         megaminx->resetFacesCorners(GRAY); break;
-	//
+
+	//menu submenu4_id: Algorithms
     case 51 ... 88:
         megaminx->rotateAlgo(num - 50); break;
     case 189 ... 193:
         megaminx->rotateAlgo(num - 150); break;
-	//utils (move to end)
-    case 91:
-        megaminx->undo(); break;
-    case 92:
-        createMegaMinx(); break;
-    case 93:
-        resetCameraViewport(); break;
-    case 94:
-        megaminx->undoDouble(); break;
-    case 95:
-        megaminx->undoQuad(); break;
-    case 96:
-        megaminx->undoBulk(); break;
-    case 100:
-        megaminx->scramble(); break;
-    case 101:
-        readlineShell(); break;
-    case 102:
-        glutDestroyWindow(1);
-        exit(0); break;
-    //Edge Piece Swaps
-	case 125 ... 128:
-		megaminx->g_currentFace->swapEdges(0, 1+num-125); break;
-    case 129 ... 131:
-        megaminx->g_currentFace->swapEdges(1, 2+num-129); break;
-    case 132 ... 133:
-        megaminx->g_currentFace->swapEdges(2, 3+num-132); break;
-    case 134:
-        megaminx->g_currentFace->swapEdges(3, 4); break;
-	//Corner Piece Swaps
-    case 135 ... 138:
-        megaminx->g_currentFace->swapCorners(0, 1+num-135); break;
-    case 139 ... 141:
-        megaminx->g_currentFace->swapCorners(1, 2+num-139); break;
-    case 142 ... 143:
-        megaminx->g_currentFace->swapCorners(2, 3+num-142); break;
-    case 144:
-        megaminx->g_currentFace->swapCorners(3, 4); break;
-	//Solve a Face (Reset) any one 1-12:
-    case 171 ... 182:
-        megaminx->resetFace(1+num-171); break;
-    case 98: //Save Cube State to File
-        SaveCubetoFile();
-        break;
-    case 99: //Restore Cube State to File
-        RestoreCubeFromFile();
-        break;
+
+    //menu submenu1_id:  AutoSolve by Layer
     case 300: //layer 1 edges rotate+autosolve F1
         MakeShadowCubeClone();
         megaminx->rotateSolveWhiteEdges(shadowDom);
@@ -495,11 +506,11 @@ void menuHandler(int num)
         MakeShadowCubeClone();
         megaminx->rotateSolveLayer6Edges(shadowDom);
         break;
-    case 307: //layer 7 edges F7
+    case 307: //layer 7 edges rotate+autosolve F7
         MakeShadowCubeClone();
         megaminx->rotateSolveLayer7Edges(shadowDom);
         break;
-    case 308: //layer 7 corners F8
+    case 308: //layer 7 corners rotate+autosolve F8
         MakeShadowCubeClone();
         megaminx->rotateSolve7thLayerCorners(shadowDom);
         break;
@@ -530,6 +541,7 @@ void menuHandler(int num)
                 continue;
         }
         g_solveravg = sum / 50000.;
+        //Solver average is 588.812
         break;
     default:
         break;
