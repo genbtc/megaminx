@@ -87,9 +87,12 @@ void Corner::render() const
     glVertex3d(_vertex[6][0] * 1.005, _vertex[6][1] * 1.005, _vertex[6][2] * 1.005);
     glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
     glEnd();
+
     //Piece Numbering Test:
-    //std::string c = std::to_string(data.pieceNum);
-    //utDrawText3D(_vertex[2][0], _vertex[2][1], _vertex[2][2] + 5, c.c_str());
+    std::string c = std::to_string(data.pieceNum);
+    int z = (data.pieceNum < 5) ? -5 : 5;
+    utDrawText3D(_vertex[2][0] + 2, _vertex[2][1], _vertex[2][2] + z, GLUT_BITMAP_HELVETICA_12, c.c_str());
+
     //Vertex Draw Test:
     //for (int i = 0; i < 7; ++i) {
     //    std::string c = std::to_string(i);

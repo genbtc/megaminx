@@ -402,15 +402,15 @@ void menuHandler(int num)
     case 41:  //1st Layer = WHITE Corners
         megaminx->resetFacesCorners(WHITE); break;
     case 42: //2nd Layer edges
-        megaminx->secondLayerEdges(); break;
+        megaminx->resetSecondLayerEdges(); break;
     case 43: //3rd Layer corners
-        megaminx->lowYmiddleW(); break;
+        megaminx->resetlowYmiddleWCorners(); break;
     case 44: //4th Layer edges
-        megaminx->fourthLayerEdges(); break;
+        megaminx->resetFourthLayerEdges(); break;
     case 45: //5th Layer corners
-        megaminx->highYmiddleW(); break;
+        megaminx->resethighYmiddleWCorners(); break;
     case 46: //6th Layer edges
-        megaminx->sixthLayerEdges(); break;
+        megaminx->resetSixthLayerEdges(); break;
     case 47:  //Last Layer GRAY Edges
         megaminx->resetFacesEdges(GRAY); break;
     case 48:  //Last Layer GRAY Corners

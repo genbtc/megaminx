@@ -177,29 +177,9 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
 
     //LL S4 Corners simple RDRD flip moved to #50
     { 5 },
-
-    // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions. 
-        //ONLY affects Corners. //3rd Repetition = Undo
-        //BACK-LEFT (9:00 to 12:00) 2corners+3edges will stay the SAME.
-        //the 3, 5 and 7 o clock corners will rotate with each other  (Counter-clockwise also)
-//DUPLICATE: Algo 6 and 7 operate in the same direction, just different face of reference. dont really need both.
-//TODO: organize: dupe: Dupes Should be removed. can remove.
-//NOTE: 6 is shorter than 7 by two moves. 
-    { 
-        .num = 6,
-        .algo = "u l U' R' , u L' U' r"
-    },
-
-    // #7Last-Layer: Step 3 - Orient rear Corners #3, 5, 4 CCW // Put the corners into their correct positions. 
-        //ONLY affects Corners. //3rd Repetition = Undo
-        // FRONT FACE corners (1&2) @ (5'o and 7 o'clock) will stay the SAME,
-        // The 3 affected corners will cycle rotate around (counter-clockwise also).
-//NOTE: ^ Algo 7 and 6 operate in the same direction, just different face of reference. 
-//TODO: organize: dupe: Dupes Should be removed. dont really need both. rather remove other.
-    { 
-        .num = 7,
-        .algo = "u r U2' L' u2 R' U2' l u"
-    },
+    //Step 3 moved 6 to 25 and 7 to 26
+    { 6 },
+    { 7 },
 
     // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 3: // Entire Front Line = Safe. untouched is C1,C2,E1,E5
         // (5 to 1, 1 to 2, 2 to 5) = (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
@@ -334,14 +314,35 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     //moved to g_AlgoStringsLayer[] at the bottom:
     //2nd Layer Edges
     //{ 21 },
-    { 22 },
+    //{ 22 },
     //4nd Layer Edges
-    { 23 },
+    //{ 23 },
     { 24 },
     //6th Layer Edges
     { 25 },
     { 26 },
 
+    // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions. 
+        //ONLY affects Corners. //3rd Repetition = Undo
+        //BACK-LEFT (9:00 to 12:00) 2corners+3edges will stay the SAME.
+        //the 3, 5 and 7 o clock corners will rotate with each other  (Counter-clockwise also)
+//DUPLICATE: Algo 6 and 7 operate in the same direction, just different face of reference. dont really need both.
+//TODO: organize: dupe: not used. Dupes Should be removed. can remove.
+//NOTE: BUT: 6 is shorter than 7 by two moves. 
+    { 
+        .num = 6,
+        .algo = "u l U' R' , u L' U' r"
+    },
+    // #7Last-Layer: Step 3 - Orient rear Corners #3, 5, 4 CCW // Put the corners into their correct positions. 
+        //ONLY affects Corners. //3rd Repetition = Undo
+        // FRONT FACE corners (1&2) @ (5'o and 7 o'clock) will stay the SAME,
+        // The 3 affected corners will cycle rotate around (counter-clockwise also).
+//NOTE: ^ Algo 7 and 6 operate in the same direction, just different face of reference. 
+//IMPORTANT
+    { 
+        .num = 7,
+        .algo = "u r U2' L' u2 R' U2' l u"
+    },
     // #7LL: Step 3, Corners Clockwise Cycle . Safe Area = Right
 //IMPORTANT
     {

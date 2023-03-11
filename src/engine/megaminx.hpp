@@ -61,6 +61,7 @@ public:
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo=0);
     const std::vector<numdir> ParseAlgorithmString(AlgoString algorithm, const colordirs &loc);
     const std::vector<numdir> ParseAlgorithmString(int algo, int startLoc);
+    //Find Functions
    template <typename T>
     int findPiece(int pieceNum);
     int findEdge(int pieceNum);
@@ -82,6 +83,7 @@ public:
     std::vector<int> findFivePieces(const std::vector<int> &v);
     std::vector<int> findEdgePieces(const std::vector<int> &v);
     std::vector<int> findCornerPieces(const std::vector<int> &v);
+    //Reset Functions
    template<typename T>
     void resetFivePieces(const int indexes[5]);
     void resetFiveEdges(const int indexes[5]);
@@ -90,36 +92,35 @@ public:
     void resetFivePiecesV(std::vector<int> &v);
     void resetFiveEdgesV(std::vector<int> &v);
     void resetFiveCornersV(std::vector<int> &v);
-
+    //Well-defined piece lists - Edge layers
     constexpr static int m_firstLayerEdges[5]   = { 0, 1, 2, 3, 4 };
     constexpr static int m_secondLayerEdges[5]  = { 5, 6, 7, 8, 9 };
     constexpr static int m_fourthLayerEdgesA[5] = { 10, 11, 12, 13, 14 };
     constexpr static int m_fourthLayerEdgesB[5] = { 15, 16, 17, 18, 19 };
     constexpr static int m_sixthLayerEdges[5]   = { 20, 21, 22, 23, 24 };
     constexpr static int m_seventhLayerEdges[5] = { 25, 26, 27, 28, 29 };
-
-    void secondLayerEdges() {
+    //Well-defined piece lists - Corner layers
+    constexpr static int m_firstLayerCorners[5]  = { 0, 1, 2, 3, 4 };
+    constexpr static int m_thirdLayerCorners[5]  = { 5, 6, 7, 8, 9 };
+    constexpr static int m_fifthLayerCorners[5] = { 10, 11, 12, 13, 14 };
+    constexpr static int m_seventhLayerCorners[5]  = { 15, 16, 17, 18, 19 };
+    //Reset functions, computer teleport solve by human layers
+    void resetSecondLayerEdges() {
         resetFiveEdges(m_secondLayerEdges);
     }
-    void fourthLayerEdges() {
+    void resetFourthLayerEdges() {
         resetFiveEdges(m_fourthLayerEdgesA);
         resetFiveEdges(m_fourthLayerEdgesB);
     }
-    void sixthLayerEdges() {
+    void resetSixthLayerEdges() {
         resetFiveEdges(m_sixthLayerEdges);
     }
-    void lowYmiddleW() {
-        resetFiveCorners(m_secondLayerEdges);
+    void resetlowYmiddleWCorners() {
+        resetFiveCorners(m_thirdLayerCorners);
     }
-    void highYmiddleW() {
-        resetFiveCorners(m_fourthLayerEdgesA);
+    void resethighYmiddleWCorners() {
+        resetFiveCorners(m_fifthLayerCorners);
     }
-    //In Shadow.cpp
-   template <typename T>
-    int createMegaMinxFromShadowVec(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors, Megaminx* shadowDom);
-    int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors, Megaminx* shadowDom);
-    int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors, Megaminx* shadowDom);
-
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
     bool isFullySolved();
@@ -132,6 +133,7 @@ public:
     bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) const {
         return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
     };
+    //In Solve.cpp
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
     void rotateSolveLayer2Edges(Megaminx* shadowDom);
@@ -152,6 +154,11 @@ public:
     void shadowRotate(numdir op);
     bool shadowMultiRotate(int face, int &offby);
     int getRotateQueueNum() const { return (int)rotateQueue.size(); }
+    //In Shadow.cpp
+   template <typename T>
+    int createMegaMinxFromShadowVec(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors, Megaminx* shadowDom);
+    int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors, Megaminx* shadowDom);
+    int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors, Megaminx* shadowDom);
 
     static const int numFaces = 12;
     static const int numCorners = 20;
@@ -196,6 +203,7 @@ extern Megaminx* shadowDom;
 static auto MM = [](int &over) { while (over >= 5) over -= 5; };
 static auto MMge = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
+static auto MMup = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
 static auto MMgeI = [](int &over, int stop) { while (over >= stop) over -= 5; };
 static auto nMM = [](int &over) { while (over <= -5) over += 5; };
 static auto MMno3 = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
