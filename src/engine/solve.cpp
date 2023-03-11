@@ -364,8 +364,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             if (offby > 6)
                 offby -= 5;
             if (offby >= 2) {
-                //bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[offby], 5); // "R' DR' r dr"
-                bulkAlgo = shadowDom->ParseAlgorithmString(5, offby); // "R' DR' r dr"
+                bulkAlgo = shadowDom->ParseAlgorithmString(50, offby);      //    .algo = "R' DR' r dr"
                 shadowDom->bulkShadowRotate(bulkAlgo);
             }
         }
@@ -376,9 +375,9 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 offby -= 5;
             if (offby >= 2) {
                 if (l.CornerItselfA->data.flipStatus == 2)
-                    bulkAlgo = shadowDom->ParseAlgorithmString("f dr F' ", g_faceNeighbors[offby]);
+                    bulkAlgo = shadowDom->ParseAlgorithmString(51, offby);  //    .algo = "f dr F' "
                 else
-                    bulkAlgo = shadowDom->ParseAlgorithmString("R' DR' R", g_faceNeighbors[offby]);
+                    bulkAlgo = shadowDom->ParseAlgorithmString(52, offby);  //    .algo = "R' DR' R"
                 shadowDom->bulkShadowRotate(bulkAlgo);
             }
         }
@@ -466,11 +465,11 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
 
         if ((l.isOnRow2 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0))) ||
             (l.isOnRow34 && l.ontopA && l.edgeFaceLocA == 4 && l.edgeFaceNeighbors.a == l.edgeHalfColorA)) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[21].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 21);    // "dl l dl L', dL' F' dL' f"
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[1].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 1);    // "dl l dl L', dL' F' dL' f"
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else if (l.isOnRow34 && l.ontopA && l.edgeFaceLocA == 3 && l.edgeFaceNeighbors.a == l.edgeHalfColorA) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[22].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 22);    //"dR' R' dR' r, dr f dr F' "
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[2].algo, g_faceNeighbors[l.edgeFaceNeighbors.a], 2);    //"dR' R' dR' r, dr f dr F' "
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
         //BUG?: Pieces still go the long-way around from 7->6->3->(skip)4->6->7->6->4 then algo....
@@ -659,15 +658,15 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6
             if ((l.isOnRow6 && l.isLeft) || (l.isOnRow4)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow4))
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[23].algo, loc, 23); // {23, "F' R' F', F' r f"},
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[3].algo, loc, 3); // {23, "F' R' F', F' r f"},
                 else
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[34].algo, loc, 34); // {34, "U' R' DR' F F DR R" },
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[4].algo, loc, 4); // {34, "U' R' DR' F F DR R" },
             }
             else if ((l.isOnRow6 && l.isRight) || (l.isOnRow3)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow3))
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[24].algo, loc, 24); // {24, "f l f, f L' F' "},
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[6].algo, loc, 6); // {24, "f l f, f L' F' "},
                 else
-                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[35].algo, loc, 35); // {35, "u l dl F' F' DL' L' "}
+                    bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[5].algo, loc, 5); // {35, "u l dl F' F' DL' L' "}
             }
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
@@ -818,10 +817,10 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
                 isRight = true;
             }
             //Check left/right faces for which direction to drop-in with isLeft/isRight
-            int algo = isLeft ? 25 : isRight ? 26 : 25;
+            int algo = isLeft ? 7 : isRight ? 8 : 7;
             //works to insert pieces from row7 to 6 and also pops wrong pieces out from 6 to 7
-            //{25, "U' L' u l, u f U' F' "},    //{26, "u r U' R', U' F' u f "},
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[algo].algo, loc, algo);
+            //{7, "U' L' u l, u f U' F' "},    //{8, "u r U' R', U' F' u f "},
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[algo].algo, loc, algo);
             shadowDom->bulkShadowRotate(bulkAlgo);
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
@@ -1007,13 +1006,15 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
 
 //BUNNY 4-COLOR-only (with 1 solved, covers all possibilities)
+//#7LL: Step 1, Edge Orientation, Flip Colors only (Invert 4 in place)
         else if (solvedCount == 1 && !allEdgeColorsSolved && allCornersAllSolved
              && twoGraysUnsolved(firstSolvedPiece + 1, firstSolvedPiece + 2)
              && twoGraysUnsolved(firstSolvedPiece + 3, firstSolvedPiece + 4)
         ) {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[29].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 29);    //algo #29 Quad-Flip Colors
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[21].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 21);    //algo #29 Quad-Flip Colors
         }
 //BUNNY 2-COLOR: (OFF-COLOR OPPOSITES)
+//#7LL: Step 2: Edge Position, opposite swaps & flip/Invert
         //If two opposite Pieces are colored wrong, Choose the face that places them @ 8' & 1' oclock and then run Algo #20 to invert those
         else if (twoOppositeOffColors && !allEdgeColorsSolved) {
             for (int op = LIGHT_BLUE; op <= BEIGE; ++op)
@@ -1875,9 +1876,9 @@ startColorFlippingCorners:
             int rotateOffset = (target - g_dirtyFaceRDRD);
             if (g_dirtyCountRDRD != 0)
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[5].algo, g_faceNeighbors[g_dirtyFaceRDRD], 5);
-            shadowDom->bulkShadowRotate(bulkAlgo);   //Algo#7 "R' DR' r dr"
-            shadowDom->bulkShadowRotate(bulkAlgo);   //Algo#7 "R' DR' r dr"
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[50].algo, g_faceNeighbors[g_dirtyFaceRDRD], 50);
+            shadowDom->bulkShadowRotate(bulkAlgo);  //  .num = 50 ,  .algo = "R' DR' r dr"
+            shadowDom->bulkShadowRotate(bulkAlgo);  //  .num = 50 ,  .algo = "R' DR' r dr"
             rotateOffset *= -1;
             if (g_dirtyCountRDRD != 0 )
                 shadowDom->shadowMultiRotate(GRAY, rotateOffset);

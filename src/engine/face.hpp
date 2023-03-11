@@ -154,7 +154,7 @@ struct AlgoString {
     int modby[5];
 };
 
-constexpr int MAXIMUM_ALGORITHMS = 50;
+constexpr int MAXIMUM_ALGORITHMS = 55;
 constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     // Initialize 0 with empty blank
     {0, ""},
@@ -171,34 +171,12 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .algo = "l u L' U' "
     },
 
-    //simple L#2-Edges - (opposite is case#2)
-        //https://youtu.be/PWTISbs0AAs?t=493 og video., Insert to Left = This First, then next.
-    { 
-        .num = 3,
-        .algo = "U' L' u l"
-    },
-    //simple L#2-Edges - (opposite is case#1) 
-        //same as ^ video: Insert to Right = This first, then previous.
-    { 
-        .num = 4,
-        .algo = "u r U' R' "
-    },
+    //2nd Layer edges (simple) moved to algoLayer[]
+    { 3 },
+    { 4 },
 
-    //Last Layer Step 4: Orienting Corners (color-flipping in-place)
-        //You repeat this over and over with all corners until they are all orientated correctly.
-        //identity function repeats every 6x. Each gray color will take 2x cycles to colorflip. It will dis-align the R and D faces temporarily.
-        //NOTE: This may SEEM like it might result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved,
-        //  But that does not occur with an internally consistent megaminx (ie pieces are not "popped out")
-        //Note2: a variation on this step is also done in the 1st White Corners stage, as 3 repetitions of this, but we can skip the 4th "dr" there (leaves temp side messy)
-//IMPORTANT        
-    { 
-        .num = 5,
-        .algo = "R' DR' r dr"
-    },
-    //repeat two times
-    //{ 5, "R' DR' r dr", 2},
-    //repeat four times
-    //{ 5, "R' DR' r dr", 4},
+    //LL S4 Corners simple RDRD flip moved to #50
+    { 5 },
 
     // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions. 
         //ONLY affects Corners. //3rd Repetition = Undo
@@ -311,7 +289,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .modby = { -2, 0, 0, 1, 1 }
     },
 
-    // #7Last-Layer: Step 2: Edge 5-way star cycle CW+ , Opposite Faces CW
+    // #7Last-Layer: Step 2: Edge Position, 5-way star cycle CW+ , Opposite Faces CW
         //10 moves * 6 = 60 moves total. copied from cube manual (turned upside down).
     { 
         .num = 17,
@@ -320,7 +298,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .modby = { 2, 2, 2, 2, 2 }
     },
 
-    // #7Last-Layer: Step 2: Edge 5-way star cycles, Two Halves
+    // #7Last-Layer: Step 2: Edge Position, 5-way star cycles, Two Halves
         // 60 moves total. (copied from cube manual)
     {
         .num = 18,
@@ -328,7 +306,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .modby = { -1, -2, -2, 1, -1 }
     },
 
-    // #7Last-Layer: Step 2: Edge two adjacent swaps,
+    // #7Last-Layer: Step 2: Edge Position, two adjacent swaps,
         // Safe Edge = FRONT. then swap 2&3 and 4&5 (colors and corners maintained)
         // 44 moves total. (copied from manual. )
     {
@@ -337,7 +315,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .modby = { 0, -1, 1, -1, 1 }
     },
 
-    // #7Last-Layer: Step 2: Edge opposite swaps & flip/Invert,
+    // #7Last-Layer: Step 2: Edge Position, opposite swaps & flip/Invert,
         //Safe Edge = FRONT. then swap 2&4 and 3&5 ( right/backLeft swap and left/backRight swap) + and INVERTS @ 8 o'clock and 1 o'clock <--* 
         //30 moves total. (copied from manual.), Repeat = Undo (origin in two cycles)
     {
@@ -345,73 +323,40 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .algo = "R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2' ",
         .modby = {  0, -2, -2, 2, 2, }
     },
-
-    // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
-        //Note: copied right algo then reverse engineered it myself back to the left
+    // #7Last-Layer: Step 1, Edge Orientation, Flip Colors only (Invert 4 in place), front=safe.
+        //(~57 moves total.) (copied from manual.) 
+    //TODO: organize: similar to #20
     {
         .num = 21,
-        .algo = "dl l dl L' , dL' F' dL' f"
-    },
-    // #2nd-Layer Edges(RIGHT) =  5 o'clock to 3 o'clock:
-        //Note: Algo from QJ cube manual & (White face on top) (Exact opposite above)
-    {
-        .num = 22,
-        .algo = "dR' R' dR' r, dr f dr F' "
+        .algo = "R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L' "
     },
 
-    // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA() // 12 o'clock to 7 o'clock
-    // Left  (drop in edge) - Third layer edges and corners
-        //Obviously: Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-//IMPORTANT
-    {
-        .num = 23,
-        .algo = "F' R' F' , F' r f"
-    },
-    // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB() //12 o'clock to 5 o'clock.
-    // Right  (drop in edge) - Third layer edges and corners
-        //Obviously: Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
-//IMPORTANT        
-    {
-        .num = 24,
-        .algo = "f l f, f L' F' "
-    },
+    //moved to g_AlgoStringsLayer[] at the bottom:
+    //2nd Layer Edges
+    //{ 21 },
+    { 22 },
+    //4nd Layer Edges
+    { 23 },
+    { 24 },
+    //6th Layer Edges
+    { 25 },
+    { 26 },
 
-    // #6th-Layer Edges(LEFT)
-        //Must have Layers 1-5 solved, and 7th layer is affected.
-        // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
-    {
-        .num = 25,
-        .algo = "U' L' u l, u f U' F' "
-    },
-    // #6th-Layer Edges(RIGHT)
-        //opposite of previous, To the edge @ 3 o'clock
-    {
-        .num = 26,
-        .algo = "u r U' R' , U' F' u f"
-    },
-
-    // #7LL: Step 3, Clockwise Cycle Corners. Safe Area = Right
+    // #7LL: Step 3, Corners Clockwise Cycle . Safe Area = Right
 //IMPORTANT
     {
         .num = 27,
         .algo = "L' u2 R U2' , L u2 R' U2' "
     },
-    // #7LL: Step 3, CounterClockwise Cycle Corners. Safe Area = Left
+    // #7LL: Step 3, Corners CounterClockwise Cycle . Safe Area = Left
     //TODO: organize: (already described as Algo #6/#7)
     //TODO: organize: dupe: Dupes Should be removed. already Commented out in menu
     {
         .num = 28,
         .algo = "R U2' L' u2, R' U2' L u2"
     },
-
-    // #7LL: Step 1, Edge Orientation, Flip Colors only (Invert 4 in place), front=safe.
-        //(~57 moves total.) (copied from manual.) 
-    //TODO: organize: similar to #20
-    {
-        .num = 29,
-        .algo = "R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L' "
-    },
-
+    
+    { 29 },
     // #7LL: Step 2, Edge Permutation 1:  //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
         //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
         // 13 moves in 1 rep, CORNERS ARE AFFECTED (gray stays)
@@ -452,19 +397,8 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .modby = { 0, -2, 1, 1, 0 }
     },
 
-    // #4th-Layer Edges(LEFT+INVERT)
-    //TODO: organize: MOVE UP w/ related
-    {
-        .num = 34,
-        .algo = "U' R' DR' f, f dr r"
-    },
-
-    // #4th-Layer Edges(RIGHT+INVERT)
-    //TODO: organize: MOVE UP w/ related
-    {
-        .num = 35,
-        .algo = "u l dl F' , F' DL' L' ",
-    },
+    { 34 },
+    { 35 },
 
     //#7LL-2/3- Edge Permute #6, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe) BUT AFFECTS CORNERS!
         //Swap an adjacent pair, and a non - adjacent pair of edges (U/R <-> U/L and U/BR <-> U/BL) (13 moves)
@@ -571,7 +505,94 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .num = 49, 
         .algo = "R U'2 L' U2 , R' U'2 L U2"
     },
+    //Last Layer Step 4: Orienting Corners (color-flipping in-place)
+        //You repeat this over and over with all corners until they are all orientated correctly.
+        //identity function repeats every 6x. Each gray color will take 2x cycles to colorflip. It will dis-align the R and D faces temporarily.
+        //NOTE: This may SEEM like it might result in a catch-22 where the 1 last gray corner piece is color-flipped but everything else is solved,
+        //  But that does not occur with an internally consistent megaminx (ie pieces are not "popped out")
+        //Note2: a variation on this step is also done in the 1st White Corners stage, as 3 repetitions of this, but we can skip the 4th "dr" there (leaves temp side messy)
+    //7LL: 4 Corners
+//IMPORTANT        
+    { 
+        .num = 50,
+        .algo = "R' DR' r dr"
+    },
+    //Layer 1 part 2 - Corners
+    {
+        .num = 51,
+        .algo = "f dr F' "
+    },
+    //Layer 1 part 2 - Corners
+    {
+        .num = 52,
+        .algo = "R' DR' R"
+    },
 };
 //see docs/algo-test-modBy.txt for the list of how these modify the gray face only
+
+constexpr AlgoString g_AlgoStringsLayer[MAXIMUM_ALGORITHMS] = {
+    { 0 },
+    // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
+        //Note: copied right algo then reverse engineered it myself back to the left
+    {
+        .num = 1,
+        .algo = "dl l dl L' , dL' F' dL' f"
+    },
+    // #2nd-Layer Edges(RIGHT) =  5 o'clock to 3 o'clock:
+        //Note: Algo from QJ cube manual & (White face on top) (Exact opposite above)
+    {
+        .num = 2,
+        .algo = "dR' R' dR' r, dr f dr F' "
+    },
+    // #4th-Layer Edges(LEFT), (between the middle W), fourthLayerEdgesA() // 12 o'clock to 7 o'clock
+        // Left  (drop in edge) - Third layer edges and corners
+        // rules: Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+    {
+        .num = 3,
+        .algo = "F' R' F' , F' r f"
+    },
+    // #4th-Layer Edges(LEFT+INVERT)
+    {
+        .num = 4,
+        .algo = "U' R' DR' f, f dr r"
+    },
+    // #4th-Layer Edges(RIGHT+INVERT)
+    {
+        .num = 5,
+        .algo = "u l dl F' , F' DL' L' "
+    },
+    // #4th-Layer Edges(RIGHT), (between the middle W), fourthLayerEdgesB() //12 o'clock to 5 o'clock.
+        // Right  (drop in edge) - Third layer edges and corners
+        // rules: Cube must have gray face on top, layer 1+2+3 Solved (white face+2nd layer edges+LowY's), and rest of puzzle Unsolved
+    {
+        .num = 6,
+        .algo = "f l f, f L' F' "
+    },
+    // #6th-Layer Edges(LEFT)
+        //Must have Layers 1-5 solved, and 7th layer is affected.
+        // swap edge from face's star at 12 o'clock to Flop in (pinned to center) To the edge @  9 o'clock
+    {
+        .num = 7,
+        .algo = "U' L' u l, u f U' F' "
+    },
+    // #6th-Layer Edges(RIGHT)
+        //opposite of previous, To the edge @ 3 o'clock
+    {
+        .num = 8,
+        .algo = "u r U' R' , U' F' u f"
+    },
+    //simple L#2-Edges - (opposite is case#2)
+        //https://youtu.be/PWTISbs0AAs?t=493 og video., Insert to Left = This First, then next.
+    { 
+        .num = 9,
+        .algo = "U' L' u l"
+    },
+    //simple L#2-Edges - (opposite is case#1) 
+        //same as ^ video: Insert to Right = This first, then previous.
+    { 
+        .num = 9,
+        .algo = "u r U' R' "
+    },    
+};
 
 #endif
