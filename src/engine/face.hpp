@@ -315,10 +315,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
 
     //moved to g_AlgoStringsLayer[] at the bottom:
     //2nd Layer Edges
-    //{ 21 },
-    //{ 22 },
     //4nd Layer Edges
-    //{ 23 },
     { 24, "" },
     //6th Layer Edges
     { 25, "" },
@@ -328,9 +325,9 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         //ONLY affects Corners. //3rd Repetition = Undo
         //BACK-LEFT (9:00 to 12:00) 2corners+3edges will stay the SAME.
         //the 3, 5 and 7 o clock corners will rotate with each other  (Counter-clockwise also)
-//DUPLICATE: Algo 6 and 7 operate in the same direction, just different face of reference. dont really need both.
+//DUPLICATE: #26 operates in the same direction, just different face of reference. dont really need both.
 //TODO: organize: dupe: not used. Dupes Should be removed. can remove.
-//NOTE: BUT: 6 is shorter than 7 by two moves. 
+//NOTE: BUT shorter than #26 by two moves. 
     { 
         .num = 25,
         .algo = "u l U' R' , u L' U' r"
@@ -339,19 +336,19 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         //ONLY affects Corners. //3rd Repetition = Undo
         // FRONT FACE corners (1&2) @ (5'o and 7 o'clock) will stay the SAME,
         // The 3 affected corners will cycle rotate around (counter-clockwise also).
-//NOTE: ^ Algo 7 and 6 operate in the same direction, just different face of reference. 
+//NOTE: ^ Algo #25 operate in the same direction, just different face of reference. 
 //IMPORTANT
     { 
         .num = 26,
         .algo = "u r U2' L' u2 R' U2' l u"
     },
-    // #7LL: Step 3, Corners Clockwise Cycle . Safe Area = Right
+    // #7LL: Step 3, Corners Cycle  CW  - ( Safe Area = Right )
 //IMPORTANT
     {
         .num = 27,
         .algo = "L' u2 R U2' , L u2 R' U2' "
     },
-    // #7LL: Step 3, Corners CounterClockwise Cycle . Safe Area = Left
+    // #7LL: Step 3, Corners Cycle CCW  - ( Safe Area = Left )
     //TODO: organize: (already described as Algo #6/#7)
     //TODO: organize: dupe: Dupes Should be removed. already Commented out in menu
     {
@@ -361,7 +358,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     
     { 29, "" },
     // #7LL: Step 2, Edge Permutation 1: HORSEDGE+ CW //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
-        //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
+        //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others CCW Counter-Clockwise
         // 13 moves in 1 rep, CORNERS ARE AFFECTED (gray stays)
     //TODO: organize: similar to #12 (except one repetition only)
     {
@@ -371,7 +368,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     },
 
     // #7LL: Step 2, Edge Permutation 2: HORSEDGE- CCW (opposite of previous; all the "up"s get reversed)
-        //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
+        //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others  CW ClockWise
         // 13 moves in 1 rep, CORNERS ARE AFFECTED (gray stays)
     //TODO: organize: similar to #13 (except one repetition only)
     {
