@@ -316,10 +316,10 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     //moved to g_AlgoStringsLayer[] at the bottom:
     //2nd Layer Edges
     //4nd Layer Edges
-    { 24, "" },
+    { 22, "" },
     //6th Layer Edges
-    { 25, "" },
-    { 26, ""},
+    { 23, "" },
+    { 24, "" },
 
     // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions. 
         //ONLY affects Corners. //3rd Repetition = Undo
@@ -525,7 +525,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     //Layer 1 part 2 - Corners
     {
         .num = 52,
-        .algo = "R' DR' R"
+        .algo = "R' DR' r"
     },
 };
 //see docs/algo-test-modBy.txt for the list of how these modify the gray face only

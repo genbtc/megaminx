@@ -371,7 +371,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 shadowDom->bulkShadowRotate(bulkAlgo);
             }
             assert(offby >= 2);   //temporary testing for confidence
-            std::cout << "Debug L1C -row1 \n";            
+            std::cout << "Debug L1C -row1 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " offby: " << offby << "\n";
         }
         //Move correct corners straight up and in from 5-9 to 0-4
         else if (l.isOnRow2 && l.sourceCornerIndex - i - 5 == 0) {
@@ -389,23 +389,24 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 shadowDom->bulkShadowRotate(bulkAlgo);
             }
             assert(offby >= 2);   //temporary testing for confidence
-            std::cout << "Debug L1C -row2 + matched index " << i << " sourcecornerindex:"  << l.sourceCornerIndex << " offby:" << offby << "\n";
+            std::cout << "Debug L1C -row2 + matched index " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " offby: " << offby << "\n";
         }
         //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
         else if (l.isOnRow2) {
             int defaultDir = Face::CW;
             //int offby = l.sourceCornerIndex - i - 5;
-            megaminxColor turnface = {};
-            //2nd rotation puts them on the gray face.
+            megaminxColor turnface=BLACK;
             if (l.ontopHalfA && l.ontopHalfB)
                 turnface = l.cornerFaceNeighbors.c;
             else if (l.ontopHalfA && l.ontopHalfC)
                 turnface = l.cornerFaceNeighbors.b;
             else if (l.ontopHalfB && l.ontopHalfC)
                 turnface = l.cornerFaceNeighbors.a;
-            defaultDir *= 2;
-            shadowDom->shadowMultiRotate(turnface, defaultDir);
-            std::cout << "Debug L1C -row2 \n";
+            // turn opposite direction row2->row3->row4 to use gray face then repeat
+            shadowDom->shadowRotate(turnface, defaultDir);
+            shadowDom->shadowRotate(turnface, defaultDir);
+            // after 2nd rotation leaves them on the gray face.
+            std::cout << "Debug L1C -row2 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " turnface: " << turnface << " offby: " << defaultDir << "\n";
         }
         //Row 3 pieces go to gray face as temporary holding (1 CW turn) (ends up on row4)
         else if (l.isOnRow3) {
@@ -424,21 +425,21 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.b;
             }
-            int result = std::max(x, y);
+            int facex = std::max(x, y);
             if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
-                result = LIGHT_BLUE;
-            shadowDom->shadowRotate(result, defaultDir);
-            std::cout << "Debug L1C -row3 \n";
+                facex = LIGHT_BLUE;
+            shadowDom->shadowRotate(facex, defaultDir);
+            std::cout << "Debug L1C -row3 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " face: " << facex << " offby: " << defaultDir << "\n";
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2
         else if (l.isOnRow4) {
-            int defaultDir = Face::CW;
+            int defaultDir = Face::CW * 2;
             int offby = l.sourceCornerIndex - i - 18;
             shadowDom->shadowMultiRotate(GRAY, offby);
-            int x = PINK + i;
-            MMg(x, BEIGE);
-            defaultDir *= 2;
-            shadowDom->shadowMultiRotate(x, defaultDir);
+            int facex = PINK + i;
+            MMg(facex, BEIGE);
+            shadowDom->shadowMultiRotate(facex, defaultDir);
+            std::cout << "Debug L1C -row4 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " face: " << facex << " offby: " << defaultDir << "\n";
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;

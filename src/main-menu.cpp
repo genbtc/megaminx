@@ -10,16 +10,20 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     if (specialKey & GLUT_ACTIVE_CTRL) {
         switch (key) {
         case 'c': // Ctrl+C
+        case 3:  // Ctrl+C
             glutDestroyWindow(1);
             exit(0);
             break;
         case 'z': // Ctrl+Z
+        case 26: // Ctrl+Z
             megaminx->undo();
             break;
         case 's': // CTRL+S //Save Game State
+        case 19: // CTRL+S //Save Game State
             SaveCubetoFile();
             break;
         case 'r': // CTRL+R //Restore Game State
+        case 18: // CTRL+R //Restore Game State
             RestoreCubeFromFile();
             break;
         case 8:		// Ctrl+backspace
