@@ -247,7 +247,6 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .algo = "r u R' u, R' U' r2 U' , R' u R' u, r U2' ",
         .modby = { 0, -1, -1, 2, 0 }
     },
-
     // #7Last-Layer: Step 2: Edge Permutation 3b+: MUSHROOM+
         //Opposite of EdgePermutation 3a-(if cube is rotated 2 turns CW, Y++).
     //DUPLICATE: manually reverse engineered from 3c+, to be equal to 3a-.
@@ -258,7 +257,6 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .algo = "R' U' r U' , r u R2' u, r U' r U' , R' u2",
         .modby = { 1, 1, 0, 0, -2 }
     },
-
     // #7Last-Layer: Step 2: Edge Permutation 3c+: MUSHROOM+
         //Opposite of EdgePermutation 3a- (if cube is rotated 2 turns CCW, Y--).
     //NOTE: Identical Twin to 3b (but Rotates the front face instead of right). Duplicate?
@@ -268,6 +266,9 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .algo = "F' U' f U' , f u F2' u, f U' f U' , F' u2",
         .modby = { -2, 0, 0, 1, 1 }
     },
+//#32=#7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
+//#33= 3e+    
+
 
     // #7Last-Layer: Step 2: Edge Position, 5-way star cycle CW+ , Opposite Faces CW
         //10 moves * 6 = 60 moves total. copied from cube manual (turned upside down).
@@ -277,7 +278,6 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .repeatX = 6,
         .modby = { 2, 2, 2, 2, 2 }
     },
-
     // #7Last-Layer: Step 2: Edge Position, 5-way star cycles, Two Halves
         // 60 moves total. (copied from cube manual)
     {

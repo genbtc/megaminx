@@ -313,7 +313,7 @@ bool Face::render()
     glPushMatrix();
     //TODO: put these into some config file
     //8 is the current rotational turnspeed for turnDir
-    constexpr int turnspeed = 120; //16 is fastmode
+    constexpr int turnspeed = 1; //144 is max, 1 is min
     if (rotating)
         angle += turnDir * turnspeed;
     //Slow down once its 75% complete (and angle == 56 == 56 % 8 == 0)

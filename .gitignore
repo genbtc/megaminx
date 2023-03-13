@@ -45,3 +45,6 @@ vc140.pdb
 .ninja_log
 .ninja_deps
 build.ninja
+
+doc/solverAvg-50000-log.txt
+doc/solverAvg-50000*.txt
