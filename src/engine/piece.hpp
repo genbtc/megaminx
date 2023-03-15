@@ -20,6 +20,8 @@ public:
         const char* _colorName[3];
         int pieceNum;
         int flipStatus;
+        //Highlight in bright green while algorithming (called in .render())
+        bool hotPieceMoving = false;
     } data = {};
 
     //Center has 1, Edge has 2, Corner has 3

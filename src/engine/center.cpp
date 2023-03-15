@@ -40,10 +40,11 @@ void Center::render() const
 {
     glColor3dv(data._color[0]);
     makeGLpentagon(_vertex, 1.0, GL_POLYGON);
-    glLineWidth(4);
+    glLineWidth(3);
     glColor3d(0, 0, 0);
-    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);   //label the piece with a string, floating as a tag
-    //TODO: Crude coords, aesthetics of text string. Option: Disable
+    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
+    //label the piece with a string, floating as a tag
     if (textGLCenterLabels)
-        utDrawText3D(_vertex[4][0]*1.1,_vertex[4][1]*1.1,_vertex[4][2]*1.1,GLUT_BITMAP_HELVETICA_18, data._colorName[0]);    
+        utDrawText3D(_vertex[4][0]*1.1,_vertex[4][1]*1.1,_vertex[4][2]*1.1,GLUT_BITMAP_HELVETICA_18, data._colorName[0]);
+    //TODO: Crude coords, aesthetics of text string suboptimal... Option: configure Disable text shown
 }

@@ -76,17 +76,28 @@ void Corner::render() const
     glVertex3dv(_vertex[1]);
     glEnd();
 
-    glLineWidth(4);
-    glColor3d(0, 0, 0);
+    glLineWidth(3);
+    if (data.hotPieceMoving)
+        glColor3d(.4, 1, 0);
+    else
+        glColor3d(0, 0, 0);
 
-    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
+//    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
+
+    glBegin(GL_LINE_LOOP);
+    glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
+    glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
+    glEnd();
+
+    glBegin(GL_LINE_LOOP);
+    glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
+    glVertex3d(_vertex[3][0] * 1.005, _vertex[3][1] * 1.005, _vertex[3][2] * 1.005);
+    glEnd();
 
     glBegin(GL_LINE_LOOP);
     glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
     glVertex3d(_vertex[5][0] * 1.005, _vertex[5][1] * 1.005, _vertex[5][2] * 1.005);
-    glVertex3d(_vertex[6][0] * 1.005, _vertex[6][1] * 1.005, _vertex[6][2] * 1.005);
-    glVertex3d(_vertex[1][0] * 1.005, _vertex[1][1] * 1.005, _vertex[1][2] * 1.005);
-    glEnd();
+    glEnd();    
 
     //Piece Numbering Test:
     std::string c = std::to_string(data.pieceNum);

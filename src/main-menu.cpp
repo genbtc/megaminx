@@ -225,8 +225,6 @@ void createMenu()
     submenu4_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("01. r u R' U'", 51);
     glutAddMenuEntry("02. l u L' U'", 52);
-    glutAddMenuEntry("03. U' L' u l", 53);
-    glutAddMenuEntry("04. u r U' R'", 54);
     //
     glutAddMenuEntry("14. 7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64);
     glutAddMenuEntry("33. 7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83);
@@ -260,6 +258,9 @@ void createMenu()
 //NOTE:I consider these 2 below redundant to the 2 above:
 //  glutAddMenuEntry("25. LL Corners: Cycle- CCW L.Back=Safe", 75);
 //  glutAddMenuEntry("28. LL Corners: Cycle- CCW Left=Safe", 78);
+    //
+    //glutAddMenuEntry("03. U' L' u l", 53);
+    //glutAddMenuEntry("04. u r U' R'", 54);
 
     submenu7_id = glutCreateMenu(menuHandler);
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)

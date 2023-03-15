@@ -74,24 +74,44 @@ void Edge::init(int n, bool doAxes)
 
 void Edge::render() const
 {
+    //Edge Side One - Color Fill
     glColor3dv(data._color[0]);
     glBegin(GL_POLYGON);
     for (int i = 0; i < 4; ++i) {
         glVertex3dv(_vertex[i]);
     }
     glEnd();
+    //Edge Side Two - Color Fill
     glColor3dv(data._color[1]);
-    //glColor3d(0.0, 0.0, 0.0); //turn it black to test.
     glBegin(GL_POLYGON);
     for (int i = 2; i < 6; ++i) {
         glVertex3dv(_vertex[i]);
     }
     glEnd();
-    glLineWidth(4);
-    glColor3d(0, 0, 0);
+    
+    if (data.hotPieceMoving)
+        glColor3d(.4, 1, 0);
+    else
+        glColor3d(0, 0, 0);
+
+    //Edge Side One - Border
+    glLineWidth(3);
     glBegin(GL_LINE_LOOP);
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 4; ++i) {
         glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] *1.005 , _vertex[i][2] *1.005);
     }
     glEnd();
+    //(Intersection Line is at 2/3)
+    //Edge Side Two - Border
+    glBegin(GL_LINE_LOOP);
+    for (int i = 2; i < 6; ++i) {
+        glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] *1.005 , _vertex[i][2] *1.005);
+    }
+    glEnd();
+
+    // for (int i = 0; i < 6; ++i) {
+    //     //Vertex Numbering Test:
+    //     std::string c = std::to_string(i);
+    //     utDrawText3D(_vertex[i][0], _vertex[i][1], _vertex[i][2], GLUT_BITMAP_HELVETICA_12, c.c_str());
+    // }
 }
