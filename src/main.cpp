@@ -1,4 +1,4 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.0-b1";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.1";
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
@@ -7,6 +7,7 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.0-b1";
              - v1.3.8 Feb 03, 2023
              - v1.3.9 Mar 06, 2023
              - v1.4.0-b1 Mar 8, 2023 - CLI Shell (readline)
+             - v1.4.1 Oct 14, 2023
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:
