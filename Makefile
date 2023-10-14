@@ -1,4 +1,5 @@
 #Simplest makefile possible. Works on Linux and Windows. And MSYS/MingW.
+#works with megaminx v1.40 where linenoise & readline are present
 
 UNAME = $(shell uname -o)
 ifeq ($(OS),Windows_NT)
@@ -10,8 +11,8 @@ endif
 
 all: megaminx
 
-megaminx: main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o 
-	g++ main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o $(COMPILE_OPT) -o megaminx
+megaminx: main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o linenoise.o readline.o
+	g++ main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o linenoise.o readline.o $(COMPILE_OPT) -o megaminx
 
 main.o: src/main.cpp
 	g++ -c src/main.cpp
@@ -32,11 +33,15 @@ load.o: src/engine/load.cpp
 shadow.o: src/engine/shadow.cpp
 	g++ -c src/engine/shadow.cpp
 solve.o: src/engine/solve.cpp
-	g++ -c src/engine/solve.cpp	
+	g++ -c src/engine/solve.cpp
 camera.o: src/ui/camera.cpp
 	g++ -c src/ui/camera.cpp
 opengl.o: src/ui/opengl.cpp
 	g++ -c src/ui/opengl.cpp
+linenoise.o: src/ui/linenoise.c
+	gcc -c src/ui/linenoise.c
+readline.o: src/readline.cpp
+	g++ -c src/readline.cpp
 #Res.rc.o is a Resource file for an Icon, and windres.exe needs to be used with arguments, it needs this stuff
 # (customized to use the 32-bit windres on a MingW64 setup)
 # This is broken for linux, cant use properly
