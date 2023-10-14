@@ -1,4 +1,5 @@
 #include "megaminx.hpp"
+constexpr int turnspeed = 60; //144 is max, 1 is min (for render() @ end of file)
 
 Face::Face()
 {
@@ -311,16 +312,16 @@ bool Face::placeParts(int dir)
 bool Face::render()
 {
     glPushMatrix();
-    //TODO: put these into some config file
-    //8 is the current rotational turnspeed for turnDir
-    constexpr int turnspeed = 1; //144 is max, 1 is min
+    //Start Rotating
     if (rotating)
         angle += turnDir * turnspeed;
-    //Slow down once its 75% complete (and angle == 56 == 56 % 8 == 0)
+    //Slow down to half-speed once its 75% complete
+    //  (56/72 is ~77.7% but use 56 because % mod 8 == 0)
     if (rotating && angle >= 56 || angle <= -56)
         angle -= turnDir * (turnspeed/2);
     if (angle)
         glRotated(angle, axis[0], axis[1], axis[2]);
+
     //Render:
     for (int i = 0; i < 5; ++i) {
         corner[i]->render();
@@ -328,14 +329,19 @@ bool Face::render()
     }
     center->render();
     glPopMatrix();
-    //Draw a black pentagon to block out view from see-thru hollow insides
+    //Color Black
     glColor3d(0, 0, 0);
+    //Draw a black pentagon to block out view from see-thru hollow insides
     makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
+
     //Done animating, clean up and commit
+    //TODO: constantify 72 as one fifth of 360 circle
     if (angle >= 72 || angle <= -72) {
         angle = 0;
         rotating = false;
+        //returns True if successful
         return placeParts(turnDir);
+        //NOTE: ^^ internal structure of pieces is calculated last
     }
     return false;
 }
