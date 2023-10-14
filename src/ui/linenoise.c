@@ -103,6 +103,10 @@
  *
  */
 
+//for strdup in string.h
+#define __USE_XOPEN 1
+#define __USE_XOPEN_EXTENDED 1
+
 #include <termios.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -115,6 +119,8 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <strings.h>
+
 #include "linenoise.h"
 
 #define LINENOISE_DEFAULT_HISTORY_MAX_LEN 100

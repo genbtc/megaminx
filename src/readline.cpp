@@ -47,7 +47,7 @@ void readlineShell() {
         } else if (!strncmp(line,"/algodiff",9)) {
             int num = atoi(line+9);
             for (int i=1;i<50;i++) {
-                auto algo = megaminx->ParseAlgorithmString(i, LIGHT_BLUE);
+                auto algo = megaminx->ParseAlgorithmID(i, LIGHT_BLUE);
                 printf("Number of Moves: #%ld\n", algo.size() );
                 printf("Executing Algo #%d\n", i);
                 megaminx->rotateAlgo(i);                

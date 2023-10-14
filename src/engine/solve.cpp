@@ -367,7 +367,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             MMg(aoffby,YELLOW);
             assert(offby == aoffby);
             if (offby >= 2) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(50, offby);      //    .algo = "R' DR' r dr"
+                bulkAlgo = shadowDom->ParseAlgorithmID(50, offby);      //    .algo = "R' DR' r dr"
                 shadowDom->bulkShadowRotate(bulkAlgo);
             }
             assert(offby >= 2);   //temporary testing for confidence
@@ -383,9 +383,9 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             assert(offby == aoffby);                
             if (offby >= 2) {
                 if (l.CornerItselfA->data.flipStatus == 2)
-                    bulkAlgo = shadowDom->ParseAlgorithmString(51, offby);  //    .algo = "f dr F' "
+                    bulkAlgo = shadowDom->ParseAlgorithmID(51, offby);  //    .algo = "f dr F' "
                 else
-                    bulkAlgo = shadowDom->ParseAlgorithmString(52, offby);  //    .algo = "R' DR' R"
+                    bulkAlgo = shadowDom->ParseAlgorithmID(52, offby);  //    .algo = "R' DR' R"
                 shadowDom->bulkShadowRotate(bulkAlgo);
             }
             assert(offby >= 2);   //temporary testing for confidence
@@ -1916,7 +1916,7 @@ startColorFlippingCorners:
 //This is the result of a solved cube + algorithm and then testing the gray faces' EDGES 
 void Megaminx::testingAlgostrings(Megaminx* shadowDom)
 {
-    for (int algo=1; algo<MAXIMUM_ALGORITHMS; ++algo) {
+    for (int algo=1; algo<MAXIMUM_ALGORITHMS; algo++) {
         shadowDom = new Megaminx();
         AlgoString a = g_AlgoStrings[algo];
         colordirs loc = g_faceNeighbors[LIGHT_BLUE];    //front-face (adjustable)
