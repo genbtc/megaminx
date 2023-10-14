@@ -154,7 +154,7 @@ struct AlgoString {
     int modby[5];
 };
 
-constexpr int MAXIMUM_ALGORITHMS = 55;
+constexpr int MAXIMUM_ALGORITHMS = 53;
 constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
     // Initialize 0 with empty blank
     {0, ""},
