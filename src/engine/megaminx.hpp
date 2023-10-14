@@ -60,7 +60,7 @@ public:
     std::vector<int> getAllEdgePiecesColorFlipStatus();
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo=0);
     const std::vector<numdir> ParseAlgorithmString(AlgoString algorithm, const colordirs &loc);
-    const std::vector<numdir> ParseAlgorithmString(int algo, int startLoc);
+    const std::vector<numdir> ParseAlgorithmID(int algoID, int startLoc);
     //Find Functions
    template <typename T>
     int findPiece(int pieceNum);

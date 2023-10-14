@@ -1,4 +1,4 @@
-/* MegaMinx v1.38 - 2017+2018+2019+2020+2023 - genBTC edition
+/* MegaMinx v1.40.2 - 2017+2018+2019+2020+2023 - genBTC edition
  * Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
@@ -74,9 +74,12 @@ void Megaminx::renderAllPieces()
 
 //Main Display Render function for OpenGL,
 // (start handling rotation calls and sub-object render calls)
+// Call each center, edge, corner, face each own .render()
 void Megaminx::render()
 {
-    if (invisible) return;
+    //Skip everything if its invisible (not sure why it would be)
+    if (invisible)
+        return;
     //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
         const auto &op = rotateQueue.front();
@@ -102,7 +105,8 @@ void Megaminx::render()
         else
             k++;
     }
-    if (_rotatingFaceIndex == -1) return;
+    if (_rotatingFaceIndex == -1)
+        return;
     //call .RENDER() and find out if successful
     const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
     //If yes, then Finish the Rotation & advance the Queue
@@ -152,20 +156,20 @@ void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc
 //Adds entire vector of numdirs to the Rotate queue one by one. 
 void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
 {
-    undoStack.push({ -999,-999 });  //begin flag
+    undoStack.push({ -999,-999 });  //begin sentinel value flag
     for (auto one : bulk) {
         rotateQueue.push(one);
         undoStack.push(one);
     }
-    undoStack.push({ 999, 999 });   //end flag
+    undoStack.push({ 999, 999 });   //end sentinel value flag
 }
 
-//An unlimited Undo LIFO stack
+//An unlimited Undo LIFO stack. undo one move.
 void Megaminx::undo()
 {
     if (undoStack.empty()) return;
     auto &op = undoStack.top();
-    //skip any of the flag values
+    //skip any of the sentinel value flags
     if (op.num == 999 || op.dir == 999 || op.num == -999 || op.dir == -999) {
         undoStack.pop();
         return;
@@ -174,18 +178,20 @@ void Megaminx::undo()
     rotateQueue.push(op);
     undoStack.pop();
 }
+//Undo twice in a row
 void Megaminx::undoDouble()
 {
     if (undoStack.size() < 2) return;
     undo(); undo();
 }
+//Undo four times in a row
 void Megaminx::undoQuad()
 {
     if (undoStack.size() < 4) return;
     undoDouble(); undoDouble();
 }
 //Undo a whole Chunk of moves at once, this is why we have the -999/999 flag values.
-//Sequences like these come from rotateBulkAlgoVector()
+// (sequences like these come from rotateBulkAlgoVector() above )
 void Megaminx::undoBulk()
 {
     if (undoStack.empty()) return;
@@ -205,7 +211,7 @@ void Megaminx::undoBulk()
     }
 }
 
-//Clear the Queue and stop any repeated rotating actions.
+//Clear Rotation Queue and stop any repeated rotating actions.
 void Megaminx::resetQueue()
 {
     isRotating = { };
@@ -218,7 +224,7 @@ void Megaminx::resetQueue()
 void Megaminx::scramble()
 {
     resetQueue();
-    //Do 137 iterations of scrambling (like a human)
+    //Do 137 iterations of scrambling (like a good human would...)
     for (int q = 0; q < 137; q++) {
         int t = 0;
         //numFaces faces - turn one each, randomizing direction
@@ -237,19 +243,19 @@ void Megaminx::scramble()
 
 /**
  * \brief Makes a pointer to g_currentFace
- * \param i Nth-face number color (1-12)
+ * \param i Nth-face number (1-12)
  */
 void Megaminx::setCurrentFaceActive(int i)
 {
     assert(i > 0 && i <= numFaces);
     i -= 1;     //Convert 1-numFaces Faces into array 0-11
     g_currentFace = &faces[i];
-    assert(g_currentFace->getNum() == i);    //double check.
+    assert(g_currentFace->getNum() == i);    //internal consistency check.
 }
 
 /**
  * \brief Reset all the pieces on [Face] and set it to active.
- * \param n Nth-face number color (1-12)
+ * \param n Nth-face number (1-12)
  */
 void Megaminx::resetFace(int n)
 {
@@ -260,8 +266,9 @@ void Megaminx::resetFace(int n)
 }
 
 /**
- * \brief Returns an EXACT ORDER list of pieces on [Face], (either Edge or Corner piece)
+ * \brief Find A Face Piece Order List, <template> (either Edge or Corner piece)
  * \param face Nth-face number (1-12)
+ * \return Returns an EXACT ORDER list of pieces on FACE
  */
 template <typename T>
 std::vector<int> Megaminx::findFacePiecesOrder(int face) const
@@ -272,13 +279,13 @@ std::vector<int> Megaminx::findFaceCornersOrder(int face) const { return findFac
 std::vector<int> Megaminx::findFaceEdgesOrder(int face) const { return findFacePiecesOrder<Edge>(face); };
 
 /**
- * \brief  This finds the color to the center/Face (since a center is perm-attached to a face)
- *   and then iterates the entire list of pieces to find when the colors match, outputs a list.
- * \param Face Num 1-12
+ * \brief Finds the colored center that is perma-attached to a face, and then
+ *         iterates the entire list of pieces to find when the colors match, and outputs a list.
+ * \param face Nth-face number (1-12)
  * \param pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
  * \param times how many times to iterate over the ref'd array
  * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
- * NOTE: Finds pieces before they are attached to a face.
+ * \note    NOTE: Finds pieces BEFORE they are attached to a face.
  */
 std::vector<int> Megaminx::findPiecesOfFace(int face, Piece &pieceRef, int times) const
 {
@@ -293,8 +300,9 @@ std::vector<int> Megaminx::findPiecesOfFace(int face, Piece &pieceRef, int times
 }
 
 /**
- * \brief Returns a SORTED list of pieces on [Face], (either Edge or Corner piece)
+ * \brief Find Pieces, <template> (either Edge or Corner piece)
  * \param face Nth-face number (1-12)
+ * \return Returns a SORTED list of pieces on FACE
  */
 template <typename T>
 std::vector<int> Megaminx::findPieces(int face)
@@ -309,7 +317,7 @@ std::vector<int> Megaminx::findCorners(int face) { return findPieces<Corner>(fac
 std::vector<int> Megaminx::findEdges(int face) { return findPieces<Edge>(face); };
 
 /**
- * \brief Flip, Changes the colors of a piece (either Edge or Corner piece)
+ * \brief FLIP Piece, Changes the colors of a piece, <template> (either Edge or Corner piece)
  * \param face  Nth-face number (1-12)
  * \param num   Nth-piece number (1-5)
  */
@@ -324,11 +332,10 @@ void Megaminx::flipPieceColor(int face, int num)
 void Megaminx::flipCornerColor(int face, int num) { return flipPieceColor<Corner>(face, num); }
 void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(face, num); }
 
-
-//used by load.cpp Save/Restore Cube to capture state
 /**
- * \brief Get a list of all pieces Position Status (either Edge or Corner piece)
-  */
+ * \brief Get all pieces POSITION status, <template> (either Edge or Corner piece)
+ * \note   (used by load.cpp Save/Restore Cube to capture state)
+ */
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesPosition()
 {
@@ -342,9 +349,9 @@ std::vector<int> Megaminx::getAllPiecesPosition()
 std::vector<int> Megaminx::getAllCornerPiecesPosition()  { return getAllPiecesPosition<Corner>(); }
 std::vector<int> Megaminx::getAllEdgePiecesPosition()  { return getAllPiecesPosition<Edge>(); }
 
-//used by load.cpp Save/Restore Cube to capture state
 /**
- * \brief Get a list of all pieces Color status (either Edge or Corner piece)
+ * \brief Get all pieces COLOR status, <template> (either Edge or Corner piece)
+ * \note   (used by load.cpp Save/Restore Cube to capture state)
  */
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
@@ -359,9 +366,10 @@ std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
 std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Corner>(); }
 std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Edge>(); }
 
+//Resets--------------------------------------------------------------------------------------------------------------//
 
 /**
- * \brief Generic template to Reset all the Face pieces to their default value.
+ * \brief Generic <template> to Reset all the Face pieces to their default value.
  * \param color_n N'th Face/Color Number (1-12)
  * \return 1 if anything moved, 0 if not
  */
@@ -387,7 +395,7 @@ int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defau
  */
 int Megaminx::resetFacesEdges(int color_n) {
     assert(color_n > 0 && color_n <= numFaces);
-    const auto& defaultEdges = faces[(color_n - 1)].defaultEdges;
+    const auto &defaultEdges = faces[(color_n - 1)].defaultEdges;
     return resetFacesEdges(color_n, defaultEdges);
 }
 int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges, bool solve)
@@ -435,7 +443,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
  */
 int Megaminx::resetFacesCorners(int color_n) {
     assert(color_n > 0 && color_n <= numFaces);
-    const auto& defaultCorners = faces[(color_n - 1)].defaultCorners;
+    const auto &defaultCorners = faces[(color_n - 1)].defaultCorners;
     return resetFacesCorners(color_n, defaultCorners);
 }
 int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorners, bool solve)
@@ -475,7 +483,11 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
     return 1;
 }
 
-/** \brief Find a single numbered piece (int 1-60) */
+//Find1 & Find5s------------------------------------------------------------------------------------------------------//
+
+/**
+ * \brief Find 1, a single numbered piece (by int 1-60)
+ */
 template <typename T>
 int Megaminx::findPiece(int pieceNum)
 {
@@ -489,7 +501,9 @@ int Megaminx::findPiece(int pieceNum)
 int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
 int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
 
-/** \brief Find a specific five-piece chunk (index array) */
+/**
+ * \brief Find 5, a specific five-piece chunk (by INDEX ARRAY)
+ */
 template <typename T>
 std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
 {
@@ -498,7 +512,7 @@ std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
         pieceList[i] = findPiece<T>(pieceNums[i]);
     return pieceList;
 } //where T = Corner or Edge
-/** \brief Find a specific five-piece chunk (vector) */
+/** \brief Find 5, a specific five-piece chunk (by VECTOR) */
 template <typename T>
 std::vector<int> Megaminx::findFivePieces(const std::vector<int> &v)
 {
@@ -511,7 +525,11 @@ std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return fin
 std::vector<int> Megaminx::findEdgePieces(const std::vector<int> &v) { return findFivePieces<Edge>(v); }
 std::vector<int> Megaminx::findCornerPieces(const std::vector<int> &v) { return findFivePieces<Corner>(v); }
 
-/** \brief Reset any five-piece chunk (index array) to defaults  */
+//Reset5Defaults------------------------------------------------------------------------------------------------------//
+
+/**
+ * \brief Reset any five-piece chunk to defaults (by INDEX ARRAY)
+ */
 template <typename T>
 void Megaminx::resetFivePieces(const int indexes[5]) {
     Piece* pieces = getPieceArray<T>(0);
@@ -529,7 +547,10 @@ void Megaminx::resetFivePieces(const int indexes[5]) {
 } //where T = Corner or Edge
 void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(indexes); }
 void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
-/** \brief Reset any five-piece chunk (vector) to defaults  */
+
+/**
+ * \brief Reset any five-piece chunk to defaults (by VECTOR)
+ */
 template <typename T>
 void Megaminx::resetFivePiecesV(std::vector<int> &v) {
     assert(v.size() == 5);
@@ -539,18 +560,26 @@ void Megaminx::resetFivePiecesV(std::vector<int> &v) {
 void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
 void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
 
+//Parse Algorithm ID -> lettered String -> numdir notation -----------------------------------------------------------//
+
+//NOTE: debug print is good but might as well be permanently on
 bool debugAlgorithmString = true;
-/** \brief A letter/notation parser to manipulate the cube with algo strings */
-const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo)
+/**
+ * \brief An algorithm parser to manipulate the cube (by lettered algostring notation) + print
+ * \note   (input: sister function below takes a numerical Algo ID -> converts to -> algostring notation)
+ * \return vector of numdir rotation items
+ */
+const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algoID)
 {
     if (debugAlgorithmString)
-        std::cout << "ParseAlgorithmString: # " << algo << " : " << algorithmString << " @ Face: " << g_colorRGBs[loc.front].name << std::endl;
+        std::cout << "ParseAlgorithmString: # " << algoID << " : " << algorithmString \
+                  << " @ Face: " << g_colorRGBs[loc.front].name << std::endl;
     std::vector<numdir> readVector;
     std::stringstream ss(algorithmString); // create a stringstream to iterate over
     auto npos = std::string::npos;
     while (ss) {                           // while the stream is good
         std::string word;                  // parse first word
-        numdir op = { -1, Face::Clockwise, algo };
+        numdir op = { -1, Face::Clockwise, algoID };
         if (ss >> word) {
             if (word.find("'") != npos)    //reverse direction if its a ' Prime
                 op.dir *= -1;
@@ -585,6 +614,7 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
             }
         }
     }
+    //NOTE: repeatX not needed anymore after we explicitly defined every algorithm verbosely
     //if (algorithmString.repeatX) {
     //    const auto &old_count = readVector.size();
     //    readVector.resize(algorithmString.repeatX * old_count);
@@ -593,11 +623,13 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
     return readVector;
 }
 
-/** \brief A letter/notation parser to manipulate the cube by algo#  */
-const std::vector<numdir> Megaminx::ParseAlgorithmString(int algo, int startLoc)
+/**
+ * \brief An algorithm parser to manipulate the cube (by algo ID#) converts to AlgoString - print?
+ */
+const std::vector<numdir> Megaminx::ParseAlgorithmID(int algoID, int startLoc)
 {
-    const std::string algorithmString = g_AlgoStrings[algo].algo;
+    const std::string algorithmString = g_AlgoStrings[algoID].algo;
     const colordirs loc = g_faceNeighbors[startLoc];
     //std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString << std::endl;
-    return ParseAlgorithmString(algorithmString, loc, algo);
+    return ParseAlgorithmString(algorithmString, loc, algoID);
 }
