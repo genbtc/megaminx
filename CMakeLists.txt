@@ -1,11 +1,11 @@
-# by genBTC 2017/2018/2019/2020 requires CMake>=3.8 for C++ 17
+# Free Open Source Software by genBTC 2017/2018/2019/2020/2023 requires CMake>=3.8 for C++ 17, 
 cmake_minimum_required(VERSION 3.8)
 # project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change stuff as needed.
 # Also compiles natively on Windows with MSVC as long as you MSVC build freeglut and set the GLUT_ROOT_PATH on Line 33.
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 # Confirmed to work on Linux 2023
 set(PACKAGE_NAME "Megaminx")
-set(PACKAGE_VERSION "1.4.0-b1")
+set(PACKAGE_VERSION "1.4.1")
 project(${PACKAGE_NAME})
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME ${PACKAGE_NAME})
