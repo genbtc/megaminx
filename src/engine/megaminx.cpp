@@ -8,7 +8,6 @@
    genBTC February 2023 - taking another look at old code
  */
 #include "megaminx.hpp"
-#include <algorithm>
 
 // global main Megaminx object (pointer, managed)
 Megaminx* megaminx;
@@ -271,12 +270,18 @@ void Megaminx::resetFace(int n)
  * \return Returns an EXACT ORDER list of pieces on FACE
  */
 template <typename T>
-std::vector<int> Megaminx::findFacePiecesOrder(int face) const
+std::vector<int> Megaminx::findFacePiecesOrder(int face)
 {
     return faces[face - 1].findPiecesOrder<T>();
 } //where T = Corner or Edge
-std::vector<int> Megaminx::findFaceCornersOrder(int face) const { return findFacePiecesOrder<Corner>(face); };
-std::vector<int> Megaminx::findFaceEdgesOrder(int face) const { return findFacePiecesOrder<Edge>(face); };
+/* Explicit specification was needed */
+template <>
+std::vector<int> Megaminx::findFacePiecesOrder<Corner>(int face) { return findFaceCornersOrder(face); };
+template <>
+std::vector<int> Megaminx::findFacePiecesOrder<Edge>(int face) { return findFaceEdgesOrder(face); };
+//where T = Corner or Edge
+std::vector<int> Megaminx::findFaceCornersOrder(int face) { return findFacePiecesOrder<Corner>(face); };
+std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return findFacePiecesOrder<Edge>(face); };
 
 /**
  * \brief Finds the colored center that is perma-attached to a face, and then
@@ -498,6 +503,12 @@ int Megaminx::findPiece(int pieceNum)
             return i;
     return -1;
 } //where T = Corner or Edge
+/* Explicit specification was needed */
+template <>
+int Megaminx::findPiece<Edge>(int pieceNum) { return findEdge(pieceNum); }
+template <>
+int Megaminx::findPiece<Corner>(int pieceNum) { return findCorner(pieceNum); }
+//where T = Corner or Edge
 int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
 int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
 

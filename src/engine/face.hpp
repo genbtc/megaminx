@@ -41,9 +41,9 @@ public:
         return center;
     };
    template<typename T>
-    std::vector<int> findPiecesOrder() const;
-    std::vector<int> findCornersOrder() const;
-    std::vector<int> findEdgesOrder() const;
+    std::vector<int> findPiecesOrder();
+    std::vector<int> findCornersOrder();
+    std::vector<int> findEdgesOrder();
    template<typename T>
     int find5PieceLoc(int pieceNum) const;
     int find5EdgeLoc(int pieceNum) const;

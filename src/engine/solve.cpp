@@ -77,12 +77,14 @@ void Megaminx::DetectSolvedPieces(int startI, bool piecesSolved[5])
             piecesSolved[p - startI] = true;
     }
 } //where T = Corner or Edge
-void Megaminx::DetectSolvedCorners(int startI, bool piecesSolved[5]) {
-    DetectSolvedPieces<Corner>(startI, &piecesSolved[0]);
-}
-void Megaminx::DetectSolvedEdges(int startI, bool piecesSolved[5]) {
-    DetectSolvedPieces<Edge>(startI, &piecesSolved[0]);
-}
+/* Explicit specification wasnt needed, yet */
+template <>
+void Megaminx::DetectSolvedPieces<Corner>(int startI, bool piecesSolved[5]) { DetectSolvedCorners(startI, &piecesSolved[0]); };
+template <>
+void Megaminx::DetectSolvedPieces<Edge>(int startI, bool piecesSolved[5]) { DetectSolvedEdges(startI, &piecesSolved[0]); };
+//where T = Corner or Edge
+void Megaminx::DetectSolvedCorners(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Corner>(startI, &piecesSolved[0]); }
+void Megaminx::DetectSolvedEdges(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Edge>(startI, &piecesSolved[0]);
 
 
 class EdgeLayerAssist {
@@ -1926,7 +1928,7 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
             shadowDom->bulkShadowRotate(bulk);
         }
         //find where pieces actually are
-        std::vector<int> foundEdges = shadowDom->findFaceEdgesOrder(GRAY);
+        std::vector<int> foundEdges = shadowDom->findFacePiecesOrder<Edge>(GRAY);
         // vs. where they're supposed to be
         std::vector<int> defaultEdges = faces[GRAY - 1].defaultEdges;
         //output the difference as an int.
