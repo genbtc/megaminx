@@ -95,8 +95,7 @@ public:
                 data._colorNum[2] == color;
     }
 
-
-    //Function to reverse the Array.
+    //Function to Reverse the c-Array.
     template <typename T>
     void arrayReverse(T arr[], int r, int n) {
         for(int i = i; i<n/2; ++i) {
@@ -106,7 +105,7 @@ public:
         }
     }
 
-    // Function to Left rotate an array by r positions, n length
+    //Function to Left rotate a C-array by r positions, n length
     template <typename T>
     void leftRotate(T arr[], int r, int n)
     {
@@ -121,7 +120,7 @@ public:
         }
     }
 
-    // Function to Right rotate an array by r positions, n length
+    //Function to Right rotate a C-array by r positions, n length
     template <typename T>
     void rightRotate(T arr[], int r, int n)
     {
@@ -153,6 +152,7 @@ public:
         flip();
         flip();
     }
+
     //Creates the common starting vertexes for all pieces that are CORNERS
     double* cornerInit() {
         numSides = 3;
@@ -231,7 +231,6 @@ public:
         }
         return &_vertex[0][0];
     }
-
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
         numSides = 0;

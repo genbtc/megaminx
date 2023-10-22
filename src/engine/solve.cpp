@@ -43,13 +43,15 @@ void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
     }
 }
 
-//call to find out if the puzzle is fully solved.
+//Function call to find out if the puzzle is fully solved.
 bool Megaminx::isFullySolved()
 {
     return (DetectIfAllSolved<Edge>() && DetectIfAllSolved<Corner>());
 }
 
-//fast way to detect if the puzzle is solved
+//Fastest way to detect if the puzzle is solved.
+//Can be const but other refactors block,getPieceArray<T> cant be const
+// so pieceData cant be flipped or swapped in the Reset function and shadow function
 template <typename T>
 bool Megaminx::DetectIfAllSolved()
 {
@@ -105,7 +107,6 @@ public:
     const Piece* currentPiece;
     bool currentpieceFlipStatusOK;
     int row1, row2, row3, row4, row5, row6, rowLAST;
-
 
     EdgeLayerAssist(Megaminx* shadowDom, int i) {
         sourceEdgeIndex = shadowDom->findEdge(i);

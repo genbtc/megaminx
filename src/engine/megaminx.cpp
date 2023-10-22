@@ -539,6 +539,7 @@ std::vector<int> Megaminx::findCornerPieces(const std::vector<int> &v) { return 
 
 /**
  * \brief Reset any five-piece chunk to defaults (by INDEX ARRAY)
+ * \note cant be const, swaps & flips the received piece
  */
 template <typename T>
 void Megaminx::resetFivePieces(const int indexes[5]) {

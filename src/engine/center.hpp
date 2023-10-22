@@ -6,7 +6,7 @@ class Center : public Piece {
 public:
     Center() {
         this->centerInit();
-    };
+    }
     ~Center() {}
     void createAxis(int n, double* target);
     void init(int n);
