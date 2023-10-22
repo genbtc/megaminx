@@ -31,7 +31,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
             break;
         default:
             break;
-           
+
         }
     }
     //Game commands
@@ -128,7 +128,7 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         break;
 	// THESE FUNC KEYS HAVE TO BE HANDLED IN HERE (even though this file is not for cubing)
     case GLUT_KEY_F1:
-        // menuHandler(300);	//Rotate_white_edges 
+        // menuHandler(300);	//Rotate_white_edges
         // menuHandler(301);	//Rotate_white_corners
         // manually call these (the double clone cube call was messing up)
         MakeShadowCubeClone();	// init
@@ -237,7 +237,7 @@ void createMenu()
     glutAddMenuEntry("20. 7LL-Edge 2+2swap BUNNY Opp. 2&4,3&5 + INVERT 8'/1'", 70);
     glutAddMenuEntry("37. 7LL-Edge 2+2swap BUNNY BEST 2&5,3&4", 87);
     glutAddMenuEntry("19. 7LL-Edge 2+2swap BUNNY Adj. 2&3,4&5", 69);
-    glutAddMenuEntry("29. 7LL-Edge 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);   
+    glutAddMenuEntry("29. 7LL-Edge 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);
     glutAddMenuEntry("38. 7LL-Edge 5-way CCW cycle by +2 all", 88);
     glutAddMenuEntry("17. 7LL-Edge 5-way  CW cycle by -2 all", 67);
     //glutAddMenuEntry("18. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
@@ -267,7 +267,7 @@ void createMenu()
     glutAddMenuEntry("2nd Layer, 1 Edge (Left drop)", 71);
     glutAddMenuEntry("2nd Layer, 1 Edge (Right drop)",72);
     glutAddMenuEntry("4th Layer, 1 Edge (Left drop)", 73);
-    glutAddMenuEntry("4th Layer, 1 Edge (Right drop)",74);   
+    glutAddMenuEntry("4th Layer, 1 Edge (Right drop)",74);
     glutAddMenuEntry("4th Layer, 1 Edge (Left+Flip)", 84);
     glutAddMenuEntry("4th Layer, 1 Edge (Right+Flip)",85);
     glutAddMenuEntry("6th Layer, 1 Edge (Left drop)", 75);
@@ -344,15 +344,15 @@ void createMenu()
     glutAddMenuEntry("Swap Edges 2 & 4", 130); //order
     glutAddMenuEntry("Swap Edges 2 & 5", 131);
     glutAddMenuEntry("Swap Edges 3 & 4", 132);
-    glutAddMenuEntry("Swap Edges 3 & 5", 133);   
+    glutAddMenuEntry("Swap Edges 3 & 5", 133);
     glutAddMenuEntry("Swap Edges 4 & 5", 134);
     glutAddMenuEntry("Swap Corners 1 & 2", 135);
     glutAddMenuEntry("Swap Corners 1 & 3", 136);
     glutAddMenuEntry("Swap Corners 1 & 4", 137);
-    glutAddMenuEntry("Swap Corners 1 & 5", 138);   
+    glutAddMenuEntry("Swap Corners 1 & 5", 138);
     glutAddMenuEntry("Swap Corners 2 & 3", 139);
     glutAddMenuEntry("Swap Corners 2 & 4", 140);
-    glutAddMenuEntry("Swap Corners 2 & 5", 141);   
+    glutAddMenuEntry("Swap Corners 2 & 5", 141);
     glutAddMenuEntry("Swap Corners 3 & 4", 142);
     glutAddMenuEntry("Swap Corners 3 & 5", 143);
     glutAddMenuEntry("Swap Corners 4 & 5", 144);
@@ -406,7 +406,7 @@ void menuHandler(int num)
     case 99: //Restore Cube State to File
         RestoreCubeFromFile();
         break;
-   
+
     //menu submenu2_id: Compu.Mod Current Face
     case 19:
         megaminx->rotate(currentFace, Face::CCW); break;
@@ -455,7 +455,7 @@ void menuHandler(int num)
 	// Solve a Face (Reset) any selected face 1-12:
     case 171 ... 182:
         megaminx->resetFace(1+num-171); break;
-   
+
     //menu SubLevel3: Teleport Reset by Layer
     case 40:  //1st Layer = WHITE Edges
         megaminx->resetFacesEdges(WHITE); break;
@@ -529,7 +529,7 @@ void menuHandler(int num)
         megaminx->rotateSolve5thLayerCorners(shadowDom);
         megaminx->rotateSolveLayer6Edges(shadowDom);
         megaminx->rotateSolveLayer7Edges(shadowDom);
-        megaminx->rotateSolve7thLayerCorners(shadowDom);        
+        megaminx->rotateSolve7thLayerCorners(shadowDom);
         break;
     case 312:   //brute force checker for solver = F11
         for (int i = 0; i < 50000; ++i) {

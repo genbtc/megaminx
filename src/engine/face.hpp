@@ -267,7 +267,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
         .modby = { -2, 0, 0, 1, 1 }
     },
 //#32=#7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
-//#33= 3e+
+//#33= 3e
 
 
     // #7Last-Layer: Step 2: Edge Position, 5-way star cycle CW+ , Opposite Faces CW

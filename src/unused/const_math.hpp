@@ -116,8 +116,8 @@ double fraction(double x) {
 
 constexpr
 double exp_helper(const double r) {
-  return 1.0 + r + pow(r,2)/2.0   + pow(r,3)/6.0   
-                   pow(r,4)/24.0  + pow(r,5)/120.0 
+  return 1.0 + r + pow(r,2)/2.0   + pow(r,3)/6.0
+                   pow(r,4)/24.0  + pow(r,5)/120.0
                    pow(r,6)/720.0 + pow(r,7)/5040.0;
 }
 
@@ -149,7 +149,7 @@ int exponent(const double x) { return exponent_helper(x,0); }
 
 constexpr
 double log_helper2(const double y) {
-  return 2.0 * (y + pow(y,3)/3.0 + pow(y,5)/5.0 
+  return 2.0 * (y + pow(y,3)/3.0 + pow(y,5)/5.0
                     pow(y,7)/7.0 + pow(y,9)/9.0 + pow(y,11)/11.0);
 }
 

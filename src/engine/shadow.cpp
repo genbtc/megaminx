@@ -75,7 +75,7 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
         auto& op = shadowDom->shadowRotateQueue.front();
         rotateQueue.push(op);
         undoStack.push(op);
-        shadowDom->shadowRotateQueue.pop();       
+        shadowDom->shadowRotateQueue.pop();
     }
     undoStack.push({ 999, 999 });
 }
@@ -83,7 +83,7 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 //Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
 void Megaminx::bulkShadowRotate(std::vector<numdir> bulk) {
     for (auto op : bulk)    //+1 the 0-11 faces
-        shadowRotate(op.num + 1, op.dir); 
+        shadowRotate(op.num + 1, op.dir);
 }
 
 //Create megaminx array, from pieces read from a file, and put into shadow array.

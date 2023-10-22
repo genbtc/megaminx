@@ -105,7 +105,7 @@ public:
     const Piece* currentPiece;
     bool currentpieceFlipStatusOK;
     int row1, row2, row3, row4, row5, row6, rowLAST;
-   
+
 
     EdgeLayerAssist(Megaminx* shadowDom, int i) {
         sourceEdgeIndex = shadowDom->findEdge(i);
@@ -382,7 +382,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 offby -= 5;
             int aoffby = i + RED;
             MMg(aoffby,YELLOW);
-            assert(offby == aoffby);               
+            assert(offby == aoffby);
             if (offby >= 2) {
                 if (l.CornerItselfA->data.flipStatus == 2)
                     bulkAlgo = shadowDom->ParseAlgorithmID(51, offby);  //    .algo = "f dr F' "
@@ -1079,7 +1079,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if (solvedCount == 3 && !twoAdjacentOffColors) {
             std::cout << "solvedCount3 not accounted for \n"
                       << "Bug in rotateSolveLayer7Edges() where solvedCount == 3 && !twoAdjacentOffColors\n";
-        }       
+        }
         else if ((offby == 4 || offby == 3) && solvedCount == 1 && !allEdgeColorsSolved && twoGraysUnsolved(3, 4)) //TT-84-2 + //TT-85-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
@@ -1188,7 +1188,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if (offby == 3 && solvedCount == 1 && allCornersAllSolved && twoGraysUnsolved(2, 3)) //TT80-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_GREEN], 33); //3e+ #33 same. (F/L safe tho)
-        }       
+        }
         else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(3,4)) //TT47-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK], 33); //3e+ #33 same. (F/L safe tho)
@@ -1197,7 +1197,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + offby + 2], 33); //3e+ #33 same. (F/L safe tho)
         }
-       
+
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved&& checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25)) //TT75-2
         {   //(needs another mushroom- after this one to solve it)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE], 33); //3e+ #33 same. (F/L safe tho)
@@ -1389,7 +1389,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
              (twoSolvedPieces(0, 1)) || (twoSolvedPieces(1, 2)) || (twoSolvedPieces(2, 3)) || (twoSolvedPieces(3, 4)) || (twoSolvedPieces(4, 0));
         bool twoOppositePieces =
              (twoSolvedPieces(0, 2)) || (twoSolvedPieces(1, 3)) || (twoSolvedPieces(2, 4)) || (twoSolvedPieces(3, 0)) || (twoSolvedPieces(4, 1));
-       
+
 //Not Needed. L7-Edges is mandatorily run as a pre-requisite.
         // firstly rotate solved Edge 0 (e#25) gray top back to default, by checking the first EDGE and setting that rotation.
         int findIfFirstEdgeDefault = shadowDom->findEdge(25); //always piece first
@@ -1951,7 +1951,7 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
             if (foundEdges[k] == 28)
                 modby[3]=newDifference[k];
             if (foundEdges[k] == 29)
-                modby[4]=newDifference[k];                                                               
+                modby[4]=newDifference[k];
         }
 //        std::cout << "  = foundEdges:  # " << algo << std::endl;
         for (int k = 0; k < 5; ++k) {

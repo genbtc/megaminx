@@ -97,7 +97,7 @@ void Corner::render() const
     glBegin(GL_LINE_LOOP);
     glVertex3d(_vertex[2][0] * 1.005, _vertex[2][1] * 1.005, _vertex[2][2] * 1.005);
     glVertex3d(_vertex[5][0] * 1.005, _vertex[5][1] * 1.005, _vertex[5][2] * 1.005);
-    glEnd();   
+    glEnd();
 
     //Piece Numbering Test:
     std::string c = std::to_string(data.pieceNum);

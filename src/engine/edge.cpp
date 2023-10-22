@@ -88,7 +88,7 @@ void Edge::render() const
         glVertex3dv(_vertex[i]);
     }
     glEnd();
-   
+
     if (data.hotPieceMoving)
         glColor3d(.4, 1, 0);
     else

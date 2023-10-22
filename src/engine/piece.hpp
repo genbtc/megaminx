@@ -102,7 +102,7 @@ public:
         for(int i = i; i<n/2; ++i) {
             int temp = arr[i];
             arr[i] = arr[n-i-1];
-            arr[n-i-1] = temp;       
+            arr[n-i-1] = temp;
         }
     }
 
@@ -231,7 +231,7 @@ public:
         }
         return &_vertex[0][0];
     }
-   
+
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
         numSides = 0;

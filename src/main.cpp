@@ -1,4 +1,4 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.1";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.2";
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod
              - v1.3.2 Nov 22, 2018
@@ -7,7 +7,8 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.1";
              - v1.3.8 Feb 03, 2023
              - v1.3.9 Mar 06, 2023
              - v1.4.0-b1 Mar 8, 2023 - CLI Shell (readline)
-             - v1.4.1 Oct 14, 2023
+             - v1.4.1 Oct 14, 2023 (bug: ld gc'ed needed symbols)
+             - v1.4.2 Oct 22, 2023 (clean code)
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
     glutReshapeFunc(myglutChangeWindowSize);
     glutMouseFunc(myglutMousePressed);
     glutMotionFunc(myglutMousePressedMove);
-   
+
     // Right click menu:
     createMenu();
     glutMenuStatusFunc(myglutMenuVisible);
@@ -120,7 +121,7 @@ void myglutRenderScene() {
 								  g_camera.m_angleX, g_camera.m_angleY);
         GetCurrentFace();
         utDrawText2D(10.f, HEIGHT - 40.f, lastface);
-       
+
         // Print out Text (Help display)
         if (g_help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);

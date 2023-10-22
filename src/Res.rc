@@ -1,21 +1,21 @@
 GLUT_ICON ICON "MAINICON.ico"
 // Executable version information.
 VS_VERSION_INFO    VERSIONINFO
-FILEVERSION        1,4,0,0
-PRODUCTVERSION     1,4,0,0
+FILEVERSION        1,4,2,0
+PRODUCTVERSION     1,4,2,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
     BLOCK "080904b0"
     BEGIN
       VALUE "CompanyName", "genBTC"
-      VALUE "FileDescription", "Megaminx v1.4.0 - genBTC mod"
-      VALUE "FileVersion", "1.4.0.0"
+      VALUE "FileDescription", "Megaminx v1.4.2 - genBTC mod"
+      VALUE "FileVersion", "1.4.2.0"
       VALUE "InternalName", "Megaminx"
       VALUE "LegalCopyright", "©2023 genBTC, based on TarasKhalymon"
       VALUE "OriginalFilename", "Megaminx.exe"
       VALUE "ProductName", "Megaminx"
-      VALUE "ProductVersion", "1.4.0.0"
+      VALUE "ProductVersion", "1.4.2.0"
     END
   END
 END
