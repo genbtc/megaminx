@@ -276,12 +276,12 @@ std::vector<int> Megaminx::findFacePiecesOrder(int face)
 } //where T = Corner or Edge
 /* Explicit specification was needed */
 template <>
-std::vector<int> Megaminx::findFacePiecesOrder<Corner>(int face) { return findFaceCornersOrder(face); };
+std::vector<int> Megaminx::findFacePiecesOrder<Corner>(int face) { return findFaceCornersOrder(face); }
 template <>
-std::vector<int> Megaminx::findFacePiecesOrder<Edge>(int face) { return findFaceEdgesOrder(face); };
+std::vector<int> Megaminx::findFacePiecesOrder<Edge>(int face) { return findFaceEdgesOrder(face); }
 //where T = Corner or Edge
-std::vector<int> Megaminx::findFaceCornersOrder(int face) { return findFacePiecesOrder<Corner>(face); };
-std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return findFacePiecesOrder<Edge>(face); };
+std::vector<int> Megaminx::findFaceCornersOrder(int face) { return findFacePiecesOrder<Corner>(face); }
+std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return findFacePiecesOrder<Edge>(face); }
 
 /**
  * \brief Finds the colored center that is perma-attached to a face, and then
@@ -318,8 +318,8 @@ std::vector<int> Megaminx::findPieces(int face)
         return findPiecesOfFace(face, this->edges[0], numEdges);
     return {};
 } //where T = Corner or Edge
-std::vector<int> Megaminx::findCorners(int face) { return findPieces<Corner>(face); };
-std::vector<int> Megaminx::findEdges(int face) { return findPieces<Edge>(face); };
+std::vector<int> Megaminx::findCorners(int face) { return findPieces<Corner>(face); }
+std::vector<int> Megaminx::findEdges(int face) { return findPieces<Edge>(face); }
 
 /**
  * \brief FLIP Piece, Changes the colors of a piece, <template> (either Edge or Corner piece)
@@ -377,8 +377,8 @@ std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()  { return getAllPie
  * \brief Generic <template> to Reset all the Face pieces to their default value.
  * \param color_n N'th Face/Color Number (1-12)
  * \return 1 if anything moved, 0 if not
+ * \deprecated Not Currently Used But Has Good Template is_same Machinery
  */
- /*
 template <typename T>
 int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
 {
@@ -390,7 +390,6 @@ int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPiece
 } //where T = Corner or Edge
 int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }
 int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }
-*/
 
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.

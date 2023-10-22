@@ -63,7 +63,7 @@ void Face::attachCornerPieces(const Megaminx* megaminx, Corner &cornersPTR)
 //Compiles an accurate colorsolvedmaybe list.  (piece exists but color maybe rotated)
 */
 template <typename T>
-std::vector<int> Face::findPiecesOrder()
+std::vector<int> Face::findPiecesOrder() const
 {
     std::vector<int> pieceOrder;
     for (int i = 0; i < 5; ++i) {
@@ -72,8 +72,8 @@ std::vector<int> Face::findPiecesOrder()
     }
     return pieceOrder;
 }
-std::vector<int> Face::findCornersOrder() { return findPiecesOrder<Corner>(); };
-std::vector<int> Face::findEdgesOrder() { return findPiecesOrder<Edge>(); };
+std::vector<int> Face::findCornersOrder() const { return findPiecesOrder<Corner>(); };
+std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); };
 
 //General usage: Is this piecenum on this face anywhere 1-5?
 //Is this 1-30 piecenum on this face anywhere 1-5 edges?

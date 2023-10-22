@@ -79,12 +79,12 @@ void Megaminx::DetectSolvedPieces(int startI, bool piecesSolved[5])
 } //where T = Corner or Edge
 /* Explicit specification wasnt needed, yet */
 template <>
-void Megaminx::DetectSolvedPieces<Corner>(int startI, bool piecesSolved[5]) { DetectSolvedCorners(startI, &piecesSolved[0]); };
+void Megaminx::DetectSolvedPieces<Corner>(int startI, bool piecesSolved[5]) { DetectSolvedCorners(startI, &piecesSolved[0]); }
 template <>
-void Megaminx::DetectSolvedPieces<Edge>(int startI, bool piecesSolved[5]) { DetectSolvedEdges(startI, &piecesSolved[0]); };
+void Megaminx::DetectSolvedPieces<Edge>(int startI, bool piecesSolved[5]) { DetectSolvedEdges(startI, &piecesSolved[0]); }
 //where T = Corner or Edge
 void Megaminx::DetectSolvedCorners(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Corner>(startI, &piecesSolved[0]); }
-void Megaminx::DetectSolvedEdges(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Edge>(startI, &piecesSolved[0]);
+void Megaminx::DetectSolvedEdges(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Edge>(startI, &piecesSolved[0]); }
 
 
 class EdgeLayerAssist {
@@ -246,7 +246,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             //TODO: This means we need a plan for any 5-9 edge to get moved into any 0-4 slot even when top isn't solved.
             int findIfPieceSolved = shadowDom->findEdge(firstSolvedPiece); //always piece 0
             int offby = findIfPieceSolved - firstSolvedPiece;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
-            if (findIfPieceSolved > 0 && findIfPieceSolved < 5 && offby > 0) {
+            if ((findIfPieceSolved > 0) && (findIfPieceSolved < 5) && (offby > 0)) {
                 offby *= -1;
                 shadowDom->shadowMultiRotate(WHITE, offby);
                 //this resets our starting point reset loop too.
