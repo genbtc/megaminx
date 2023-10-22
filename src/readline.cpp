@@ -4,13 +4,14 @@
 #include "ui/linenoise.h"
 #include "engine/megaminx.hpp"
 
-// include prototypes
+// include prototype from main-menu.cpp
 void menuHandler(int num);
 
 void readlineCompletion(const char *buf, linenoiseCompletions *lc) {
     if (buf[0] == 'h') {
         linenoiseAddCompletion(lc,"hello");
         linenoiseAddCompletion(lc,"hello there");
+        linenoiseAddCompletion(lc,"hello world");
     }
 }
 void readlineShell() {
@@ -27,14 +28,19 @@ void readlineShell() {
             printf("No Input, returning to GUI.\n");
             free(line);
             return;
-        } else if (line[0] != '\0' && line[0] != '/') {
-            printf("echo: '%s'\n", line);
+        } else if ((!strncmp(line,"exit",4))
+                || (!strncmp(line,"quit",4))) {
+            printf("Exiting shell, returning to GUI\n");
+            free(line);
+            return;
+        } else if (line[0] != '/') {
+            printf("not a command: '%s'\n", line);
+        } else if (!strncmp(line,"/hello",6)) {
+            printf("Hello World!\n");
         } else if (!strncmp(line,"/historylen",11)) {
             int len = atoi(line+11);
             linenoiseHistorySetMaxLen(len); /* change the history length. */
             printf("Changed History Length to #%d lines\n", len);
-        } else if (!strncmp(line,"/hello",6)) {
-            printf("Hello world!\n");
         } else if (!strncmp(line,"/menu",5)) {
             int num = atoi(line+5);
             printf("Executing Menu #%d\n", num);
