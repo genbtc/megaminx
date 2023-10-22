@@ -22,8 +22,8 @@ public:
     void initEdgePieces();
     void initFacePieces();
     void renderAllPieces();
-    void toggleInvisibility() {  invisible = !invisible;  };
-    bool isInvisible() { return invisible; };
+    void toggleInvisibility() {  invisible = !invisible;  }
+    bool isInvisible() { return invisible; }
     void render();
     void undo();
     void undoDouble();
@@ -172,7 +172,7 @@ public:
         else if (std::is_same<T, Corner>::value)
             return numCorners;
         return numFaces;
-    };
+    }
 
    template <typename T>
     Piece* getPieceArray(int i) {
@@ -181,7 +181,7 @@ public:
         else if (std::is_same<T, Corner>::value)
             return &corners[i];
         return &centers[i];
-    };
+    }
 
 private:
     Face   faces[numFaces];

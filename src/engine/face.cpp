@@ -72,8 +72,8 @@ std::vector<int> Face::findPiecesOrder() const
     }
     return pieceOrder;
 }
-std::vector<int> Face::findCornersOrder() const { return findPiecesOrder<Corner>(); };
-std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); };
+std::vector<int> Face::findCornersOrder() const { return findPiecesOrder<Corner>(); }
+std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); }
 
 //General usage: Is this piecenum on this face anywhere 1-5?
 //Is this 1-30 piecenum on this face anywhere 1-5 edges?
