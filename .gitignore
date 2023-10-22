@@ -8,6 +8,7 @@ megaminx.creator
 megaminx.cxxflags
 megaminx.files
 megaminx.includes
+*.o
 #CMake
 build
 CMakeBuild

@@ -10,3 +10,18 @@ history
 /algotest
 /ALGOTEST
 /algotest
+quit
+algo
+algo 21
+history
+/hello
+/menu
+algo 21
+history
+/hello
+/menu
+/algotest
+/ALGOTEST
+/algotest
+quit
+/algotest

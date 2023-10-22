@@ -167,7 +167,7 @@ void Camera::RotateGLCameraView()
 
 
 /**
- * \brief Free function. Takes camera position angles and tells what face
+ * \brief Free function. MEGAMINX. Takes camera position angles and tells what face
  *    is most showing. Shortcut way of angle detection. external linkage.
  * \param x camera_angleX
  * \param y camera_angleY

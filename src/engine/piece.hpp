@@ -31,7 +31,7 @@ public:
     void swapdata(_data &out) {
         if (&(this->data) == &out)
             return;
-        _data temp = data;
+        const _data temp = data;
         data = out;
         out = temp;
     }
@@ -124,7 +124,7 @@ public:
     template <typename T>
     void rightRotate(T arr[], int r, int n)
     {
-        int rotations = r % n;
+        const int rotations = r % n;
         for(int j = 0; j < rotations; j++) {
             /* Store last element of array */
             T last = arr[n - 1];
