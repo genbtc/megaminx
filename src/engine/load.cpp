@@ -4,7 +4,7 @@
 //Cube SaveState filenames
 #define EDGEFILE "EdgePositions30.dat"
 #define EDGEFILECOLORS "EdgeColors30.dat"
-#define CORNERFILE "CornerPositions20.dat" 
+#define CORNERFILE "CornerPositions20.dat"
 #define CORNERFILECOLORS "CornerColors20.dat"
 #define MEGAMINXBLOB "Megaminx.SAVEGAME.txt"
 //TODO: combine into 1 file-format, its un-human un-readable un-correlatable numbers as is.

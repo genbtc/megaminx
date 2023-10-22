@@ -18,7 +18,7 @@ static const long double PI = acos(-1.);           //3.1415927410125732
 static const long double PHI = (1 + sqrt(5.)) / 2;  //1.6180340051651001
 static const long double SIDE_ANGLE = 2 * atan(PHI); //2.0344439448698051
 //inscribed sphere radius ( ri = a / 2 * √ ( 25 + 11 * √5 ) / 10 )
-static const long double INS_SPHERE_RAD = DODESIZE * sqrt(10+22 / sqrt(5.)) / 4;   //111.35163307189941 
+static const long double INS_SPHERE_RAD = DODESIZE * sqrt(10+22 / sqrt(5.)) / 4;   //111.35163307189941
 static const long double INS_CIRCLE_RAD = DODESIZE / sqrt((5 - sqrt(5.)) / 2);     // 85.065082037033278
 #define pim(x) x*PI/5
 //megaminx vertex math shortcuts
@@ -118,19 +118,19 @@ static void arrayRotateRightTemp(int arr[], int d, int n)
     int temp[n];
     // Keeping track of the current index of temp[]
     int k = 0;
- 
+
     // Storing the n - d elements of array arr[] to the front of temp[]
     for (int i = d; i < n; i++) {
         temp[k] = arr[i];
         k++;
     }
- 
+
     // Storing the first d elements of array arr[] into temp
     for (int i = 0; i < d; i++) {
         temp[k] = arr[i];
         k++;
     }
- 
+
     // Copying the elements of temp[] in arr[] to get the final rotated array
     for (int i = 0; i < n; i++) {
         arr[i] = temp[i];

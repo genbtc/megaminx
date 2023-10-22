@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     glutReshapeFunc(myglutChangeWindowSize);
     glutMouseFunc(myglutMousePressed);
     glutMotionFunc(myglutMousePressedMove);
-    
+   
     // Right click menu:
     createMenu();
     glutMenuStatusFunc(myglutMenuVisible);
@@ -120,7 +120,7 @@ void myglutRenderScene() {
 								  g_camera.m_angleX, g_camera.m_angleY);
         GetCurrentFace();
         utDrawText2D(10.f, HEIGHT - 40.f, lastface);
-        
+       
         // Print out Text (Help display)
         if (g_help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
@@ -178,7 +178,7 @@ void doDoubleClickRotate(int, int) {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
 
-// Camera - init/reset Camera+vars to default, set view angles, etc. (and spin) 
+// Camera - init/reset Camera+vars to default, set view angles, etc. (and spin)
 void resetCameraViewport() {
     g_camera = Camera();
     g_camera.m_zoom = -ZDIST;
@@ -213,7 +213,7 @@ void myglutMenuVisible(int status, int x, int y) {
 } //continued:
 //stops cube rotate from happening after right click menu visible then drag
 void myglutMousePressedMove(int x, int y) {
-	//if the menu is visible, do nothing 
+	//if the menu is visible, do nothing
 	if (g_camera.menuVisibleState)
 		return;
 	//if the menu is not visible and it was never visible, we can drag.

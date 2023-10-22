@@ -7,7 +7,7 @@ Face::Face()
     rotating = false;
     angle = 0;
     thisNum = 0;
-    turnDir = 0;        
+    turnDir = 0;
     axis[0] = 0;
     axis[1] = 0.001;
     axis[2] = -1;
@@ -158,7 +158,7 @@ bool Face::placeParts(int dir)
         switch (thisNum) {
         case 0: //WHITE
             QuadSwapEdges(CCW0E);
-            QuadSwapCorners(CCW0C);            
+            QuadSwapCorners(CCW0C);
             break;
         case 1: //DARK_BLUE
             QuadSwapEdges(CCW1E);
@@ -192,7 +192,7 @@ bool Face::placeParts(int dir)
             break;
         case 6: //GRAY
             QuadSwapEdges(CCW6E);
-            QuadSwapCorners(CCW6C);            
+            QuadSwapCorners(CCW6C);
             break;
         case 7: //LIGHT_BLUE Front Face, Left Turn = Counter-ClockWise;
             QuadSwapEdges(CCW7E);
@@ -232,7 +232,7 @@ bool Face::placeParts(int dir)
         switch (thisNum) {
         case 0: //WHITE
             QuadSwapEdges(CW0E);
-            QuadSwapCorners(CW0C);            
+            QuadSwapCorners(CW0C);
             break;
         case 1: //DARK_BLUE
             QuadSwapEdges(CW1E);
@@ -266,7 +266,7 @@ bool Face::placeParts(int dir)
             break;
         case 6: //GRAY
             QuadSwapEdges(CW6E);
-            QuadSwapCorners(CW6C);            
+            QuadSwapCorners(CW6C);
             break;
         case 7: //LIGHT_BLUE Front Face, Right Turn = ClockWise;
             QuadSwapEdges(CW7E);

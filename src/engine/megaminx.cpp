@@ -152,7 +152,7 @@ void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc
     std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc, algoID);
     rotateBulkAlgoVector(bulk);
 }
-//Adds entire vector of numdirs to the Rotate queue one by one. 
+//Adds entire vector of numdirs to the Rotate queue one by one.
 void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
 {
     undoStack.push({ -999,-999 });  //begin sentinel value flag

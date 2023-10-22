@@ -14,7 +14,7 @@ void readlineCompletion(const char *buf, linenoiseCompletions *lc) {
     }
 }
 void readlineShell() {
-    char *line;    
+    char *line;
     linenoiseSetCompletionCallback(readlineCompletion);
     linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
     printf("Megaminx Command Line Internals - \n");
@@ -26,13 +26,13 @@ void readlineShell() {
         if (line[0] == '\0') {
             printf("No Input, returning to GUI.\n");
             free(line);
-            return;            
+            return;
         } else if (line[0] != '\0' && line[0] != '/') {
             printf("echo: '%s'\n", line);
         } else if (!strncmp(line,"/historylen",11)) {
             int len = atoi(line+11);
             linenoiseHistorySetMaxLen(len); /* change the history length. */
-            printf("Changed History Length to #%d lines\n", len);            
+            printf("Changed History Length to #%d lines\n", len);
         } else if (!strncmp(line,"/hello",6)) {
             printf("Hello world!\n");
         } else if (!strncmp(line,"/menu",5)) {
@@ -50,7 +50,7 @@ void readlineShell() {
                 auto algo = megaminx->ParseAlgorithmID(i, LIGHT_BLUE);
                 printf("Number of Moves: #%ld\n", algo.size() );
                 printf("Executing Algo #%d\n", i);
-                megaminx->rotateAlgo(i);                
+                megaminx->rotateAlgo(i);
             }
             printf("Exiting shell, returning to GUI\n");
             free(line);
@@ -61,7 +61,7 @@ void readlineShell() {
             megaminx->rotateAlgo(num);
             printf("Exiting shell, returning to GUI\n");
             free(line);
-            return;            
+            return;
         } else if ((!strncmp(line,"/exit",5))
                 || (!strncmp(line,"/quit",5))) {
             printf("Exiting shell, returning to GUI\n");

@@ -1,3 +1,14 @@
+#QTCreator
+.qtc_clangd/
+Megaminx
+megaminx
+megaminx.cflags
+megaminx.config
+megaminx.creator
+megaminx.cxxflags
+megaminx.files
+megaminx.includes
+#CMake
 build
 CMakeBuild
 CMakeCache.txt

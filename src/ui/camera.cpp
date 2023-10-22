@@ -156,9 +156,9 @@ void Camera::RotateGLCameraView()
     //These must be transformed in this order for mouse to work right.
     glTranslated(0, 0, m_zoom);
     //vertical
-    glRotated(m_angleY, -1, 0, 0); 
+    glRotated(m_angleY, -1, 0, 0);
     //horizontal wants to act in reverse when cube is flipped upside down.
-    //this fix is crude, works, but causes a visible and disorienting glitch across the transition. 
+    //this fix is crude, works, but causes a visible and disorienting glitch across the transition.
     if (m_angleY > 180) //cant just go changing this without the getCurrentAngles being modified.
         glRotated(-m_angleX, 0, 0, 1); //rotating the faces CW/CCW opposite when </>180 transition. White Face and gray face pay the consequences
     else //default:
@@ -188,7 +188,7 @@ int getCurrentFaceFromAngles(int x, int y)
     const bool y3 = y >= (s + 120 - d) && y <= (s + 120 + d);      //180
     const bool y4a = y >= (0 - d) && y <= (0 + d);                //0
     const bool y4b = y >= (360 - d) && y <= (360 + d);              //360
-    //Edited so horizontal mouse-movement isnt backwards anymore when cube 
+    //Edited so horizontal mouse-movement isnt backwards anymore when cube
     // is vertically inverted (white face up), reliant on fix w/ Camera.cpp@Line126
     constexpr int toplistA[5] = { 12,11,10,9,8 };
     constexpr int toplistB[5] = { 3,4,5,6,2 };

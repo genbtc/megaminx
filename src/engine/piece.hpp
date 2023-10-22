@@ -102,7 +102,7 @@ public:
         for(int i = i; i<n/2; ++i) {
             int temp = arr[i];
             arr[i] = arr[n-i-1];
-            arr[n-i-1] = temp;        
+            arr[n-i-1] = temp;       
         }
     }
 
@@ -231,13 +231,13 @@ public:
         }
         return &_vertex[0][0];
     }
-    
+   
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
         numSides = 0;
         for (int i = 0; i < 5; ++i) {
             //This puts it on the front face. (same as center but larger since not * 2 / 5)
-            //_vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5)); 
+            //_vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5));
             //_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5));
             //_vertex[i][2] = -INS_SPHERE_RAD;
             //This puts it on the back face
