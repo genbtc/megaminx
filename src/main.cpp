@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
 
-    // create window
+    // create window + title
     g_window = glutCreateWindow(myglutTitle);
-    // *new megaminx
+    // new *megaminx dodecahedron
     createMegaMinx(); //also handles /calls\ to glViewport(0,0,w,h);
 
     // Setup of GL Params
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glEnable(GL_ALPHA);
-    // Stylistic thick lines
+    // Stylistic thick line borders
     glLineWidth(4);
     glPointSize(4);
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     // Right click menu:
     createMenu();
     glutMenuStatusFunc(myglutMenuVisible);
-    // main-menu.cpp
+    // main-menu.cpp controls:
 	glutKeyboardFunc(myglutOnKeyboard);
     glutSpecialFunc(myglutOnSpecialKeyPress);
 
@@ -92,13 +92,13 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-// idle, Wait for Refresh Rate, FrameRate Cap. save CPU
+// idle, Wait for Refresh Rate, FrameRate Cap. save CPU when idle (GLUT callback)
 void myglutIdle(int) {
     glutPostRedisplay();
     glutTimerFunc(REFRESH_WAIT_TIME - 1, myglutIdle, 0);
 }
 
-// OpenGL World Render Main Scene Function:
+// Entire OpenGL World Render Main Scene : (GLUT callback)
 void myglutRenderScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
@@ -150,7 +150,7 @@ void myglutRenderScene() {
     glutSwapBuffers();
 }
 
-// Query Megaminx - what face we are looking at?
+// Query Megaminx - what face we are looking at? (helper)
 //TODO: NOTE: This executes a lot. TODO: How to Skip when not moving ?
 void GetCurrentFace() {
     const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX,
@@ -163,8 +163,8 @@ void GetCurrentFace() {
     }
 }
 
-// camera spin movement - convenience toggle function
-void isSpinning() {
+// camera spin movement - convenience toggle function (helper)
+void toggleSpinning() {
     g_camera.isSpinning = !g_camera.isSpinning;
 }
 
@@ -174,7 +174,7 @@ int GetDirFromSpecialKey() {
 /*  (CAPS LOCK cannot scan here). */                : (int)Face::CW;
 }
 
-// Camera.cpp - Double click Rotates Current Face with Shift Modifier too.
+// Controls,Camera - Double click Rotates Current Face with Shift Modifier too.
 void doDoubleClickRotate(int, int) {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
@@ -189,20 +189,20 @@ void resetCameraViewport() {
     myglutChangeWindowSize(WIDTH, HEIGHT); //GLUT resize window to default
 }
 
-// from main-menu.cpp : Route keyboard arrow keys to the camera for motion
+// Controls,Camera - Route keyboard arrow keys to the camera for motion
 void doCameraMotionSpecial(int key, int x, int y) {
     g_camera.PressSpecialKey(key, x, y);
 }
 
-// GLUT callback - handle mouse/rotation camera movement
+// Controls,Camera - Handle mouse/rotation/camera movement (GLUT callback)
 void myglutMousePressed(int button, int state, int x, int y) {
     g_camera.ProcessMouse(button, state, x, y);
 }
 
-// additional Right click handling for menu
+// Controls, Mouse, Camera, Menu - special Right click handling for menu
 int OldmenuVisibleState = 0;
 int oldmenux = 0, oldmenuy = 0;
-// GLUT callback - display right-click menu
+// diplay right-click menu (GLUT callback)
 void myglutMenuVisible(int status, int x, int y) {
 	//check for Menu first, otherwise bug from click/drag through past it
     g_camera.menuVisibleState = (status == GLUT_MENU_IN_USE);
@@ -211,8 +211,8 @@ void myglutMenuVisible(int status, int x, int y) {
         oldmenux = x;
         oldmenuy = y;
     }
-} //continued:
-//stops cube rotate from happening after right click menu visible then drag
+} //continued (part 2):
+//stops cube from rotating after right click menu visible (GLUT callback)
 void myglutMousePressedMove(int x, int y) {
 	//if the menu is visible, do nothing
 	if (g_camera.menuVisibleState)
@@ -227,10 +227,9 @@ void myglutMousePressedMove(int x, int y) {
     }
 }
 
-// GLUT callback - Resize Window function passthrough to the camera class
+// Camera, Window - Resize Window function passthrough to the camera class (GLUT callback)
 void myglutChangeWindowSize(int x, int y) {
     g_camera.ChangeViewportSize(x, y);
 }
-
 
 //see main-menu.cpp for rest of main GUI program

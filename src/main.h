@@ -20,7 +20,7 @@ void GetCurrentFace();
 // global camera main / camera.cpp
 void doCameraMotionSpecial(int key, int x, int y);
 void resetCameraViewport();
-void isSpinning();
+void toggleSpinning();
 
 // main / main.cpp
 int main(int argc, char *argv[]);

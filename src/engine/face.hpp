@@ -45,9 +45,9 @@ public:
     std::vector<int> findCornersOrder() const;
     std::vector<int> findEdgesOrder() const;
    template<typename T>
-    int find5PieceLoc(int pieceNum) const;
-    int find5EdgeLoc(int pieceNum) const;
-    int find5CornerLoc(int pieceNum) const;
+    int find5PiecePresent(int pieceNum) const;
+    int find5EdgePresent(int pieceNum) const;
+    int find5CornerPresent(int pieceNum) const;
 
    template <typename T>
     void swapPieces(int a, int b);

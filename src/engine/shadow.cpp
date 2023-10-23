@@ -53,7 +53,7 @@ bool Megaminx::shadowMultiRotate(int face, int &offby)
     }
     if (offby > 0) {
         //Save moves by never going past 5
-        MM(offby);
+        MM5(offby);
         //Saves moves by going the opposite direction:
         if (offby > 2.5) {
             offby = (offby - 5) * -1;

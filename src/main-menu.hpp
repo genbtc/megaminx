@@ -9,7 +9,7 @@ static int submenu0_id, submenu1_id, submenu2_id, submenu3_id,
 
 void createMegaMinx();
 void resetCameraViewport();
-void isSpinning();
+void toggleSpinning();
 
 // defined in main.cpp
 extern int currentFace;

@@ -201,12 +201,15 @@ private:
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
 
-static auto MM = [](int &over) { while (over >= 5) over -= 5; };
-static auto MMge = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
-static auto MMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
-static auto MMup = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
-static auto MMgeI = [](int &over, int stop) { while (over >= stop) over -= 5; };
-static auto nMM = [](int &over) { while (over <= -5) over += 5; };
-static auto MMno3 = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
+//lambdas for over-rotation
+static auto MM5 = [](int &over) { while (over >= 5) over -= 5; };
+static auto MM4 = [](int &over) { while (over >= 4) over -= 5; };
+//static auto r5MM = [](int &over) { while (over <= -5) over += 5; };
+static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
+//static auto MMs = [](int &over, int stop) { while (over >= stop) over -= 5; };
+//static auto MMsl = [](int &over, int stop) { while (over > stop) over -= 5; };
+//static auto MMMge = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
+static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
+//static auto MMMu = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
 
 #endif

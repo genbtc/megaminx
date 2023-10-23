@@ -79,7 +79,7 @@ std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); 
 //Is this 1-30 piecenum on this face anywhere 1-5 edges?
 //Is this 1-20 piecenum on this face anywhere 1-5 corners?
 template <typename T>
-int Face::find5PieceLoc(int pieceNum) const
+int Face::find5PiecePresent(int pieceNum) const
 {
     for (int i = 0; i < 5; ++i) {
         const auto piece = getFacePiece<T>(i);
@@ -88,8 +88,8 @@ int Face::find5PieceLoc(int pieceNum) const
     }
     return -1;
 } //where T = Corner or Edge
-int Face::find5EdgeLoc(int pieceNum) const { return find5PieceLoc<Edge>(pieceNum); }
-int Face::find5CornerLoc(int pieceNum) const { return find5PieceLoc<Corner>(pieceNum); }
+int Face::find5EdgePresent(int pieceNum) const { return find5PiecePresent<Edge>(pieceNum); }
+int Face::find5CornerPresent(int pieceNum) const { return find5PiecePresent<Corner>(pieceNum); }
 
 //Private/Internal. Simple-Flips (inverts) one Edge-piece and then the other, individually.
 void Face::TwoEdgesFlip(int a,int b)

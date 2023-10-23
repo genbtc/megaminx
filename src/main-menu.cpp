@@ -37,7 +37,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     //Game commands
     switch (key) {
     case ' ':	// spacebar 32
-        isSpinning();
+        toggleSpinning();
         break;
     case 'h':
     case 'H':	// help
@@ -379,7 +379,7 @@ void menuHandler(int num)
     double sum = 0;
     switch (num) {
     case 1:
-        isSpinning(); break;
+        toggleSpinning(); break;
     //menu submenu0_id: Main Menu
     case 91:
         megaminx->undo(); break;
@@ -431,8 +431,7 @@ void menuHandler(int num)
     case 33:  //color flip corner piece 5
         megaminx->flipCornerColor(currentFace, num - 28); break;
 
-    //menu submenu6_id:
-    // Edge Piece Swaps
+    //menu submenu6_id: Edge Piece Swaps
 	case 125 ... 128:
 		megaminx->g_currentFace->swapEdges(0, 1+num-125); break;
     case 129 ... 131:
@@ -546,7 +545,8 @@ void menuHandler(int num)
                 continue;
         }
         g_solveravg = sum / 50000.;
-        //Solver average is 588.812
+        std::cout << "Solver Average was: " << g_solveravg << std::endl;
+        //Solver average was 588.812
         break;
     default:
         break;
