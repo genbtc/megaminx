@@ -949,6 +949,8 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
 
 //Begin solvedCount=0:
+        //2, 2, 2, 2, 2,        = modby, Algo # 40
+        //-2, -2, -2, -2, -2,   = modby, Algo # 41
 
 //5-way cycle (-2,-2,-2,-2,-2) #Algo#40
         if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 29, 25, 26, 27)) //TT55-3
@@ -1927,6 +1929,8 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         for (int n = 0; n < repeat; ++n) {
             std::vector<numdir> bulk = shadowDom->ParseAlgorithmString(al.algo, loc, algo);
             shadowDom->bulkShadowRotate(bulk);
+            auto numsize = bulk.size();
+            std::cout << numsize << "  = length, Algo # " << algo << std::endl;
         }
         //find where pieces actually are //
         std::vector<int> foundEdges = shadowDom->faces[GRAY - 1].findEdgesOrder();
@@ -1959,7 +1963,6 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
             std::cout << modby[k] << ", ";
         }
         std::cout << "  = modby, Algo # " << algo << std::endl;
-
         //also, not all of these are valid conceptually, do not trust, verify.
         delete shadowDom;
     }
