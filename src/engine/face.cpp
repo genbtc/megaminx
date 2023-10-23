@@ -1,5 +1,5 @@
 #include "megaminx.hpp"
-constexpr int turnspeed = 60; //144 is max, 1 is min (for render() @ end of file)
+constexpr int turnspeed = 32; //144 is max, 1 is min (for render() @ end of file)
 
 Face::Face()
 {
@@ -9,7 +9,7 @@ Face::Face()
     thisNum = 0;
     turnDir = 0;
     axis[0] = 0;
-    axis[1] = 0.001;
+    axis[1] = 1e-8;
     axis[2] = -1;
 }
 
@@ -37,7 +37,7 @@ void Face::initAxis(int n)
         center->createAxis(n, _vertex[i]);
 }
 
-/** \brief connect the right matching Edge pieces to the face. and store the list. */
+/** \brief connect matching Edge pieces to the face. and store the list. */
 void Face::attachEdgePieces(const Megaminx* megaminx, Edge &edgesPTR)
 {
     defaultEdges = megaminx->findPiecesOfFace(thisNum+1, edgesPTR, Megaminx::numEdges);
@@ -47,7 +47,7 @@ void Face::attachEdgePieces(const Megaminx* megaminx, Edge &edgesPTR)
     }
 }
 
-/** \brief connect the right matching Corner pieces to the face. and store the list. */
+/** \brief connect matching Corner pieces to the face. and store the list. */
 void Face::attachCornerPieces(const Megaminx* megaminx, Corner &cornersPTR)
 {
     defaultCorners = megaminx->findPiecesOfFace(thisNum+1, cornersPTR, Megaminx::numCorners);
@@ -311,29 +311,33 @@ bool Face::placeParts(int dir)
  */
 bool Face::render()
 {
-    glPushMatrix();
     //Start Rotating
-    if (rotating)
+    if (rotating) {
+        glPushMatrix();
         angle += turnDir * turnspeed;
-    //Slow down to half-speed once its 75% complete
-    //  (56/72 is ~77.7% but use 56 because % mod 8 == 0)
-    if (rotating && angle >= 56 || angle <= -56)
-        angle -= turnDir * (turnspeed/2);
-    if (angle)
+        //Slow down to half-speed once its 75% complete
+        //  (56/72 is ~77.7% but use 56 because % mod 8 == 0)
+        if (angle >= 56 || angle <= -56)
+            angle -= turnDir * (turnspeed/2);
+        //Rotate axis by angle
         glRotated(angle, axis[0], axis[1], axis[2]);
+    }
+    else
+        angle = 0;
 
-    //Render:
+    //Render parts:
     for (int i = 0; i < 5; ++i) {
         corner[i]->render();
         edge[i]->render();
     }
     center->render();
-    glPopMatrix();
-    //Color Black
-    glColor3d(0, 0, 0);
-    //Draw a black pentagon to block out view from see-thru hollow insides
-    makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
-
+    if (angle) {
+        glPopMatrix();
+        //Color Black
+        glColor3d(0, 0, 0);
+        //Draw a black pentagon to block out view from see-thru hollow insides
+        makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
+    }
     //Done animating, clean up and commit
     //TODO: constantify 72 as one fifth of 360 circle
     if (angle >= 72 || angle <= -72) {

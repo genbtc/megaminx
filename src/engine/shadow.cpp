@@ -65,6 +65,12 @@ bool Megaminx::shadowMultiRotate(int face, int &offby)
     return (offby > 0);
 }
 
+//Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
+void Megaminx::shadowBulkRotate(std::vector<numdir> bulk) {
+    for (auto op : bulk)    //+1 the 0-11 faces
+        shadowRotate(op.num + 1, op.dir);
+}
+
 //Apply our shadow cube changes we put in the queue <- back to our main cube, one by one
 void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 {
@@ -78,12 +84,6 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
         shadowDom->shadowRotateQueue.pop();
     }
     undoStack.push({ 999, 999 });
-}
-
-//Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
-void Megaminx::bulkShadowRotate(std::vector<numdir> bulk) {
-    for (auto op : bulk)    //+1 the 0-11 faces
-        shadowRotate(op.num + 1, op.dir);
 }
 
 //Create megaminx array, from pieces read from a file, and put into shadow array.
@@ -100,7 +100,6 @@ int Megaminx::createMegaMinxFromShadowVec(const std::vector<int> &readPieces, co
     }   //Two Loops to avoid clobbering state midway through
     //Re-Flip Colors last
     for (int each = 0; each < readPieceColors.size(); ++each) {
-        const auto &pv = readPieces[each];
         const auto &cv = readPieceColors[each];
         //Pieces are in the right place but maybe wrong orientation, so Flip the colors:
         while (megaminxArray[each].data.flipStatus != cv)

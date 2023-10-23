@@ -167,7 +167,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .algo = "r u R' U' ",
         .len = 4
     },
-    // opposite pair to first one
+    // opposite pair to #1, corners.
     {
         .num = 2,
         .algo = "l u L' U' ",
@@ -186,21 +186,25 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
 
     // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 3: // Entire Front Line = Safe. untouched is C1,C2,E1,E5
         // (5 to 1, 1 to 2, 2 to 5) = (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
-        //NOTE: CORNERS ARE AFFECTED by this as well as EDGES too, but solved gray tops never change  //3rd Repetition = Undo
+        //NOTE: CORNERS ARE AFFECTED by this as well as EDGES too
+        //      solved gray tops never change
     {
         .num = 8,
         .algo = "r u R' F' , r  u  R' U' , R' f r2 U' R' ",
         .len = 14,
+        .repeatX = 1, //3rd Repetition = Undo
         .modby = { 0, -2, 1, 1, 0 }
     },
 
     // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 5: //R.Back=Safe
         //(Corners 5 & 3 swap + 1 & 2 swap) && (Edges 1 & 5 swap + 4 & 2 swap)
-        //NOTE: CORNERS ARE AFFECTED by this as well as EDGES too, but solved gray tops never change  //2nd Repetition = Undo
+        //NOTE: CORNERS ARE AFFECTED by this as well as EDGES too\
+        //      solved gray tops never change
     {
         .num = 9,
         .algo = "l r u2, L' u R' , l U' r u2, L' u2 R' ",
         .len = 16,
+        .repeatX = 1, //2nd Repetition = Undo
         .modby = { 1, -2, 0, 2, -1 }
     },
     // #7Last-Layer: Step 2/3 : Corner+Edge main - SUNE
