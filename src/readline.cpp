@@ -39,20 +39,20 @@ void readlineShell() {
             printf("Hello World!\n");
         } else if (!strncmp(line,"/historylen",11)) {
             int len = atoi(line+11);
-            linenoiseHistorySetMaxLen(len); /* change the history length. */
+            linenoiseHistorySetMaxLen(len);
             printf("Changed History Length to #%d lines\n", len);
         } else if (!strncmp(line,"/menu",5)) {
             int num = atoi(line+5);
             printf("Executing Menu #%d\n", num);
             menuHandler(num);
         } else if (!strncmp(line,"/algotest",9)) {
-            printf("Testing All Algorithms 1-50! ...\n");
+            printf("Testing All Algorithms #1 - #%d! ...\n", ALL_ALGORITHMS);
             megaminx->testingAlgostrings(shadowDom);
             free(line);
             return;
         } else if (!strncmp(line,"/algodiff",9)) {
             int num = atoi(line+9);
-            for (int i=1;i<50;i++) {
+            for (int i=1; i<ALL_ALGORITHMS; i++) {
                 auto algo = megaminx->ParseAlgorithmID(i, LIGHT_BLUE);
                 printf("Number of Moves: #%ld\n", algo.size() );
                 printf("Executing Algo #%d\n", i);

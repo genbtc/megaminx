@@ -1,53 +1,128 @@
-//output of Megaminx::testingAlgostrings() @ solve.cpp
-//This is the result of a solved cube + algorithm and then testing the gray faces' EDGES 
-"Testing All Algorithms 1-50! ..."
-0, -1, 0, 0, 0   = modby, Algo # 1
-0, 0, 0, 0, -1   = modby, Algo # 2
-0, 0, 0, -1, 0   = modby, Algo # 3
-0, 0, 1, 0, 0   = modby, Algo # 4
-0, 0, 0, 0, 0   = modby, Algo # 5
-0, 0, 0, 0, 0   = modby, Algo # 6
-0, 0, 0, 0, 0   = modby, Algo # 7
-0, -2, 1, 1, 0   = modby, Algo # 8
-1, -2, 0, 2, -1   = modby, Algo # 9
-0, -1, -1, 2, 0   = modby, Algo # 10
-0, -2, 0, -1, -2   = modby, Algo # 11
-0, -2, 0, -1, -2   = modby, Algo # 12
-0, 2, 0, 2, 1   = modby, Algo # 13
-0, -1, -1, 2, 0   = modby, Algo # 14
-1, 1, 0, 0, -2   = modby, Algo # 15
-1, 0, 0, -2, 1   = modby, Algo # 16
-2, 2, 2, 2, 2   = modby, Algo # 17
--1, -2, -2, 1, -1   = modby, Algo # 18
-0, -1, 1, -1, 1   = modby, Algo # 19
-0, -2, -2, 2, 2   = modby, Algo # 20
-0, 0, 0, 0, 0   = modby, Algo # 21
-0, 0, 0, 0, 0   = modby, Algo # 22
-0, 1, 0, 0, 0   = modby, Algo # 23
-0, 0, 0, 0, -1   = modby, Algo # 24
-0, 1, 0, -1, -2   = modby, Algo # 25
-0, 2, 1, 0, -1   = modby, Algo # 26
-0, 0, 0, 0, 0   = modby, Algo # 27
-0, 0, 0, 0, 0   = modby, Algo # 28
-0, 0, 0, 0, 0   = modby, Algo # 29
-0, 2, 0, 2, 1   = modby, Algo # 30
-0, -2, 0, -1, -2   = modby, Algo # 31
--1, 2, 0, 0, -1   = modby, Algo # 32
-0, -2, 1, 1, 0   = modby, Algo # 33
-0, -1, -1, -1, 0   = modby, Algo # 34
-0, 0, 1, 1, 1   = modby, Algo # 35
-0, 2, -1, 1, -2   = modby, Algo # 36
-0, 2, -1, 1, -2   = modby, Algo # 37
--2, -2, -2, -2, -2   = modby, Algo # 38
-1, -1, -1, -2, -2   = modby, Algo # 39
-2, 2, 2, 2, 2   = modby, Algo # 40
--2, -2, -2, -2, -2   = modby, Algo # 41
--1, 1, -1, 1, 0   = modby, Algo # 42
-2, 2, 1, 1, -1   = modby, Algo # 43
--2, 1, 1, 0, 0   = modby, Algo # 44
--1, -1, 2, 0, 0   = modby, Algo # 45
-1, 0, 0, -2, 1   = modby, Algo # 46
-2, 0, 0, -1, -1   = modby, Algo # 47
-0, 0, 0, 0, 0   = modby, Algo # 48
-0, 0, 0, 0, 0   = modby, Algo # 49
-genr8eofl@genr8too ~/src/megaminx $ 
+megaminx> /algotest
+Testing All Algorithms 1-52! ...
+ParseAlgorithmString: # 1 : r u R' U' 
+0, -1, 0, 0, 0,   = modby, Algo # 1
+ParseAlgorithmString: # 2 : l u L' U' 
+0, 0, 0, 0, -1,   = modby, Algo # 2
+ParseAlgorithmString: # 3 : 
+0, 0, 0, 0, 0,   = modby, Algo # 3
+ParseAlgorithmString: # 4 : 
+0, 0, 0, 0, 0,   = modby, Algo # 4
+ParseAlgorithmString: # 5 : 
+0, 0, 0, 0, 0,   = modby, Algo # 5
+ParseAlgorithmString: # 6 : 
+0, 0, 0, 0, 0,   = modby, Algo # 6
+ParseAlgorithmString: # 7 : 
+0, 0, 0, 0, 0,   = modby, Algo # 7
+ParseAlgorithmString: # 8 : r u R' F' , r  u  R' U' , R' f r2 U' R' 
+0, -2, 1, 1, 0,   = modby, Algo # 8
+ParseAlgorithmString: # 9 : l r u2, L' u R' , l U' r u2, L' u2 R' 
+1, -2, 0, 2, -1,   = modby, Algo # 9
+ParseAlgorithmString: # 10 : r u R' u, r U2' R' 
+0, -1, -1, 2, 0,   = modby, Algo # 10
+ParseAlgorithmString: # 11 : r u2 R' u, r u2 R' 
+0, -2, 0, -1, -2,   = modby, Algo # 11
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2' 
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2' 
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2' 
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2' 
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2' 
+0, -2, 0, -1, -2,   = modby, Algo # 12
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2' 
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2' 
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2' 
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2' 
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2' 
+0, 2, 0, 2, 1,   = modby, Algo # 13
+ParseAlgorithmString: # 14 : r u R' u, R' U' r2 U' , R' u R' u, r U2' 
+0, -1, -1, 2, 0,   = modby, Algo # 14
+ParseAlgorithmString: # 15 : R' U' r U' , r u R2' u, r U' r U' , R' u2
+1, 1, 0, 0, -2,   = modby, Algo # 15
+ParseAlgorithmString: # 16 : F' U' f U' , f u F2' u, f U' f U' , F' u2
+1, 0, 0, -2, 1,   = modby, Algo # 16
+ParseAlgorithmString: # 17 : L' u2 r U2' l u2 R' 
+ParseAlgorithmString: # 17 : L' u2 r U2' l u2 R' 
+ParseAlgorithmString: # 17 : L' u2 r U2' l u2 R' 
+ParseAlgorithmString: # 17 : L' u2 r U2' l u2 R' 
+ParseAlgorithmString: # 17 : L' u2 r U2' l u2 R' 
+ParseAlgorithmString: # 17 : L' u2 r U2' l u2 R' 
+2, 2, 2, 2, 2,   = modby, Algo # 17
+ParseAlgorithmString: # 18 : R' l U' , r L' u2, R' l U2' , r L' u2 ,, R' l U2,' r L' u2 ,, R' l U2' , r L' u2 ,, R' l U2' , r L' u2 ,, R' l U2' , r L' u2 ,, R' l U2' , r L' u2 , R' l U' , r L' 
+-1, -2, -2, 1, -1,   = modby, Algo # 18
+ParseAlgorithmString: # 19 : U2' L2' U2' l2 U' L2' U2' l2 U' ,, L2' U2' l2 U' L2' U2' l2 U' ,, L2' U2' l2 U' L2' U2' l2 u
+0, -1, 1, -1, 1,   = modby, Algo # 19
+ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2' 
+0, -2, -2, 2, 2,   = modby, Algo # 20
+ParseAlgorithmString: # 21 : R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L' 
+0, 0, 0, 0, 0,   = modby, Algo # 21
+ParseAlgorithmString: # 22 : 
+0, 0, 0, 0, 0,   = modby, Algo # 22
+ParseAlgorithmString: # 23 : 
+0, 0, 0, 0, 0,   = modby, Algo # 23
+ParseAlgorithmString: # 24 : 
+0, 0, 0, 0, 0,   = modby, Algo # 24
+ParseAlgorithmString: # 25 : u l U' R' , u L' U' r
+0, 0, 0, 0, 0,   = modby, Algo # 25
+ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u
+0, 0, 0, 0, 0,   = modby, Algo # 26
+ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2' 
+0, 0, 0, 0, 0,   = modby, Algo # 27
+ParseAlgorithmString: # 28 : R U2' L' u2, R' U2' L u2
+0, 0, 0, 0, 0,   = modby, Algo # 28
+ParseAlgorithmString: # 29 : 
+0, 0, 0, 0, 0,   = modby, Algo # 29
+ParseAlgorithmString: # 30 : r2 U2' R2' U' , r2 U2' R2' 
+0, 2, 0, 2, 1,   = modby, Algo # 30
+ParseAlgorithmString: # 31 : r2 u2 R2' u, r2 u2 R2' 
+0, -2, 0, -1, -2,   = modby, Algo # 31
+ParseAlgorithmString: # 32 : U2' r, u R' u R' , U' r2 U' R' , u R' u r
+-1, 2, 0, 0, -1,   = modby, Algo # 32
+ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R' 
+0, -2, 1, 1, 0,   = modby, Algo # 33
+ParseAlgorithmString: # 34 : 
+0, 0, 0, 0, 0,   = modby, Algo # 34
+ParseAlgorithmString: # 35 : 
+0, 0, 0, 0, 0,   = modby, Algo # 35
+ParseAlgorithmString: # 36 : r u R' u, r U' R' u2, r u2 R' 
+0, 2, -1, 1, -2,   = modby, Algo # 36
+ParseAlgorithmString: # 37 : r U2' R' U' , r U' R' u, r U2' R' 
+ParseAlgorithmString: # 37 : r U2' R' U' , r U' R' u, r U2' R' 
+ParseAlgorithmString: # 37 : r U2' R' U' , r U' R' u, r U2' R' 
+ParseAlgorithmString: # 37 : r U2' R' U' , r U' R' u, r U2' R' 
+ParseAlgorithmString: # 37 : r U2' R' U' , r U' R' u, r U2' R' 
+0, 2, -1, 1, -2,   = modby, Algo # 37
+ParseAlgorithmString: # 38 : r U2' L' u2 R' U2' l
+ParseAlgorithmString: # 38 : r U2' L' u2 R' U2' l
+ParseAlgorithmString: # 38 : r U2' L' u2 R' U2' l
+ParseAlgorithmString: # 38 : r U2' L' u2 R' U2' l
+ParseAlgorithmString: # 38 : r U2' L' u2 R' U2' l
+ParseAlgorithmString: # 38 : r U2' L' u2 R' U2' l
+-2, -2, -2, -2, -2,   = modby, Algo # 38
+ParseAlgorithmString: # 39 : r u R' u, R' U' r2 U' , R' u R' u, r U2' ,, u2 L' , U' l U' l, u L2' u l, U' l U' L' 
+1, -1, -1, -2, -2,   = modby, Algo # 39
+ParseAlgorithmString: # 40 : l u l' u, l' U' l2 U' , l' u l' u, l U2' ,, f u F' u, F' U' f2 U' , F' u F' u, f U2' ,, r u R' u, R' U' r2 U' , R' u R' u, r U2' 
+2, 2, 2, 2, 2,   = modby, Algo # 40
+ParseAlgorithmString: # 41 : u2 R' , U' r U' r, u R2' u r, U' r U' R' ,, u2 F' , U' f U' f, u F2' u f, U' f U' f' ,, u2 l' , U' l U' l, u l2' u l, U' l U' l' 
+-2, -2, -2, -2, -2,   = modby, Algo # 41
+ParseAlgorithmString: # 42 : u2 F' , U' f U' f, u F2' u f, U' f U' F' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R' 
+-1, 1, -1, 1, 0,   = modby, Algo # 42
+ParseAlgorithmString: # 43 : l u L' u, L' U' l2 U' , L' u L' u, l U2' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R' 
+2, 2, 1, 1, -1,   = modby, Algo # 43
+ParseAlgorithmString: # 44 : F U R , U' R' F' 
+-2, 1, 1, 0, 0,   = modby, Algo # 44
+ParseAlgorithmString: # 45 : F R U , R' U' F' 
+-1, -1, 2, 0, 0,   = modby, Algo # 45
+ParseAlgorithmString: # 46 : R U R' U , R U U U R' U
+1, 0, 0, -2, 1,   = modby, Algo # 46
+ParseAlgorithmString: # 47 : U' R U2 R' , U' R U' R' 
+2, 0, 0, -1, -1,   = modby, Algo # 47
+ParseAlgorithmString: # 48 : L' U2 R U'2 , L U2 R' U'2
+0, 0, 0, 0, 0,   = modby, Algo # 48
+ParseAlgorithmString: # 49 : R U'2 L' U2 , R' U'2 L U2
+0, 0, 0, 0, 0,   = modby, Algo # 49
+ParseAlgorithmString: # 50 : R' DR' r dr
+0, 0, 0, 0, 0,   = modby, Algo # 50
+ParseAlgorithmString: # 51 : f dr F' 
+0, 0, 0, 0, 0,   = modby, Algo # 51
+ParseAlgorithmString: # 52 : R' DR' r
+0, 0, 0, 0, 0,   = modby, Algo # 52

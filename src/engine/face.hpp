@@ -154,8 +154,8 @@ struct AlgoString {
     int modby[5];
 };
 
-constexpr int MAXIMUM_ALGORITHMS = 53;
-constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
+constexpr int ALL_ALGORITHMS = 53;
+constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
     // Initialize 0 with empty blank
     {0, ""},
 
@@ -530,7 +530,7 @@ constexpr AlgoString g_AlgoStrings[MAXIMUM_ALGORITHMS] = {
 };
 //see docs/algo-test-modBy.txt for the list of how these modify the gray face only
 
-constexpr AlgoString g_AlgoStringsLayer[MAXIMUM_ALGORITHMS] = {
+constexpr AlgoString g_AlgoStringsLayer[ALL_ALGORITHMS] = {
     { 0 },
     // #2nd-Layer Edges(LEFT) =  7 o'clock to 9 o'clock:
         //Note: copied right algo then reverse engineered it myself back to the left

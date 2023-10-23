@@ -6,7 +6,17 @@
 #define EDGEFILECOLORS "EdgeColors30.dat"
 #define CORNERFILE "CornerPositions20.dat"
 #define CORNERFILECOLORS "CornerColors20.dat"
-#define MEGAMINXBLOB "Megaminx.SAVEGAME.txt"
+#define MEGAMINXBLOB "MegaminxSAVEFILE.txt"
+
+/**
+ * @brief Save/Store Cube - (Write 4 Vector Files)
+ */
+void SaveCubetoFile() {
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
+    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
+    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
+}
 
 /**
  * @brief Save/Store Cube - (Write 1 File with 4 lines)
@@ -17,17 +27,6 @@ void SaveCubetoFileMonolithic() {
     file << "CornerPiecesPosition: " << serializeVectorIntToString(megaminx->getAllCornerPiecesPosition()) << "\n";
     file << "EdgePiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllEdgePiecesColorFlipStatus()) << "\n";
     file << "CornerPiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllCornerPiecesColorFlipStatus()) << "\n";
-}
-
-//
-/**
- * @brief Save/Store Cube - (Write 4 Vector Files)
- */
-void SaveCubetoFile() {
-    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
-    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
-    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), EDGEFILECOLORS);
-    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
 
 /**
@@ -46,7 +45,7 @@ void RestoreCubeFromFile() {
 }
 
 /**
- * @brief Load Source Cube and store into Shadow Cube
+ * @brief Shadow Cube - Clone real Megaminx viewmodel to invisible twin model
  */
 void MakeShadowCubeClone() {
     if (shadowDom)
@@ -59,7 +58,7 @@ void MakeShadowCubeClone() {
 /**
  * @brief serializeVectorInt5ToFile - write vectors to file
  * @param vec - Input: a vector of any length
- * @param filename - Output: name of file to write to
+ * @param filename - Output: name of file to write ofstream to
  * @return void - wrote vector to file, 5 elements per line
  */
 void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename) {
@@ -90,7 +89,6 @@ std::string serializeVectorIntToString(std::vector<int> vec) {
     return vectorString.str();
 }
 
-//
 /**
  * @brief ReadPiecesFileVector - basic parser for reading vectors from file.
  * @param filename - Input: name of file to read from
@@ -118,7 +116,7 @@ const std::vector<int> ReadPiecesFileVector(std::string filename)
             }
         }
     }
-    //TEST:
+    //UNIT TEST:
     //serializeVectorInt5(readvector, "ReOutput" + filename );
     return readvector;
 }
