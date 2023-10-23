@@ -92,17 +92,19 @@ int Megaminx::createMegaMinxFromShadowVec(const std::vector<int> &readPieces, co
 {
     const auto megaminxArray = this->getPieceArray<T>(0);
     const auto shadowArray = shadowDom->getPieceArray<T>(0);
-    const auto arrsize = getMaxNumberOfPieces<T>();
-    for (int i = 0; i < arrsize; ++i) {
-        auto &p = readPieces[i];
-        megaminxArray[i].data = shadowArray[p].data;
-    }
-    for (int i = 0; i < readPieceColors.size(); ++i) {
-        auto &p = readPieces[i];
-        auto &c = readPieceColors[i];
+    const auto arrMaxSize = getMaxNumberOfPieces<T>(); // 30 or 20 pieces
+    //Re-Arrange Pieces first
+    for (int each = 0; each < arrMaxSize; ++each) {
+        const auto &pv = readPieces[each];
+        megaminxArray[each].data = shadowArray[pv].data;
+    }   //Two Loops to avoid clobbering state midway through
+    //Re-Flip Colors last
+    for (int each = 0; each < readPieceColors.size(); ++each) {
+        const auto &pv = readPieces[each];
+        const auto &cv = readPieceColors[each];
         //Pieces are in the right place but maybe wrong orientation, so Flip the colors:
-        while (megaminxArray[i].data.flipStatus != c)
-            megaminxArray[i].flip();
+        while (megaminxArray[each].data.flipStatus != cv)
+            megaminxArray[each].flip();
     }
     return 0;
 } //where T = Corner or Edge
