@@ -1,67 +1,21 @@
 #include "edge.hpp"
 
-void Edge::createAxis(int n, double* target)
-{
-    piecepack pack = { 'z', 'x', (n * 2 % 10) };
-    switch (n + 1) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-        axis1multi(target, pack);
-        break;
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-        EdgeGrp2(target, pack);
-        break;
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-        EdgeGrp3(target, pack);
-        break;
-    case 16:
-    case 17:
-    case 18:
-    case 19:
-    case 20:
-        EdgeGrp4(target, pack);
-        break;
-    case 21:
-    case 22:
-    case 23:
-    case 24:
-    case 25:
-        EdgeGrp5(target, pack);
-        break;
-    case 26:
-    case 27:
-    case 28:
-    case 29:
-    case 30:
-        EdgeGrp6(target, pack);
-        break;
-    default:
-        break;
-    }
-}
-
 /**
  * \brief Inits the piece with a pre-existing Vertex Array
- * \param n the number of the piece
+ * \param n the number of the Edge piece
  * \param edgeVertexBase the starting points to be memcpy'ed in
  */
 void Edge::init(int n, double* edgeVertexBase)
 {
     memcpy(&_vertex, edgeVertexBase, sizeof(_vertex));
-    init(n);
+    init(n); //doAxes = true
 }
 
+/**
+ * \brief Inits the piece with a pre-existing Vertex Array
+ * \param n the number of the Edge piece
+ * \param doAxes True by default. First Time Initialization Only
+ */
 void Edge::init(int n, bool doAxes)
 {
     if (doAxes)
@@ -72,6 +26,42 @@ void Edge::init(int n, bool doAxes)
     _defaultPieceNum = n;
 }
 
+/**
+ * \brief createAxis sets up the x & z Axes that the Edge pieces ride on
+ * \note (called by init on startup)
+ * \param n - the number of the piece
+ * \param *target - the pre-existing Vertex Array
+ */
+void Edge::createAxis(int n, double* target)
+{
+    piecepack pack = { 'z', 'x', (n * 2 % 10) };
+    switch (n + 1) {
+    case 1 ... 5:
+        axis1multi(target, pack);
+        break;
+    case 6 ... 10:
+        EdgeGrp2(target, pack);
+        break;
+    case 11 ... 15:
+        EdgeGrp3(target, pack);
+        break;
+    case 16 ... 20:
+        EdgeGrp4(target, pack);
+        break;
+    case 21 ... 25:
+        EdgeGrp5(target, pack);
+        break;
+    case 26 ... 30:
+        EdgeGrp6(target, pack);
+        break;
+    default:
+        break;
+    }
+}
+
+/**
+ * \brief Render Edge Node
+ */
 void Edge::render() const
 {
     //Edge Side One - Color Fill
@@ -109,6 +99,7 @@ void Edge::render() const
     }
     glEnd();
 
+    //if (textGLCenterLabels)
     // for (int i = 0; i < 6; ++i) {
     //     //Vertex Numbering Test:
     //     std::string c = std::to_string(i);
