@@ -509,12 +509,6 @@ int Megaminx::findPiece(int pieceNum)
             return i;
     return -1;
 } //where T = Corner or Edge
-/* Explicit specification was needed */
-template <>
-int Megaminx::findPiece<Edge>(int pieceNum) { return findEdge(pieceNum); }
-template <>
-int Megaminx::findPiece<Corner>(int pieceNum) { return findCorner(pieceNum); }
-//where T = Corner or Edge
 int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
 int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
 
