@@ -6,7 +6,7 @@ ifeq ($(OS),Windows_NT)
 	EXEEXT = .exe
 	COMPILE_OPT = -lfreeglut -lglu32 -lopengl32
 else
-	COMPILE_OPT = -lGL -lGLU -lglut
+	COMPILE_OPT = -lGL -lGLU -lglut -ggdb
 endif
 
 all: megaminx

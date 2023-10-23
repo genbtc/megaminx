@@ -274,14 +274,21 @@ std::vector<int> Megaminx::findFacePiecesOrder(int face)
 {
     return faces[face - 1].findPiecesOrder<T>();
 } //where T = Corner or Edge
-/* Explicit specification was needed */
+/* Explicit specification was needed 
+/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: CMakeFiles/Megaminx.dir/src/engine/megaminx.cpp.o: in function `Megaminx::findFaceCornersOrder(int)':
+megaminx.cpp:(.text+0xbae): undefined reference to `std::vector<int, std::allocator<int> > Face::findPiecesOrder<Corner>() const'
+/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: CMakeFiles/Megaminx.dir/src/engine/megaminx.cpp.o: in function `Megaminx::findFaceEdgesOrder(int)':
+megaminx.cpp:(.text+0xbfe): undefined reference to `std::vector<int, std::allocator<int> > Face::findPiecesOrder<Edge>() const'
+/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: CMakeFiles/Megaminx.dir/src/engine/solve.cpp.o: in function `Megaminx::testingAlgostrings(Megaminx*)':
+solve.cpp:(.text+0x7201): undefined reference to `std::vector<int, std::allocator<int> > Megaminx::findFacePiecesOrder<Edge>(int)'
 template <>
 std::vector<int> Megaminx::findFacePiecesOrder<Corner>(int face) { return findFaceCornersOrder(face); }
 template <>
 std::vector<int> Megaminx::findFacePiecesOrder<Edge>(int face) { return findFaceEdgesOrder(face); }
+*/
 //where T = Corner or Edge
-std::vector<int> Megaminx::findFaceCornersOrder(int face) { return findFacePiecesOrder<Corner>(face); }
-std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return findFacePiecesOrder<Edge>(face); }
+std::vector<int> Megaminx::findFaceCornersOrder(int face) { return faces[face - 1].findEdgesOrder(); }
+std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return faces[face - 1].findCornersOrder(); }
 
 /**
  * \brief Finds the colored center that is perma-attached to a face, and then
