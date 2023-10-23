@@ -5,7 +5,7 @@
 class Edge : public Piece {
 public:
     Edge() = default;
-    ~Edge() {}
+    ~Edge() = default;
     void createAxis(int n, double* target);
     void init(int n, double* edgeVertexBase);
     void init(int n, bool doAxes = true);
