@@ -133,7 +133,7 @@ public:
     void DetectSolvedEdges(int startI, bool piecesSolved[5]);
     bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) const {
         return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
-    };
+    }
     //In Solve.cpp
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
@@ -206,9 +206,9 @@ static auto MM5 = [](int &over) { while (over >= 5) over -= 5; };
 static auto MM4 = [](int &over) { while (over >= 4) over -= 5; };
 //static auto r5MM = [](int &over) { while (over <= -5) over += 5; };
 static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
-//static auto MMs = [](int &over, int stop) { while (over >= stop) over -= 5; };
-//static auto MMsl = [](int &over, int stop) { while (over > stop) over -= 5; };
-//static auto MMMge = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
+//static auto MMs5 = [](int &over, int stop) { while (over >= stop) over -= 5; };
+//static auto MMsg = [](int &over, int stop) { while (over > stop) over -= 5; };
+//static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
 //static auto MMMu = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
 

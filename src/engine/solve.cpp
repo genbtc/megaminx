@@ -297,18 +297,15 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
-
         loopcount++;
-        //break; //DEV: break stops it after only one round
-        updateRotateQueueWithShadow(shadowDom);
-
+        //updateRotateQueueWithShadow(shadowDom);
     } while (!allSolved);
-    //Not needed. If its solved, get top white face spun oriented back to normal
+    //If its solved, get top white face spun oriented back to normal    //redundant
     if (allSolved) {
         int findIfPieceSolved = shadowDom->findEdge(startingPiece); //always piece 0
         if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
             findIfPieceSolved *= -1;
-            shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved); //redundant, line243 reverses this
+            shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved);
         }
     }
     //After all loops, load the shadow Queue into the real megaminx queue,
@@ -1082,8 +1079,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[37].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 37); //algo #37, 13*5=65 moves
             for (int i = 0; i < g_AlgoStrings[37].repeatX; ++i)
                 shadowDom->shadowBulkRotate(bulkAlgo);
-            updateRotateQueueWithShadow(shadowDom);
-            continue;
         }
 
 //BUNNY 2+2SWAP  #Algo#42=/=Algo#19
@@ -1102,29 +1097,29 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[42].algo, g_faceNeighbors[start], 42); //algo#42=algo#19
         }
 
-
-
 //MUSHROOM- #Algo#14 (all) 3a- (F/L Safe)
         //twoAdjacentOffColors #Algo14#  -  then restart loop and pick up at mushroom to finish
         else if (twoAdjacentOffColors) //TT-85-2,  //TT63-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
         }
-/*
+        //Not Needed Start
         else if (offby == 0 && solvedCount == 3 && !allEdgeColorsSolved && (twoGraysUnsolved(1, 2) || twoGraysUnsolved(2, 3))) //TT62-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
+            assert(0);
         }
         else if ((offby == 4 || offby == 3) && solvedCount == 1 && !allEdgeColorsSolved && twoGraysUnsolved(3, 4)) //TT-84-2 + //TT-85-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
+            assert(0);
         }
         else if (solvedCount == 3 && !twoAdjacentOffColors) {
             std::cout << "solvedCount3 not accounted for \n"
                       << "Bug in rotateSolveLayer7Edges() where solvedCount == 3 && !twoAdjacentOffColors\n";
             assert(!(solvedCount == 3 && !twoAdjacentOffColors));
         }
-*/
+        //Not Needed End
         else if (offby == 0 && solvedCount == 3 && twoAdjacentPieces && twoSolvedPieces(0,1) && piecesSolved[2] && twoGraysUnsolved(3,4))
         {                                                                                 //TestCube15-2-Edgesstuck
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE], 14);
@@ -1385,6 +1380,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //Set up main loop variables:
         //data storage types for current state
         std::vector<numdir> bulkAlgo;
+        //TODO: use CornerLayerAssist for layer 7 like we do for 1,3,5?
         const int sourceCornerIndex = shadowDom->findCorner(i);
         auto currentPiece = shadowDom->getPieceArray<Corner>(sourceCornerIndex);
         bool currentpieceFlipStatusOK = currentPiece->data.flipStatus == 0;

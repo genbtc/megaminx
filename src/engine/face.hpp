@@ -663,4 +663,30 @@ constexpr AlgoString g_AlgoStringsLayer[11] = {
     },
 };
 
+constexpr AlgoString g_edgeOrientation[4]= {
+    { 0 },
+    //Algo #45 Above
+    {
+        .num = 1,
+        .algo = "f, r u R' U', F' ",
+        .len = 6
+    },
+    //Algo #44 Above
+    {
+        .num = 2,
+        .algo = "f, u r U' R', F' ",
+        .len = 6
+    },
+    {
+        .num = 3,
+        .algo = "f r u2, R2' f r F', U2' F' ",
+        .len = 12
+    }
+};
+
+
+constexpr AlgoString g_cornerOrientation[4]= {
+    { 0 },
+};
+
 #endif
