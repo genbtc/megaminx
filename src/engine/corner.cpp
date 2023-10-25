@@ -11,7 +11,6 @@ void Corner::init(int n, double* cornerVertexBase)
     init(n);
 }
 
-
 /**
  * \brief Inits the piece with a pre-existing Vertex Array
  * \param n the number of the Corner piece
@@ -106,9 +105,10 @@ void Corner::render() const
 
     //Piece Numbering Test:
     std::string c = std::to_string(data.pieceNum);
-    int z = (data.pieceNum < 5) ? -5 : 5;
+    int x = 2;
+    int z = (data.pieceNum < 10) ? -8 : 8;   //positional offset
     if (textGLCenterLabels)
-        utDrawText3D(_vertex[2][0] + 2, _vertex[2][1], _vertex[2][2] + z, GLUT_BITMAP_HELVETICA_12, c.c_str());
+        utDrawText3D(_vertex[2][0] + z, _vertex[2][1], _vertex[2][2] + z, GLUT_BITMAP_HELVETICA_18, c.c_str());
 
     //Vertex Draw Test:
     //for (int i = 0; i < 7; ++i) {
