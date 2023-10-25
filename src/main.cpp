@@ -1,6 +1,6 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.2";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.3";
 ///////////////////////////////////////////////////////////////////////////////
-/* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod
+/* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod . Changlog
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
              - v1.3.7 Mar 13, 2020
@@ -8,7 +8,8 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.2";
              - v1.3.9 Mar 06, 2023
              - v1.4.0-b1 Mar 8, 2023 - CLI Shell (readline)
              - v1.4.1 Oct 14, 2023 (bug: ld gc'ed needed symbols)
-             - v1.4.2 Oct 22, 2023 (clean code)
+             - v1.4.2 Oct 22, 2023 (still bugged.)
+             - v1.4.3 Oct 25, 2023 (symbol errors fixed, piece number tooltips)
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:

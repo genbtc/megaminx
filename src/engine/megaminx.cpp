@@ -1,4 +1,4 @@
-/* MegaMinx v1.4.2 - 2017+2018+2019+2020+2023 - genBTC edition
+/* MegaMinx v1.4.3 - 2017+2018+2019+2020+2023 - genBTC edition
  * Uses code originally from Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * genBTC November 2017 - genbtc@gmx.com / @genr8_ / github.com/genbtc/
  * genBTC December 2018 - fixups, tweaks.
@@ -6,6 +6,7 @@
    genBTC October 2019 - fixup code. started gray layer 7 solver
    genBTC February 2020 - completed gray layer 7 solver
    genBTC February 2023 - taking another look at old code
+   genBTC October 2023 - fixing LD unresolved symbol errors from template linkages across TU's
  */
 #include "megaminx.hpp"
 
@@ -14,7 +15,7 @@ Megaminx* megaminx;
 Megaminx* shadowDom;
 
 //simple constructor.
-//Solve Puzzle, aka Reset, aka the real constructor.
+//Setup, Solve Puzzle (aka Reset). constructors/inits.
 Megaminx::Megaminx()
 {
     g_currentFace = NULL;
