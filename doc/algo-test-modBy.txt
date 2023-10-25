@@ -4,16 +4,6 @@ ParseAlgorithmString: # 1 : r u R' U'
 0, -1, 0, 0, 0,   = modby, Algo # 1
 ParseAlgorithmString: # 2 : l u L' U' 
 0, 0, 0, 0, -1,   = modby, Algo # 2
-ParseAlgorithmString: # 3 : 
-0, 0, 0, 0, 0,   = modby, Algo # 3
-ParseAlgorithmString: # 4 : 
-0, 0, 0, 0, 0,   = modby, Algo # 4
-ParseAlgorithmString: # 5 : 
-0, 0, 0, 0, 0,   = modby, Algo # 5
-ParseAlgorithmString: # 6 : 
-0, 0, 0, 0, 0,   = modby, Algo # 6
-ParseAlgorithmString: # 7 : 
-0, 0, 0, 0, 0,   = modby, Algo # 7
 ParseAlgorithmString: # 8 : r u R' F' , r  u  R' U' , R' f r2 U' R' 
 0, -2, 1, 1, 0,   = modby, Algo # 8
 ParseAlgorithmString: # 9 : l r u2, L' u R' , l U' r u2, L' u2 R' 
@@ -55,12 +45,6 @@ ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u
 0, -2, -2, 2, 2,   = modby, Algo # 20
 ParseAlgorithmString: # 21 : R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L' 
 0, 0, 0, 0, 0,   = modby, Algo # 21
-ParseAlgorithmString: # 22 : 
-0, 0, 0, 0, 0,   = modby, Algo # 22
-ParseAlgorithmString: # 23 : 
-0, 0, 0, 0, 0,   = modby, Algo # 23
-ParseAlgorithmString: # 24 : 
-0, 0, 0, 0, 0,   = modby, Algo # 24
 ParseAlgorithmString: # 25 : u l U' R' , u L' U' r
 0, 0, 0, 0, 0,   = modby, Algo # 25
 ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u
@@ -69,8 +53,6 @@ ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2'
 0, 0, 0, 0, 0,   = modby, Algo # 27
 ParseAlgorithmString: # 28 : R U2' L' u2, R' U2' L u2
 0, 0, 0, 0, 0,   = modby, Algo # 28
-ParseAlgorithmString: # 29 : 
-0, 0, 0, 0, 0,   = modby, Algo # 29
 ParseAlgorithmString: # 30 : r2 U2' R2' U' , r2 U2' R2' 
 0, 2, 0, 2, 1,   = modby, Algo # 30
 ParseAlgorithmString: # 31 : r2 u2 R2' u, r2 u2 R2' 
@@ -79,10 +61,6 @@ ParseAlgorithmString: # 32 : U2' r, u R' u R' , U' r2 U' R' , u R' u r
 -1, 2, 0, 0, -1,   = modby, Algo # 32
 ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R' 
 0, -2, 1, 1, 0,   = modby, Algo # 33
-ParseAlgorithmString: # 34 : 
-0, 0, 0, 0, 0,   = modby, Algo # 34
-ParseAlgorithmString: # 35 : 
-0, 0, 0, 0, 0,   = modby, Algo # 35
 ParseAlgorithmString: # 36 : r u R' u, r U' R' u2, r u2 R' 
 0, 2, -1, 1, -2,   = modby, Algo # 36
 ParseAlgorithmString: # 37 : r U2' R' U' , r U' R' u, r U2' R' 
