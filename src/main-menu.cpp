@@ -26,7 +26,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
         case 18: // CTRL+R //Restore Game State
             RestoreCubeFromFile();
             break;
-        case 8:		// Ctrl+backspace
+        case 8: // Ctrl+backspace
             createMegaMinx();
             break;
         default:
@@ -63,7 +63,8 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     const int dir = GetDirFromSpecialKey();
     const auto face = g_faceNeighbors[currentFace];
     switch (key) {
-    case 'w': // Upper(Top)
+    //Direction of Rotation
+    case 'w': // Upper Face (Top)
     case 'W':
         megaminx->rotate(face.up, dir);
         break;
@@ -79,11 +80,11 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     case 'D':
         megaminx->rotate(face.right, dir);
         break;
-    case 'z': // Diagonal/Corner Left
+    case 'z': // Diagonal/Corner Left Lower
     case 'Z':
         megaminx->rotate(face.downl, dir);
         break;
-    case 'c': // Diagonal/Corner Right
+    case 'c': // Diagonal/Corner Right Lower
     case 'C':
         megaminx->rotate(face.downr, dir);
         break;
@@ -91,21 +92,21 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     case 'X':
         megaminx->rotate(face.bottom, dir);
         break;
-	//These are admin cheater functions, and nobody should be able to
+    //Teleport Flips
     case '1':
     case '2':
     case '3':
     case '4':
-    case '5':
+    case '5':   //Color
         megaminx->flipCornerColor(currentFace, (int)key - 48);
         break;
     case '!':
     case '#':
     case '$':
-    case '%':
+    case '%':   //Edge (1,3,4,5)
         megaminx->flipEdgeColor(currentFace, (int)key - 32);
         break;
-    case '@':
+    case '@':   //Edge 2 (char symbol discontinuity)
         megaminx->flipEdgeColor(currentFace, (int)key - 62);
         break;
     default:
@@ -179,8 +180,8 @@ void utPrintHelpMenu(float w, float h)
                                            "[Right Click]  Actions Menu",
                                            "[Dbl Click]  Rotate Current CW>",
                                            "  +Shift  CounterClockwise <<",
-                                           "1,2,3,4,5 Flip Curr. Corner #",
-                                           "!,@,#,$,% Flip Curr. Edge  #",
+                                           "1,2,3,4,5 Flip Edge Color #",
+                                           "!,@,#,$,% Flip Corner Color #",
                                            "[W/w]  Rotate Upper Face </>",
                                            "[S/s]  Rotate Front Face </>",
                                            "[A/a]  Rotate Left  Face </>",
@@ -431,7 +432,8 @@ void menuHandler(int num)
     case 33:  //color flip corner piece 5
         megaminx->flipCornerColor(currentFace, num - 28); break;
 
-    //menu submenu6_id: Edge Piece Swaps
+    //menu submenu6_id: (dispatch logic in menu)
+    // Edge Piece Swaps (teleport)
 	case 125 ... 128:
 		megaminx->g_currentFace->swapEdges(0, 1+num-125); break;
     case 129 ... 131:
@@ -440,7 +442,7 @@ void menuHandler(int num)
         megaminx->g_currentFace->swapEdges(2, 3+num-132); break;
     case 134:
         megaminx->g_currentFace->swapEdges(3, 4); break;
-	// Corner Piece Swaps
+    // Corner Piece Swaps (teleport)
     case 135 ... 138:
         megaminx->g_currentFace->swapCorners(0, 1+num-135); break;
     case 139 ... 141:
@@ -475,10 +477,10 @@ void menuHandler(int num)
     case 48:  //Last Layer GRAY Corners
         megaminx->resetFacesCorners(GRAY); break;
 
-	//menu submenu4_id: Algorithms
-    case 51 ... 88:
+    //menu submenu4_id: Algorithms by Number
+    case 51 ... 88:     //1-38
         megaminx->rotateAlgo(num - 50); break;
-    case 189 ... 193:
+    case 189 ... 202:   //39-52
         megaminx->rotateAlgo(num - 150); break;
 
     //menu submenu1_id:  AutoSolve by Layer
@@ -529,24 +531,25 @@ void menuHandler(int num)
         megaminx->rotateSolveLayer6Edges(shadowDom);
         megaminx->rotateSolveLayer7Edges(shadowDom);
         megaminx->rotateSolve7thLayerCorners(shadowDom);
+        std::cout << "AUTOSOLVER: Number of Rotations Queued up to Solve: " << megaminx->getRotateQueueNum() << std::endl;
         break;
     case 312:   //brute force checker for solver = F11
         for (int i = 0; i < 50000; ++i) {
             SaveCubetoFile(); //save
             menuHandler(309);   //solver
-            //produce a debug error immediately, and Save. then hit Abort to close, and Restore.
-            assert(shadowDom->isFullySolved()); //check
             if (shadowDom->isFullySolved()) {
                 sum += megaminx->getRotateQueueNum();
                 megaminx->resetQueue(); //Cancel
                 megaminx->scramble(); //scramble
             }
             else
-                continue;
+            //produce a debug error immediately, and Save. then hit Abort to close, and Restore.
+                assert(shadowDom->isFullySolved()); //check
         }
+        //solver avg global is processed in main.cpp render func
         g_solveravg = sum / 50000.;
-        std::cout << "Solver Average was: " << g_solveravg << std::endl;
-        //Solver average was 588.812
+        std::cout << "Solver Average: " << g_solveravg << std::endl;
+        //Solver average was 588.629
         break;
     default:
         break;

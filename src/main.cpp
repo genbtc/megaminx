@@ -102,10 +102,10 @@ void myglutIdle(int) {
 void myglutRenderScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
-    {
+    { //scoped { ... for GL in the matrix context ... }
         // Spinning can be toggled w/ spacebar
         if (g_camera.isSpinning)
-            g_camera.m_angleX += 0.5;
+            g_camera.m_angleX += 0.5;   //TODO: spinconfig
         // Rotate the Camera so cube is in View
         g_camera.RotateGLCameraView();
         // Render Megaminx.
@@ -115,7 +115,7 @@ void myglutRenderScene() {
     utSetOrthographicProjection(WIDTH, HEIGHT);
     { //scoped { ... for OrthographicProjection context ... }
         // Print out Green Text, FPS display + Angles + face Name
-        glColor3f(0, 1, 0); // ...in green.
+        glColor3f(0, 1, 0); // ...in green. TODO: colorconfig
         utCalculateAndPrintFps(10.f, 20.f);
         utCalculateAndPrintAngles(10.f, HEIGHT - 20.f,
 								  g_camera.m_angleX, g_camera.m_angleY);
@@ -143,10 +143,12 @@ void myglutRenderScene() {
             static char solvquestr[32];
             snprintf(solvquestr, 32, "Solver Avg: %5g", g_solveravg);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, solvquestr);
+            //TODO: fix this from lingering.
         }
-    }
-    //Reset ortho scoped text and present backbuffer
+    } //end ortho scope
+    //Reset text overlay projections
     utResetPerspectiveProjection();
+    //Present GL back buffer to front (swap)
     glutSwapBuffers();
 }
 
@@ -155,7 +157,7 @@ void myglutRenderScene() {
 void GetCurrentFace() {
     const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX,
                                                   (int)g_camera.m_angleY);
-    if (tempFace != 0) {
+    if (currentFace != tempFace) {
         currentFace = tempFace;
 		sprintf(lastface, "%s", g_colorRGBs[currentFace].name);
         // Save it into the viewmodel (sync view)
