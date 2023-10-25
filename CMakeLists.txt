@@ -52,7 +52,6 @@ set(MAKEFLAGS "-j${NumCPUS}") #This should be default by now
 
 #// Prepare EXE - by listing all source files (explicitly is safer), and the Res.rc (icon resource)
 add_executable(${PACKAGE_NAME} WIN32
-    src/main.cpp
     src/readline.cpp
     src/ui/linenoise.c
     src/ui/camera.cpp
@@ -65,8 +64,8 @@ add_executable(${PACKAGE_NAME} WIN32
     src/engine/solve.cpp
     src/engine/shadow.cpp
     src/engine/load.cpp
-    src/main.cpp
     src/main-menu.cpp
+    src/main.cpp
     src/Res.rc
 )
 
