@@ -1,5 +1,5 @@
-#ifndef __MEGAMINX_H__
-#define __MEGAMINX_H__
+//#ifndef __MEGAMINX_H__
+//#define __MEGAMINX_H__
 
 #include "face.hpp"
 #include <vector>
@@ -62,11 +62,11 @@ public:
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo=0);
     const std::vector<numdir> ParseAlgorithmString(AlgoString algorithm, const colordirs &loc);
     const std::vector<numdir> ParseAlgorithmID(int algoID, int startLoc);
-    //Find Functions
-   template <typename T>
-    int findPiece(int pieceNum);
-    int findEdge(int pieceNum);
-    int findCorner(int pieceNum);
+    //Find Piece Functions  (see bottom of file for definition)
+    int findPiece(int pieceNum);    //Find 1, a single numbered piece (by int 1-60)
+    int findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); };
+    int findCorner(int pieceNum){ return findPiece<Corner>(pieceNum); };
+    //Face Find Piece Functions
     std::vector<int> findPiecesOfFace(int face, Piece &pieceRef, int times) const;
    template <typename T>
     std::vector<int> findFacePiecesOrder(int face);
@@ -125,7 +125,7 @@ public:
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
     bool isFullySolved();
-   template<typename T>
+   template <typename T>
     bool DetectIfAllSolved();
    template <typename T>
     void DetectSolvedPieces(int startI, bool piecesSolved[5]);
@@ -166,7 +166,7 @@ public:
     static const int numEdges = 30;
 
    template <typename T>
-    const int getMaxNumberOfPieces() const {
+    constexpr int getMaxNumberOfPieces() const {
         if (std::is_same<T, Edge>::value)
             return numEdges;
         else if (std::is_same<T, Corner>::value)
@@ -183,6 +183,18 @@ public:
         return &centers[i];
     }
 
+    //This has to be duplicated from megaminx.cpp for solve.cpp
+    //or theres LD unresolved symbol errors with findPiece<Edge> findPiece<Corner>
+   template <typename T>
+    int findPiece(int pieceNum) {
+        const auto piece = getPieceArray<T>(0);
+        int maxpcs = getMaxNumberOfPieces<T>();
+        for (int i = 0; i < maxpcs; ++i)
+            if (piece[i].data.pieceNum == pieceNum)
+                return i;
+        return -1;
+    } //where T = Corner or Edge
+
 private:
     Face   faces[numFaces];
     Center centers[numFaces];
@@ -197,6 +209,7 @@ private:
     friend class EdgeLayerAssist;
     friend class CornerLayerAssist;
 };
+
 // global main Megaminx object (pointer, managed)
 extern Megaminx* megaminx;
 extern Megaminx* shadowDom;
@@ -208,8 +221,8 @@ static auto MM4 = [](int &over) { while (over >= 4) over -= 5; };
 static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
 //static auto MMs5 = [](int &over, int stop) { while (over >= stop) over -= 5; };
 //static auto MMsg = [](int &over, int stop) { while (over > stop) over -= 5; };
-//static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
+static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
 //static auto MMMu = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
 
-#endif
+//#endif

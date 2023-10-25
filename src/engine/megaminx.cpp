@@ -264,69 +264,6 @@ void Megaminx::resetFace(int n)
     setCurrentFaceActive(n);
 }
 
-/**
- * \brief Find A Face Piece Order List, <template> (either Edge or Corner piece)
- * \param face Nth-face number (1-12)
- * \return Returns an EXACT ORDER list of pieces on FACE
- */
-template <typename T>
-std::vector<int> Megaminx::findFacePiecesOrder(int face)
-{
-    return faces[face - 1].findPiecesOrder<T>();
-} //where T = Corner or Edge
-/* Explicit specification was needed 
-/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: CMakeFiles/Megaminx.dir/src/engine/megaminx.cpp.o: in function `Megaminx::findFaceCornersOrder(int)':
-megaminx.cpp:(.text+0xbae): undefined reference to `std::vector<int, std::allocator<int> > Face::findPiecesOrder<Corner>() const'
-/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: CMakeFiles/Megaminx.dir/src/engine/megaminx.cpp.o: in function `Megaminx::findFaceEdgesOrder(int)':
-megaminx.cpp:(.text+0xbfe): undefined reference to `std::vector<int, std::allocator<int> > Face::findPiecesOrder<Edge>() const'
-/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: CMakeFiles/Megaminx.dir/src/engine/solve.cpp.o: in function `Megaminx::testingAlgostrings(Megaminx*)':
-solve.cpp:(.text+0x7201): undefined reference to `std::vector<int, std::allocator<int> > Megaminx::findFacePiecesOrder<Edge>(int)'
-template <>
-std::vector<int> Megaminx::findFacePiecesOrder<Corner>(int face) { return findFaceCornersOrder(face); }
-template <>
-std::vector<int> Megaminx::findFacePiecesOrder<Edge>(int face) { return findFaceEdgesOrder(face); }
-*/
-//where T = Corner or Edge
-std::vector<int> Megaminx::findFaceCornersOrder(int face) { return faces[face - 1].findEdgesOrder(); }
-std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return faces[face - 1].findCornersOrder(); }
-
-/**
- * \brief Finds the colored center that is perma-attached to a face, and then
- *         iterates the entire list of pieces to find when the colors match, and outputs a list.
- * \param face Nth-face number (1-12)
- * \param pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
- * \param times how many times to iterate over the ref'd array
- * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
- * \note    NOTE: Finds pieces BEFORE they are attached to a face.
- */
-std::vector<int> Megaminx::findPiecesOfFace(int face, Piece &pieceRef, int times) const
-{
-    std::vector<int> pieceList;
-    const int color = faces[face - 1].center->data._colorNum[0];
-    for (int i = 0; i < times && pieceList.size() < 5; ++i) {
-        const bool result = (&pieceRef)[i].matchesColor(color);
-        if (result)
-            pieceList.push_back(i);
-    }
-    return pieceList;
-}
-
-/**
- * \brief Find Pieces, <template> (either Edge or Corner piece)
- * \param face Nth-face number (1-12)
- * \return Returns a SORTED list of pieces on FACE
- */
-template <typename T>
-std::vector<int> Megaminx::findPieces(int face)
-{
-    if (std::is_same<T, Corner>::value)
-        return findPiecesOfFace(face, this->corners[0], numCorners);
-    else if (std::is_same<T, Edge>::value)
-        return findPiecesOfFace(face, this->edges[0], numEdges);
-    return {};
-} //where T = Corner or Edge
-std::vector<int> Megaminx::findCorners(int face) { return findPieces<Corner>(face); }
-std::vector<int> Megaminx::findEdges(int face) { return findPieces<Edge>(face); }
 
 /**
  * \brief FLIP Piece, Changes the colors of a piece, <template> (either Edge or Corner piece)
@@ -351,7 +288,7 @@ void Megaminx::flipEdgeColor(int face, int num) { return flipPieceColor<Edge>(fa
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesPosition()
 {
-    int maxpcs = getMaxNumberOfPieces<T>();
+    const int maxpcs = getMaxNumberOfPieces<T>();
     std::vector<int> allPiecesPos(maxpcs);
     for (int r = 0; r < maxpcs; ++r) {
         allPiecesPos[r] = getPieceArray<T>(0)[r].data.pieceNum;
@@ -368,7 +305,7 @@ std::vector<int> Megaminx::getAllEdgePiecesPosition()  { return getAllPiecesPosi
 template <typename T>
 std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
 {
-    int maxpcs = getMaxNumberOfPieces<T>();
+    const int maxpcs = getMaxNumberOfPieces<T>();
     std::vector<int> allPiecesPos(maxpcs);
     for (int r = 0; r < maxpcs; ++r) {
         allPiecesPos[r] = getPieceArray<T>(0)[r].data.flipStatus;
@@ -378,8 +315,117 @@ std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
 std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Corner>(); }
 std::vector<int> Megaminx::getAllEdgePiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Edge>(); }
 
-//Resets--------------------------------------------------------------------------------------------------------------//
+/**
+ * \brief Find A Face Piece Order List, <template> (either Edge or Corner piece)
+ * \param face Nth-face number (1-12)
+ * \return Returns an EXACT ORDER list of pieces on FACE
+ */
+template <typename T>
+std::vector<int> Megaminx::findFacePiecesOrder(int face)
+{
+    return faces[face - 1].findPiecesOrder<T>();
+} //where T = Corner or Edge
+std::vector<int> Megaminx::findFaceCornersOrder(int face) { return faces[face - 1].findEdgesOrder(); }
+std::vector<int> Megaminx::findFaceEdgesOrder(int face) { return faces[face - 1].findCornersOrder(); }
 
+/**
+ * \brief Finds the colored center that is perma-attached to a face, and then
+ *         iterates the entire list of pieces to find when the colors match, and outputs a list.
+ * \param face Nth-face number (1-12)
+ * \param pieceRef Takes a reference to the [0]th member of Pointer_array of (either Corner/Edge's)
+ * \param times how many times to iterate over the ref'd array
+ * \return Returns the list of 5 positions where the starting face's pieces have ended up at.
+ * \note    NOTE: Finds pieces BEFORE they are attached to a face.
+ */
+std::vector<int> Megaminx::findPiecesOfFace(int face, Piece &pieceRef, int times) const
+{
+    std::vector<int> pieceList;
+    const int color = faces[face - 1].center->data._colorNum[0];
+    for (int i = 0; i < times && pieceList.size() < 5; ++i) {
+        const bool result = (&pieceRef)[i].matchesColor(color);
+        if (result)
+            pieceList.push_back(i);
+    }
+    return pieceList;
+}
+/**
+ * \brief Find Pieces, <template> (either Edge or Corner piece)
+ * \param face Nth-face number (1-12)
+ * \return Returns a SORTED list of pieces on FACE
+ */
+template <typename T>
+std::vector<int> Megaminx::findPieces(int face)
+{
+    if (std::is_same<T, Corner>::value)
+        return findPiecesOfFace(face, this->corners[0], numCorners);
+    else if (std::is_same<T, Edge>::value)
+        return findPiecesOfFace(face, this->edges[0], numEdges);
+    return {};
+} //where T = Corner or Edge
+std::vector<int> Megaminx::findCorners(int face) { return findPieces<Corner>(face); }
+std::vector<int> Megaminx::findEdges(int face) { return findPieces<Edge>(face); }
+
+//Find5s------------------------------------------------------------------------------------------------------//
+/**
+ * \brief Find 5, a specific five-piece chunk (by INDEX ARRAY)
+ */
+template <typename T>
+std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
+{
+    std::vector<int> pieceList(5);
+    for (int i = 0; i < 5; i++)
+        pieceList[i] = findPiece<T>(pieceNums[i]);
+    return pieceList;
+} //where T = Corner or Edge
+/** \brief Find 5, a specific five-piece chunk (by VECTOR) */
+template <typename T>
+std::vector<int> Megaminx::findFivePieces(const std::vector<int> &v)
+{
+    assert(v.size() == 5);
+    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
+    return findFivePieces<T>(vecPieceNums);
+} //where T = Corner or Edge
+std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findFivePieces<Edge>(pieceNums); }
+std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
+std::vector<int> Megaminx::findEdgePieces(const std::vector<int> &v) { return findFivePieces<Edge>(v); }
+std::vector<int> Megaminx::findCornerPieces(const std::vector<int> &v) { return findFivePieces<Corner>(v); }
+
+//Reset5Defaults------------------------------------------------------------------------------------------------------//
+/**
+ * \brief Reset any five-piece chunk to defaults (by INDEX ARRAY)
+ * \note cant be const, swaps & flips the received piece
+ */
+template <typename T>
+void Megaminx::resetFivePieces(const int indexes[5]) {
+    Piece* pieces = getPieceArray<T>(0);
+    for (int i = 0; i < 5; ++i) {
+        auto &destpiece = pieces[indexes[i]];
+        auto &sourcepiece = pieces[findPiece<T>(indexes[i])];
+        if (sourcepiece.data.pieceNum == destpiece._defaultPieceNum)
+            destpiece.swapdata(sourcepiece.data);
+    }
+    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
+    for (int i = 0; i < 5; ++i) {
+        while (pieces[indexes[i]].data.flipStatus != 0)
+            pieces[indexes[i]].flip();
+    }
+} //where T = Corner or Edge
+void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(indexes); }
+void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
+
+/**
+ * \brief Reset any five-piece chunk to defaults (by VECTOR)
+ */
+template <typename T>
+void Megaminx::resetFivePiecesV(std::vector<int> &v) {
+    assert(v.size() == 5);
+    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
+    resetFivePieces<T>(vecPieceNums);
+} //where T = Corner or Edge
+void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
+void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
+
+//Resets--------------------------------------------------------------------------------------------------------------//
 /**
  * \brief Generic <template> to Reset all the Face pieces to their default value.
  * \param color_n N'th Face/Color Number (1-12)
@@ -395,8 +441,8 @@ int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPiece
         return resetFacesCorners(color_n, defaultPieces, solve);
     return 0;
 } //where T = Corner or Edge
-int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }
-int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }
+int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }
+int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }
 
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.
@@ -493,84 +539,6 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
     }
     return 1;
 }
-
-//Find1 & Find5s------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief Find 1, a single numbered piece (by int 1-60)
- */
-template <typename T>
-int Megaminx::findPiece(int pieceNum)
-{
-    Piece* piece = getPieceArray<T>(0);
-    int maxpcs = getMaxNumberOfPieces<T>();
-    for (int i = 0; i < maxpcs; ++i)
-        if (piece[i].data.pieceNum == pieceNum)
-            return i;
-    return -1;
-} //where T = Corner or Edge
-int Megaminx::findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); }
-int Megaminx::findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
-
-/**
- * \brief Find 5, a specific five-piece chunk (by INDEX ARRAY)
- */
-template <typename T>
-std::vector<int> Megaminx::findFivePieces(const int pieceNums[5])
-{
-    std::vector<int> pieceList(5);
-    for (int i = 0; i < 5; i++)
-        pieceList[i] = findPiece<T>(pieceNums[i]);
-    return pieceList;
-} //where T = Corner or Edge
-/** \brief Find 5, a specific five-piece chunk (by VECTOR) */
-template <typename T>
-std::vector<int> Megaminx::findFivePieces(const std::vector<int> &v)
-{
-    assert(v.size() == 5);
-    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    return findFivePieces<T>(vecPieceNums);
-} //where T = Corner or Edge
-std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findFivePieces<Edge>(pieceNums); }
-std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
-std::vector<int> Megaminx::findEdgePieces(const std::vector<int> &v) { return findFivePieces<Edge>(v); }
-std::vector<int> Megaminx::findCornerPieces(const std::vector<int> &v) { return findFivePieces<Corner>(v); }
-
-//Reset5Defaults------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief Reset any five-piece chunk to defaults (by INDEX ARRAY)
- * \note cant be const, swaps & flips the received piece
- */
-template <typename T>
-void Megaminx::resetFivePieces(const int indexes[5]) {
-    Piece* pieces = getPieceArray<T>(0);
-    for (int i = 0; i < 5; ++i) {
-        auto &destpiece = pieces[indexes[i]];
-        auto &sourcepiece = pieces[findPiece<T>(indexes[i])];
-        if (sourcepiece.data.pieceNum == destpiece._defaultPieceNum)
-            destpiece.swapdata(sourcepiece.data);
-    }
-    //Pieces are in the right place but maybe wrong orientation, so flip the colors:
-    for (int i = 0; i < 5; ++i) {
-        while (pieces[indexes[i]].data.flipStatus != 0)
-            pieces[indexes[i]].flip();
-    }
-} //where T = Corner or Edge
-void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(indexes); }
-void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
-
-/**
- * \brief Reset any five-piece chunk to defaults (by VECTOR)
- */
-template <typename T>
-void Megaminx::resetFivePiecesV(std::vector<int> &v) {
-    assert(v.size() == 5);
-    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    resetFivePieces<T>(vecPieceNums);
-} //where T = Corner or Edge
-void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
-void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
 
 //Parse Algorithm ID -> lettered String -> numdir notation -----------------------------------------------------------//
 
