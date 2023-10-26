@@ -2,6 +2,7 @@
 //#define __MEGAMINX_H__
 
 #include "face.hpp"
+#include "algorithms.hpp"
 #include <vector>
 #include <stack>
 #include <queue>

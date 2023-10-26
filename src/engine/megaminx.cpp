@@ -294,6 +294,7 @@ std::vector<int> Megaminx::getAllPiecesPosition()
     for (int r = 0; r < maxpcs; ++r) {
         allPiecesPos[r] = getPieceArray<T>(0)[r].data.pieceNum;
     }
+    //std::for_each();
     return allPiecesPos;
 } //where T = Corner or Edge
 std::vector<int> Megaminx::getAllCornerPiecesPosition()  { return getAllPiecesPosition<Corner>(); }
