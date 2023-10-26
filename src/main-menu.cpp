@@ -132,7 +132,7 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         MakeShadowCubeClone();	// init
         megaminx->rotateSolveWhiteEdges(shadowDom);
         megaminx->rotateSolveWhiteCorners(shadowDom);
-        break;
+        break; // rotate_1st-layer-edges+corners
     case GLUT_KEY_F2:
         menuHandler(302);
         break; // rotate_2nd-layer-edges
@@ -162,11 +162,11 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         // break;
     case GLUT_KEY_F12:
         menuHandler(312);
-        break; // Brute-Force Checker for solver. stomps on savefile.
+        break; // Brute-Force Checker for solver. NOTE:(stomps on savefile)
     default:
         break;
     }
-    // Route the arrow keys to the camera for motion
+    // Route the arrow keys to the camera for motion (main.cpp)
     doCameraMotionSpecial(key, x, y);
 }
 
@@ -191,7 +191,6 @@ void utPrintHelpMenu(float w, float h)
                                            "[Delete]  Scramble Puzzle",
                                            "[Enter]  Default Current Face",
                                            "[F1-F8=F9] Layer'# Human Solver",
-//                                              "[F1-F12]     Rotate Face #  >>",
     };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
@@ -283,32 +282,33 @@ void createMenu()
         { "36. 7LL-E+C 2+2swap BUNNY 2&5,3&4 Front=Safe", 86 },
         { "31. 7LL-E+C x1 CCW HORSEdge- Fr./R.Back=Safe", 81 },
         { "30. 7LL-E+C x1  CW HORSEdge+ Fr./R.Back=Safe", 80 },
-        { "50. 7LL Corner: R' D' r dr (Permute) C2+Safe", 100 },
+        { "50. 7LL Corner: R' D' r dr (Permute) C2+Safe", 200 },
         { "26. 7LL Corners: Cycle- CCW FrontLine=Safe", 76 },
         { "27. 7LL Corners: Cycle+  CW RightLine=Safe", 77 },
     };
+    //(goes into menu submenu4_id: Algorithms by Number) 51-88(-50),189-202(-150)
 
     submenu7_id = glutCreateMenu(menuHandler);
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)
-    glutAddMenuEntry("2nd Layer, 1 Edge (Left drop)", 71);
-    glutAddMenuEntry("2nd Layer, 1 Edge (Right drop)",72);
-    glutAddMenuEntry("4th Layer, 1 Edge (Left drop)", 73);
-    glutAddMenuEntry("4th Layer, 1 Edge (Right drop)",74);
-    glutAddMenuEntry("4th Layer, 1 Edge (Left+Flip)", 84);
-    glutAddMenuEntry("4th Layer, 1 Edge (Right+Flip)",85);
-    glutAddMenuEntry("6th Layer, 1 Edge (Left drop)", 75);
-    glutAddMenuEntry("6th Layer, 1 Edge (Right drop)",76);
+    glutAddMenuEntry("2nd Layer, 1 Edge (Left drop)", 291);
+    glutAddMenuEntry("2nd Layer, 1 Edge (Right drop)",292);
+    glutAddMenuEntry("4th Layer, 1 Edge (Left drop)", 293);
+    glutAddMenuEntry("4th Layer, 1 Edge (Right drop)",296);
+    glutAddMenuEntry("4th Layer, 1 Edge (Left+Flip)", 294);
+    glutAddMenuEntry("4th Layer, 1 Edge (Right+Flip)",295);
+    glutAddMenuEntry("6th Layer, 1 Edge (Left drop)", 297);
+    glutAddMenuEntry("6th Layer, 1 Edge (Right drop)",298);
     constexpr int MAX_HUMANLAYER_ALGORITHMS= 9;
     constexpr StringAlgo humanlayer_algorithms[MAX_HUMANLAYER_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
-        { "2nd Layer, 1 Edge (Left drop)",  71 },
-        { "2nd Layer, 1 Edge (Right drop)", 72 },
-        { "4th Layer, 1 Edge (Left drop)",  73 },
-        { "4th Layer, 1 Edge (Right drop)", 74 },
-        { "4th Layer, 1 Edge (Left+Flip)",  84 },
-        { "4th Layer, 1 Edge (Right+Flip)", 85 },
-        { "6th Layer, 1 Edge (Left drop)",  75 },
-        { "6th Layer, 1 Edge (Right drop)", 76 },
+        { "2nd Layer, 1 Edge (Left drop)",  291 },
+        { "2nd Layer, 1 Edge (Right drop)", 292 },
+        { "4th Layer, 1 Edge (Left drop)",  293 },
+        { "4th Layer, 1 Edge (Right drop)", 296 },
+        { "4th Layer, 1 Edge (Left+Flip)",  294 },
+        { "4th Layer, 1 Edge (Right+Flip)", 295 },
+        { "6th Layer, 1 Edge (Left drop)",  297 },
+        { "6th Layer, 1 Edge (Right drop)", 298 },
     };
 
     //Sublevel1 Menu = Human Rotate Bulk-Solve using best layer routines (Solve.cpp)
@@ -407,7 +407,7 @@ void createMenu()
     //SubLevel2 Menu - Current Face Method Manipulatations
     submenu2_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Rotate CounterClockwise <<", 19);
-    glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20)
+    glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20);
     //Color Flips
     glutAddMenuEntry("Flip Color: Edge [Shift+1]", 24);
     glutAddMenuEntry("Flip Color: Edge [Shift+2]", 25);
@@ -501,6 +501,7 @@ void createMenu()
 //Right Click Menu event Handler, user interface back-end
 void menuHandler(int num)
 {
+    auto face = megaminx->g_currentFace->getNum()+1;
     double sum = 0;
     switch (num) {
     case 1:
@@ -606,6 +607,9 @@ void menuHandler(int num)
         megaminx->rotateAlgo(num - 50); break;
     case 189 ... 202:   //39-52
         megaminx->rotateAlgo(num - 150); break;
+    case 291 ... 299:   //1-8
+        megaminx->rotateBulkAlgoString(g_AlgoStringsLayer[num - 290].algo,
+                                   g_faceNeighbors[face], num - 290); break;
 
     //menu submenu1_id:  AutoSolve by Layer = solve.cpp
     case 300: //layer 1 edges rotate+autosolve F1
