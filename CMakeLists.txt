@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.8)
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
 # Confirmed to work on Linux 2023
 set(PACKAGE_NAME "Megaminx")
-set(PACKAGE_VERSION "1.4.2")
+set(PACKAGE_VERSION "1.4.3")
 project(${PACKAGE_NAME})
 set(PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
 set(PACKAGE_TARNAME ${PACKAGE_NAME})
@@ -52,8 +52,8 @@ set(MAKEFLAGS "-j${NumCPUS}") #This should be default by now
 
 #// Prepare EXE - by listing all source files (explicitly is safer), and the Res.rc (icon resource)
 add_executable(${PACKAGE_NAME} WIN32
-    src/readline.cpp
     src/ui/linenoise.c
+    src/readline.cpp
     src/ui/camera.cpp
     src/ui/opengl.cpp
     src/engine/center.cpp
@@ -69,7 +69,26 @@ add_executable(${PACKAGE_NAME} WIN32
     src/Res.rc
 )
 
-#CMake Settings:
+#Sources - Add .H Files
+target_sources(${PACKAGE_NAME} PRIVATE
+    src/ui/linenoise.h
+    src/ui/camera.hpp
+    src/ui/opengl.h
+    src/engine/algorithms.hpp
+    src/engine/piece.hpp
+    src/engine/piece-color.hpp
+    src/engine/piece-static.hpp
+    src/engine/center.hpp
+    src/engine/corner.hpp
+    src/engine/edge.hpp
+    src/engine/face.hpp
+    src/engine/megaminx.hpp
+    src/engine/load.hpp
+    src/main-menu.hpp
+    src/main.h
+)
+
+#CMake C/C++ Settings:
 message("C++ 17 Standard required, Enabling")
 # Turn on C++ 17 flag.
 set(CMAKE_CXX_STANDARD 17)
@@ -84,22 +103,10 @@ message("--> GLUT detected as: libs: ${GLUT_LIBRARIES} include: ${GLUT_INCLUDE_D
 target_link_libraries(${PACKAGE_NAME} PRIVATE GLUT::GLUT)
 
 if(UNIX OR LINUX OR MINGW)
-	message("checking confirmation of working GL subsystems...")
-#    CMake Warning (dev) at /usr/share/cmake/Modules/FindOpenGL.cmake:315
-#    (message):Policy CMP0072 is not set: FindOpenGL prefers GLVND by default when
-#    available.  Run "cmake --help-policy CMP0072" for policy details.  Use the
-#    cmake_policy command to set the policy and suppress this warning.
-#    
-#    FindOpenGL found both a legacy GL library:
-#      OPENGL_gl_LIBRARY: /usr/lib64/libGL.so
-#    
-#    and GLVND libraries for OpenGL and GLX:
-#      OPENGL_opengl_LIBRARY: /usr/lib64/libOpenGL.so
-#      OPENGL_glx_LIBRARY: /usr/lib64/libGLX.so
-#    
-#    OpenGL_GL_PREFERENCE has not been set to "GLVND" or "LEGACY", so for
-#    compatibility with CMake 3.10 and below the legacy GL library will be used.
-#Either works.
+    message("checking confirmation of working GL subsystems...")
+    #    OpenGL_GL_PREFERENCE has not been set to "GLVND" or "LEGACY", so for
+    #    compatibility with CMake 3.10 and below the legacy GL library will be used.
+    #Either works. - "cmake --help-policy CMP0072"
 	set(OpenGL_GL_PREFERENCE "GLVND")
     message("OpenGL Preference set to GLVND instead of legacy...")
     # Find Library, _need_ a OpenGL (or Xmesa)
