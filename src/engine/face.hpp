@@ -147,6 +147,10 @@ constexpr int CW10E[8] = { 0, 1, 0, 3, 0, 4, 0, 2 };
 constexpr int CW11E[8] = { 0, 1, 0, 2, 0, 4, 0, 3 };
 
 
+struct StringAlgo {
+    const char* algo;
+    int num;
+};
 struct AlgoString {
     int num;
     const char* algo;

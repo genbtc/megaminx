@@ -965,6 +965,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             shadowDom->shadowMultiRotate(GRAY, offby);
             continue;
         }
+        //TODO: never fires. redundant to above.
         //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
         else if (!piecesSolved[0] && !twoAdjacentPieces && !allCornersAllSolved && solvedCount >= (i - startingPiece) && piecesSolvedMaybe[i - startingPiece]) {
             const int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);

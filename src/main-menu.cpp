@@ -31,7 +31,6 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
             break;
         default:
             break;
-
         }
     }
     //Game commands
@@ -127,11 +126,9 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         break;
     case GLUT_KEY_INSERT:
         break;
-	// THESE FUNC KEYS HAVE TO BE HANDLED IN HERE (even though this file is not for cubing)
+    //DEV: THESE GLUT FUNC KEYS _HAVE_ TO BE HANDLED IN HERE, but dont encode too much logic in the menu
     case GLUT_KEY_F1:
-        // menuHandler(300);	//Rotate_white_edges
-        // menuHandler(301);	//Rotate_white_corners
-        // manually call these (the double clone cube call was messing up)
+        //DEV: manually call these (the double clone cube call was messed up)
         MakeShadowCubeClone();	// init
         megaminx->rotateSolveWhiteEdges(shadowDom);
         megaminx->rotateSolveWhiteCorners(shadowDom);
@@ -159,9 +156,9 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         break; // rotate_7th_layer-corners
     case GLUT_KEY_F9:
         menuHandler(309);
-        break; // Layers 1-7 all at once
-    case GLUT_KEY_F10:
-    case GLUT_KEY_F11:
+        break; // Layers 1-7 ALL at once
+    case GLUT_KEY_F10:  //inactive
+    case GLUT_KEY_F11:  //inactive
         // break;
     case GLUT_KEY_F12:
         menuHandler(312);
@@ -205,7 +202,7 @@ void utPrintHelpMenu(float w, float h)
 }
 
 
-//Right Click Menu text/function mappings, actual user interface front-end
+//Right Click Menu text/function mappings, and actual user interface front-end logic
 void createMenu()
 {
     //SubLevel 0 menu - Main Menu
@@ -262,6 +259,34 @@ void createMenu()
     //
     //glutAddMenuEntry("03. U' L' u l", 53);
     //glutAddMenuEntry("04. u r U' R'", 54);
+    constexpr int MAX_HUMANBULK_ALGORITHMS= 25;
+    constexpr StringAlgo humanbulk_algorithms[MAX_HUMANBULK_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { "01. r u R' U'", 51 },
+        { "02. l u L' U'", 52 },
+        { "14. 7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64 },
+        { "33. 7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83 },
+        { "12. 7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62 },
+        { "13. 7LL-Edge2+   CW x5 HORSE+ Fr./R.Back=Safe", 63 },
+        { "20. 7LL-Edge 2+2swap BUNNY Opp. 2&4,3&5 + INVERT 8'/1'", 70 },
+        { "37. 7LL-Edge 2+2swap BUNNY BEST 2&5,3&4", 87 },
+        { "19. 7LL-Edge 2+2swap BUNNY Adj. 2&3,4&5", 69 },
+        { "29. 7LL-Edge 2+2swap BUNNY Colors ONLY 2,3,4,5", 79 },
+        { "38. 7LL-Edge 5-way CCW cycle by +2 all", 88 },
+        { "17. 7LL-Edge 5-way  CW cycle by -2 all", 67 },
+        { "39. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 189 },
+        { "43. 7LL-Edge 5-way  CW cycle by -1,-2,1,-2,-1", 193 },
+        { "11. 7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61 },
+        { "10. 7LL-E+C #2 CCW MUSHEdge- Fr./L.=Safe", 60 },
+        { "08. 7LL-E+C #3  CW MUSHEdge+ Fr.Line/L.Edge=Safe", 58 },
+        { "09. 7LL-E+C 2+2swap BUNNY 1&3,2&4 R.Back=Safe", 59 },
+        { "36. 7LL-E+C 2+2swap BUNNY 2&5,3&4 Front=Safe", 86 },
+        { "31. 7LL-E+C x1 CCW HORSEdge- Fr./R.Back=Safe", 81 },
+        { "30. 7LL-E+C x1  CW HORSEdge+ Fr./R.Back=Safe", 80 },
+        { "50. 7LL Corner: R' D' r dr (Permute) C2+Safe", 100 },
+        { "26. 7LL Corners: Cycle- CCW FrontLine=Safe", 76 },
+        { "27. 7LL Corners: Cycle+  CW RightLine=Safe", 77 },
+    };
 
     submenu7_id = glutCreateMenu(menuHandler);
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)
@@ -273,6 +298,18 @@ void createMenu()
     glutAddMenuEntry("4th Layer, 1 Edge (Right+Flip)",85);
     glutAddMenuEntry("6th Layer, 1 Edge (Left drop)", 75);
     glutAddMenuEntry("6th Layer, 1 Edge (Right drop)",76);
+    constexpr int MAX_HUMANLAYER_ALGORITHMS= 9;
+    constexpr StringAlgo humanlayer_algorithms[MAX_HUMANLAYER_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { "2nd Layer, 1 Edge (Left drop)",  71 },
+        { "2nd Layer, 1 Edge (Right drop)", 72 },
+        { "4th Layer, 1 Edge (Left drop)",  73 },
+        { "4th Layer, 1 Edge (Right drop)", 74 },
+        { "4th Layer, 1 Edge (Left+Flip)",  84 },
+        { "4th Layer, 1 Edge (Right+Flip)", 85 },
+        { "6th Layer, 1 Edge (Left drop)",  75 },
+        { "6th Layer, 1 Edge (Right drop)", 76 },
+    };
 
     //Sublevel1 Menu = Human Rotate Bulk-Solve using best layer routines (Solve.cpp)
     submenu1_id = glutCreateMenu(menuHandler);
@@ -286,6 +323,24 @@ void createMenu()
     glutAddMenuEntry("7th Layer: Gray Edges (Rotate)", 307);
     glutAddMenuEntry("7th Layer: Gray Corners (Rotate)", 308);
     glutAddMenuEntry("ALL Layers: #1 - #7 (Rotate)", 309); // 309 = Solve All
+    constexpr int MAX_LAYERSOLVE_ALGORITHMS= 13;
+    constexpr StringAlgo layersolve_algorithms[MAX_LAYERSOLVE_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { "1st Layer: White Edges (Rotate)", 300 },
+        { "1st Layer: White Corners (Rotate)", 301 },
+        { "2nd Layer: All Edges (Rotate)", 302 },
+        { "3rd Layer: All Corners (Rotate)", 303 },
+        { "4th Layer: All Edges (Rotate)", 304 },
+        { "5th Layer: All Corners (Rotate)", 305 },
+        { "6th Layer: All Edges (Rotate)", 306 },
+        { "7th Layer: Gray Edges (Rotate)", 307 },
+        { "7th Layer: Gray Corners (Rotate)", 308 },
+        { "ALL Layers: #1 - #7 (Rotate)", 309 }, // 309 = Solve All
+    };
+    for (int i = 1; i < MAX_LAYERSOLVE_ALGORITHMS; i++) {
+        auto la = layersolve_algorithms[i];
+        //glutAddMenuEntry(la.algo,la.num); //commented out for refactor later.
+    }
 
     //SubLevel3 Menu - Computer Auto-InstaSolve - Layer by Layer using Teleport
     //                 (internally "pops-out" pieces to move them, aka cheating)
@@ -299,6 +354,23 @@ void createMenu()
     glutAddMenuEntry("6th Layer: Edges (Teleport)", 46);
     glutAddMenuEntry("7th Layer: Grey Star (Teleport)", 47);
     glutAddMenuEntry("7th Layer: Grey Corners (Teleport)", 48);
+    constexpr int MAX_COMPUSOLVE_ALGORITHMS= 13;
+    constexpr StringAlgo compusolve_algorithms[MAX_COMPUSOLVE_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { "1st Layer: White Star (Teleport)", 40 },
+        { "1st Layer: White Corners (Teleport)", 41 },
+        { "2nd Layer: Edges (Teleport)", 42 },
+        { "3rd Layer: Low Y's (Teleport)", 43 },
+        { "4th Layer: Edges (Teleport)", 44 },
+        { "5th Layer: High Y's (Teleport)", 45 },
+        { "6th Layer: Edges (Teleport)", 46 },
+        { "7th Layer: Grey Star (Teleport)", 47 },
+        { "7th Layer: Grey Corners (Teleport)", 48 },
+    };
+    //these three computer "solves" are for teleporting/cheating
+    glutAddMenuEntry("Compu.Solve Current Face", 21);
+    glutAddMenuEntry("Compu.Solve Cur 5 Edges", 22);
+    glutAddMenuEntry("Compu.Solve Cur 5 Corners", 23);
 
     //SubLevel5 Menu - Computer InstaSolve by Faces - Single
     //                 (return to solved position = "reset")
@@ -315,15 +387,28 @@ void createMenu()
     glutAddMenuEntry("10 LIGHT_GREEN", 180);
     glutAddMenuEntry("11 PINK", 181);
     glutAddMenuEntry("12 BEIGE", 182);
+    constexpr int MAX_FACES_ALGORITHMS= 13;
+    constexpr StringAlgo faces_algorithms[MAX_FACES_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { " 1 WHITE", 171 },
+        { " 2 DARK_BLUE", 172 },
+        { " 3 RED", 173 },
+        { " 4 DARK_GREEN", 174 },
+        { " 5 PURPLE", 175 },
+        { " 6 YELLOW", 176 },
+        { " 7 GRAY", 177 },
+        { " 8 LIGHT_BLUE", 178 },
+        { " 9 ORANGE", 179 },
+        { "10 LIGHT_GREEN", 180 },
+        { "11 PINK", 181 },
+        { "12 BEIGE", 182 },
+    };
 
     //SubLevel2 Menu - Current Face Method Manipulatations
     submenu2_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Rotate CounterClockwise <<", 19);
-    glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20);
-    //the rest of these are for cheating
-    glutAddMenuEntry("Compu.Solve Current Face", 21);
-    glutAddMenuEntry("Compu.Solve Cur 5 Edges", 22);
-    glutAddMenuEntry("Compu.Solve Cur 5 Corners", 23);
+    glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20)
+    //Color Flips
     glutAddMenuEntry("Flip Color: Edge [Shift+1]", 24);
     glutAddMenuEntry("Flip Color: Edge [Shift+2]", 25);
     glutAddMenuEntry("Flip Color: Edge [Shift+3]", 26);
@@ -334,6 +419,20 @@ void createMenu()
     glutAddMenuEntry("Flip Color: Corner  [3]", 31);
     glutAddMenuEntry("Flip Color: Corner  [4]", 32);
     glutAddMenuEntry("Flip Color: Corner  [5]", 33);
+    constexpr int MAX_FLIP_COLOR_ALGORITHMS= 11;
+    constexpr StringAlgo flipcolor_algorithms[MAX_FLIP_COLOR_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { "Flip Color: Edge [Shift+1]", 24 },
+        { "Flip Color: Edge [Shift+2]", 25 },
+        { "Flip Color: Edge [Shift+3]", 26 },
+        { "Flip Color: Edge [Shift+4]", 27 },
+        { "Flip Color: Edge [Shift+5]", 28 },
+        { "Flip Color: Corner  [1]",    29 },
+        { "Flip Color: Corner  [2]",    30 },
+        { "Flip Color: Corner  [3]",    31 },
+        { "Flip Color: Corner  [4]",    32 },
+        { "Flip Color: Corner  [5]",    33 },
+    };
 
     //Sublevel6 Menu - AutoSwap Piece w/ Teleport
     submenu6_id = glutCreateMenu(menuHandler);
@@ -357,6 +456,30 @@ void createMenu()
     glutAddMenuEntry("Swap Corners 3 & 4", 142);
     glutAddMenuEntry("Swap Corners 3 & 5", 143);
     glutAddMenuEntry("Swap Corners 4 & 5", 144);
+    constexpr int MAX_SWAP_ALGORITHMS= 21;
+    constexpr StringAlgo swap_algorithms[MAX_SWAP_ALGORITHMS] = {
+        { "", 0},   // Initialize 0 with empty blank
+        { "Swap Edges 1 & 2",   125 },
+        { "Swap Edges 1 & 3",   126 }, //humans
+        { "Swap Edges 1 & 4",   127 }, //will
+        { "Swap Edges 1 & 5",   128 }, //enjoy
+        { "Swap Edges 2 & 3",   129 }, //the
+        { "Swap Edges 2 & 4",   130 }, //order
+        { "Swap Edges 2 & 5",   131 },
+        { "Swap Edges 3 & 4",   132 },
+        { "Swap Edges 3 & 5",   133 },
+        { "Swap Edges 4 & 5",   134 },
+        { "Swap Corners 1 & 2", 135 },
+        { "Swap Corners 1 & 3", 136 },
+        { "Swap Corners 1 & 4", 137 },
+        { "Swap Corners 1 & 5", 138 },
+        { "Swap Corners 2 & 3", 139 },
+        { "Swap Corners 2 & 4", 140 },
+        { "Swap Corners 2 & 5", 141 },
+        { "Swap Corners 3 & 4", 142 },
+        { "Swap Corners 3 & 5", 143 },
+        { "Swap Corners 4 & 5", 144 },
+    };
 
     //Top Level - Main Menu
     menu_id = glutCreateMenu(menuHandler);
@@ -373,6 +496,7 @@ void createMenu()
     glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 //TODO: refactor all into one map of { "menu name", "menu handle #", function+args }
+//      working on it.
 
 //Right Click Menu event Handler, user interface back-end
 void menuHandler(int num)
@@ -483,7 +607,7 @@ void menuHandler(int num)
     case 189 ... 202:   //39-52
         megaminx->rotateAlgo(num - 150); break;
 
-    //menu submenu1_id:  AutoSolve by Layer
+    //menu submenu1_id:  AutoSolve by Layer = solve.cpp
     case 300: //layer 1 edges rotate+autosolve F1
         MakeShadowCubeClone();
         megaminx->rotateSolveWhiteEdges(shadowDom);
@@ -520,7 +644,7 @@ void menuHandler(int num)
         MakeShadowCubeClone();
         megaminx->rotateSolve7thLayerCorners(shadowDom);
         break;
-    case 309:    //layers 1-7 all rotate+autosolve F9 = solve.cpp
+    case 309: //layers 1-7 ALL at once rotate+autosolve F9
         MakeShadowCubeClone(); //init
         megaminx->rotateSolveWhiteEdges(shadowDom); //start
         megaminx->rotateSolveWhiteCorners(shadowDom);
@@ -534,9 +658,11 @@ void menuHandler(int num)
         std::cout << "AUTOSOLVER: Number of Rotations Queued up to Solve: " << megaminx->getRotateQueueNum() << std::endl;
         break;
     case 312:   //brute force checker for solver = F11
-        for (int i = 0; i < 50000; ++i) {
-            SaveCubetoFile(); //save
-            menuHandler(309);   //solver
+        std::cout << "Starting Brute Force Checker. Running 50000 Iterations" << std::endl;
+        for (int i = 0; i < 50000; ++i) {   //loop
+            SaveCubetoFile();   //save
+            menuHandler(309);   //run one virtual solver
+            //check if complete, count how many moves, and reset
             if (shadowDom->isFullySolved()) {
                 sum += megaminx->getRotateQueueNum();
                 megaminx->resetQueue(); //Cancel
@@ -548,8 +674,8 @@ void menuHandler(int num)
         }
         //solver avg global is processed in main.cpp render func
         g_solveravg = sum / 50000.;
-        std::cout << "Solver Average: " << g_solveravg << std::endl;
-        //Solver average was 588.629
+        std::cout << "Brute Force Checker Complete! - Solver Average: " << g_solveravg << std::endl;
+        //Solver average was 588.627
         break;
     default:
         break;
