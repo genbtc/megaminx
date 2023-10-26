@@ -204,6 +204,7 @@ void utPrintHelpMenu(float w, float h)
 //Right Click Menu text/function mappings, and actual user interface front-end logic
 void createMenu()
 {
+    StringAlgo la={};
     //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Camera go Home", 93);
@@ -220,49 +221,21 @@ void createMenu()
 
     //SubLevel4 Menu - Human Bulk Rotate Algos
     submenu4_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("01. r u R' U'", 51);
-    glutAddMenuEntry("02. l u L' U'", 52);
-    //
-    glutAddMenuEntry("14. 7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64);
-    glutAddMenuEntry("33. 7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83);
-//NOTE:I consider these 3 below redundant to the 2 above:
+//NOTE:I consider these 3 below redundant
 //  glutAddMenuEntry("32. 7LL-Edge3d- CCW MUSHROOM- Both+Backs=Safe", 82);
 //  glutAddMenuEntry("15. 7LL-Edge3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
 //  glutAddMenuEntry("16. 7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
-    glutAddMenuEntry("12. 7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62);
-    glutAddMenuEntry("13. 7LL-Edge2+   CW x5 HORSE+ Fr./R.Back=Safe", 63);
-    glutAddMenuEntry("20. 7LL-Edge 2+2swap BUNNY Opp. 2&4,3&5 + INVERT 8'/1'", 70);
-    glutAddMenuEntry("37. 7LL-Edge 2+2swap BUNNY BEST 2&5,3&4", 87);
-    glutAddMenuEntry("19. 7LL-Edge 2+2swap BUNNY Adj. 2&3,4&5", 69);
-    glutAddMenuEntry("29. 7LL-Edge 2+2swap BUNNY Colors ONLY 2,3,4,5", 79);
-    glutAddMenuEntry("38. 7LL-Edge 5-way CCW cycle by +2 all", 88);
-    glutAddMenuEntry("17. 7LL-Edge 5-way  CW cycle by -2 all", 67);
-    //glutAddMenuEntry("18. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
-    glutAddMenuEntry("39. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 189);
-    glutAddMenuEntry("43. 7LL-Edge 5-way  CW cycle by -1,-2,1,-2,-1", 193);
-    //
-    glutAddMenuEntry("11. 7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61);
-    glutAddMenuEntry("10. 7LL-E+C #2 CCW MUSHEdge- Fr./L.=Safe", 60);
-    glutAddMenuEntry("08. 7LL-E+C #3  CW MUSHEdge+ Fr.Line/L.Edge=Safe", 58);
-    glutAddMenuEntry("09. 7LL-E+C 2+2swap BUNNY 1&3,2&4 R.Back=Safe", 59);
-    glutAddMenuEntry("36. 7LL-E+C 2+2swap BUNNY 2&5,3&4 Front=Safe", 86);
-    glutAddMenuEntry("31. 7LL-E+C x1 CCW HORSEdge- Fr./R.Back=Safe", 81);
-    glutAddMenuEntry("30. 7LL-E+C x1  CW HORSEdge+ Fr./R.Back=Safe", 80);
-    //
-    glutAddMenuEntry("50. 7LL Corner: R' D' r dr (Permute) C2+Safe", 100);
-    glutAddMenuEntry("26. 7LL Corners: Cycle- CCW FrontLine=Safe", 76);
-    glutAddMenuEntry("27. 7LL Corners: Cycle+  CW RightLine=Safe", 77);
-//NOTE:I consider these 2 below redundant to the 2 above:
+// -glutAddMenuEntry("18. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
+//NOTE:I consider these 2 below redundant:
 //  glutAddMenuEntry("25. LL Corners: Cycle- CCW L.Back=Safe", 75);
 //  glutAddMenuEntry("28. LL Corners: Cycle- CCW Left=Safe", 78);
-    //
     //glutAddMenuEntry("03. U' L' u l", 53);
     //glutAddMenuEntry("04. u r U' R'", 54);
-    constexpr int MAX_HUMANBULK_ALGORITHMS= 25;
+    constexpr int MAX_HUMANBULK_ALGORITHMS = 25;
     constexpr StringAlgo humanbulk_algorithms[MAX_HUMANBULK_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
-        { "01. r u R' U'", 51 },
-        { "02. l u L' U'", 52 },
+        { "01. Corners r u R' U'", 51 },
+        { "02. Corners l u L' U'", 52 },
         { "14. 7LL-Edge3a- CCW MUSHROOM- Fr./L.=Safe", 64 },
         { "33. 7LL-Edge3e+  CW MUSHROOM+ Fr./L.=Safe", 83 },
         { "12. 7LL-Edge1-  CCW x5 HORSE- Fr./R.Back=Safe", 62 },
@@ -287,139 +260,106 @@ void createMenu()
         { "27. 7LL Corners: Cycle+  CW RightLine=Safe", 77 },
     };
     //(goes into menu submenu4_id: Algorithms by Number) 51-88(-50),189-202(-150)
+    for (int i = 1; i < MAX_HUMANBULK_ALGORITHMS; i++) {
+        la = humanbulk_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
+    }
 
     submenu7_id = glutCreateMenu(menuHandler);
     //Sublevel Y = Human Manual Rotate Routines (insert one piece manually into layer)
-    glutAddMenuEntry("2nd Layer, 1 Edge (Left drop)", 291);
-    glutAddMenuEntry("2nd Layer, 1 Edge (Right drop)",292);
-    glutAddMenuEntry("4th Layer, 1 Edge (Left drop)", 293);
-    glutAddMenuEntry("4th Layer, 1 Edge (Right drop)",296);
-    glutAddMenuEntry("4th Layer, 1 Edge (Left+Flip)", 294);
-    glutAddMenuEntry("4th Layer, 1 Edge (Right+Flip)",295);
-    glutAddMenuEntry("6th Layer, 1 Edge (Left drop)", 297);
-    glutAddMenuEntry("6th Layer, 1 Edge (Right drop)",298);
-    constexpr int MAX_HUMANLAYER_ALGORITHMS= 9;
+    constexpr int MAX_HUMANLAYER_ALGORITHMS = 9;
     constexpr StringAlgo humanlayer_algorithms[MAX_HUMANLAYER_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
         { "2nd Layer, 1 Edge (Left drop)",  291 },
         { "2nd Layer, 1 Edge (Right drop)", 292 },
         { "4th Layer, 1 Edge (Left drop)",  293 },
-        { "4th Layer, 1 Edge (Right drop)", 296 },
         { "4th Layer, 1 Edge (Left+Flip)",  294 },
+        { "4th Layer, 1 Edge (Right drop)", 296 },
         { "4th Layer, 1 Edge (Right+Flip)", 295 },
         { "6th Layer, 1 Edge (Left drop)",  297 },
         { "6th Layer, 1 Edge (Right drop)", 298 },
     };
+    for (int i = 1; i < MAX_HUMANLAYER_ALGORITHMS; i++) {
+        la = humanlayer_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
+    }
 
     //Sublevel1 Menu = Human Rotate Bulk-Solve using best layer routines (Solve.cpp)
     submenu1_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("1st Layer: White Edges (Rotate)", 300);
-    glutAddMenuEntry("1st Layer: White Corners (Rotate)", 301);
-    glutAddMenuEntry("2nd Layer: All Edges (Rotate)", 302);
-    glutAddMenuEntry("3rd Layer: All Corners (Rotate)", 303);
-    glutAddMenuEntry("4th Layer: All Edges (Rotate)", 304);
-    glutAddMenuEntry("5th Layer: All Corners (Rotate)", 305);
-    glutAddMenuEntry("6th Layer: All Edges (Rotate)", 306);
-    glutAddMenuEntry("7th Layer: Gray Edges (Rotate)", 307);
-    glutAddMenuEntry("7th Layer: Gray Corners (Rotate)", 308);
-    glutAddMenuEntry("ALL Layers: #1 - #7 (Rotate)", 309); // 309 = Solve All
-    constexpr int MAX_LAYERSOLVE_ALGORITHMS= 13;
+    constexpr int MAX_LAYERSOLVE_ALGORITHMS = 11;
     constexpr StringAlgo layersolve_algorithms[MAX_LAYERSOLVE_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
-        { "1st Layer: White Edges (Rotate)", 300 },
+        { "1st Layer: White Edges (Rotate)",   300 },
         { "1st Layer: White Corners (Rotate)", 301 },
-        { "2nd Layer: All Edges (Rotate)", 302 },
-        { "3rd Layer: All Corners (Rotate)", 303 },
-        { "4th Layer: All Edges (Rotate)", 304 },
-        { "5th Layer: All Corners (Rotate)", 305 },
-        { "6th Layer: All Edges (Rotate)", 306 },
-        { "7th Layer: Gray Edges (Rotate)", 307 },
-        { "7th Layer: Gray Corners (Rotate)", 308 },
-        { "ALL Layers: #1 - #7 (Rotate)", 309 }, // 309 = Solve All
+        { "2nd Layer: All Edges (Rotate)",     302 },
+        { "3rd Layer: All Corners (Rotate)",   303 },
+        { "4th Layer: All Edges (Rotate)",     304 },
+        { "5th Layer: All Corners (Rotate)",   305 },
+        { "6th Layer: All Edges (Rotate)",     306 },
+        { "7th Layer: Gray Edges (Rotate)",    307 },
+        { "7th Layer: Gray Corners (Rotate)",  308 },
+        { "ALL Layers: #1 - #7 (Auto Solve)",  309 }, // 309 = Solve All
     };
     for (int i = 1; i < MAX_LAYERSOLVE_ALGORITHMS; i++) {
-        auto la = layersolve_algorithms[i];
-        //glutAddMenuEntry(la.algo,la.num); //commented out for refactor later.
+        la = layersolve_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
     }
 
     //SubLevel3 Menu - Computer Auto-InstaSolve - Layer by Layer using Teleport
     //                 (internally "pops-out" pieces to move them, aka cheating)
     submenu3_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("1st Layer: White Star (Teleport)", 40);
-    glutAddMenuEntry("1st Layer: White Corners (Teleport)", 41);
-    glutAddMenuEntry("2nd Layer: Edges (Teleport)", 42);
-    glutAddMenuEntry("3rd Layer: Low Y's (Teleport)", 43);
-    glutAddMenuEntry("4th Layer: Edges (Teleport)", 44);
-    glutAddMenuEntry("5th Layer: High Y's (Teleport)", 45);
-    glutAddMenuEntry("6th Layer: Edges (Teleport)", 46);
-    glutAddMenuEntry("7th Layer: Grey Star (Teleport)", 47);
-    glutAddMenuEntry("7th Layer: Grey Corners (Teleport)", 48);
-    constexpr int MAX_COMPUSOLVE_ALGORITHMS= 13;
+    constexpr int MAX_COMPUSOLVE_ALGORITHMS = 10;
     constexpr StringAlgo compusolve_algorithms[MAX_COMPUSOLVE_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
-        { "1st Layer: White Star (Teleport)", 40 },
+        { "1st Layer: White Star (Teleport)",    40 },
         { "1st Layer: White Corners (Teleport)", 41 },
-        { "2nd Layer: Edges (Teleport)", 42 },
-        { "3rd Layer: Low Y's (Teleport)", 43 },
-        { "4th Layer: Edges (Teleport)", 44 },
-        { "5th Layer: High Y's (Teleport)", 45 },
-        { "6th Layer: Edges (Teleport)", 46 },
-        { "7th Layer: Grey Star (Teleport)", 47 },
-        { "7th Layer: Grey Corners (Teleport)", 48 },
+        { "2nd Layer: Edges (Teleport)",         42 },
+        { "3rd Layer: Low Y's (Teleport)",       43 },
+        { "4th Layer: Edges (Teleport)",         44 },
+        { "5th Layer: High Y's (Teleport)",      45 },
+        { "6th Layer: Edges (Teleport)",         46 },
+        { "7th Layer: Grey Star (Teleport)",     47 },
+        { "7th Layer: Grey Corners (Teleport)",  48 },
     };
+    for (int i = 1; i < MAX_COMPUSOLVE_ALGORITHMS; i++) {
+        la = compusolve_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
+    }
     //these three computer "solves" are for teleporting/cheating
-    glutAddMenuEntry("Compu.Solve Current Face", 21);
-    glutAddMenuEntry("Compu.Solve Cur 5 Edges", 22);
+    glutAddMenuEntry("Compu.Solve Current Face",  21);
+    glutAddMenuEntry("Compu.Solve Cur 5 Edges",   22);
     glutAddMenuEntry("Compu.Solve Cur 5 Corners", 23);
 
     //SubLevel5 Menu - Computer InstaSolve by Faces - Single
     //                 (return to solved position = "reset")
     submenu5_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry(" 1 WHITE", 171);
-    glutAddMenuEntry(" 2 DARK_BLUE", 172);
-    glutAddMenuEntry(" 3 RED", 173);
-    glutAddMenuEntry(" 4 DARK_GREEN", 174);
-    glutAddMenuEntry(" 5 PURPLE", 175);
-    glutAddMenuEntry(" 6 YELLOW", 176);
-    glutAddMenuEntry(" 7 GRAY", 177);
-    glutAddMenuEntry(" 8 LIGHT_BLUE", 178);
-    glutAddMenuEntry(" 9 ORANGE", 179);
-    glutAddMenuEntry("10 LIGHT_GREEN", 180);
-    glutAddMenuEntry("11 PINK", 181);
-    glutAddMenuEntry("12 BEIGE", 182);
-    constexpr int MAX_FACES_ALGORITHMS= 13;
+    constexpr int MAX_FACES_ALGORITHMS = 13;
     constexpr StringAlgo faces_algorithms[MAX_FACES_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
-        { " 1 WHITE", 171 },
-        { " 2 DARK_BLUE", 172 },
-        { " 3 RED", 173 },
-        { " 4 DARK_GREEN", 174 },
-        { " 5 PURPLE", 175 },
-        { " 6 YELLOW", 176 },
-        { " 7 GRAY", 177 },
-        { " 8 LIGHT_BLUE", 178 },
-        { " 9 ORANGE", 179 },
+        { " 1 WHITE",       171 },
+        { " 2 DARK_BLUE",   172 },
+        { " 3 RED",         173 },
+        { " 4 DARK_GREEN",  174 },
+        { " 5 PURPLE",      175 },
+        { " 6 YELLOW",      176 },
+        { " 7 GRAY",        177 },
+        { " 8 LIGHT_BLUE",  178 },
+        { " 9 ORANGE",      179 },
         { "10 LIGHT_GREEN", 180 },
-        { "11 PINK", 181 },
-        { "12 BEIGE", 182 },
+        { "11 PINK",        181 },
+        { "12 BEIGE",       182 },
     };
+    for (int i = 1; i < MAX_FACES_ALGORITHMS; i++) {
+        la = faces_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
+    }
 
     //SubLevel2 Menu - Current Face Method Manipulatations
     submenu2_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Rotate CounterClockwise <<", 19);
     glutAddMenuEntry("Rotate >>>>>> Clockwise >>", 20);
     //Color Flips
-    glutAddMenuEntry("Flip Color: Edge [Shift+1]", 24);
-    glutAddMenuEntry("Flip Color: Edge [Shift+2]", 25);
-    glutAddMenuEntry("Flip Color: Edge [Shift+3]", 26);
-    glutAddMenuEntry("Flip Color: Edge [Shift+4]", 27);
-    glutAddMenuEntry("Flip Color: Edge [Shift+5]", 28);
-    glutAddMenuEntry("Flip Color: Corner  [1]", 29);
-    glutAddMenuEntry("Flip Color: Corner  [2]", 30);
-    glutAddMenuEntry("Flip Color: Corner  [3]", 31);
-    glutAddMenuEntry("Flip Color: Corner  [4]", 32);
-    glutAddMenuEntry("Flip Color: Corner  [5]", 33);
-    constexpr int MAX_FLIP_COLOR_ALGORITHMS= 11;
+    constexpr int MAX_FLIP_COLOR_ALGORITHMS = 11;
     constexpr StringAlgo flipcolor_algorithms[MAX_FLIP_COLOR_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
         { "Flip Color: Edge [Shift+1]", 24 },
@@ -433,30 +373,14 @@ void createMenu()
         { "Flip Color: Corner  [4]",    32 },
         { "Flip Color: Corner  [5]",    33 },
     };
+    for (int i = 1; i < MAX_LAYERSOLVE_ALGORITHMS; i++) {
+        la = layersolve_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
+    }
 
     //Sublevel6 Menu - AutoSwap Piece w/ Teleport
     submenu6_id = glutCreateMenu(menuHandler);
-    glutAddMenuEntry("Swap Edges 1 & 2", 125); //note:
-    glutAddMenuEntry("Swap Edges 1 & 3", 126); //humans
-    glutAddMenuEntry("Swap Edges 1 & 4", 127); //will
-    glutAddMenuEntry("Swap Edges 1 & 5", 128); //enjoy
-    glutAddMenuEntry("Swap Edges 2 & 3", 129); //the
-    glutAddMenuEntry("Swap Edges 2 & 4", 130); //order
-    glutAddMenuEntry("Swap Edges 2 & 5", 131);
-    glutAddMenuEntry("Swap Edges 3 & 4", 132);
-    glutAddMenuEntry("Swap Edges 3 & 5", 133);
-    glutAddMenuEntry("Swap Edges 4 & 5", 134);
-    glutAddMenuEntry("Swap Corners 1 & 2", 135);
-    glutAddMenuEntry("Swap Corners 1 & 3", 136);
-    glutAddMenuEntry("Swap Corners 1 & 4", 137);
-    glutAddMenuEntry("Swap Corners 1 & 5", 138);
-    glutAddMenuEntry("Swap Corners 2 & 3", 139);
-    glutAddMenuEntry("Swap Corners 2 & 4", 140);
-    glutAddMenuEntry("Swap Corners 2 & 5", 141);
-    glutAddMenuEntry("Swap Corners 3 & 4", 142);
-    glutAddMenuEntry("Swap Corners 3 & 5", 143);
-    glutAddMenuEntry("Swap Corners 4 & 5", 144);
-    constexpr int MAX_SWAP_ALGORITHMS= 21;
+    constexpr int MAX_SWAP_ALGORITHMS = 21;
     constexpr StringAlgo swap_algorithms[MAX_SWAP_ALGORITHMS] = {
         { "", 0},   // Initialize 0 with empty blank
         { "Swap Edges 1 & 2",   125 },
@@ -480,8 +404,12 @@ void createMenu()
         { "Swap Corners 3 & 5", 143 },
         { "Swap Corners 4 & 5", 144 },
     };
+    for (int i = 1; i < MAX_LAYERSOLVE_ALGORITHMS; i++) {
+        la = layersolve_algorithms[i];
+        glutAddMenuEntry(la.algo, la.num);
+    }
 
-    //Top Level - Main Menu
+    //Top Level = Main Menu + Attach SubMenus
     menu_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Toggle Spinning..", 1);
     glutAddSubMenu("Main Menu", submenu0_id);
