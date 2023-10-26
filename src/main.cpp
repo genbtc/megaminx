@@ -1,4 +1,4 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.3";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.4";
 ///////////////////////////////////////////////////////////////////////////////
 /* MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod . Changlog
              - v1.3.2 Nov 22, 2018
@@ -10,6 +10,7 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.3";
              - v1.4.1 Oct 14, 2023 (bug: ld gc'ed needed symbols)
              - v1.4.2 Oct 22, 2023 (still bugged.)
              - v1.4.3 Oct 25, 2023 (symbol errors fixed, piece number tooltips)
+             - v1.4.4 Oct 26, 2023 Create algorithms.hpp and refactor algostring menus
 * Uses some code originally from:
 * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
 * Modified by:
