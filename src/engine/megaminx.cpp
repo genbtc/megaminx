@@ -78,8 +78,9 @@ void Megaminx::renderAllPieces()
 void Megaminx::render()
 {
     //Skip everything if its invisible (not sure why it would be)
-    if (invisible || _rotatingFaceIndex < 0)    // (or early startup face index is -1)
+    if (invisible)    // (or early startup face index is -1)
         return;
+
     //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
         const auto &op = rotateQueue.front();
@@ -105,12 +106,12 @@ void Megaminx::render()
         else
             k++;
     }
+
     if (_rotatingFaceIndex == -1)
         return;
     //call .RENDER() and find out if successful
-    const bool isRotaFullyRendered = faces[_rotatingFaceIndex].render();
-    //If yes, then Finish the Rotation & advance the Queue
-    if (isRotaFullyRendered && isRotating) {
+    if (faces[_rotatingFaceIndex].render() && isRotating) {
+        //If yes, then Finish the Rotation & advance the Queue
         rotateQueue.pop();
         isRotating = false;
     }
