@@ -228,8 +228,8 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         // but something else came undone, go back and fix it, one more pass.
         else if (i >= endingPiece) {
             std::cout << "Debug L1E-1, loop iterated i past end but still unsolved, BUG? \n";
-            i = startingPiece;
-            continue;
+            i = startingPiece;  //start entire layer over, otherwise assert fails
+            //continue;
         }
         //data storage types for current state
         const EdgeLayerAssist l{ shadowDom, i };
@@ -240,12 +240,12 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
         if (firstSolvedPiece != -1) {
             //NOTE: Doing this over and over is wasting moves solving the partial-solved top every time.
             //TODO: This means we need a plan for any 5-9 edge to get moved into any 0-4 slot even when top isn't solved.
-            const int findIfPieceSolved = shadowDom->findEdge(firstSolvedPiece); //always piece 0
+            int findIfPieceSolved = shadowDom->findEdge(startingPiece); //always piece 0
             int offby = findIfPieceSolved - firstSolvedPiece;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
-            if ((findIfPieceSolved > 0) && (findIfPieceSolved < 5) && (offby > 0)) {
-                offby *= -1;
-                shadowDom->shadowMultiRotate(WHITE, offby);
-                //this resets our starting point reset loop too.
+            if ((findIfPieceSolved > startingPiece && findIfPieceSolved < endingPiece) && offby != 0 ) {
+                findIfPieceSolved *= -1;
+                shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved);
+                //this resets our starting point, reset loop to recalculate.
                 continue;
             }
         }
@@ -264,6 +264,8 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
             else if (l.isOnRow2 && l.colormatchB)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
+            else
+                unknownloop++; //unhandled condition
         }
         //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by facesSolved pieces
         else if (l.isOnRow34 && l.dirToWhiteA != 0 && ((l.edgeFaceNeighbors.a < GRAY && !facesSolved[l.edgeFaceNeighbors.a - 1]) || l.edgeFaceNeighbors.a >= GRAY)) {
@@ -301,7 +303,7 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
     //If its solved, get top white face spun oriented back to normal    //redundant
     if (allSolved) {
         int findIfPieceSolved = shadowDom->findEdge(startingPiece); //always piece 0
-        if (findIfPieceSolved > 0 && findIfPieceSolved < 5) {
+        if (findIfPieceSolved > startingPiece && findIfPieceSolved < endingPiece) {
             findIfPieceSolved *= -1;
             shadowDom->shadowMultiRotate(WHITE, findIfPieceSolved);
         }
@@ -346,9 +348,13 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         //Rotates the white face to its solved position, first solved EDGE matches up to its face.
         //Edges should already be solved, if not, get top white face spun oriented back to normal
         int edgesOffBy = shadowDom->findEdge(startingPiece); //always piece 0
-        if (edgesOffBy > 0 && edgesOffBy < 5) {
+        int offby = edgesOffBy - startingPiece;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
+        if (edgesOffBy != 0) {
             edgesOffBy *= -1;
             shadowDom->shadowMultiRotate(WHITE, edgesOffBy);
+        }
+        else if (edgesOffBy > startingPiece && edgesOffBy < endingPiece) {
+            unknownloop++;
         }
         //Move incorrect corners out of the 0-4 slots moves them right down with the algo
         else if (l.isOnRow1 && ((i != l.sourceCornerIndex) || (i == l.sourceCornerIndex && l.CornerItselfA->data.flipStatus != 0))) {
