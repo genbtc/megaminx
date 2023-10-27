@@ -45,6 +45,11 @@ public:
     std::vector<int> findCornersOrder() const;
     std::vector<int> findEdgesOrder() const;
    template<typename T>
+    std::vector<int> findPiecesColorFlipStatus() const;
+    std::vector<int> findCornersColorFlipStatus() const;
+    std::vector<int> findEdgesColorFlipStatus() const;
+
+   template<typename T>
     int find5PiecePresent(int pieceNum) const;
     int find5EdgePresent(int pieceNum) const;
     int find5CornerPresent(int pieceNum) const;

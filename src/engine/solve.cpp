@@ -880,10 +880,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         //basic overflow protection:
         if (loopcount > 101)
             break;
-        int i = startingPiece;
-        //check solved-ness, Stores piece and color status from the gray face
         bool piecesSolved[5] = { false };
-        shadowDom->DetectSolvedEdges(i, piecesSolved);
+        //check solved-ness, Stores piece and color status from the gray face
+        shadowDom->DetectSolvedEdges(startingPiece, piecesSolved);
+        int i = startingPiece;
         //Solved pieces can be skipped (Iterate past any already completely solved pieces)
         while (i < endingPiece && piecesSolved[i - startingPiece])
             i++;
@@ -905,6 +905,12 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (EdgeItselfNext->data.flipStatus == 0)
                 grayFaceColorSolved[k] = true;
         }
+        std::vector<int> pieceFoundOrder= megaminx->faces[GRAY - 1].findEdgesOrder();
+        std::vector<int> grayFaceColors = megaminx->faces[GRAY - 1].findEdgesColorFlipStatus();
+        bool grayFaceColorSolved2[5] = { false };
+        for (int k = 0; k < 5; ++k)
+            grayFaceColorSolved2[k] = (grayFaceColors.at(k) == 0);
+
     //iterate through the piece/color lists and make some easy compound conditional aliases as conceptual shortcuts
         //twoSolvedPieces(a,b) - Lambda for Solved pieces
         const auto twoSolvedPieces = [piecesSolved](int a, int b) { return (piecesSolved[a] && piecesSolved[b]); };
@@ -948,7 +954,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         std::vector<numdir> bulkAlgo;
         const int sourceEdgeIndex = shadowDom->findEdge(i);
         const int offby = sourceEdgeIndex - i;
-        const bool currentpieceFlipStatusOK = grayFaceColorSolved[i];
+        const bool currentpieceFlipStatusOK = grayFaceColorSolved[i - startingPiece];
         //Check gray CORNERS also, "maybe" we want to preserve them.
         bool grayCornerColorSolved[5] = { false };
         shadowDom->DetectSolvedCorners(15, grayCornerColorSolved);
@@ -1358,13 +1364,13 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //basic overflow protection:
         if (loopcount > 120)
             break;
-        bool grayFaceColorSolved[5] = { false };
-        bool piecesSolvedStrict[5] = { false };
+        //bool grayFaceColorSolved[5] = { false };
+        bool piecesSolved[5] = { false };
         //check solved-ness
-        shadowDom->DetectSolvedCorners(startingPiece, piecesSolvedStrict);
+        shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
         int i = startingPiece;
         //can skip if solved
-        while (i < endingPiece && piecesSolvedStrict[i - startingPiece])
+        while (i < endingPiece && piecesSolved[i - startingPiece])
             i++;
         //entirely solved, done
         if (i >= endingPiece) {
@@ -1378,37 +1384,39 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         const int sourceCornerIndex = shadowDom->findCorner(i);
         const int offby = sourceCornerIndex - i;
         //Populate the current order state:
-        //auto pieceOrder = megaminx->faces[GRAY - 1].findCornersOrder();
-        std::vector<int> pieceOrder (5);
+        std::vector<int> pieceOrder(5);
+        bool grayFaceColorSolved[5] = { false };
         for (int k = 0; k < 5; ++k) {
             Corner* CornerItselfNext = shadowDom->faces[GRAY - 1].corner[k];
             pieceOrder[k] = CornerItselfNext->data.pieceNum;
             if (CornerItselfNext->data.flipStatus == 0)
                 grayFaceColorSolved[k] = true;
         }
+        //std::vector<int> pieceOrder = megaminx->faces[GRAY - 1].findCornersOrder();
+        std::vector<int> pieceOrderB = megaminx->findCornerPieces(megaminx->m_seventhLayerCorners);
+        std::vector<int> grayFaceColorsB = megaminx->faces[GRAY - 1].findCornersColorFlipStatus();
+        bool grayFaceColorSolvedB[5] = { false };
+        for (int k = 0; k < 5; ++k)
+            grayFaceColorSolvedB[k] = (grayFaceColorsB.at(k) == 0);
+        bool grayCornerColorSolvedB[5] = { false };
+        shadowDom->DetectSolvedCorners(startingPiece, grayCornerColorSolvedB);
         //iterate through the piece/color lists and make some easy compound conditional aliases
-        bool fullySolvedOrder = checkPieceMatches(pieceOrder, 15, 16, 17, 18, 19);
-        bool hasTwoAdjacentSolved = false;
-        for (int k = 0; k < 5; ++k) {
-            if ((k + startingPiece == pieceOrder[k]) &&
-                ((k < 4 && pieceOrder[k] + 1 == pieceOrder[k + 1]) ||
-                (k == 4 && pieceOrder[4] == 19 && pieceOrder[0] == 15)))
-            {
-                hasTwoAdjacentSolved = true;
-            }
-        }
-        const auto twoSolvedPieces = [piecesSolvedStrict](int a, int b) { return (piecesSolvedStrict[a] && piecesSolvedStrict[b]); };
+        const bool fullySolvedOrder = checkPieceMatches(pieceOrder, 15, 16, 17, 18, 19);
+        const auto twoGraysUnsolved = [grayFaceColorSolved](int a, int b) { MM5(a); MM5(b); return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); }; //MM=overrotation support
+//        const bool twoAdjacentOffColors =
+//            (twoGraysUnsolved(0, 1)) || (twoGraysUnsolved(1, 2)) || (twoGraysUnsolved(2, 3)) || (twoGraysUnsolved(3, 4)) || (twoGraysUnsolved(4, 0));
+        const auto twoPiecesSolved = [piecesSolved](int a, int b) { return (piecesSolved[a] && piecesSolved[b]); };
         const bool twoAdjacentPieces =
-             (twoSolvedPieces(0, 1)) || (twoSolvedPieces(1, 2)) || (twoSolvedPieces(2, 3)) || (twoSolvedPieces(3, 4)) || (twoSolvedPieces(4, 0));
-        const bool twoOppositePieces =
-             (twoSolvedPieces(0, 2)) || (twoSolvedPieces(1, 3)) || (twoSolvedPieces(2, 4)) || (twoSolvedPieces(3, 0)) || (twoSolvedPieces(4, 1));
+            (twoPiecesSolved(0, 1)) || (twoPiecesSolved(1, 2)) || (twoPiecesSolved(2, 3)) || (twoPiecesSolved(3, 4)) || (twoPiecesSolved(4, 0));
+//        const bool twoOppositePieces =
+//            (twoPiecesSolved(0, 2)) || (twoPiecesSolved(1, 3)) || (twoPiecesSolved(2, 4)) || (twoPiecesSolved(3, 0)) || (twoPiecesSolved(4, 1));
 
 //START MAIN
         //SoNot Needed. L7-Edges is mandatorily run as a pre-requisite.
         //DEVTODO: turn this into a unit test
         // firstly rotate solved Edge 0 (e#25) gray top back to default, by checking the first EDGE and setting that rotation.
         const int findIfFirstEdgeDefault = shadowDom->findEdge(25); //always piece first
-        if (findIfFirstEdgeDefault > 25 && findIfFirstEdgeDefault < 30 && !piecesSolvedStrict[0] && offby != 0)
+        if (findIfFirstEdgeDefault > 25 && findIfFirstEdgeDefault < 30 && !piecesSolved[0] && offby != 0)
         {
             int offby = findIfFirstEdgeDefault - 25;
             shadowDom->shadowMultiRotate(GRAY, offby);
@@ -1419,8 +1427,8 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         if (fullySolvedOrder)
             goto startColorFlippingCorners;
         //skip to the middle if we can, starting with pairs
-        else if (hasTwoAdjacentSolved)
-            goto haveTwoAdjacentSolved;
+//        else if (twoAdjacentPieces)
+//            goto haveTwoAdjacentSolved;
 
 //49 Testcases Total:
 // Everything is #Algo#26 and #Algo#27#

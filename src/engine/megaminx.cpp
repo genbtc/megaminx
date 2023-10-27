@@ -78,7 +78,7 @@ void Megaminx::renderAllPieces()
 void Megaminx::render()
 {
     //Skip everything if its invisible (not sure why it would be)
-    if (invisible)
+    if (invisible || _rotatingFaceIndex < 0)    // (or early startup face index is -1)
         return;
     //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
@@ -343,6 +343,7 @@ std::vector<int> Megaminx::findPiecesOfFace(int face, Piece &pieceRef, int times
 {
     std::vector<int> pieceList;
     const int color = faces[face - 1].center->data._colorNum[0];
+    assert(face == color);
     for (int i = 0; i < times && pieceList.size() < 5; ++i) {
         const bool result = (&pieceRef)[i].matchesColor(color);
         if (result)

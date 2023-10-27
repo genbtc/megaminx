@@ -75,6 +75,19 @@ std::vector<int> Face::findPiecesOrder() const
 std::vector<int> Face::findCornersOrder() const { return findPiecesOrder<Corner>(); }
 std::vector<int> Face::findEdgesOrder() const { return findPiecesOrder<Edge>(); }
 
+template <typename T>
+std::vector<int> Face::findPiecesColorFlipStatus() const
+{
+    std::vector<int> pieceColor;
+    for (int i = 0; i < 5; ++i) {
+        const auto piece = getFacePiece<T>(i);
+        pieceColor.push_back(piece->data.flipStatus);
+    }
+    return pieceColor;
+}
+std::vector<int> Face::findCornersColorFlipStatus() const { return findPiecesColorFlipStatus<Corner>(); }
+std::vector<int> Face::findEdgesColorFlipStatus() const { return findPiecesColorFlipStatus<Edge>(); }
+
 //General usage: Is this piecenum on this face anywhere 1-5?
 //Is this 1-30 piecenum on this face anywhere 1-5 edges?
 //Is this 1-20 piecenum on this face anywhere 1-5 corners?

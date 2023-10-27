@@ -96,6 +96,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #// Use C++17 on all linkages (is this needed if we have ^^ ?)
 target_compile_features(${PACKAGE_NAME} INTERFACE cxx_std_17)
 
+# Debugging features
+if (Debug)
+    set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG -D_GLIBCXX_ASSERTIONS -Og -ggdb3 -fsanitize=undefined -fsanitize=alignment -fno-sanitize-recover=undefined,alignment")
+endif()
+
 # Find Library, _need_ GLUT (aka freeglut)
 find_package(GLUT REQUIRED)
 message("--> GLUT detected as: libs: ${GLUT_LIBRARIES} include: ${GLUT_INCLUDE_DIR}")
