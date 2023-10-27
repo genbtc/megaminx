@@ -21,10 +21,12 @@ Megaminx::Megaminx()
     g_currentFace = NULL;
     _rotatingFaceIndex = -1;
     isRotating = false;
+    invisible = true;
     initEdgePieces();
     initCornerPieces();
     initFacePieces();
     renderAllPieces();
+    invisible = false;
 }
 
 //Init the Edge pieces.
@@ -61,7 +63,7 @@ void Megaminx::initFacePieces()
     }
 }
 
-//Render all the pieces unconditionally. (need once at the start)
+//Default Render All the pieces (unconditionally)
 void Megaminx::renderAllPieces()
 {
     for (const auto &center : centers)
@@ -72,13 +74,12 @@ void Megaminx::renderAllPieces()
         corner.render();
 }
 
-//Main Display Render function for OpenGL,
-// (start handling rotation calls and sub-object render calls)
-// Call each center, edge, corner, face each own .render()
+//Main Render Logic function - (start handling rotation calls and sub-object render calls)
+// Conditionally call each OpenGL .render() func (each rotating face, center, edge, corner)
 void Megaminx::render()
 {
-    //Skip everything if its invisible (not sure why it would be)
-    if (invisible)    // (or early startup face index is -1)
+    //Skip everything if its invisible
+    if (invisible)
         return;
 
     //Start the face rotation Queue for multiple ops.
@@ -86,10 +87,17 @@ void Megaminx::render()
         const auto &op = rotateQueue.front();
         isRotating = true;
         _rotatingFaceIndex = op.num;
+        assert(_rotatingFaceIndex != -1);   //ensure safety
         faces[_rotatingFaceIndex].rotate(op.dir);
     }
+    //non-rotating causes a full re-render all
+    // (ever since early startup, _rotatingFaceIndex is -1)
+    else if (_rotatingFaceIndex == -1) {
+        renderAllPieces();
+        return; //rest of function can be skipped to avoid array[-1] error
+    }
 
-    //Process all pieces that are NOT part of a rotating face.
+    //Conditionally Process all pieces that are NOT part of a rotating face.
     for (int i = 0; i < numFaces; ++i) {
         if (&centers[i] != faces[_rotatingFaceIndex].center)
             centers[i].render();
@@ -107,8 +115,6 @@ void Megaminx::render()
             k++;
     }
 
-    if (_rotatingFaceIndex == -1)
-        return;
     //call .RENDER() and find out if successful
     if (faces[_rotatingFaceIndex].render() && isRotating) {
         //If yes, then Finish the Rotation & advance the Queue
