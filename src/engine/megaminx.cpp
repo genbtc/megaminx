@@ -153,8 +153,8 @@ void Megaminx::rotate(int num, int dir)
 
 /**
  * \brief rotateAlgorithm Switcher Dispatcher. Queues multiple rotate ops
- * \param face from 1 - 12
- * \param id Index into g_AlgoStrings[] struct
+ * \param algoID Index into g_AlgoStrings[] struct
+ * \param face   from 1 - 12 (or -1 for currentFace)
  */
 void Megaminx::rotateAlgo(int algoID, int face)
 {
@@ -167,9 +167,9 @@ void Megaminx::rotateAlgo(int algoID, int face)
         rotateBulkAlgoString(g_AlgoStrings[algoID].algo, g_faceNeighbors[face], algoID);
     }
 }
-
 /**
- * \brief Takes an Algo String and parses it, vectorizes it, then rotates it. (Algo ID is tracked)
+ * \brief rotateAlgorithm by String - Takes an Algo String and parses it, vectorizes it, then rotates it.
+ * \note  (algoID is extra information but should be tracked to pass it on)
  */
 void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc, int algoID)
 {
@@ -177,7 +177,7 @@ void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc
     rotateBulkAlgoVector(bulk);
 }
 /**
- * \brief Adds entire vector of numdirs to the Rotate queue one by one.
+ * \brief rotateAlgorithm by Vector - Adds entire vector of numdirs to the Rotate queue one by one.
  */
 void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
 {
@@ -188,41 +188,9 @@ void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
     }
     undoStack.push({ 999, 999 });   //end sentinel value flag
 }
-
+//Undo-Functions-------------------------------------------------------//
 /**
- * \brief An unlimited Undo LIFO stack. undo one move.
- */
-void Megaminx::undo()
-{
-    if (undoStack.empty()) return;
-    auto &op = undoStack.top();
-    //skip any of the sentinel value flags
-    if (op.num == 999 || op.dir == 999 || op.num == -999 || op.dir == -999) {
-        undoStack.pop();
-        return;
-    }
-    op.dir *= -1;
-    rotateQueue.push(op);
-    undoStack.pop();
-}
-/**
- * \brief Undo twice in a row
- */
-void Megaminx::undoDouble()
-{
-    if (undoStack.size() < 2) return;
-    undo(); undo();
-}
-/**
- * \brief Undo four times in a row
- */
-void Megaminx::undoQuad()
-{
-    if (undoStack.size() < 4) return;
-    undoDouble(); undoDouble();
-}
-/**
- * \brief Undo a bulk whole Chunk of moves at once
+ * \brief Undo a bulk, whole Chunk of moves at once
  * \note   (sequences like these come from rotateBulkAlgoVector() above )
  * \remark  (this is why we have the -999/999 flag values)
  */
@@ -243,6 +211,38 @@ void Megaminx::undoBulk()
             undoStack.pop();
         }
     }
+}
+/**
+ * \brief Undo one - An unlimited Undo LIFO stack.
+ */
+void Megaminx::undo()
+{
+    if (undoStack.empty()) return;
+    auto &op = undoStack.top();
+    //skip any of the sentinel value flags
+    if (op.num == 999 || op.dir == 999 || op.num == -999 || op.dir == -999) {
+        undoStack.pop();
+        return;
+    }
+    op.dir *= -1;
+    rotateQueue.push(op);
+    undoStack.pop();
+}
+/**
+ * \brief Undo 2x in a row
+ */
+void Megaminx::undoDouble()
+{
+    if (undoStack.size() < 2) return;
+    undo(); undo();
+}
+/**
+ * \brief Undo 4x in a row
+ */
+void Megaminx::undoQuad()
+{
+    if (undoStack.size() < 4) return;
+    undoDouble(); undoDouble();
 }
 
 /**
@@ -585,8 +585,8 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
 //NOTE: debug print is good but might as well be permanently on
 bool debugAlgorithmString = true;
 /**
- * \brief An algorithm parser to manipulate the cube (by lettered algostring notation) + print
- * \note   (input: sister function below takes a numerical Algo ID -> converts to -> algostring notation)
+ * \brief An algorithm parser by string. To manipulate the cube (by lettered algostring notation) + print
+ * \note   (input: sister function below takes a numerical AlgoID by num -> converts it -> into AlgoString notation)
  * \return vector of numdir rotation items
  */
 const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algoID)
@@ -650,6 +650,7 @@ const std::vector<numdir> Megaminx::ParseAlgorithmID(int algoID, int startLoc)
 {
     const std::string algorithmString = g_AlgoStrings[algoID].algo;
     const colordirs loc = g_faceNeighbors[startLoc];
+    //if (debugAlgorithmString)
     //std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString << std::endl;
     return ParseAlgorithmString(algorithmString, loc, algoID);
 }
