@@ -14,8 +14,10 @@
 Megaminx* megaminx;
 Megaminx* shadowDom;
 
-//simple constructor.
-//Setup, Solve Puzzle (aka Reset). constructors/inits.
+/**
+ * \brief Megaminx main simple constructor for init.
+ * \note   Setup, Solve Puzzle (aka Reset), Render
+ */
 Megaminx::Megaminx()
 {
     g_currentFace = NULL;
@@ -29,28 +31,36 @@ Megaminx::Megaminx()
     invisible = false;
 }
 
-//Init the Edge pieces.
+/**
+ * \brief Init the Edge pieces.
+ * \note   numEdges = 30
+ */
 void Megaminx::initEdgePieces()
 {
     //store a list of the basic starting Edge vertexes
     double* edgeVertexList = edges[0].edgeInit();
-    for (int i = 0; i < numEdges; ++i) {
+    for (int i = 0; i < numEdges; ++i)
         edges[i].init(i, edgeVertexList);
-    }
 }
 
-//Init the Corner pieces.
+/**
+ * \brief Init the Corner pieces.
+ * \note   numCorners = 20
+ */
 void Megaminx::initCornerPieces()
 {
     //store a list of the basic starting Corner vertexes
     double* cornerVertexList = corners[0].cornerInit();
-    for (int i = 0; i < numCorners; ++i) {
+    for (int i = 0; i < numCorners; ++i)
         corners[i].init(i, cornerVertexList);
-    }
 }
 
-//Init the Faces: Init the Centers, attach them to Faces. Set up the Axes
-// of the faces, and attach the Edge and Corner pieces to the Faces.
+/**
+ * \brief Init the Faces and All Pieces.
+ * \note - Init the Centers, attach them to Faces.
+ *         Set up the Axes of the faces,
+ *          and attach the Edge and Corner pieces to the Faces.
+ */
 void Megaminx::initFacePieces()
 {
     double* centerVertexList = faces[0].faceInit();
@@ -63,7 +73,9 @@ void Megaminx::initFacePieces()
     }
 }
 
-//Default Render All the pieces (unconditionally)
+/**
+ * \brief Default Render ALL the pieces (unconditionally)
+ */
 void Megaminx::renderAllPieces()
 {
     for (const auto &center : centers)
@@ -74,8 +86,10 @@ void Megaminx::renderAllPieces()
         corner.render();
 }
 
-//Main Render Logic function - (start handling rotation calls and sub-object render calls)
-// Conditionally call each OpenGL .render() func (each rotating face, center, edge, corner)
+/**
+ * \brief Main Render Logic function - (start handling rotation calls and sub-object render calls)
+ * \note Conditionally call each OpenGL .render() func (each rotating face, center, edge, corner)
+ */
 void Megaminx::render()
 {
     //Skip everything if its invisible
@@ -84,31 +98,31 @@ void Megaminx::render()
 
     //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
-        const auto &op = rotateQueue.front();
         isRotating = true;
-        _rotatingFaceIndex = op.num;
+        const auto &op = rotateQueue.front();
+        _rotatingFaceIndex = op.num;    //this is set only here
         assert(_rotatingFaceIndex != -1);   //ensure safety
         faces[_rotatingFaceIndex].rotate(op.dir);
-    }
-    //non-rotating causes a full re-render all
-    // (ever since early startup, _rotatingFaceIndex is -1)
-    else if (_rotatingFaceIndex == -1) {
+    } else if (_rotatingFaceIndex == -1) {
         renderAllPieces();
         return; //rest of function can be skipped to avoid array[-1] error
     }
-
+    // Full Re-render all if non-rotating or early startup
+    // (starts up with _rotatingFaceIndex is -1)
+    //else
+    std::cout << _rotatingFaceIndex << std::endl;
     //Conditionally Process all pieces that are NOT part of a rotating face.
     for (int i = 0; i < numFaces; ++i) {
         if (&centers[i] != faces[_rotatingFaceIndex].center)
             centers[i].render();
     }
-    for (int i = 0, k = 0; i < numEdges; ++i) {
+    for (int i = 0, k = 0; i < numEdges && k < 5; ++i) {
         if (&edges[i] != faces[_rotatingFaceIndex].edge[k])
             edges[i].render();
         else
             k++;
     }
-    for (int i = 0, k = 0; i < numCorners; ++i) {
+    for (int i = 0, k = 0; i < numCorners && k < 5; ++i) {
         if (&corners[i] != faces[_rotatingFaceIndex].corner[k])
             corners[i].render();
         else
@@ -119,7 +133,7 @@ void Megaminx::render()
     if (faces[_rotatingFaceIndex].render() && isRotating) {
         //If yes, then Finish the Rotation & advance the Queue
         rotateQueue.pop();
-        isRotating = false;
+        isRotating = false; _rotatingFaceIndex = -1;
     }
 }
 
@@ -138,7 +152,7 @@ void Megaminx::rotate(int num, int dir)
 }
 
 /**
- * \brief Algorithm Switcher Dispatcher. Queues multiple rotate ops
+ * \brief rotateAlgorithm Switcher Dispatcher. Queues multiple rotate ops
  * \param face from 1 - 12
  * \param id Index into g_AlgoStrings[] struct
  */
@@ -154,13 +168,17 @@ void Megaminx::rotateAlgo(int algoID, int face)
     }
 }
 
-//Takes an Algo String and parses it, vectorizes it, then rotates it. (Algo ID is tracked)
+/**
+ * \brief Takes an Algo String and parses it, vectorizes it, then rotates it. (Algo ID is tracked)
+ */
 void Megaminx::rotateBulkAlgoString(std::string algoString, const colordirs &loc, int algoID)
 {
     std::vector<numdir> bulk = ParseAlgorithmString(algoString, loc, algoID);
     rotateBulkAlgoVector(bulk);
 }
-//Adds entire vector of numdirs to the Rotate queue one by one.
+/**
+ * \brief Adds entire vector of numdirs to the Rotate queue one by one.
+ */
 void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
 {
     undoStack.push({ -999,-999 });  //begin sentinel value flag
@@ -171,7 +189,9 @@ void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
     undoStack.push({ 999, 999 });   //end sentinel value flag
 }
 
-//An unlimited Undo LIFO stack. undo one move.
+/**
+ * \brief An unlimited Undo LIFO stack. undo one move.
+ */
 void Megaminx::undo()
 {
     if (undoStack.empty()) return;
@@ -185,20 +205,27 @@ void Megaminx::undo()
     rotateQueue.push(op);
     undoStack.pop();
 }
-//Undo twice in a row
+/**
+ * \brief Undo twice in a row
+ */
 void Megaminx::undoDouble()
 {
     if (undoStack.size() < 2) return;
     undo(); undo();
 }
-//Undo four times in a row
+/**
+ * \brief Undo four times in a row
+ */
 void Megaminx::undoQuad()
 {
     if (undoStack.size() < 4) return;
     undoDouble(); undoDouble();
 }
-//Undo a whole Chunk of moves at once, this is why we have the -999/999 flag values.
-// (sequences like these come from rotateBulkAlgoVector() above )
+/**
+ * \brief Undo a bulk whole Chunk of moves at once
+ * \note   (sequences like these come from rotateBulkAlgoVector() above )
+ * \remark  (this is why we have the -999/999 flag values)
+ */
 void Megaminx::undoBulk()
 {
     if (undoStack.empty()) return;
@@ -218,7 +245,9 @@ void Megaminx::undoBulk()
     }
 }
 
-//Clear Rotation Queue and stop any repeated rotating actions.
+/**
+ * \brief Clear Rotation Queue and stop any repeated rotating actions.
+ */
 void Megaminx::resetQueue()
 {
     isRotating = { };
@@ -226,8 +255,10 @@ void Megaminx::resetQueue()
     undoStack = { };
 }
 
-//Scramble by Rotating 1400-2700 times (137 x 12 x 2?)
-//NOTE: apparently scrambles are even more random if you rotate by 2/5ths instead of 1/5th.
+/**
+ * \brief Scramble by Rotating 1400-2700 times (137 x 12 x 2?)
+ * \note  (apparently scrambles are even more random if you rotate by 2/5ths instead of 1/5th)
+ */
 void Megaminx::scramble()
 {
     resetQueue();
@@ -249,13 +280,13 @@ void Megaminx::scramble()
 }
 
 /**
- * \brief Makes a pointer to g_currentFace
+ * \brief setCurrentFaceActive - helper for GUI. Makes global pointer to g_currentFace
  * \param i Nth-face number (1-12)
  */
-void Megaminx::setCurrentFaceActive(int i)
+inline void Megaminx::setCurrentFaceActive(int i)
 {
-    assert(i > 0 && i <= numFaces);
-    i -= 1;     //Convert 1-numFaces Faces into array 0-11
+    assert(i > 0 && i <= numFaces);          //require valid input
+    i -= 1;     //Convert 1-numFaces Faces into array 0-11 (safe)
     g_currentFace = &faces[i];
     assert(g_currentFace->getNum() == i);    //internal consistency check.
 }
@@ -272,9 +303,8 @@ void Megaminx::resetFace(int n)
     setCurrentFaceActive(n);
 }
 
-
 /**
- * \brief FLIP Piece, Changes the colors of a piece, <template> (either Edge or Corner piece)
+ * \brief Change Piece COLOR, internally FLIPS the piece, <template> (either Edge or Corner piece)
  * \param face  Nth-face number (1-12)
  * \param num   Nth-piece number (1-5)
  */
@@ -282,7 +312,7 @@ template <typename T>
 void Megaminx::flipPieceColor(int face, int num)
 {
     assert(face > 0 && face <= numFaces);
-    assert(num > 0 && num <= 5);
+    assert(num > 0 && num <= 5);      //ensure safe access
     Piece* piece = faces[face - 1].getFacePiece<T>(num-1);
     piece->flip();
 } //where T = Corner or Edge
