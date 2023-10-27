@@ -36,6 +36,7 @@ public:
         out = temp;
     }
     //getter
+    [[deprecated]]
     double* getcolor() {
         return &data._color[0][0];
     }
@@ -59,6 +60,7 @@ public:
         numSides = 1;
     }
     //store Edge colors
+    [[deprecated]]
     void initColor(int a, int b) {
         initColorIndex(0, a);
         initColorIndex(1, b);
@@ -68,6 +70,7 @@ public:
         numSides = 2;
     }
     //store Corner colors
+    [[deprecated]]
     void initColor(int a, int b, int c) {
         initColorIndex(0, a);
         initColorIndex(1, b);

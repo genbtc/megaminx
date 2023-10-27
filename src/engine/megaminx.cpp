@@ -425,8 +425,8 @@ void Megaminx::resetFivePiecesV(std::vector<int> &v) {
     const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
     resetFivePieces<T>(vecPieceNums);
 } //where T = Corner or Edge
-void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }
-void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }
+void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }  //unused
+void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }  //unused
 
 //Resets--------------------------------------------------------------------------------------------------------------//
 /**
@@ -444,8 +444,8 @@ int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPiece
         return resetFacesCorners(color_n, defaultPieces, solve);
     return 0;
 } //where T = Corner or Edge
-int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }
-int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }
+int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }   //unused
+int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }   //unused
 
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.

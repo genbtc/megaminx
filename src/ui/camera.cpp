@@ -137,6 +137,7 @@ void Camera::ProcessMouseMotion(int x, int y, bool calcRotation)
     }
 }
 
+[[deprecated]]
 void Camera::ProcessPassiveMouseMotion(int x, int y)
 {
     m_mouseX = x;

@@ -30,7 +30,7 @@ void Megaminx::shadowRotate(int num, int dir)
     faces[num].placeParts(dir);
 }
 
-//Same as above, take struct as parameter, no need to subtract 1. unused.
+//Same as above, take struct as parameter, no need to subtract 1. // unused.
 void Megaminx::shadowRotate(numdir op)
 {
     shadowRotate(op.num, op.dir);

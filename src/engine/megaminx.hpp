@@ -23,8 +23,8 @@ public:
     void initEdgePieces();
     void initFacePieces();
     void renderAllPieces();
-    void toggleInvisibility() {  invisible = !invisible;  }
-    bool isInvisible() { return invisible; }
+    //void toggleInvisibility() {  invisible = !invisible;  }
+    //bool isInvisible() { return invisible; } //unused
     void render();
     void undo();
     void undoDouble();

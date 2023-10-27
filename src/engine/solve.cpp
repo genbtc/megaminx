@@ -10,15 +10,19 @@ void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
     //Check if any pieces are already in their assigned slots:
     for (int p = startI; p < endI; ++p) {
         const int pIndex = findEdge(p);
-        //make sure its a match and make sure the colors arent flipped
-        if (pIndex >= startI && pIndex < endI && edges[pIndex].data.flipStatus == 0)
-            piecesSeenOnTop.push_back(p - startI);
-        //If we found the correct piece solved in the correct spot
-        if (p == pIndex && edges[pIndex].data.flipStatus == 0) {
-            piecesSolved[p - startI] = true;
-            numSolved++;
+        //-1 means not found. if it is found, make sure the colors are flipped correctly
+        if (pIndex >= 0 && edges[pIndex].data.flipStatus == 0) {
+            //we found the correct piece solved in the correct spot, got em
+            if (p == pIndex) {
+                piecesSolved[p - startI] = true;
+                numSolved++;
+            }
+            //make sure piece lies within range
+            if (pIndex >= startI && pIndex < endI)
+                piecesSeenOnTop.push_back(p - startI);
         }
     }
+/*
     if (piecesSeenOnTop.size() > 1) {
         //Check if the ordering blue->red,red->green is correct,etc... even if the top is twisted vs the sides
         for (int p = startI; p < endI; ++p) {
@@ -34,18 +38,13 @@ void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
             }
         }
     }
+*/
     //Fallback to at least get first piece solved
     if ((numSolved == 0 && piecesSeenOnTop.size() > 1) || piecesSeenOnTop.size() == 1) {
         std::sort(piecesSeenOnTop.begin(), piecesSeenOnTop.end());
         piecesSolved[piecesSeenOnTop[0]] = true;
         numSolved++;
     }
-}
-
-//Function call to find out if the puzzle is fully solved.
-bool Megaminx::isFullySolved()
-{
-    return (DetectIfAllSolved<Edge>() && DetectIfAllSolved<Corner>());
 }
 
 //Fastest way to detect if the puzzle is solved.
@@ -62,6 +61,12 @@ bool Megaminx::DetectIfAllSolved()
             allSolved++;
     }
     return (numpieces==allSolved);
+}
+
+//Function call to find out if the puzzle is fully solved.
+bool Megaminx::isFullySolved()
+{
+    return (DetectIfAllSolved<Edge>() && DetectIfAllSolved<Corner>());
 }
 
 //Generic template way to detect if pieces are solved, in their correct locations with correct colors, on one face
@@ -905,8 +910,8 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             if (EdgeItselfNext->data.flipStatus == 0)
                 grayFaceColorSolved[k] = true;
         }
-        std::vector<int> pieceFoundOrder= megaminx->faces[GRAY - 1].findEdgesOrder();
-        std::vector<int> grayFaceColors = megaminx->faces[GRAY - 1].findEdgesColorFlipStatus();
+        std::vector<int> pieceFoundOrder= shadowDom->faces[GRAY - 1].findEdgesOrder();
+        std::vector<int> grayFaceColors = shadowDom->faces[GRAY - 1].findEdgesColorFlipStatus();
         bool grayFaceColorSolved2[5] = { false };
         for (int k = 0; k < 5; ++k)
             grayFaceColorSolved2[k] = (grayFaceColors.at(k) == 0);
@@ -964,19 +969,20 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 //START MAIN:
 
         //orient the first piece if it exists:
-        const int findIfPieceSolved = shadowDom->findEdge(startingPiece); //always piece first
-        if (findIfPieceSolved > startingPiece && findIfPieceSolved < 30 && !allCornersAllSolved && !piecesSolved[0] && offby != 0 && !twoAdjacentPieces) {
+        const int findFirstPieceSolved = shadowDom->findEdge(startingPiece);
+        if (findFirstPieceSolved > startingPiece && findFirstPieceSolved < endingPiece && !allCornersAllSolved && !piecesSolved[0] && offby != 0 && !twoAdjacentPieces) {
             //Test 3 passes.
-            int offby = findIfPieceSolved - startingPiece;
+            int offby = findFirstPieceSolved - startingPiece;
             shadowDom->shadowMultiRotate(GRAY, offby);
             continue;
         }
-        //TODO: never fires. redundant to above.
+        //TODO: Remove. never fires. redundant to above.
         //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
         else if (!piecesSolved[0] && !twoAdjacentPieces && !allCornersAllSolved && solvedCount >= (i - startingPiece) && piecesSolvedMaybe[i - startingPiece]) {
             const int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);
+            assert(0);  //entire clause is redundant.
             int offby = findIfPieceSolved - i + firstSolvedPiece;
-            if (findIfPieceSolved >= startingPiece && findIfPieceSolved < 30 && offby != 0) {
+            if (findIfPieceSolved >= startingPiece && findIfPieceSolved < endingPiece && offby != 0) {
                 shadowDom->shadowMultiRotate(GRAY, offby);
                 continue;
             }
@@ -1099,27 +1105,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 
 //MUSHROOM- #Algo#14 (all) 3a- (F/L Safe)
         //twoAdjacentOffColors #Algo14#  -  then restart loop and pick up at mushroom to finish
-        else if (twoAdjacentOffColors) //TT-85-2,  //TT63-2
+        else if (twoAdjacentOffColors) //TT-85-2,  //TT63-2 , ( bypassed //TT62-2 ,  //TT-84-2 + //TT-85-2 )
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
         }
-        //Not Needed Start
-        else if (offby == 0 && solvedCount == 3 && !allEdgeColorsSolved && (twoGraysUnsolved(1, 2) || twoGraysUnsolved(2, 3))) //TT62-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
-            assert(0);
-        }
-        else if ((offby == 4 || offby == 3) && solvedCount == 1 && !allEdgeColorsSolved && twoGraysUnsolved(3, 4)) //TT-84-2 + //TT-85-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
-            assert(0);
-        }
-        else if (solvedCount == 3 && !twoAdjacentOffColors) {
-            std::cout << "solvedCount3 not accounted for \n"
-                      << "Bug in rotateSolveLayer7Edges() where solvedCount == 3 && !twoAdjacentOffColors\n";
-            assert(!(solvedCount == 3 && !twoAdjacentOffColors));
-        }
-        //Not Needed End
         else if (offby == 0 && solvedCount == 3 && twoAdjacentPieces && twoSolvedPieces(0,1) && piecesSolved[2] && twoGraysUnsolved(3,4))
         {                                                                                 //TestCube15-2-Edgesstuck
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE], 14);

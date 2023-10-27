@@ -20,6 +20,7 @@ void SaveCubetoFile() {
 
 /**
  * @brief Save/Store Cube - (Write 1 File with 4 lines)
+ * @property not used
  */
 void SaveCubetoFileMonolithic() {
     std::ofstream file(MEGAMINXBLOB);

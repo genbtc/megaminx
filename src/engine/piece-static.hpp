@@ -112,6 +112,7 @@ static void EdgeGrp6(double* target, piecepack &pack) {
 
 
 // Function to rotate array
+[[deprecated]]
 static void arrayRotateRightTemp(int arr[], int d, int n)
 {
     // Storing rotated version of array
