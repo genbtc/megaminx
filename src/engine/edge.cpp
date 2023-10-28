@@ -105,7 +105,7 @@ void Edge::render() const
     int z = (data.pieceNum > 9 && data.pieceNum < 20) ? -10 : 10;   //positional offset
     if (textGLCenterLabels) {
         glColor3f(0.9, 0.2, 0.2);
-        utDrawText3D(_vertex[2][0], _vertex[2][1], _vertex[2][2], GLUT_BITMAP_HELVETICA_18, c.c_str());
+        utDrawText3DFont(_vertex[2][0], _vertex[2][1], _vertex[2][2], GLUT_BITMAP_HELVETICA_18, c.c_str());
     }
 /*
     if (textGLCenterLabels) {

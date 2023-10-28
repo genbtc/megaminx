@@ -42,24 +42,34 @@ void utResetPerspectiveProjection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void utDrawText2D(float x, float y, void *font, const char *string)
+void utDrawText2DFont(float x, float y, void *font, const char *anglesStr)
 {
     // set position to start drawing fonts 2D
     glRasterPos2f(x, y);
     // loop all the characters in the string
-    for (char *c=(char*)string; *c != '\0'; c++) {
+    for (char *c=(char*)anglesStr; *c != '\0'; c++) {
         glutBitmapCharacter(font, *c);
     }
 }
-
-void utDrawText3D(float x, float y, float z, void *font, const char *string)
+//choose default automatic 8x13 font
+void utDrawText2D(float x, float y, const char *anglesStr)
+{
+    utDrawText2DFont(x, y + 13, GLUT_BITMAP_8_BY_13, anglesStr);
+}
+///////////////////////////////////////////////////////////////////////////////
+void utDrawText3DFont(float x, float y, float z, void *font, const char *anglesStr)
 {
     // set position to start drawing fonts 3D
     glRasterPos3f(x, y, z);
     // loop all the characters in the string
-    for (char *c=(char*)string; *c != '\0'; c++) {
+    for (char *c=(char*)anglesStr; *c != '\0'; c++) {
         glutBitmapCharacter(font, *c);
     }
+}
+//choose default automatic 8x13 font
+void utDrawText3D(float x, float y, float z, const char *anglesStr)
+{
+    utDrawText3DFont(x, y, z, GLUT_BITMAP_8_BY_13, anglesStr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,9 +77,9 @@ void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {
     static char anglesStr[16];
     snprintf(anglesStr, 16, "X: %5.0f", x1);
-    utDrawText2D(x, y, glutBitmap8By13, anglesStr);
+    utDrawText2D(x, y, anglesStr);
     snprintf(anglesStr, 16, "Y: %5.0f", y1);
-    utDrawText2D(x, y + 13, glutBitmap8By13, anglesStr);
+    utDrawText2D(x, y + 13, anglesStr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,7 +95,7 @@ void utCalculateAndPrintFps(float x, float y)
         timeBase = t;
         frame = 0;
     }
-    utDrawText2D(x, y, glutBitmap8By13, fpsStr);
+    utDrawText2D(x, y, fpsStr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
