@@ -135,29 +135,29 @@ void myglutRenderScene() {
         utCalculateAndPrintAngles(10.f, HEIGHT - 20.f,
 								  g_camera.m_angleX, g_camera.m_angleY);
         GetCurrentFace();
-        utDrawText2D(10.f, HEIGHT - 40.f, lastface);
+        utDrawText2D(10.f, HEIGHT - 40.f, glutBitmap8By13, lastface);
 
         // Print out Text (Help display)
         if (g_help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else {
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, glutBitmap8By13, "[H]elp");
 			if (megaminx->isFullySolved() && g_help)
-				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "SOLVED!");
+                utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, glutBitmap8By13,  "SOLVED!");
 			else
-				utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, "[F9] = SOLVER");
+                utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f, glutBitmap8By13,  "[F9] = SOLVER");
 		}
         // Footer
         int shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
             static char rotquestr[32];
             snprintf(rotquestr, 32, "Rotate Queue: %5d", shadowQueueLength);
-            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
+            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, glutBitmap8By13, rotquestr);
         }
         if (g_solveravg > 0) {
             static char solvquestr[32];
             snprintf(solvquestr, 32, "Solver Avg: %5g", g_solveravg);
-            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, solvquestr);
+            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, glutBitmap8By13, solvquestr);
             //TODO: fix this from lingering.
         }
     } //end ortho scope

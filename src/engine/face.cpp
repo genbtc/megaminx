@@ -349,7 +349,7 @@ bool Face::render()
         //Color Black
         glColor3d(0, 0, 0);
         //Draw a black pentagon to block out view from see-thru hollow insides
-        makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
+        makeGLpentagon((const double(*)[3])_vertex, 1.0 , GL_POLYGON);
     }
     //Done animating, clean up and commit
     //TODO: constantify 72 as one fifth of 360 circle

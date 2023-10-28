@@ -67,9 +67,9 @@ void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {
     static char anglesStr[16];
     snprintf(anglesStr, 16, "X: %5.0f", x1);
-    utDrawText2D(x, y, anglesStr);
+    utDrawText2D(x, y, glutBitmap8By13, anglesStr);
     snprintf(anglesStr, 16, "Y: %5.0f", y1);
-    utDrawText2D(x, y + 13, anglesStr);
+    utDrawText2D(x, y + 13, glutBitmap8By13, anglesStr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,11 +85,11 @@ void utCalculateAndPrintFps(float x, float y)
         timeBase = t;
         frame = 0;
     }
-    utDrawText2D(x, y, fpsStr);
+    utDrawText2D(x, y, glutBitmap8By13, fpsStr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void makeGLpentagon(const double(&_vertex)[7][3], double scale, int shape)
+void makeGLpentagon(const double _vertex[][3], double scale, int shape)
 {
     glBegin(shape);
     for (int i = 0; i < 5; ++i) {

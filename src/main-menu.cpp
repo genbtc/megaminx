@@ -195,7 +195,7 @@ void utPrintHelpMenu(float w, float h)
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
     for (int i = 0; i < 18; i++) {
-        utDrawText2D(w, incrementHeight, helpStrings[i]);
+        utDrawText2D(w, incrementHeight, glutBitmapHelvetica18, helpStrings[i]);
         incrementHeight += 15;
     }
 }
