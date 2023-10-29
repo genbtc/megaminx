@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     srand((int)time(nullptr)); // seed rand()
     glutInit(&argc, argv);
     // set OpenGL render modes
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE | GLUT_DEPTH);
     glutInitWindowSize(WIDTH, HEIGHT);
 
     // create window + title
@@ -141,7 +141,7 @@ void myglutRenderScene() {
         if (g_help)
             utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
         else {
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f, "[H]elp");
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f,      "[H]elp");
 			if (megaminx->isFullySolved() && g_help)
                 utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f,  "SOLVED!");
 			else

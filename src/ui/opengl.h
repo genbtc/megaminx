@@ -20,10 +20,10 @@ static int textGLCenterLabels = 1;
 // 2D and TEXT MODE
 void utSetOrthographicProjection(float scrW, float scrH);
 void utResetPerspectiveProjection();
-void utDrawText2DFont(float x, float y, void *font, const char *anglesStr);
-void utDrawText3DFont(float x, float y, float z, void *font, const char *anglesStr);
-void utDrawText2D(float x, float y, const char *anglesStr);
-void utDrawText3D(float x, float y, float z, const char *anglesStr);
+void utDrawText2DFont(float x, float y, void *font, const char *theString);
+void utDrawText3DFont(float x, float y, float z, void *font, const char *theString);
+void utDrawText2D(float x, float y, const char *theString);
+void utDrawText3D(float x, float y, float z, const char *theString);
 
 void utCalculateAndPrintFps(float x, float y);
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1);
