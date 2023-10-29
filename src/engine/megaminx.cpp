@@ -23,12 +23,11 @@ Megaminx::Megaminx()
     g_currentFace = NULL;
     _rotatingFaceIndex = -1;
     isRotating = false;
-    invisible = true;
+    invisible = false;
     initEdgePieces();
     initCornerPieces();
     initFacePieces();
     renderAllPieces();
-    invisible = false;
 }
 
 /**
@@ -98,42 +97,46 @@ void Megaminx::render()
 
     //Start the face rotation Queue for multiple ops.
     if (!rotateQueue.empty()) {
-        isRotating = true;
         const auto &op = rotateQueue.front();
         _rotatingFaceIndex = op.num;    //this is set only here
         assert(_rotatingFaceIndex != -1);   //ensure safety
+        isRotating = true;
         faces[_rotatingFaceIndex].rotate(op.dir);
-    } else if (_rotatingFaceIndex == -1) {
-        renderAllPieces();
-        return; //rest of function can be skipped to avoid array[-1] error
     }
     // Full Re-render all if non-rotating or early startup
     // (starts up with _rotatingFaceIndex is -1)
-    //else
-    std::cout << _rotatingFaceIndex << std::endl;
-    //Conditionally Process all pieces that are NOT part of a rotating face.
-    for (int i = 0; i < numFaces; ++i) {
-        if (&centers[i] != faces[_rotatingFaceIndex].center)
-            centers[i].render();
-    }
-    for (int i = 0, k = 0; i < numEdges && k < 5; ++i) {
-        if (&edges[i] != faces[_rotatingFaceIndex].edge[k])
-            edges[i].render();
-        else
-            k++;
-    }
-    for (int i = 0, k = 0; i < numCorners && k < 5; ++i) {
-        if (&corners[i] != faces[_rotatingFaceIndex].corner[k])
-            corners[i].render();
-        else
-            k++;
-    }
+    //} else
+        //renderAllPieces();
+        //return;
+    //rest of function can be skipped to avoid array[-1] error
+//    if (_rotatingFaceIndex != -1) {
+        //Conditionally Process all pieces that are NOT part of a rotating face.
+        for (int i = 0; i < numFaces; ++i) {
+            if (&centers[i] != faces[_rotatingFaceIndex].center)
+                centers[i].render();
+        }
+        for (int i = 0, k = 0; i < numEdges; ++i) {
+            if (&edges[i] != faces[_rotatingFaceIndex].edge[k])
+                edges[i].render();
+            else
+                k++;
+        }
+        for (int i = 0, k = 0; i < numCorners; ++i) {
+            if (&corners[i] != faces[_rotatingFaceIndex].corner[k])
+                corners[i].render();
+            else
+                k++;
+        }
+//    } else
+//        return;
 
+    if (_rotatingFaceIndex == -1)
+        return;
     //call .RENDER() and find out if successful
     if (faces[_rotatingFaceIndex].render() && isRotating) {
         //If yes, then Finish the Rotation & advance the Queue
         rotateQueue.pop();
-        isRotating = false; _rotatingFaceIndex = -1;
+//        isRotating = false;
     }
 }
 
@@ -283,7 +286,7 @@ void Megaminx::scramble()
  * \brief setCurrentFaceActive - helper for GUI. Makes global pointer to g_currentFace
  * \param i Nth-face number (1-12)
  */
-inline void Megaminx::setCurrentFaceActive(int i)
+void Megaminx::setCurrentFaceActive(int i)
 {
     assert(i > 0 && i <= numFaces);          //require valid input
     i -= 1;     //Convert 1-numFaces Faces into array 0-11 (safe)

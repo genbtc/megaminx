@@ -17,30 +17,43 @@
 
 class Megaminx {
 public:
+    static const int numFaces = 12;
+    static const int numCorners = 20;
+    static const int numEdges = 30;
     Megaminx();
     ~Megaminx() = default;
     void initCornerPieces();
     void initEdgePieces();
     void initFacePieces();
+private:
+    Face   faces[numFaces];
+    Center centers[numFaces];
+    Corner corners[numCorners];
+    Edge   edges[numEdges];
+public:
     void renderAllPieces();
-    //void toggleInvisibility() {  invisible = !invisible;  }
-    //bool isInvisible() { return invisible; } //unused
     void render();
     void undo();
     void undoDouble();
     void undoQuad();
     void undoBulk();
+    void resetQueue();
     void scramble();
     void setCurrentFaceActive(int i);
     Face* g_currentFace;    //tracks active face, set by setCurrentFaceActive()
+    bool invisible = false;
+    void toggleInvisibility() {  invisible = !invisible;  } //unused
+    bool isInvisible() const { return invisible; }          //unused
+    //Rotate
+    int _rotatingFaceIndex;
     bool isRotating;
     void rotate(int num, int dir);
     void rotateAlgo(int algoID, int face=-1);
     void rotateBulkAlgoVector(const std::vector<numdir> &bulk);
     void rotateBulkAlgoString(std::string algoString, const colordirs &loc, int algoID);
-    void resetQueue();
+    //Reset
     void resetFace(int n);
-   template <typename T>
+    template <typename T>
     int resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve = true);
     int resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve);
     int resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve);
@@ -48,18 +61,21 @@ public:
     int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve = true);
     int resetFacesCorners(int color_n);
     int resetFacesEdges(int color_n);
-   template <typename T>
+    //Flip
+    template <typename T>
     void flipPieceColor(int face, int num);
     void flipCornerColor(int face, int num);
     void flipEdgeColor(int face, int num);
-   template <typename T>
+    //Get Query
+    template <typename T>
     std::vector<int> getAllPiecesPosition();
     std::vector<int> getAllCornerPiecesPosition();
     std::vector<int> getAllEdgePiecesPosition();
-   template <typename T>
+    template <typename T>
     std::vector<int> getAllPiecesColorFlipStatus();
     std::vector<int> getAllCornerPiecesColorFlipStatus();
     std::vector<int> getAllEdgePiecesColorFlipStatus();
+    //Parse
     const std::vector<numdir> ParseAlgorithmString(std::string algorithmString, const colordirs &loc, int algo=0);
     const std::vector<numdir> ParseAlgorithmString(AlgoString algorithm, const colordirs &loc);
     const std::vector<numdir> ParseAlgorithmID(int algoID, int startLoc);
@@ -85,7 +101,7 @@ public:
     std::vector<int> findFivePieces(const std::vector<int> &v);
     std::vector<int> findEdgePieces(const std::vector<int> &v);
     std::vector<int> findCornerPieces(const std::vector<int> &v);
-    //Reset Functions
+    //Reset5 Functions
    template<typename T>
     void resetFivePieces(const int indexes[5]);
     void resetFiveEdges(const int indexes[5]);
@@ -95,47 +111,27 @@ public:
     void resetFiveEdgesV(std::vector<int> &v);
     void resetFiveCornersV(std::vector<int> &v);
     //Well-defined piece lists - Edge layers
-    constexpr static int m_firstLayerEdges[5]   = { 0, 1, 2, 3, 4 };
-    constexpr static int m_secondLayerEdges[5]  = { 5, 6, 7, 8, 9 };
+    constexpr static int m_firstLayerEdges[5]   = {  0, 1, 2, 3, 4 };
+    constexpr static int m_secondLayerEdges[5]  = {  5, 6, 7, 8, 9 };
     constexpr static int m_fourthLayerEdgesA[5] = { 10, 11, 12, 13, 14 };
     constexpr static int m_fourthLayerEdgesB[5] = { 15, 16, 17, 18, 19 };
     constexpr static int m_sixthLayerEdges[5]   = { 20, 21, 22, 23, 24 };
     constexpr static int m_seventhLayerEdges[5] = { 25, 26, 27, 28, 29 };
     //Well-defined piece lists - Corner layers
-    constexpr static int m_firstLayerCorners[5]  = { 0, 1, 2, 3, 4 };
-    constexpr static int m_thirdLayerCorners[5]  = { 5, 6, 7, 8, 9 };
-    constexpr static int m_fifthLayerCorners[5] = { 10, 11, 12, 13, 14 };
-    constexpr static int m_seventhLayerCorners[5]  = { 15, 16, 17, 18, 19 };
-    //Reset functions, computer teleport solve by human layers
-    void resetSecondLayerEdges() {
-        resetFiveEdges(m_secondLayerEdges);
-    }
-    void resetFourthLayerEdges() {
-        resetFiveEdges(m_fourthLayerEdgesA);
-        resetFiveEdges(m_fourthLayerEdgesB);
-    }
-    void resetSixthLayerEdges() {
-        resetFiveEdges(m_sixthLayerEdges);
-    }
-    void resetlowYmiddleWCorners() {
-        resetFiveCorners(m_thirdLayerCorners);
-    }
-    void resethighYmiddleWCorners() {
-        resetFiveCorners(m_fifthLayerCorners);
-    }
+    constexpr static int m_firstLayerCorners[5]   = {  0, 1, 2, 3, 4 };
+    constexpr static int m_thirdLayerCorners[5]   = {  5, 6, 7, 8, 9 };
+    constexpr static int m_fifthLayerCorners[5]   = { 10, 11, 12, 13, 14 };
+    constexpr static int m_seventhLayerCorners[5] = { 15, 16, 17, 18, 19 };
+    //Reset Layer functions
+    void resetSecondLayerEdges()    { resetFiveEdges(m_secondLayerEdges);    }
+    void resetFourthLayerEdges()    { resetFiveEdges(m_fourthLayerEdgesA);
+                                      resetFiveEdges(m_fourthLayerEdgesB);   }
+    void resetSixthLayerEdges()     { resetFiveEdges(m_sixthLayerEdges);     }
+    void resetlowYmiddleWCorners()  { resetFiveCorners(m_thirdLayerCorners); }
+    void resethighYmiddleWCorners() { resetFiveCorners(m_fifthLayerCorners); }
+
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
-    bool isFullySolved();
-   template <typename T>
-    bool DetectIfAllSolved();
-   template <typename T>
-    void DetectSolvedPieces(int startI, bool piecesSolved[5]);
-    void DetectSolvedCorners(int startI, bool piecesSolved[5]);
-    void DetectSolvedEdges(int startI, bool piecesSolved[5]);
-    bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) const {
-        return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
-    }
-    //In Solve.cpp
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
     void rotateSolveLayer2Edges(Megaminx* shadowDom);
@@ -156,15 +152,10 @@ public:
     void shadowRotate(numdir op);
     bool shadowMultiRotate(int face, int &offby);
     int getRotateQueueNum() const { return (int)rotateQueue.size(); }
-    //In Shadow.cpp
    template <typename T>
     int createMegaMinxFromShadowVec(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors, Megaminx* shadowDom);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors, Megaminx* shadowDom);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors, Megaminx* shadowDom);
-
-    static const int numFaces = 12;
-    static const int numCorners = 20;
-    static const int numEdges = 30;
 
    template <typename T>
     constexpr int getMaxNumberOfPieces() const {
@@ -184,26 +175,55 @@ public:
         return &centers[i];
     }
 
-    //This has to be duplicated from megaminx.cpp for solve.cpp
-    //or theres LD unresolved symbol errors with findPiece<Edge> findPiece<Corner>
+    //declaring here fixes LD unresolved symbol errors with findPiece<Edge> / findPiece<Corner>
    template <typename T>
     int findPiece(int pieceNum) {
-        const auto piece = getPieceArray<T>(0);
-        int maxpcs = getMaxNumberOfPieces<T>();
+        const Piece* piece = getPieceArray<T>(0);
+        const int maxpcs = getMaxNumberOfPieces<T>();
         for (int i = 0; i < maxpcs; ++i)
             if (piece[i].data.pieceNum == pieceNum)
                 return i;
         return -1;
     } //where T = Corner or Edge
 
-private:
-    Face   faces[numFaces];
-    Center centers[numFaces];
-    Corner corners[numCorners];
-    Edge   edges[numEdges];
+   template <typename T>
+    bool DetectIfAllSolved()
+    {
+        int allSolved = 0;
+        const Piece* piece = getPieceArray<T>(0);
+        const int maxpcs = getMaxNumberOfPieces<T>();
+        for (int i = 0; i < maxpcs; ++i) {
+            if (piece[i].data.pieceNum == i && piece[i].data.flipStatus == 0)
+                allSolved++;
+        } //if count is the same, solved true
+        return (maxpcs==allSolved);
+    } //where T = Corner or Edge
 
-    int _rotatingFaceIndex;
-    bool invisible = false;
+    //simple Function call to find out if the puzzle is fully solved.
+    bool isFullySolved() { return (DetectIfAllSolved<Edge>() && DetectIfAllSolved<Corner>()); }
+
+    //Generic template way to detect if pieces are solved, in their correct locations with correct colors, on one face
+    template <typename T>
+    void DetectSolvedPieces(int startI, bool piecesSolved[5])
+    {
+        const int endI = startI + 5;
+        //Find out if any applicable startI-endI pieces are exactly in their slots.
+        for (int p = startI; p < endI; ++p) {
+            const int pIndex = findPiece<T>(p);
+            const Piece* piece = getPieceArray<T>(pIndex);
+            //make sure its startI-endI and make sure the colors arent flipped
+            if (pIndex >= startI && pIndex < endI && p == pIndex && piece->data.flipStatus == 0)
+                piecesSolved[p - startI] = true;
+        }
+    } //where T = Corner or Edge
+    void DetectSolvedCorners(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Corner>(startI, piecesSolved); }
+    void DetectSolvedEdges(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Edge>(startI, piecesSolved); }
+    
+    bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) const {
+        return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
+    }
+
+private:
     std::queue<numdir> rotateQueue;
     std::stack<numdir> undoStack;
     std::queue<numdir> shadowRotateQueue;
