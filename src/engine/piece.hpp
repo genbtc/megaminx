@@ -90,6 +90,7 @@ public:
             numSides = 2;
         }
     }
+    
     //check if color-num (int) matches any colors
     // currently stored in struct data (3 sided)
     bool matchesColor(int color) const {
@@ -145,7 +146,7 @@ public:
         leftRotate<int>(data._colorNum, 1, numSides);
         leftRotate<const char*>(data._colorName, 1, numSides);
         const bool isCorner = (numSides == 3);
-        if (isCorner && data.flipStatus < 2 || !isCorner && data.flipStatus == 0)
+        if ((isCorner && data.flipStatus < 2) || (!isCorner && data.flipStatus == 0))
             data.flipStatus++;
         else
             data.flipStatus = 0;

@@ -155,8 +155,9 @@ constexpr colordirs g_faceNeighbors[MAX_COLOR_STATES] = {
 
 //Determine which direction those faces need to rotate to land the Edge on the white
 //Decides which direction, up or down, for the pieces to passively float to their original home
-constexpr int DirToWhiteFace[numFaces][5] =
+constexpr int DirToWhiteFace[MAX_COLOR_STATES][5] =
 {
+    { 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0 },
     { -1, -1, 1, 1, -1 },  //e2&3 swapped @ D.Blue
     { -1, 1, -1, 1, -1 },
@@ -173,8 +174,9 @@ constexpr int DirToWhiteFace[numFaces][5] =
 
 //Edges that have their solved-Face-Color in the color[1] index. (marked by 1's),
 //                                instead of the color[0] index. (marked by 0's)
-constexpr int BlackEdgesNumber2[numFaces][5] =
+constexpr int BlackEdgesNumber2[MAX_COLOR_STATES][5] =
 {
+    { 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0 },
     { 1, 0, 1, 0, 0 },
     { 1, 1, 0, 0, 0 },
