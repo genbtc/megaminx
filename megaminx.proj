@@ -1,0 +1,68 @@
+[editor]
+line_wrapping=false
+line_break_column=72
+auto_continue_multiline=true
+
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=false
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=false
+detect_indent_width=false
+indent_mode=2
+
+[project]
+name=megaminx
+base_path=/home/genr8eofl/src/megaminx/
+description=
+file_patterns=
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=72
+
+[files]
+current_page=0
+FILE_NAME_0=7880;C++;0;EUTF-8;1;1;0;%2Fhome%2Fgenr8eofl%2Fsrc%2Fmegaminx%2Fsrc%2Fmain.cpp;0;4
+
+[VTE]
+last_dir=/home/genr8eofl/src/megaminx
+
+[prjorg]
+source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;*.m;
+header_patterns=*.h;*.H;*.hpp;*.hxx;*.h++;*.hh;
+ignored_dirs_patterns=.*;CVS;
+ignored_file_patterns=*.o;*.obj;*.a;*.lib;*.so;*.dll;*.lo;*.la;*.class;*.jar;*.pyc;*.mo;*.gmo;
+generate_tag_prefs=0
+show_empty_dirs=true
+external_dirs=
+
+[build-menu]
+CMakeFT_00_LB=CMake Generate
+CMakeFT_00_CM=cmake -D CMAKE_BUILD_TYPE=RelWithDebInfo -G Ninja -S . -B build
+CMakeFT_00_WD=
+CMakeFT_01_LB=CMake Build
+CMakeFT_01_CM=cmake --build build --verbose --parallel 16
+CMakeFT_01_WD=
+filetypes=CMake;
+NF_00_LB=_Make
+NF_00_CM=make -j16
+NF_00_WD=
+NF_01_LB=Make Custom _Target...
+NF_01_CM=make -j16
+NF_01_WD=
+NF_02_LB=Make _Object
+NF_02_CM=make -j16 %e.o
+NF_02_WD=
+NF_03_LB=CMake Clean
+NF_03_CM=cmake --build build --target=clean --verbose --parallel 16
+NF_03_WD=
+CMakeFT_02_LB=CMake ReBuild Fresh
+CMakeFT_02_CM=cmake --build build --verbose --parallel 16  --clean-first
+CMakeFT_02_WD=
