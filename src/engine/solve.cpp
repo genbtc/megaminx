@@ -217,12 +217,10 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                                          : (l.edgeFaceNeighbors.b - l.edgeHalfColorB);
             //Set up Rotated White top to be in-line with the face we want to spin in.
             shadowDom->shadowMultiRotate(WHITE, fastspin);
-            //updateRotateQueueWithShadow(shadowDom);    //REFRESH
-            //rotate pieces onto correct place on Row1 (yolo, state was changed)
-            if (l.isOnRow34 && l.colormatchA) {
-                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-            }
+            //updateRotateQueueWithShadow(shadowDom);    //(nested state)
+            //rotate pieces onto correct place on Row1
+            if (l.isOnRow34 && l.colormatchA)
+                shadowDom->shadowMultiRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA*2);
             else if (l.isOnRow2 && l.colormatchA)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
             else if (l.isOnRow2 && l.colormatchB)
@@ -231,12 +229,12 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
                 unknownloop++; //track unhandled condition
         }
         //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by piecesSolved(was facesSolved) pieces
-        else if (l.isOnRow34 && (l.dirToWhiteA != 0) && ((l.ontopHalfA && !piecesSolved[l.edgeFaceNeighbors.a - 2 ]) || !l.ontopHalfA)) {
+        else if (l.isOnRow34 && (l.dirToWhiteA != 0) && ((l.ontopHalfA && !piecesSolved[l.edgeFaceNeighbors.a - 2]) || !l.ontopHalfA)) {
             shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
         }
-        else if (l.isOnRow34 && (l.dirToWhiteB != 0) && ((l.ontopHalfB && !piecesSolved[l.edgeFaceNeighbors.b - 2]) || !l.ontopHalfB)) {
+        else if (l.isOnRow34 && (l.dirToWhiteB != 0)) { //&& ((l.ontopHalfB && !piecesSolved[l.edgeFaceNeighbors.b - 2]) || !l.ontopHalfB)) {
             shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
-            updateRotateQueueWithShadow(shadowDom);   //REFRESH (nested state)
+            //updateRotateQueueWithShadow(shadowDom);   //(nested state)
             const int sourceEdgeIndexNext = shadowDom->findEdge(i);
             //Moves a piece again from Row 4 to Row 6. (if the face it lands on is locked).
             //Determine which two faces the edge belongs to
@@ -321,7 +319,8 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             shadowDom->shadowMultiRotate(WHITE, edgesOffBy);
         }
         else if (edgesOffBy > startingPiece && edgesOffBy < endingPiece) {
-            unknownloop++;
+            std::cout << "error, solve White Edges first" << std::endl;
+            unknownloop++;  //error
         }
         //Move incorrect corners out of the 0-4 slots moves them right down with the algo
         else if (l.isOnRow1 && ((i != l.sourceCornerIndex) || (i == l.sourceCornerIndex && l.CornerItselfA->data.flipStatus != 0))) {
