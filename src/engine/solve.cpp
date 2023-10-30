@@ -218,15 +218,14 @@ void Megaminx::rotateSolveWhiteEdges(Megaminx* shadowDom)
             //Set up Rotated White top to be in-line with the face we want to spin in.
             shadowDom->shadowMultiRotate(WHITE, fastspin);
             //updateRotateQueueWithShadow(shadowDom);    //(nested state)
-            //rotate pieces onto correct place on Row1
-            if (l.isOnRow34 && l.colormatchA)
-                shadowDom->shadowMultiRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA*2);
-            else if (l.isOnRow2 && l.colormatchA)
+            //Row2 rotate in pieces onto correct place on Row1
+            if (/*(l.isOnRow2 && l.isOnRow34) &&*/ l.colormatchA)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-            else if (l.isOnRow2 && l.colormatchB)
+            else if (/*(l.isOnRow2 && l.isOnRow34) &&*/ l.colormatchB)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
-            else
-                unknownloop++; //track unhandled condition
+            //Row34 Rotates Twice.
+            if (l.isOnRow34 /* && l.colormatchA || l.colormatchB */)
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
         }
         //Locates any straggler pieces on the bottom and bubbles them up to the top layers, as long as the face isnt protected by piecesSolved(was facesSolved) pieces
         else if (l.isOnRow34 && (l.dirToWhiteA != 0) && ((l.ontopHalfA && !piecesSolved[l.edgeFaceNeighbors.a - 2]) || !l.ontopHalfA)) {
@@ -318,10 +317,9 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             edgesOffBy *= -1;
             shadowDom->shadowMultiRotate(WHITE, edgesOffBy);
         }
-        else if (edgesOffBy > startingPiece && edgesOffBy < endingPiece) {
-            std::cout << "error, solve White Edges first" << std::endl;
-            unknownloop++;  //error
-        }
+        //else if (edgesOffBy > startingPiece && edgesOffBy < endingPiece) {
+        //  assert(1);
+        //}
         //Move incorrect corners out of the 0-4 slots moves them right down with the algo
         else if (l.isOnRow1 && ((i != l.sourceCornerIndex) || (i == l.sourceCornerIndex && l.CornerItselfA->data.flipStatus != 0))) {
             int offby = RED;
@@ -343,8 +341,8 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             assert(offby >= 2);   //temporary testing for confidence
             std::cout << "Debug L1C -row1 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " offby: " << offby << "\n";
         }
-        //Move correct corners straight up and in from 5-9 to 0-4
-        else if (l.isOnRow2 && l.sourceCornerIndex - i - endingPiece == 0) {
+        //Move correct corners straight up and in from 5-9 to 0-4 ( 5 - 5 = 0)
+        else if (l.isOnRow2 && l.sourceCornerIndex - endingPiece == i) {
             int offby =  l.sourceCornerIndex - endingPiece + RED;
             if (offby > YELLOW)
                 offby -= 5;
@@ -363,7 +361,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         }
         //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
         else if (l.isOnRow2) {
-            const int defaultDir = Face::CW;
+            int defaultDir = Face::CW * 2;
             megaminxColor turnface=BLACK;
             if (l.ontopHalfA && l.ontopHalfB)
                 turnface = l.cornerFaceNeighbors.c;
@@ -372,8 +370,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
             else if (l.ontopHalfB && l.ontopHalfC)
                 turnface = l.cornerFaceNeighbors.a;
             // turn opposite direction row2->row3->row4 to use gray face then repeat
-            shadowDom->shadowRotate(turnface, defaultDir);
-            shadowDom->shadowRotate(turnface, defaultDir);
+            shadowDom->shadowMultiRotate(turnface, defaultDir);
             // after 2nd rotation leaves them on the gray face.
             std::cout << "Debug L1C -row2 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " turnface: " << turnface << " offby: " << defaultDir << "\n";
         }
@@ -393,11 +390,10 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.b;
             }
-            int facex = std::max(x, y);
-            if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))
-                facex = LIGHT_BLUE;
-            shadowDom->shadowRotate(facex, defaultDir);
-            std::cout << "Debug L1C -row3 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " face: " << facex << " offby: " << defaultDir << "\n";
+            int result = std::max(x, y);
+            MMMg(result, BEIGE);
+            shadowDom->shadowRotate(result, defaultDir);
+            std::cout << "Debug L1C -row3 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " face: " << result << " offby: " << defaultDir << "\n";
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2
         else if (l.isOnRow4) {
@@ -492,8 +488,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
                 if (l.dirToWhiteA != 0) {
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-                }
-                else if (l.dirToWhiteB != 0) {
+                } else if (l.dirToWhiteB != 0) {
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
                     shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
                 }
@@ -655,6 +650,8 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
             //obtain the non-gray face neighbor we need to be rotating
             else if (l.isOnRow34)
                 loc = g_faceNeighbors[std::max(l.edgeFaceNeighbors.b, l.edgeFaceNeighbors.a)];
+            else
+                unknownloop++;
             //works to insert pieces from row7 to 3/4 and also pops wrong pieces out from 3/4 to 6
             if ((l.isOnRow6 && l.isLeft) || (l.isOnRow4)) {
                 if (l.EdgeItselfA->data.flipStatus == 0 || (l.isOnRow4))
@@ -668,6 +665,8 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 else
                     bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStringsLayer[5].algo, loc, 5); // {35, "u l dl F' F' DL' L' "}
             }
+            else
+                unknownloop++;
             shadowDom->shadowBulkRotate(bulkAlgo);
         }
         //Row 6 - flip piece up to GRAY, then return the moved faces to unharm the low corners.
@@ -682,6 +681,8 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 shadowDom->shadowRotate(GRAY, l.dirToWhiteB);
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
             }
+            else
+                unknownloop++;
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
             unknownloop++;
