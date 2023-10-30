@@ -53,10 +53,12 @@ public:
     void rotateBulkAlgoString(std::string algoString, const colordirs &loc, int algoID);
     //Reset
     void resetFace(int n);
-    template <typename T>
-    int resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve = true);
-    int resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve);
-    int resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve);
+    template <typename T> //used by deprecated save loader
+    int resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve = false);
+    int resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve = false) {
+      return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }       //used by old loader
+    int resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve = false) {
+      return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }   //used by old loader
     int resetFacesCorners(int color_n, const std::vector<int> &loadNewCorners, bool solve = true);
     int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve = true);
     int resetFacesCorners(int color_n);
@@ -81,8 +83,8 @@ public:
     const std::vector<numdir> ParseAlgorithmID(int algoID, int startLoc);
     //Find Piece Functions  (see bottom of file for definition)
     int findPiece(int pieceNum);    //Find 1, a single numbered piece (by int 1-60)
-    int findEdge(int pieceNum){ return findPiece<Edge>(pieceNum); };
-    int findCorner(int pieceNum){ return findPiece<Corner>(pieceNum); };
+    int findEdge(int pieceNum) { return findPiece<Edge>(pieceNum); }
+    int findCorner(int pieceNum) { return findPiece<Corner>(pieceNum); }
     //Face Find Piece Functions
     std::vector<int> findPiecesOfFace(int face, Piece &pieceRef, int times) const;
    template <typename T>
@@ -152,11 +154,16 @@ public:
     void shadowRotate(numdir op);
     bool shadowMultiRotate(int face, int &offby);
     int getRotateQueueNum() const { return (int)rotateQueue.size(); }
+    //current savefile algo
    template <typename T>
-    int createMegaMinxFromShadowVec(const std::vector<int>& readPieces, const std::vector<int>& readPieceColors, Megaminx* shadowDom);
+    int createMegaMinxFromShadowVec(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors, Megaminx* shadowDom);
     int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors, Megaminx* shadowDom);
     int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors, Megaminx* shadowDom);
-
+    //old deprecated savefile algo
+   template <typename T>
+    int LoadNewPiecesFromVector(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors);
+    int LoadNewCornersFromVector(const std::vector<int> &readCorners, const std::vector<int> &readCornerColors);
+    int LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors);
    template <typename T>
     constexpr int getMaxNumberOfPieces() const {
         if (std::is_same<T, Edge>::value)
@@ -245,6 +252,9 @@ static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >=
 static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
 //static auto MMMu = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
-static auto MMmin = [](megaminxColor x, megaminxColor y) { if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE)) return BEIGE; };
+static auto MMmin = [](megaminxColor x, megaminxColor y) {
+  if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))  return BEIGE;
+  else  return std::min(x,y);
+};
 
 //#endif

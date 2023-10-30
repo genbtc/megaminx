@@ -1,3 +1,16 @@
+/hello
+/menu
+algo 21
+history
+/hello
+/menu
+/algotest
+/ALGOTEST
+/algotest
+quit
+/algotest
+/testdir tests/TestCube10-1/
+
 algo
 algo 21
 history
@@ -25,3 +38,63 @@ history
 /algotest
 quit
 /algotest
+/testdir tests/TestCube10-1/
+
+algo
+algo 21
+history
+/hello
+/menu
+algo 21
+history
+/hello
+/menu
+/algotest
+/ALGOTEST
+/algotest
+quit
+algo
+algo 21
+history
+/hello
+/menu
+algo 21
+history
+/hello
+/menu
+/algotest
+/ALGOTEST
+/algotest
+quit
+/algotest
+/testdir tests/TestCube10-1/
+
+algo
+algo 21
+history
+/hello
+/menu
+algo 21
+history
+/hello
+/menu
+/algotest
+/ALGOTEST
+/algotest
+quit
+algo
+algo 21
+history
+/hello
+/menu
+algo 21
+history
+/hello
+/menu
+/algotest
+/ALGOTEST
+/algotest
+quit
+/algotest
+/testdir tests/TestCube10-1/
+

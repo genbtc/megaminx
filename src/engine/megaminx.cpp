@@ -468,24 +468,6 @@ void Megaminx::resetFivePiecesV(std::vector<int> &v) {
 void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }  //unused
 void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }  //unused
 
-//Resets--------------------------------------------------------------------------------------------------------------//
-/**
- * \brief Generic <template> to Reset all the Face pieces to their default value.
- * \param color_n N'th Face/Color Number (1-12)
- * \return 1 if anything moved, 0 if not
- * \deprecated Not Currently Used But Has Good Template is_same Machinery
- */
-template <typename T>
-int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
-{
-    if (std::is_same<T, Edge>::value)
-        return resetFacesEdges(color_n, defaultPieces, solve);
-    else if (std::is_same<T, Corner>::value)
-        return resetFacesCorners(color_n, defaultPieces, solve);
-    return 0;
-} //where T = Corner or Edge
-int Megaminx::resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }   //unused
-int Megaminx::resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve) { return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }   //unused
 
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.

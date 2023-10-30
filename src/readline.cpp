@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ui/linenoise.h"
 #include "engine/megaminx.hpp"
+#include "engine/load.hpp"
 
 // include prototype from main-menu.cpp
 void menuHandler(int num);
@@ -68,6 +69,10 @@ void readlineShell() {
             printf("Exiting shell, returning to GUI\n");
             free(line);
             return;
+        } else if (!strncmp(line,"/testdir",8)) {
+            printf("Running Test: %s\n", line);
+            std::string testDir(line+9);
+            RestoreOldCubeFromFile(testDir);
         } else if ((!strncmp(line,"/exit",5))
                 || (!strncmp(line,"/quit",5))) {
             printf("Exiting shell, returning to GUI\n");
