@@ -53,36 +53,42 @@ void RestoreCubeFromFile() {
     megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector, shadowDom);
 }
 
-//[[deprecated]]
+//[[deprecated]]  - old cube loader (for old tests/saves)
 void RestoreOldCubeFromFile(std::string testDir) {
-    MakeShadowCubeClone();
+    //MakeShadowCubeClone();
     //TODO: Crashes w/ segfault if the files dont exist. check for them first.
     std::cout << "STATUS BEFORE: \n"    ;
     const std::vector<int> readEdgevector = ReadPiecesFileVector(testDir+OLDEDGEFILE);
     const std::vector<int> readEdgeColorvector = ReadPiecesFileVector(testDir+OLDEDGEFILECOLORS);
     const std::vector<int> readCornervector = ReadPiecesFileVector(testDir+OLDCORNERFILE);
     const std::vector<int> readCornerColorvector = ReadPiecesFileVector(testDir+OLDCORNERFILECOLORS);
-    std::cout << "EdgePiecesPosition: " << serializeVectorIntToString(readEdgevector) << std::endl;
-    std::cout << "CornerPiecesPosition: " << serializeVectorIntToString(readEdgeColorvector) << std::endl;
-    std::cout << "EdgePiecesColorFlip: " << serializeVectorIntToString(readCornervector) << std::endl;
-    std::cout << "CornerPiecesColorFlip: " << serializeVectorIntToString(readCornerColorvector) << std::endl;
+    //Read New Piece Data
+    std::cout << "EdgePiecesPosition60: " << serializeVectorIntToString(readEdgevector) << std::endl;
+    std::cout << "CornerPiecesPosition60: " << serializeVectorIntToString(readEdgeColorvector) << std::endl;
+    std::cout << "EdgePiecesColorFlip60: " << serializeVectorIntToString(readCornervector) << std::endl;
+    std::cout << "CornerPiecesColorFlip60: " << serializeVectorIntToString(readCornerColorvector) << std::endl;
     if ((readEdgevector.size() != 60 && readCornervector.size() != 60 ) &&
         (readEdgeColorvector.size() != 60 && readCornerColorvector.size() != 60)) {
         std::cerr << "There was an error reading the input file - "
                      "(internal contents corrupt or size mismatch) !!!!!!" << std::endl;
         return;
     }
-    //read 12 lines * 5 = 60
+    //read 12 lines * 5 faces = 60 piecs
     int es,cs = 0;
     es=megaminx->LoadNewEdgesFromVector(readEdgevector, readEdgeColorvector);
-    cs=megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector);
+    cs=megaminx->LoadNewCornersFromVector(readCornervector, readCornerColorvector); //TODO: check int status
+    //Absorbed New piece Data:
     std::cout << "STATUS AFTER: \n"    ;
-    std::cout << "EdgePiecesPosition: " << serializeVectorIntToString(megaminx->getAllEdgePiecesPosition()) << std::endl;
-    std::cout << "CornerPiecesPosition: " << serializeVectorIntToString(megaminx->getAllCornerPiecesPosition()) << std::endl;
-    std::cout << "EdgePiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllEdgePiecesColorFlipStatus()) << std::endl;
-    std::cout << "CornerPiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllCornerPiecesColorFlipStatus()) << std::endl;
-
-
+    std::cout << "EdgePiecesPosition30: " << serializeVectorIntToString(megaminx->getAllEdgePiecesPosition()) << std::endl;
+    std::cout << "CornerPiecesPosition30: " << serializeVectorIntToString(megaminx->getAllCornerPiecesPosition()) << std::endl;
+    std::cout << "EdgePiecesColorFlip20: " << serializeVectorIntToString(megaminx->getAllEdgePiecesColorFlipStatus()) << std::endl;
+    std::cout << "CornerPiecesColorFlip20: " << serializeVectorIntToString(megaminx->getAllCornerPiecesColorFlipStatus()) << std::endl;
+    //Reoutput as file:
+    //UNIT TESTS, reoutputs as another file converted type:
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), "tests/6060to3020/"+testDir+OLDEDGEFILE);
+    serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), "tests/6060to3020/"+testDir+OLDEDGEFILECOLORS);
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), "tests/6060to3020/"+testDir+OLDCORNERFILE);
+    serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), "tests/6060to3020/"+testDir+OLDCORNERFILECOLORS);
 }
 
 /**
@@ -111,7 +117,6 @@ void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename) {
         if (count % 5 == 0)
             file << "\n";
     }
-    file.close();
 }
 
 /**
@@ -158,13 +163,11 @@ const std::vector<int> ReadPiecesFileVector(std::string filename)
             }
         }
     }
-    //UNIT TEST, reoutput as another file:
-    serializeVectorInt5ToFile(readvector, "New6060-"+filename );
     return readvector;
 }
 
 
-//[[deprecated]]
+//[[deprecated]]  - old cube loader (for old tests/saves)
 template <typename T>
 int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors)
 {
