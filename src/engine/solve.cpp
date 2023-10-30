@@ -539,7 +539,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         //data storage types for current state
         const CornerLayerAssist l{ shadowDom, i };
 
-        //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4)
+        //Row 2 pieces go to gray face as temporary holding (2-CW turns) (ends up on row4) (2->4)
         if (l.isOnRow2) {
             int defaultDir = Face::CCW * 2;
             megaminxColor turnface=BLACK;
@@ -556,7 +556,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
             shadowDom->shadowMultiRotate(turnface, defaultDir);
             // after 2nd rotation leaves them on the gray face.
         }
-        //Row 3 pieces go to gray face as temporary holding (1 CCW turn) (ends up on row4)
+        //Row 3 pieces go to gray face as temporary holding (1 CCW turn) (ends up on row4) (3->4)
         else if (l.isOnRow3) {
             const int defaultDir = Face::CCW;
             megaminxColor x, y = BLACK;
@@ -573,19 +573,24 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
                 y = l.cornerFaceNeighbors.b;
             }
             int result = std::max(x, y);
-            MMMg(result, BEIGE);
+            MMMg(result, BEIGE);    //if over Beige , -5 it.
             shadowDom->shadowRotate(result, defaultDir);
         }
-        //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved
-        else if (l.isOnRow4) {
+        //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved (4 -> 2)
+        else if (l.isOnRow4) {   //15->10, 16-14>, 17->13, 18->12, 19->11 (0,1,2,3,4 * -2)
             //locate our source piece
-            int offby = l.sourceCornerIndex - i - 18;
+            int offby = l.sourceCornerIndex - endingPiece - startingPiece - i - 3;
+            //Orient Gray Top layer (index goes in reverse)
+            int offby2 = (l.sourceCornerIndex - i + 2) % 5;
+            //assert(offby == offby2);
             //get it out of row4 by orienting top.
             shadowDom->shadowMultiRotate(GRAY, offby);
             //locate where it went
             int facex = PINK + i;
             MMMg(facex, BEIGE);
-            //get it onto row2 solved
+            //quick shortcut to know which face we're working on.
+            const int front = BEIGE - (i - startingPiece);
+            //get it onto row2 solved   // (5,6,7,8,9)
             int defaultDir = Face::CW * 2;
             shadowDom->shadowMultiRotate(facex, defaultDir);
         }
@@ -634,7 +639,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
         const EdgeLayerAssist l{ shadowDom,i };
         std::vector<numdir> bulkAlgo;
 
-        //Get ready for algorithms
+        //Get ready for algorithms - 6/3/4
         if ((l.isOnRow34 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0)))
             || (l.isOnRow6)) {
             colordirs loc;
@@ -728,8 +733,8 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         const CornerLayerAssist l{ shadowDom, i };
         std::vector<numdir> bulkAlgo;
 
-        //Get the Pieces to drop-in ready on Row 4 (gray layer) solved into Row3
-        //Any Row 3 pieces that are mis-solved use same algo to go up to gray layer (ends up on row4)
+        //Get the Pieces to drop-in ready on Row 4 (gray layer) solved into Row3 (4 -> 3)
+        //Any Row 3 pieces that are mis-solved use same algo to go up to gray layer (ends up on row4) (3->7 then->4)
         if (l.isOnRow3) {
             megaminxColor x, y = BLACK;
             if (l.ontopHalfA) {
@@ -750,10 +755,11 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[result], 1); // "r u R' U' "
             shadowDom->shadowBulkRotate(bulkAlgo);
         }
+        //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved
         else if (l.isOnRow4) {
             //Orient Gray Top layer (index goes in reverse)
-            int offby = l.sourceCornerIndex - i * -1;
-            shadowDom->shadowMultiRotate(GRAY, offby);
+            int obffby = (l.sourceCornerIndex - i * -1) % 5;
+            shadowDom->shadowMultiRotate(GRAY, obffby);
             //quick shortcut to know which face we're working on.
             const int front = BEIGE - (i - startingPiece);
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[front], 1); // "r u R' U' "
@@ -768,6 +774,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
     updateRotateQueueWithShadow(shadowDom);
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
+    assert(loopcount < 101);
     std::cout << "Solved rotateSolve5thLayerCorners 5 in " << loopcount << " loops" << std::endl;
 }
 
@@ -801,8 +808,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
         std::vector<numdir> bulkAlgo;
 
         //Get ready for algorithms
-        if ((l.isOnRow5 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0)))
-            || (l.isOnRow6)) {
+        if (l.isOnRow5 || l.isOnRow6) {
             if (l.isOnRow6) {
                 //assert(l.dirToWhiteA == 0);
                 int offby = l.graymatchA ? (l.edgeFaceNeighbors.b - l.edgeHalfColorB) : (l.edgeFaceNeighbors.a - l.edgeHalfColorA);
