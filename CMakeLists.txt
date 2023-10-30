@@ -67,6 +67,7 @@ add_executable(${PACKAGE_NAME} WIN32
     src/main-menu.cpp
     src/main.cpp
     src/Res.rc
+    src/engine/algo-menu.hpp
 )
 
 #Sources - Add .H Files

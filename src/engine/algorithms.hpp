@@ -2,10 +2,6 @@
 #ifndef __ALGORITHMS_H__
 #define __ALGORITHMS_H__
 
-struct StringAlgo {
-    const char* algo;
-    int num;
-};
 struct AlgoString {
     int num{};
     const char* algo{};

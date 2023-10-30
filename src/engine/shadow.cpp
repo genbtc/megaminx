@@ -33,8 +33,8 @@ void Megaminx::shadowRotate(int num, int dir)
 //Same as above, take struct as parameter, no need to subtract 1. // unused.
 void Megaminx::shadowRotate(numdir op)
 {
-    shadowRotate(op.num, op.dir);
-    //TODO: FIX
+//    shadowRotate(op.num, op.dir);
+    //TODO: FIX (+1?)
     assert(op.num > 0 && op.num <= numFaces);
     assert(op.dir == Face::Clockwise || op.dir == Face::CCW);
     shadowRotateQueue.push({ op.num, op.dir });

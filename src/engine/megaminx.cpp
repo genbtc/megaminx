@@ -272,12 +272,12 @@ void Megaminx::scramble()
         for (int i = 0; i < numFaces; i++) {
             const int r = rand() % 2 * 2 - 1; //generates -1 or 1
             faces[i].placeParts(r);
-            if (t == 0) {
-                faces[i].placeParts(r); //FIXED: do a second rotation.
-                t++;
-            }
-            else
-                t = 0;  //alternate or not
+//            if (t == 0) {
+//                faces[i].placeParts(r); //FIXED: do a second rotation.
+//                t++;
+//            }
+//            else
+//                t = 0;  //alternate or not
         }
     }
 }

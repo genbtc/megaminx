@@ -1,0 +1,836 @@
+AUTOSOLVER: Number of Rotations Queued up to Solve: 398
+AUTOSOLVER: Number of Rotations Queued up to Solve: 402
+AUTOSOLVER: Number of Rotations Queued up to Solve: 405
+AUTOSOLVER: Number of Rotations Queued up to Solve: 411
+AUTOSOLVER: Number of Rotations Queued up to Solve: 413
+AUTOSOLVER: Number of Rotations Queued up to Solve: 417
+AUTOSOLVER: Number of Rotations Queued up to Solve: 423
+AUTOSOLVER: Number of Rotations Queued up to Solve: 425
+AUTOSOLVER: Number of Rotations Queued up to Solve: 426
+AUTOSOLVER: Number of Rotations Queued up to Solve: 427
+AUTOSOLVER: Number of Rotations Queued up to Solve: 428
+AUTOSOLVER: Number of Rotations Queued up to Solve: 429
+AUTOSOLVER: Number of Rotations Queued up to Solve: 430
+AUTOSOLVER: Number of Rotations Queued up to Solve: 431
+AUTOSOLVER: Number of Rotations Queued up to Solve: 433
+AUTOSOLVER: Number of Rotations Queued up to Solve: 434
+AUTOSOLVER: Number of Rotations Queued up to Solve: 437
+AUTOSOLVER: Number of Rotations Queued up to Solve: 438
+AUTOSOLVER: Number of Rotations Queued up to Solve: 441
+AUTOSOLVER: Number of Rotations Queued up to Solve: 442
+AUTOSOLVER: Number of Rotations Queued up to Solve: 443
+AUTOSOLVER: Number of Rotations Queued up to Solve: 444
+AUTOSOLVER: Number of Rotations Queued up to Solve: 445
+AUTOSOLVER: Number of Rotations Queued up to Solve: 446
+AUTOSOLVER: Number of Rotations Queued up to Solve: 447
+AUTOSOLVER: Number of Rotations Queued up to Solve: 448
+AUTOSOLVER: Number of Rotations Queued up to Solve: 449
+AUTOSOLVER: Number of Rotations Queued up to Solve: 450
+AUTOSOLVER: Number of Rotations Queued up to Solve: 451
+AUTOSOLVER: Number of Rotations Queued up to Solve: 452
+AUTOSOLVER: Number of Rotations Queued up to Solve: 453
+AUTOSOLVER: Number of Rotations Queued up to Solve: 454
+AUTOSOLVER: Number of Rotations Queued up to Solve: 455
+AUTOSOLVER: Number of Rotations Queued up to Solve: 456
+AUTOSOLVER: Number of Rotations Queued up to Solve: 457
+AUTOSOLVER: Number of Rotations Queued up to Solve: 458
+AUTOSOLVER: Number of Rotations Queued up to Solve: 459
+AUTOSOLVER: Number of Rotations Queued up to Solve: 460
+AUTOSOLVER: Number of Rotations Queued up to Solve: 461
+AUTOSOLVER: Number of Rotations Queued up to Solve: 462
+AUTOSOLVER: Number of Rotations Queued up to Solve: 463
+AUTOSOLVER: Number of Rotations Queued up to Solve: 464
+AUTOSOLVER: Number of Rotations Queued up to Solve: 465
+AUTOSOLVER: Number of Rotations Queued up to Solve: 466
+AUTOSOLVER: Number of Rotations Queued up to Solve: 467
+AUTOSOLVER: Number of Rotations Queued up to Solve: 468
+AUTOSOLVER: Number of Rotations Queued up to Solve: 469
+AUTOSOLVER: Number of Rotations Queued up to Solve: 470
+AUTOSOLVER: Number of Rotations Queued up to Solve: 471
+AUTOSOLVER: Number of Rotations Queued up to Solve: 472
+AUTOSOLVER: Number of Rotations Queued up to Solve: 473
+AUTOSOLVER: Number of Rotations Queued up to Solve: 474
+AUTOSOLVER: Number of Rotations Queued up to Solve: 475
+AUTOSOLVER: Number of Rotations Queued up to Solve: 476
+AUTOSOLVER: Number of Rotations Queued up to Solve: 477
+AUTOSOLVER: Number of Rotations Queued up to Solve: 478
+AUTOSOLVER: Number of Rotations Queued up to Solve: 479
+AUTOSOLVER: Number of Rotations Queued up to Solve: 480
+AUTOSOLVER: Number of Rotations Queued up to Solve: 481
+AUTOSOLVER: Number of Rotations Queued up to Solve: 482
+AUTOSOLVER: Number of Rotations Queued up to Solve: 483
+AUTOSOLVER: Number of Rotations Queued up to Solve: 484
+AUTOSOLVER: Number of Rotations Queued up to Solve: 485
+AUTOSOLVER: Number of Rotations Queued up to Solve: 486
+AUTOSOLVER: Number of Rotations Queued up to Solve: 487
+AUTOSOLVER: Number of Rotations Queued up to Solve: 488
+AUTOSOLVER: Number of Rotations Queued up to Solve: 489
+AUTOSOLVER: Number of Rotations Queued up to Solve: 490
+AUTOSOLVER: Number of Rotations Queued up to Solve: 491
+AUTOSOLVER: Number of Rotations Queued up to Solve: 492
+AUTOSOLVER: Number of Rotations Queued up to Solve: 493
+AUTOSOLVER: Number of Rotations Queued up to Solve: 494
+AUTOSOLVER: Number of Rotations Queued up to Solve: 495
+AUTOSOLVER: Number of Rotations Queued up to Solve: 496
+AUTOSOLVER: Number of Rotations Queued up to Solve: 497
+AUTOSOLVER: Number of Rotations Queued up to Solve: 498
+AUTOSOLVER: Number of Rotations Queued up to Solve: 499
+AUTOSOLVER: Number of Rotations Queued up to Solve: 500
+AUTOSOLVER: Number of Rotations Queued up to Solve: 501
+AUTOSOLVER: Number of Rotations Queued up to Solve: 502
+AUTOSOLVER: Number of Rotations Queued up to Solve: 503
+AUTOSOLVER: Number of Rotations Queued up to Solve: 504
+AUTOSOLVER: Number of Rotations Queued up to Solve: 505
+AUTOSOLVER: Number of Rotations Queued up to Solve: 506
+AUTOSOLVER: Number of Rotations Queued up to Solve: 507
+AUTOSOLVER: Number of Rotations Queued up to Solve: 508
+AUTOSOLVER: Number of Rotations Queued up to Solve: 509
+AUTOSOLVER: Number of Rotations Queued up to Solve: 510
+AUTOSOLVER: Number of Rotations Queued up to Solve: 511
+AUTOSOLVER: Number of Rotations Queued up to Solve: 512
+AUTOSOLVER: Number of Rotations Queued up to Solve: 513
+AUTOSOLVER: Number of Rotations Queued up to Solve: 514
+AUTOSOLVER: Number of Rotations Queued up to Solve: 515
+AUTOSOLVER: Number of Rotations Queued up to Solve: 516
+AUTOSOLVER: Number of Rotations Queued up to Solve: 517
+AUTOSOLVER: Number of Rotations Queued up to Solve: 518
+AUTOSOLVER: Number of Rotations Queued up to Solve: 519
+AUTOSOLVER: Number of Rotations Queued up to Solve: 520
+AUTOSOLVER: Number of Rotations Queued up to Solve: 521
+AUTOSOLVER: Number of Rotations Queued up to Solve: 522
+AUTOSOLVER: Number of Rotations Queued up to Solve: 523
+AUTOSOLVER: Number of Rotations Queued up to Solve: 524
+AUTOSOLVER: Number of Rotations Queued up to Solve: 525
+AUTOSOLVER: Number of Rotations Queued up to Solve: 526
+AUTOSOLVER: Number of Rotations Queued up to Solve: 527
+AUTOSOLVER: Number of Rotations Queued up to Solve: 528
+AUTOSOLVER: Number of Rotations Queued up to Solve: 529
+AUTOSOLVER: Number of Rotations Queued up to Solve: 530
+AUTOSOLVER: Number of Rotations Queued up to Solve: 531
+AUTOSOLVER: Number of Rotations Queued up to Solve: 532
+AUTOSOLVER: Number of Rotations Queued up to Solve: 533
+AUTOSOLVER: Number of Rotations Queued up to Solve: 534
+AUTOSOLVER: Number of Rotations Queued up to Solve: 535
+AUTOSOLVER: Number of Rotations Queued up to Solve: 536
+AUTOSOLVER: Number of Rotations Queued up to Solve: 537
+AUTOSOLVER: Number of Rotations Queued up to Solve: 538
+AUTOSOLVER: Number of Rotations Queued up to Solve: 539
+AUTOSOLVER: Number of Rotations Queued up to Solve: 540
+AUTOSOLVER: Number of Rotations Queued up to Solve: 541
+AUTOSOLVER: Number of Rotations Queued up to Solve: 542
+AUTOSOLVER: Number of Rotations Queued up to Solve: 543
+AUTOSOLVER: Number of Rotations Queued up to Solve: 544
+AUTOSOLVER: Number of Rotations Queued up to Solve: 545
+AUTOSOLVER: Number of Rotations Queued up to Solve: 546
+AUTOSOLVER: Number of Rotations Queued up to Solve: 547
+AUTOSOLVER: Number of Rotations Queued up to Solve: 548
+AUTOSOLVER: Number of Rotations Queued up to Solve: 549
+AUTOSOLVER: Number of Rotations Queued up to Solve: 550
+AUTOSOLVER: Number of Rotations Queued up to Solve: 551
+AUTOSOLVER: Number of Rotations Queued up to Solve: 552
+AUTOSOLVER: Number of Rotations Queued up to Solve: 553
+AUTOSOLVER: Number of Rotations Queued up to Solve: 554
+AUTOSOLVER: Number of Rotations Queued up to Solve: 555
+AUTOSOLVER: Number of Rotations Queued up to Solve: 556
+AUTOSOLVER: Number of Rotations Queued up to Solve: 557
+AUTOSOLVER: Number of Rotations Queued up to Solve: 558
+AUTOSOLVER: Number of Rotations Queued up to Solve: 559
+AUTOSOLVER: Number of Rotations Queued up to Solve: 560
+AUTOSOLVER: Number of Rotations Queued up to Solve: 561
+AUTOSOLVER: Number of Rotations Queued up to Solve: 562
+AUTOSOLVER: Number of Rotations Queued up to Solve: 563
+AUTOSOLVER: Number of Rotations Queued up to Solve: 564
+AUTOSOLVER: Number of Rotations Queued up to Solve: 565
+AUTOSOLVER: Number of Rotations Queued up to Solve: 566
+AUTOSOLVER: Number of Rotations Queued up to Solve: 567
+AUTOSOLVER: Number of Rotations Queued up to Solve: 568
+AUTOSOLVER: Number of Rotations Queued up to Solve: 569
+AUTOSOLVER: Number of Rotations Queued up to Solve: 570
+AUTOSOLVER: Number of Rotations Queued up to Solve: 571
+AUTOSOLVER: Number of Rotations Queued up to Solve: 572
+AUTOSOLVER: Number of Rotations Queued up to Solve: 573
+AUTOSOLVER: Number of Rotations Queued up to Solve: 574
+AUTOSOLVER: Number of Rotations Queued up to Solve: 575
+AUTOSOLVER: Number of Rotations Queued up to Solve: 576
+AUTOSOLVER: Number of Rotations Queued up to Solve: 577
+AUTOSOLVER: Number of Rotations Queued up to Solve: 578
+AUTOSOLVER: Number of Rotations Queued up to Solve: 579
+AUTOSOLVER: Number of Rotations Queued up to Solve: 580
+AUTOSOLVER: Number of Rotations Queued up to Solve: 581
+AUTOSOLVER: Number of Rotations Queued up to Solve: 582
+AUTOSOLVER: Number of Rotations Queued up to Solve: 583
+AUTOSOLVER: Number of Rotations Queued up to Solve: 584
+AUTOSOLVER: Number of Rotations Queued up to Solve: 585
+AUTOSOLVER: Number of Rotations Queued up to Solve: 586
+AUTOSOLVER: Number of Rotations Queued up to Solve: 587
+AUTOSOLVER: Number of Rotations Queued up to Solve: 588
+AUTOSOLVER: Number of Rotations Queued up to Solve: 589
+AUTOSOLVER: Number of Rotations Queued up to Solve: 590
+AUTOSOLVER: Number of Rotations Queued up to Solve: 591
+AUTOSOLVER: Number of Rotations Queued up to Solve: 592
+AUTOSOLVER: Number of Rotations Queued up to Solve: 593
+AUTOSOLVER: Number of Rotations Queued up to Solve: 594
+AUTOSOLVER: Number of Rotations Queued up to Solve: 595
+AUTOSOLVER: Number of Rotations Queued up to Solve: 596
+AUTOSOLVER: Number of Rotations Queued up to Solve: 597
+AUTOSOLVER: Number of Rotations Queued up to Solve: 598
+AUTOSOLVER: Number of Rotations Queued up to Solve: 599
+AUTOSOLVER: Number of Rotations Queued up to Solve: 600
+AUTOSOLVER: Number of Rotations Queued up to Solve: 601
+AUTOSOLVER: Number of Rotations Queued up to Solve: 602
+AUTOSOLVER: Number of Rotations Queued up to Solve: 603
+AUTOSOLVER: Number of Rotations Queued up to Solve: 604
+AUTOSOLVER: Number of Rotations Queued up to Solve: 605
+AUTOSOLVER: Number of Rotations Queued up to Solve: 606
+AUTOSOLVER: Number of Rotations Queued up to Solve: 607
+AUTOSOLVER: Number of Rotations Queued up to Solve: 608
+AUTOSOLVER: Number of Rotations Queued up to Solve: 609
+AUTOSOLVER: Number of Rotations Queued up to Solve: 610
+AUTOSOLVER: Number of Rotations Queued up to Solve: 611
+AUTOSOLVER: Number of Rotations Queued up to Solve: 612
+AUTOSOLVER: Number of Rotations Queued up to Solve: 613
+AUTOSOLVER: Number of Rotations Queued up to Solve: 614
+AUTOSOLVER: Number of Rotations Queued up to Solve: 615
+AUTOSOLVER: Number of Rotations Queued up to Solve: 616
+AUTOSOLVER: Number of Rotations Queued up to Solve: 617
+AUTOSOLVER: Number of Rotations Queued up to Solve: 618
+AUTOSOLVER: Number of Rotations Queued up to Solve: 619
+AUTOSOLVER: Number of Rotations Queued up to Solve: 620
+AUTOSOLVER: Number of Rotations Queued up to Solve: 621
+AUTOSOLVER: Number of Rotations Queued up to Solve: 622
+AUTOSOLVER: Number of Rotations Queued up to Solve: 623
+AUTOSOLVER: Number of Rotations Queued up to Solve: 624
+AUTOSOLVER: Number of Rotations Queued up to Solve: 625
+AUTOSOLVER: Number of Rotations Queued up to Solve: 626
+AUTOSOLVER: Number of Rotations Queued up to Solve: 627
+AUTOSOLVER: Number of Rotations Queued up to Solve: 628
+AUTOSOLVER: Number of Rotations Queued up to Solve: 629
+AUTOSOLVER: Number of Rotations Queued up to Solve: 630
+AUTOSOLVER: Number of Rotations Queued up to Solve: 631
+AUTOSOLVER: Number of Rotations Queued up to Solve: 632
+AUTOSOLVER: Number of Rotations Queued up to Solve: 633
+AUTOSOLVER: Number of Rotations Queued up to Solve: 634
+AUTOSOLVER: Number of Rotations Queued up to Solve: 635
+AUTOSOLVER: Number of Rotations Queued up to Solve: 636
+AUTOSOLVER: Number of Rotations Queued up to Solve: 637
+AUTOSOLVER: Number of Rotations Queued up to Solve: 638
+AUTOSOLVER: Number of Rotations Queued up to Solve: 639
+AUTOSOLVER: Number of Rotations Queued up to Solve: 640
+AUTOSOLVER: Number of Rotations Queued up to Solve: 641
+AUTOSOLVER: Number of Rotations Queued up to Solve: 642
+AUTOSOLVER: Number of Rotations Queued up to Solve: 643
+AUTOSOLVER: Number of Rotations Queued up to Solve: 644
+AUTOSOLVER: Number of Rotations Queued up to Solve: 645
+AUTOSOLVER: Number of Rotations Queued up to Solve: 646
+AUTOSOLVER: Number of Rotations Queued up to Solve: 647
+AUTOSOLVER: Number of Rotations Queued up to Solve: 648
+AUTOSOLVER: Number of Rotations Queued up to Solve: 649
+AUTOSOLVER: Number of Rotations Queued up to Solve: 650
+AUTOSOLVER: Number of Rotations Queued up to Solve: 651
+AUTOSOLVER: Number of Rotations Queued up to Solve: 652
+AUTOSOLVER: Number of Rotations Queued up to Solve: 653
+AUTOSOLVER: Number of Rotations Queued up to Solve: 654
+AUTOSOLVER: Number of Rotations Queued up to Solve: 655
+AUTOSOLVER: Number of Rotations Queued up to Solve: 656
+AUTOSOLVER: Number of Rotations Queued up to Solve: 657
+AUTOSOLVER: Number of Rotations Queued up to Solve: 658
+AUTOSOLVER: Number of Rotations Queued up to Solve: 659
+AUTOSOLVER: Number of Rotations Queued up to Solve: 660
+AUTOSOLVER: Number of Rotations Queued up to Solve: 661
+AUTOSOLVER: Number of Rotations Queued up to Solve: 662
+AUTOSOLVER: Number of Rotations Queued up to Solve: 663
+AUTOSOLVER: Number of Rotations Queued up to Solve: 664
+AUTOSOLVER: Number of Rotations Queued up to Solve: 665
+AUTOSOLVER: Number of Rotations Queued up to Solve: 666
+AUTOSOLVER: Number of Rotations Queued up to Solve: 667
+AUTOSOLVER: Number of Rotations Queued up to Solve: 668
+AUTOSOLVER: Number of Rotations Queued up to Solve: 669
+AUTOSOLVER: Number of Rotations Queued up to Solve: 670
+AUTOSOLVER: Number of Rotations Queued up to Solve: 671
+AUTOSOLVER: Number of Rotations Queued up to Solve: 672
+AUTOSOLVER: Number of Rotations Queued up to Solve: 673
+AUTOSOLVER: Number of Rotations Queued up to Solve: 674
+AUTOSOLVER: Number of Rotations Queued up to Solve: 675
+AUTOSOLVER: Number of Rotations Queued up to Solve: 676
+AUTOSOLVER: Number of Rotations Queued up to Solve: 677
+AUTOSOLVER: Number of Rotations Queued up to Solve: 678
+AUTOSOLVER: Number of Rotations Queued up to Solve: 679
+AUTOSOLVER: Number of Rotations Queued up to Solve: 680
+AUTOSOLVER: Number of Rotations Queued up to Solve: 681
+AUTOSOLVER: Number of Rotations Queued up to Solve: 682
+AUTOSOLVER: Number of Rotations Queued up to Solve: 683
+AUTOSOLVER: Number of Rotations Queued up to Solve: 684
+AUTOSOLVER: Number of Rotations Queued up to Solve: 685
+AUTOSOLVER: Number of Rotations Queued up to Solve: 686
+AUTOSOLVER: Number of Rotations Queued up to Solve: 687
+AUTOSOLVER: Number of Rotations Queued up to Solve: 688
+AUTOSOLVER: Number of Rotations Queued up to Solve: 689
+AUTOSOLVER: Number of Rotations Queued up to Solve: 690
+AUTOSOLVER: Number of Rotations Queued up to Solve: 691
+AUTOSOLVER: Number of Rotations Queued up to Solve: 692
+AUTOSOLVER: Number of Rotations Queued up to Solve: 693
+AUTOSOLVER: Number of Rotations Queued up to Solve: 694
+AUTOSOLVER: Number of Rotations Queued up to Solve: 695
+AUTOSOLVER: Number of Rotations Queued up to Solve: 696
+AUTOSOLVER: Number of Rotations Queued up to Solve: 697
+AUTOSOLVER: Number of Rotations Queued up to Solve: 698
+AUTOSOLVER: Number of Rotations Queued up to Solve: 699
+AUTOSOLVER: Number of Rotations Queued up to Solve: 700
+AUTOSOLVER: Number of Rotations Queued up to Solve: 701
+AUTOSOLVER: Number of Rotations Queued up to Solve: 702
+AUTOSOLVER: Number of Rotations Queued up to Solve: 703
+AUTOSOLVER: Number of Rotations Queued up to Solve: 704
+AUTOSOLVER: Number of Rotations Queued up to Solve: 705
+AUTOSOLVER: Number of Rotations Queued up to Solve: 706
+AUTOSOLVER: Number of Rotations Queued up to Solve: 707
+AUTOSOLVER: Number of Rotations Queued up to Solve: 708
+AUTOSOLVER: Number of Rotations Queued up to Solve: 709
+AUTOSOLVER: Number of Rotations Queued up to Solve: 710
+AUTOSOLVER: Number of Rotations Queued up to Solve: 711
+AUTOSOLVER: Number of Rotations Queued up to Solve: 712
+AUTOSOLVER: Number of Rotations Queued up to Solve: 713
+AUTOSOLVER: Number of Rotations Queued up to Solve: 714
+AUTOSOLVER: Number of Rotations Queued up to Solve: 715
+AUTOSOLVER: Number of Rotations Queued up to Solve: 716
+AUTOSOLVER: Number of Rotations Queued up to Solve: 717
+AUTOSOLVER: Number of Rotations Queued up to Solve: 718
+AUTOSOLVER: Number of Rotations Queued up to Solve: 719
+AUTOSOLVER: Number of Rotations Queued up to Solve: 720
+AUTOSOLVER: Number of Rotations Queued up to Solve: 721
+AUTOSOLVER: Number of Rotations Queued up to Solve: 722
+AUTOSOLVER: Number of Rotations Queued up to Solve: 723
+AUTOSOLVER: Number of Rotations Queued up to Solve: 724
+AUTOSOLVER: Number of Rotations Queued up to Solve: 725
+AUTOSOLVER: Number of Rotations Queued up to Solve: 726
+AUTOSOLVER: Number of Rotations Queued up to Solve: 727
+AUTOSOLVER: Number of Rotations Queued up to Solve: 728
+AUTOSOLVER: Number of Rotations Queued up to Solve: 729
+AUTOSOLVER: Number of Rotations Queued up to Solve: 730
+AUTOSOLVER: Number of Rotations Queued up to Solve: 731
+AUTOSOLVER: Number of Rotations Queued up to Solve: 732
+AUTOSOLVER: Number of Rotations Queued up to Solve: 733
+AUTOSOLVER: Number of Rotations Queued up to Solve: 734
+AUTOSOLVER: Number of Rotations Queued up to Solve: 735
+AUTOSOLVER: Number of Rotations Queued up to Solve: 736
+AUTOSOLVER: Number of Rotations Queued up to Solve: 737
+AUTOSOLVER: Number of Rotations Queued up to Solve: 738
+AUTOSOLVER: Number of Rotations Queued up to Solve: 739
+AUTOSOLVER: Number of Rotations Queued up to Solve: 740
+AUTOSOLVER: Number of Rotations Queued up to Solve: 741
+AUTOSOLVER: Number of Rotations Queued up to Solve: 742
+AUTOSOLVER: Number of Rotations Queued up to Solve: 744
+AUTOSOLVER: Number of Rotations Queued up to Solve: 746
+AUTOSOLVER: Number of Rotations Queued up to Solve: 747
+AUTOSOLVER: Number of Rotations Queued up to Solve: 748
+AUTOSOLVER: Number of Rotations Queued up to Solve: 750
+AUTOSOLVER: Number of Rotations Queued up to Solve: 753
+AUTOSOLVER: Number of Rotations Queued up to Solve: 755
+AUTOSOLVER: Number of Rotations Queued up to Solve: 760
+AUTOSOLVER: Number of Rotations Queued up to Solve: 762
+AUTOSOLVER: Number of Rotations Queued up to Solve: 765
+AUTOSOLVER: Number of Rotations Queued up to Solve: 780
+AUTOSOLVER: Number of Rotations Queued up to Solve: 788
+ Average Time per iteration = 0.00134
+Brute Force Checker Complete! - Solver Average: 589.427
+Debug-111-L1WE: Restore White Face
+Debug-112-L1WE: Move Row2 to Row1
+Debug-112-L1WE: Move Row34 Twice to Row1
+Debug-113-L1WE: Move Row4 to Row6
+Debug-114-L1WE: Move Row5/6 A
+Debug-115-L1WE: Move Row5/6 B
+Debug-117-L1WE: Move Row1 unsolved off B
+Debug-121-L1WC: Row1 0 sourcecornerindex: 0 offby: 3
+Debug-121-L1WC: Row1 0 sourcecornerindex: 1 offby: 4
+Debug-121-L1WC: Row1 0 sourcecornerindex: 2 offby: 5
+Debug-121-L1WC: Row1 0 sourcecornerindex: 3 offby: 6
+Debug-121-L1WC: Row1 0 sourcecornerindex: 4 offby: 2
+Debug-121-L1WC: Row1 1 sourcecornerindex: 1 offby: 4
+Debug-121-L1WC: Row1 1 sourcecornerindex: 2 offby: 5
+Debug-121-L1WC: Row1 1 sourcecornerindex: 3 offby: 6
+Debug-121-L1WC: Row1 1 sourcecornerindex: 4 offby: 2
+Debug-121-L1WC: Row1 2 sourcecornerindex: 2 offby: 5
+Debug-121-L1WC: Row1 2 sourcecornerindex: 3 offby: 6
+Debug-121-L1WC: Row1 2 sourcecornerindex: 4 offby: 2
+Debug-121-L1WC: Row1 3 sourcecornerindex: 3 offby: 6
+Debug-121-L1WC: Row1 3 sourcecornerindex: 4 offby: 2
+Debug-121-L1WC: Row1 4 sourcecornerindex: 4 offby: 2
+Debug-122a-L1WC: Row2 + matched index 0 sourcecornerindex: 5 offby: 3
+Debug-122a-L1WC: Row2 + matched index 1 sourcecornerindex: 6 offby: 4
+Debug-122a-L1WC: Row2 + matched index 2 sourcecornerindex: 7 offby: 5
+Debug-122a-L1WC: Row2 + matched index 3 sourcecornerindex: 8 offby: 6
+Debug-122a-L1WC: Row2 + matched index 4 sourcecornerindex: 9 offby: 2
+Debug-122b-L1WC: Row2 0 sourcecornerindex: 6 turnface: 12 offby: 2
+Debug-122b-L1WC: Row2 0 sourcecornerindex: 7 turnface: 8 offby: 2
+Debug-122b-L1WC: Row2 0 sourcecornerindex: 8 turnface: 9 offby: 2
+Debug-122b-L1WC: Row2 0 sourcecornerindex: 9 turnface: 10 offby: 2
+Debug-122b-L1WC: Row2 1 sourcecornerindex: 5 turnface: 11 offby: 2
+Debug-122b-L1WC: Row2 1 sourcecornerindex: 7 turnface: 8 offby: 2
+Debug-122b-L1WC: Row2 1 sourcecornerindex: 8 turnface: 9 offby: 2
+Debug-122b-L1WC: Row2 1 sourcecornerindex: 9 turnface: 10 offby: 2
+Debug-122b-L1WC: Row2 2 sourcecornerindex: 5 turnface: 11 offby: 2
+Debug-122b-L1WC: Row2 2 sourcecornerindex: 6 turnface: 12 offby: 2
+Debug-122b-L1WC: Row2 2 sourcecornerindex: 8 turnface: 9 offby: 2
+Debug-122b-L1WC: Row2 2 sourcecornerindex: 9 turnface: 10 offby: 2
+Debug-122b-L1WC: Row2 3 sourcecornerindex: 5 turnface: 11 offby: 2
+Debug-122b-L1WC: Row2 3 sourcecornerindex: 6 turnface: 12 offby: 2
+Debug-122b-L1WC: Row2 3 sourcecornerindex: 7 turnface: 8 offby: 2
+Debug-122b-L1WC: Row2 3 sourcecornerindex: 9 turnface: 10 offby: 2
+Debug-122b-L1WC: Row2 4 sourcecornerindex: 5 turnface: 11 offby: 2
+Debug-122b-L1WC: Row2 4 sourcecornerindex: 6 turnface: 12 offby: 2
+Debug-122b-L1WC: Row2 4 sourcecornerindex: 7 turnface: 8 offby: 2
+Debug-122b-L1WC: Row2 4 sourcecornerindex: 8 turnface: 9 offby: 2
+Debug-123-L1WC: Row3 0 sourcecornerindex: 10 face: 12 offby: -1
+Debug-123-L1WC: Row3 0 sourcecornerindex: 11 face: 12 offby: -1
+Debug-123-L1WC: Row3 0 sourcecornerindex: 12 face: 11 offby: -1
+Debug-123-L1WC: Row3 0 sourcecornerindex: 13 face: 10 offby: -1
+Debug-123-L1WC: Row3 0 sourcecornerindex: 14 face: 9 offby: -1
+Debug-123-L1WC: Row3 1 sourcecornerindex: 10 face: 12 offby: -1
+Debug-123-L1WC: Row3 1 sourcecornerindex: 11 face: 12 offby: -1
+Debug-123-L1WC: Row3 1 sourcecornerindex: 12 face: 11 offby: -1
+Debug-123-L1WC: Row3 1 sourcecornerindex: 13 face: 10 offby: -1
+Debug-123-L1WC: Row3 1 sourcecornerindex: 14 face: 9 offby: -1
+Debug-123-L1WC: Row3 2 sourcecornerindex: 10 face: 12 offby: -1
+Debug-123-L1WC: Row3 2 sourcecornerindex: 11 face: 12 offby: -1
+Debug-123-L1WC: Row3 2 sourcecornerindex: 12 face: 11 offby: -1
+Debug-123-L1WC: Row3 2 sourcecornerindex: 13 face: 10 offby: -1
+Debug-123-L1WC: Row3 2 sourcecornerindex: 14 face: 9 offby: -1
+Debug-123-L1WC: Row3 3 sourcecornerindex: 10 face: 12 offby: -1
+Debug-123-L1WC: Row3 3 sourcecornerindex: 11 face: 12 offby: -1
+Debug-123-L1WC: Row3 3 sourcecornerindex: 12 face: 11 offby: -1
+Debug-123-L1WC: Row3 3 sourcecornerindex: 13 face: 10 offby: -1
+Debug-123-L1WC: Row3 3 sourcecornerindex: 14 face: 9 offby: -1
+Debug-123-L1WC: Row3 4 sourcecornerindex: 10 face: 12 offby: -1
+Debug-123-L1WC: Row3 4 sourcecornerindex: 11 face: 12 offby: -1
+Debug-123-L1WC: Row3 4 sourcecornerindex: 12 face: 11 offby: -1
+Debug-123-L1WC: Row3 4 sourcecornerindex: 13 face: 10 offby: -1
+Debug-123-L1WC: Row3 4 sourcecornerindex: 14 face: 9 offby: -1
+Debug-124-L1WC: Row4 0 sourcecornerindex: 15 face: 11 offby: 2
+Debug-124-L1WC: Row4 0 sourcecornerindex: 16 face: 11 offby: 2
+Debug-124-L1WC: Row4 0 sourcecornerindex: 17 face: 11 offby: 2
+Debug-124-L1WC: Row4 0 sourcecornerindex: 18 face: 11 offby: 2
+Debug-124-L1WC: Row4 0 sourcecornerindex: 19 face: 11 offby: 2
+Debug-124-L1WC: Row4 1 sourcecornerindex: 15 face: 12 offby: 2
+Debug-124-L1WC: Row4 1 sourcecornerindex: 16 face: 12 offby: 2
+Debug-124-L1WC: Row4 1 sourcecornerindex: 17 face: 12 offby: 2
+Debug-124-L1WC: Row4 1 sourcecornerindex: 18 face: 12 offby: 2
+Debug-124-L1WC: Row4 1 sourcecornerindex: 19 face: 12 offby: 2
+Debug-124-L1WC: Row4 2 sourcecornerindex: 15 face: 8 offby: 2
+Debug-124-L1WC: Row4 2 sourcecornerindex: 16 face: 8 offby: 2
+Debug-124-L1WC: Row4 2 sourcecornerindex: 17 face: 8 offby: 2
+Debug-124-L1WC: Row4 2 sourcecornerindex: 18 face: 8 offby: 2
+Debug-124-L1WC: Row4 2 sourcecornerindex: 19 face: 8 offby: 2
+Debug-124-L1WC: Row4 3 sourcecornerindex: 15 face: 9 offby: 2
+Debug-124-L1WC: Row4 3 sourcecornerindex: 16 face: 9 offby: 2
+Debug-124-L1WC: Row4 3 sourcecornerindex: 17 face: 9 offby: 2
+Debug-124-L1WC: Row4 3 sourcecornerindex: 18 face: 9 offby: 2
+Debug-124-L1WC: Row4 3 sourcecornerindex: 19 face: 9 offby: 2
+Debug-124-L1WC: Row4 4 sourcecornerindex: 15 face: 10 offby: 2
+Debug-124-L1WC: Row4 4 sourcecornerindex: 16 face: 10 offby: 2
+Debug-124-L1WC: Row4 4 sourcecornerindex: 17 face: 10 offby: 2
+Debug-124-L1WC: Row4 4 sourcecornerindex: 18 face: 10 offby: 2
+Debug-124-L1WC: Row4 4 sourcecornerindex: 19 face: 10 offby: 2
+Debug-221-L2E: 2-3-4 Algo1
+Debug-222-L2E: 3-4-2 Algo2
+Debug-223-L2E: 4-6-7 
+Debug-224-L2E: Row5 to A 
+Debug-227-L2E: Row6 to B 
+Debug-331-L3C: corner Row2 CW to Row4 
+Debug-332-L3C: corner Row3 CCW to Row4 
+Debug-333-L3C: corner Row4 Solve Row2 
+Debug-441-L4E: edge Run Layer 3  
+Debug-442-L4E: edge Run Layer 4 
+Debug-443-L4E: edge Run Layer 6 
+Debug-444-L4E: edge Run Layer 5 
+Debug-445-L4E: edge Row5 to dir A 
+Debug-551-L5C: corner Row3 use Algo 1 
+Debug-552-L5C: corner Row4 use Algo 1 
+Debug-661-L6E: get ready Align GRAY Face 
+Debug-662-L6E: Row7/6/5 use Algo 7
+Debug-662-L6E: Row7/6/5 use Algo 8
+Debug-711-L7E: orient first piece if exists 
+Debug-717-L7E: Algo39 5way cycle 1/2/-1/2/1  @ 3  =
+Debug-724-L7E: Algo21 Bunny 4Color  @ 0
+Debug-724-L7E: Algo21 Bunny 4Color  @ 2
+Debug-725-L7E: Algo20 Bunny 2Color  @ 0
+Debug-725-L7E: Algo20 Bunny 2Color  @ -1
+Debug-725-L7E: Algo20 Bunny 2Color  @ 1
+Debug-725-L7E: Algo20 Bunny 2Color  @ 2
+Debug-725-L7E: Algo20 Bunny 2Color  @ 3
+Debug-725-L7E: Algo20 Bunny 2Color  @ 4
+Debug-727-L7E: Algo42 Bunny 2+2Swap  @ 0
+Debug-727-L7E: Algo42 Bunny 2+2Swap  @ 1
+Debug-727-L7E: Algo42 Bunny 2+2Swap  @ 3
+Debug-728-L7E: Algo14 Mushroom-  @ 0
+Debug-728-L7E: Algo14 Mushroom-  @ 1
+Debug-728-L7E: Algo14 Mushroom-  @ 2
+Debug-728-L7E: Algo14 Mushroom-  @ 3
+Debug-728-L7E: Algo14 Mushroom-  @ 4
+Debug-7309-L7E: Algo14 Mushroom-  @  0
+Debug-7309-L7E: Algo14 Mushroom-  @  1
+Debug-7309-L7E: Algo14 Mushroom-  @  2
+Debug-7309-L7E: Algo14 Mushroom-  @  3
+Debug-7309-L7E: Algo14 Mushroom-  @  4
+Debug-738-L7E: Algo14 Mushroom-  @  3 
+Debug-741-L7E: Algo14 Mushroom-  @  4 
+Debug-7459-L7E: Algo33 Mushroom+  @  0
+Debug-7459-L7E: Algo33 Mushroom+  @  1
+Debug-7459-L7E: Algo33 Mushroom+  @  2
+Debug-7459-L7E: Algo33 Mushroom+  @  3
+Debug-7459-L7E: Algo33 Mushroom+  @  4
+Debug-754-L7E: Algo33 Mushroom+  @  4
+Debug-755-L7E: Algo12 HorseFace- 5x+ @  8
+Debug-756-L7E: Algo13 HorseFace- @  11
+Debug-756-L7E: Algo13 HorseFace- @  8
+Debug-758-L7E: Algo13 HorseFace- +/- 3
+Debug-760-L7E: Algo13 HorseFace+ 5x+ @  11
+Debug-761-L7E: Algo12 HorseFace+  @  11
+Debug-761-L7E: Algo12 HorseFace+  @  8
+genr8eofl@genr8too ~/src/build-megaminx-Desktop-Release $ 
+genr8eofl@genr8too ~/src/build-megaminx-Desktop-Release $ ./Megaminx 
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 12 : r2 U2' R2' U' , r2 U2' R2'  @ Face: PINK
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 13 : r2 u2 R2' u, r2 u2 R2'  @ Face: PINK
+ParseAlgorithmString: # 14 : r u R' u, R' U' r2 U' , R' u R' u, r U2'  @ Face: BEIGE
+ParseAlgorithmString: # 14 : r u R' u, R' U' r2 U' , R' u R' u, r U2'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 14 : r u R' u, R' U' r2 U' , R' u R' u, r U2'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 14 : r u R' u, R' U' r2 U' , R' u R' u, r U2'  @ Face: ORANGE
+ParseAlgorithmString: # 14 : r u R' u, R' U' r2 U' , R' u R' u, r U2'  @ Face: PINK
+ParseAlgorithmString: # 1 : dl l dl L' , dL' F' dL' f @ Face: DARK_BLUE
+ParseAlgorithmString: # 1 : dl l dl L' , dL' F' dL' f @ Face: DARK_GREEN
+ParseAlgorithmString: # 1 : dl l dl L' , dL' F' dL' f @ Face: PURPLE
+ParseAlgorithmString: # 1 : dl l dl L' , dL' F' dL' f @ Face: RED
+ParseAlgorithmString: # 1 : dl l dl L' , dL' F' dL' f @ Face: YELLOW
+ParseAlgorithmString: # 1 : r u R' U'  @ Face: BEIGE
+ParseAlgorithmString: # 1 : r u R' U'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 1 : r u R' U'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 1 : r u R' U'  @ Face: ORANGE
+ParseAlgorithmString: # 1 : r u R' U'  @ Face: PINK
+ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2'  @ Face: BEIGE
+ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2'  @ Face: ORANGE
+ParseAlgorithmString: # 20 : R' l F2' r L' u2 R' l, F' r L' U2' R' l F2' r, L' u2 R' l F' r L' U2'  @ Face: PINK
+ParseAlgorithmString: # 21 : R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 21 : R' l F2' r L' u2 R' l,  F' r L' U2' R' l F2' r,  L' u2 R' l F' r L' u,  R' l F' r L' u2 R' l,  F2' r L' U2' R' l F' r,  L' u2 R' l F2' r L'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u @ Face: BEIGE
+ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u @ Face: ORANGE
+ParseAlgorithmString: # 26 : u r U2' L' u2 R' U2' l u @ Face: PINK
+ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2'  @ Face: BEIGE
+ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2'  @ Face: ORANGE
+ParseAlgorithmString: # 27 : L' u2 R U2' , L u2 R' U2'  @ Face: PINK
+ParseAlgorithmString: # 2 : dR' R' dR' r, dr f dr F'  @ Face: DARK_BLUE
+ParseAlgorithmString: # 2 : dR' R' dR' r, dr f dr F'  @ Face: DARK_GREEN
+ParseAlgorithmString: # 2 : dR' R' dR' r, dr f dr F'  @ Face: PURPLE
+ParseAlgorithmString: # 2 : dR' R' dR' r, dr f dr F'  @ Face: RED
+ParseAlgorithmString: # 2 : dR' R' dR' r, dr f dr F'  @ Face: YELLOW
+ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: BEIGE
+ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: ORANGE
+ParseAlgorithmString: # 33 : u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: PINK
+ParseAlgorithmString: # 39 : r u R' u, R' U' r2 U' , R' u R' u, r U2' ,, u2 L' , U' l U' l, u L2' u l, U' l U' L'  @ Face: PINK
+ParseAlgorithmString: # 3 : F' R' F' , F' r f @ Face: BEIGE
+ParseAlgorithmString: # 3 : F' R' F' , F' r f @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 3 : F' R' F' , F' r f @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 3 : F' R' F' , F' r f @ Face: ORANGE
+ParseAlgorithmString: # 3 : F' R' F' , F' r f @ Face: PINK
+ParseAlgorithmString: # 42 : u2 F' , U' f U' f, u F2' u f, U' f U' F' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: BEIGE
+ParseAlgorithmString: # 42 : u2 F' , U' f U' f, u F2' u f, U' f U' F' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 42 : u2 F' , U' f U' f, u F2' u f, U' f U' F' ,, u2 R' , U' r U' r, u R2' u r, U' r U' R'  @ Face: ORANGE
+ParseAlgorithmString: # 4 : U' R' DR' f, f dr r @ Face: BEIGE
+ParseAlgorithmString: # 4 : U' R' DR' f, f dr r @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 4 : U' R' DR' f, f dr r @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 4 : U' R' DR' f, f dr r @ Face: ORANGE
+ParseAlgorithmString: # 4 : U' R' DR' f, f dr r @ Face: PINK
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: BEIGE
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: DARK_BLUE
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: DARK_GREEN
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: ORANGE
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: PURPLE
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: RED
+ParseAlgorithmString: # 50 : R' DR' r dr @ Face: YELLOW
+ParseAlgorithmString: # 51 : f dr F'  @ Face: DARK_BLUE
+ParseAlgorithmString: # 51 : f dr F'  @ Face: DARK_GREEN
+ParseAlgorithmString: # 51 : f dr F'  @ Face: PURPLE
+ParseAlgorithmString: # 51 : f dr F'  @ Face: RED
+ParseAlgorithmString: # 51 : f dr F'  @ Face: YELLOW
+ParseAlgorithmString: # 52 : R' DR' r @ Face: DARK_BLUE
+ParseAlgorithmString: # 52 : R' DR' r @ Face: DARK_GREEN
+ParseAlgorithmString: # 52 : R' DR' r @ Face: PURPLE
+ParseAlgorithmString: # 52 : R' DR' r @ Face: RED
+ParseAlgorithmString: # 52 : R' DR' r @ Face: YELLOW
+ParseAlgorithmString: # 5 : u l dl F' , F' DL' L'  @ Face: BEIGE
+ParseAlgorithmString: # 5 : u l dl F' , F' DL' L'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 5 : u l dl F' , F' DL' L'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 5 : u l dl F' , F' DL' L'  @ Face: ORANGE
+ParseAlgorithmString: # 5 : u l dl F' , F' DL' L'  @ Face: PINK
+ParseAlgorithmString: # 6 : f l f, f L' F'  @ Face: BEIGE
+ParseAlgorithmString: # 6 : f l f, f L' F'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 6 : f l f, f L' F'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 6 : f l f, f L' F'  @ Face: ORANGE
+ParseAlgorithmString: # 6 : f l f, f L' F'  @ Face: PINK
+ParseAlgorithmString: # 7 : U' L' u l, u f U' F'  @ Face: BEIGE
+ParseAlgorithmString: # 7 : U' L' u l, u f U' F'  @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 7 : U' L' u l, u f U' F'  @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 7 : U' L' u l, u f U' F'  @ Face: ORANGE
+ParseAlgorithmString: # 7 : U' L' u l, u f U' F'  @ Face: PINK
+ParseAlgorithmString: # 8 : u r U' R' , U' F' u f @ Face: BEIGE
+ParseAlgorithmString: # 8 : u r U' R' , U' F' u f @ Face: LIGHT_BLUE
+ParseAlgorithmString: # 8 : u r U' R' , U' F' u f @ Face: LIGHT_GREEN
+ParseAlgorithmString: # 8 : u r U' R' , U' F' u f @ Face: ORANGE
+ParseAlgorithmString: # 8 : u r U' R' , U' F' u f @ Face: PINK
+Solved rotateSolve3rdLayerCorners 3 in 10 loops
+Solved rotateSolve3rdLayerCorners 3 in 11 loops
+Solved rotateSolve3rdLayerCorners 3 in 12 loops
+Solved rotateSolve3rdLayerCorners 3 in 13 loops
+Solved rotateSolve3rdLayerCorners 3 in 14 loops
+Solved rotateSolve3rdLayerCorners 3 in 15 loops
+Solved rotateSolve3rdLayerCorners 3 in 16 loops
+Solved rotateSolve3rdLayerCorners 3 in 17 loops
+Solved rotateSolve3rdLayerCorners 3 in 18 loops
+Solved rotateSolve3rdLayerCorners 3 in 19 loops
+Solved rotateSolve3rdLayerCorners 3 in 20 loops
+Solved rotateSolve3rdLayerCorners 3 in 21 loops
+Solved rotateSolve3rdLayerCorners 3 in 22 loops
+Solved rotateSolve3rdLayerCorners 3 in 23 loops
+Solved rotateSolve3rdLayerCorners 3 in 24 loops
+Solved rotateSolve3rdLayerCorners 3 in 25 loops
+Solved rotateSolve3rdLayerCorners 3 in 26 loops
+Solved rotateSolve3rdLayerCorners 3 in 27 loops
+Solved rotateSolve3rdLayerCorners 3 in 28 loops
+Solved rotateSolve3rdLayerCorners 3 in 29 loops
+Solved rotateSolve3rdLayerCorners 3 in 30 loops
+Solved rotateSolve3rdLayerCorners 3 in 31 loops
+Solved rotateSolve3rdLayerCorners 3 in 32 loops
+Solved rotateSolve3rdLayerCorners 3 in 33 loops
+Solved rotateSolve3rdLayerCorners 3 in 34 loops
+Solved rotateSolve3rdLayerCorners 3 in 35 loops
+Solved rotateSolve3rdLayerCorners 3 in 36 loops
+Solved rotateSolve3rdLayerCorners 3 in 37 loops
+Solved rotateSolve3rdLayerCorners 3 in 38 loops
+Solved rotateSolve3rdLayerCorners 3 in 39 loops
+Solved rotateSolve3rdLayerCorners 3 in 40 loops
+Solved rotateSolve3rdLayerCorners 3 in 41 loops
+Solved rotateSolve3rdLayerCorners 3 in 42 loops
+Solved rotateSolve3rdLayerCorners 3 in 43 loops
+Solved rotateSolve3rdLayerCorners 3 in 44 loops
+Solved rotateSolve3rdLayerCorners 3 in 45 loops
+Solved rotateSolve3rdLayerCorners 3 in 46 loops
+Solved rotateSolve3rdLayerCorners 3 in 47 loops
+Solved rotateSolve3rdLayerCorners 3 in 48 loops
+Solved rotateSolve3rdLayerCorners 3 in 49 loops
+Solved rotateSolve3rdLayerCorners 3 in 4 loops
+Solved rotateSolve3rdLayerCorners 3 in 50 loops
+Solved rotateSolve3rdLayerCorners 3 in 51 loops
+Solved rotateSolve3rdLayerCorners 3 in 52 loops
+Solved rotateSolve3rdLayerCorners 3 in 53 loops
+Solved rotateSolve3rdLayerCorners 3 in 54 loops
+Solved rotateSolve3rdLayerCorners 3 in 55 loops
+Solved rotateSolve3rdLayerCorners 3 in 56 loops
+Solved rotateSolve3rdLayerCorners 3 in 57 loops
+Solved rotateSolve3rdLayerCorners 3 in 58 loops
+Solved rotateSolve3rdLayerCorners 3 in 59 loops
+Solved rotateSolve3rdLayerCorners 3 in 5 loops
+Solved rotateSolve3rdLayerCorners 3 in 60 loops
+Solved rotateSolve3rdLayerCorners 3 in 61 loops
+Solved rotateSolve3rdLayerCorners 3 in 62 loops
+Solved rotateSolve3rdLayerCorners 3 in 63 loops
+Solved rotateSolve3rdLayerCorners 3 in 64 loops
+Solved rotateSolve3rdLayerCorners 3 in 66 loops
+Solved rotateSolve3rdLayerCorners 3 in 67 loops
+Solved rotateSolve3rdLayerCorners 3 in 68 loops
+Solved rotateSolve3rdLayerCorners 3 in 6 loops
+Solved rotateSolve3rdLayerCorners 3 in 7 loops
+Solved rotateSolve3rdLayerCorners 3 in 8 loops
+Solved rotateSolve3rdLayerCorners 3 in 9 loops
+Solved rotateSolve5thLayerCorners 5 in 10 loops
+Solved rotateSolve5thLayerCorners 5 in 11 loops
+Solved rotateSolve5thLayerCorners 5 in 12 loops
+Solved rotateSolve5thLayerCorners 5 in 13 loops
+Solved rotateSolve5thLayerCorners 5 in 14 loops
+Solved rotateSolve5thLayerCorners 5 in 15 loops
+Solved rotateSolve5thLayerCorners 5 in 16 loops
+Solved rotateSolve5thLayerCorners 5 in 17 loops
+Solved rotateSolve5thLayerCorners 5 in 18 loops
+Solved rotateSolve5thLayerCorners 5 in 19 loops
+Solved rotateSolve5thLayerCorners 5 in 20 loops
+Solved rotateSolve5thLayerCorners 5 in 21 loops
+Solved rotateSolve5thLayerCorners 5 in 22 loops
+Solved rotateSolve5thLayerCorners 5 in 23 loops
+Solved rotateSolve5thLayerCorners 5 in 24 loops
+Solved rotateSolve5thLayerCorners 5 in 25 loops
+Solved rotateSolve5thLayerCorners 5 in 26 loops
+Solved rotateSolve5thLayerCorners 5 in 27 loops
+Solved rotateSolve5thLayerCorners 5 in 28 loops
+Solved rotateSolve5thLayerCorners 5 in 2 loops
+Solved rotateSolve5thLayerCorners 5 in 3 loops
+Solved rotateSolve5thLayerCorners 5 in 4 loops
+Solved rotateSolve5thLayerCorners 5 in 5 loops
+Solved rotateSolve5thLayerCorners 5 in 6 loops
+Solved rotateSolve5thLayerCorners 5 in 7 loops
+Solved rotateSolve5thLayerCorners 5 in 8 loops
+Solved rotateSolve5thLayerCorners 5 in 9 loops
+Solved rotateSolveLayer2Edges 2 in 10 loops
+Solved rotateSolveLayer2Edges 2 in 11 loops
+Solved rotateSolveLayer2Edges 2 in 12 loops
+Solved rotateSolveLayer2Edges 2 in 13 loops
+Solved rotateSolveLayer2Edges 2 in 14 loops
+Solved rotateSolveLayer2Edges 2 in 15 loops
+Solved rotateSolveLayer2Edges 2 in 16 loops
+Solved rotateSolveLayer2Edges 2 in 17 loops
+Solved rotateSolveLayer2Edges 2 in 18 loops
+Solved rotateSolveLayer2Edges 2 in 19 loops
+Solved rotateSolveLayer2Edges 2 in 20 loops
+Solved rotateSolveLayer2Edges 2 in 21 loops
+Solved rotateSolveLayer2Edges 2 in 22 loops
+Solved rotateSolveLayer2Edges 2 in 23 loops
+Solved rotateSolveLayer2Edges 2 in 24 loops
+Solved rotateSolveLayer2Edges 2 in 25 loops
+Solved rotateSolveLayer2Edges 2 in 26 loops
+Solved rotateSolveLayer2Edges 2 in 27 loops
+Solved rotateSolveLayer2Edges 2 in 28 loops
+Solved rotateSolveLayer2Edges 2 in 29 loops
+Solved rotateSolveLayer2Edges 2 in 30 loops
+Solved rotateSolveLayer2Edges 2 in 31 loops
+Solved rotateSolveLayer2Edges 2 in 32 loops
+Solved rotateSolveLayer2Edges 2 in 33 loops
+Solved rotateSolveLayer2Edges 2 in 34 loops
+Solved rotateSolveLayer2Edges 2 in 35 loops
+Solved rotateSolveLayer2Edges 2 in 36 loops
+Solved rotateSolveLayer2Edges 2 in 37 loops
+Solved rotateSolveLayer2Edges 2 in 38 loops
+Solved rotateSolveLayer2Edges 2 in 39 loops
+Solved rotateSolveLayer2Edges 2 in 40 loops
+Solved rotateSolveLayer2Edges 2 in 41 loops
+Solved rotateSolveLayer2Edges 2 in 42 loops
+Solved rotateSolveLayer2Edges 2 in 43 loops
+Solved rotateSolveLayer2Edges 2 in 44 loops
+Solved rotateSolveLayer2Edges 2 in 45 loops
+Solved rotateSolveLayer2Edges 2 in 46 loops
+Solved rotateSolveLayer2Edges 2 in 47 loops
+Solved rotateSolveLayer2Edges 2 in 48 loops
+Solved rotateSolveLayer2Edges 2 in 49 loops
+Solved rotateSolveLayer2Edges 2 in 50 loops
+Solved rotateSolveLayer2Edges 2 in 51 loops
+Solved rotateSolveLayer2Edges 2 in 52 loops
+Solved rotateSolveLayer2Edges 2 in 53 loops
+Solved rotateSolveLayer2Edges 2 in 54 loops
+Solved rotateSolveLayer2Edges 2 in 55 loops
+Solved rotateSolveLayer2Edges 2 in 56 loops
+Solved rotateSolveLayer2Edges 2 in 57 loops
+Solved rotateSolveLayer2Edges 2 in 58 loops
+Solved rotateSolveLayer2Edges 2 in 60 loops
+Solved rotateSolveLayer2Edges 2 in 6 loops
+Solved rotateSolveLayer2Edges 2 in 7 loops
+Solved rotateSolveLayer2Edges 2 in 8 loops
+Solved rotateSolveLayer2Edges 2 in 9 loops
+Solved rotateSolveLayer4Edges 4 in 10 loops
+Solved rotateSolveLayer4Edges 4 in 11 loops
+Solved rotateSolveLayer4Edges 4 in 12 loops
+Solved rotateSolveLayer4Edges 4 in 13 loops
+Solved rotateSolveLayer4Edges 4 in 14 loops
+Solved rotateSolveLayer4Edges 4 in 15 loops
+Solved rotateSolveLayer4Edges 4 in 16 loops
+Solved rotateSolveLayer4Edges 4 in 17 loops
+Solved rotateSolveLayer4Edges 4 in 18 loops
+Solved rotateSolveLayer4Edges 4 in 19 loops
+Solved rotateSolveLayer4Edges 4 in 20 loops
+Solved rotateSolveLayer4Edges 4 in 21 loops
+Solved rotateSolveLayer4Edges 4 in 22 loops
+Solved rotateSolveLayer4Edges 4 in 23 loops
+Solved rotateSolveLayer4Edges 4 in 24 loops
+Solved rotateSolveLayer4Edges 4 in 25 loops
+Solved rotateSolveLayer4Edges 4 in 26 loops
+Solved rotateSolveLayer4Edges 4 in 27 loops
+Solved rotateSolveLayer4Edges 4 in 28 loops
+Solved rotateSolveLayer4Edges 4 in 7 loops
+Solved rotateSolveLayer4Edges 4 in 8 loops
+Solved rotateSolveLayer4Edges 4 in 9 loops
+Solved rotateSolveLayer6Edges 6 in 10 loops
+Solved rotateSolveLayer6Edges 6 in 1 loops
+Solved rotateSolveLayer6Edges 6 in 2 loops
+Solved rotateSolveLayer6Edges 6 in 3 loops
+Solved rotateSolveLayer6Edges 6 in 4 loops
+Solved rotateSolveLayer6Edges 6 in 5 loops
+Solved rotateSolveLayer6Edges 6 in 6 loops
+Solved rotateSolveLayer6Edges 6 in 7 loops
+Solved rotateSolveLayer6Edges 6 in 8 loops
+Solved rotateSolveLayer6Edges 6 in 9 loops
+Solved rotateSolveLayer7Corners 7 2 in 0 loops
+Solved rotateSolveLayer7Corners 7 2 in 10 loops
+Solved rotateSolveLayer7Corners 7 2 in 11 loops
+Solved rotateSolveLayer7Corners 7 2 in 12 loops
+Solved rotateSolveLayer7Corners 7 2 in 13 loops
+Solved rotateSolveLayer7Corners 7 2 in 14 loops
+Solved rotateSolveLayer7Corners 7 2 in 15 loops
+Solved rotateSolveLayer7Corners 7 2 in 1 loops
+Solved rotateSolveLayer7Corners 7 2 in 2 loops
+Solved rotateSolveLayer7Corners 7 2 in 3 loops
+Solved rotateSolveLayer7Corners 7 2 in 4 loops
+Solved rotateSolveLayer7Corners 7 2 in 5 loops
+Solved rotateSolveLayer7Corners 7 2 in 6 loops
+Solved rotateSolveLayer7Corners 7 2 in 7 loops
+Solved rotateSolveLayer7Corners 7 2 in 8 loops
+Solved rotateSolveLayer7Corners 7 2 in 9 loops
+Solved rotateSolveLayer7Edges 7 1 in 0 loops
+Solved rotateSolveLayer7Edges 7 1 in 1 loops
+Solved rotateSolveLayer7Edges 7 1 in 2 loops
+Solved rotateSolveLayer7Edges 7 1 in 3 loops
+Solved rotateSolveLayer7Edges 7 1 in 4 loops
+Solved rotateSolveLayer7Edges 7 1 in 5 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 10 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 11 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 12 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 13 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 14 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 15 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 16 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 17 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 18 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 19 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 20 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 21 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 22 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 23 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 24 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 25 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 26 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 27 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 28 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 5 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 6 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 7 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 8 loops
+Solved rotateSolveWhiteCorners 1 2/2 in 9 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 10 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 11 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 12 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 13 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 14 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 15 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 16 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 17 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 18 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 19 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 20 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 21 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 22 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 23 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 24 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 25 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 26 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 27 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 4 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 5 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 6 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 7 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 8 loops
+Solved rotateSolveWhiteEdges 1 1/2 in 9 loops
+Starting Brute Force Checker. Running 50000 Iterations
