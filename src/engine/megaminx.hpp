@@ -245,5 +245,6 @@ static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >=
 static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
 //static auto MMMu = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
+static auto MMmin = [](megaminxColor x, megaminxColor y) { if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE)) return BEIGE; };
 
 //#endif
