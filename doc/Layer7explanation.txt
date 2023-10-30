@@ -1,0 +1,24 @@
+#from commit 2704816c77e5bdae493ca55381c1a5b7ae5cafc2 at least#
+/*----------
+Last Layer includes both sides of the edge and all corners.
+EDGES = (phase one):
+Start finding out which Edges are OK
+OK means multiple correct pieces in order, or  1 piece's color facing correctly (gray),
+Does it Need to be rotated? must be considered...
+if 0/5, find how many colors are gray,
+If solved 1/5, find out which piece and try to solve the adjacent piece to it next.
+If solved 2/5 find out if #2 is attached? NO: If not, why? are they 3 away? Choose a three-way-opposite Algo
+                                        YES: Choose a three-ina-row Edge+/Corner rotate algo, ie: algo #11
+If solved >=3/5 find out if #3 is attached?: NO: IDK
+                                           YES: ie: Algo #206 to invert the other 2 corners
+Can go from 2/5 to all 5/5 at once OR go from 3/5 to 5/5.
+
+CORNERS = (phase two):
+Corners must keep the edges in place, we will know solved rotation by having the offby=0 as a query to solved findEdges above.
+If solved 1/5, determine if better to skip and start at 0 or continue with this.
+1pt2: check next piece, find out if its capable of being moved in 1 move, or if its 2 moves.
+If solved 2/5, find out if they are attached: NO: If not, why? are they 3 away? we have no three-way-opposite algo, must give up, go back to 1.
+                                          YES: Choose right three-in-a-row corner-only algo
+If solved 3/5, find out if they are attached: NO: If not, proceed to next.
+                                          YES: Choose right three-way corner-only algo
+*/
