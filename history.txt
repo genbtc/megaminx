@@ -1,38 +1,3 @@
-/ALGOTEST
-/algotest
-quit
-/algotest
-/testdir tests/TestCube10-1/
-
-algo
-algo 21
-history
-/hello
-/menu
-algo 21
-history
-/hello
-/menu
-/algotest
-/ALGOTEST
-/algotest
-quit
-algo
-algo 21
-history
-/hello
-/menu
-algo 21
-history
-/hello
-/menu
-/algotest
-/ALGOTEST
-/algotest
-quit
-/algotest
-/testdir tests/TestCube10-1/
-
 algo
 algo 21
 history
@@ -95,6 +60,41 @@ quit
 /testdir tests/7EdgeTest4-Pass/
 /testdir tests/7EdgeTest5-Pass/
 /testdir tests/7EdgeTest6-Pass/
-/testdir tests/7EdgeTest6-p2-Pass/
-/testdir tests/7EdgeTest6-p2-pass/
+/testdir tests/7EdgeTest1-Pass
 
+/testdir 
+/testdir tests/7EdgeTest1-Pass/
+/testconvert tests/7EdgeTest1-Pass/
+/testconvert tests/7EdgeTest2-p2-Pass/
+/testconvert tests/7EdgeTest2-p3p4OK-rotate3a+_Pass/
+/testconvert tests/7EdgeTest2-p4-Pass/
+/testconvert tests/7EdgeTest2-Pass/
+/testconvert tests/7EdgeTest4-Pass/
+/testconvert tests/7EdgeTest5-Pass/
+/testconvert tests/7EdgeTest6-Pass/
+/testconvert tests/7EdgeTest3-p2-pass/
+/testconvert tests/7EdgeTest3-pass/
+/testconvert tests/7EdgeTest4-p2-pass/
+/testconvert tests/7EdgeTest4-p2-Pass/
+/testconvert tests/7EdgeTest6-p2-pass/
+/testconvert tests/RandomTestCube1-1/
+/testconvert tests/RandomTestCube1-2/
+/testconvert tests/RandomTestCube1-3/
+/testconvert tests/RealLifeCube-1/
+/testconvert tests/TestCube10-1/
+/testconvert tests/TestCube2-1/
+/testconvert tests/TestCube3-1/
+/testconvert tests/TestCube4-1/
+/testconvert tests/TestCube5-1/
+/testconvert tests/TestCube6-1/
+/testconvert tests/TestCube7-1/
+/testconvert tests/TestCube8-1/
+/testconvert tests/TestCube9-1/
+/testconvert tests/TestCube11-1/
+/testconvert tests/TestCube12-1/
+/testconvert tests/TestCube13-1/
+/testconvert tests/TestCube14-1/
+/testconvert tests/TestCube10-2/
+/testconvert tests/TestCube14-2/
+/testconvert tests/TestCube3-2/
+/testconvert tests/TestCube6-2/

@@ -30,6 +30,13 @@ struct megaminxPieceData {
         CornerPiecesPosition = ReadPiecesFileVector(testDir+CORNERFILE);
         CornerPiecesColors = ReadPiecesFileVector(testDir+CORNERFILECOLORS);
     }
+    void readOLDFileConstruct(std::string testDir) {
+        infilepath = testDir;
+        EdgePiecesPosition = ReadPiecesFileVector(testDir+OLDEDGEFILE);
+        EdgePiecesColors = ReadPiecesFileVector(testDir+OLDEDGEFILECOLORS);
+        CornerPiecesPosition = ReadPiecesFileVector(testDir+OLDCORNERFILE);
+        CornerPiecesColors = ReadPiecesFileVector(testDir+OLDCORNERFILECOLORS);
+    }
     void cloneConstruct() {
         EdgePiecesPosition = megaminx->getAllEdgePiecesPosition();
         EdgePiecesColors = megaminx->getAllEdgePiecesColorFlipStatus();
@@ -108,7 +115,7 @@ void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp w
      //TODO: Crashes w/ segfault if the files dont exist. check for them first.
     megaminxPieceData td;
     //Read New Piece Data
-    td.readFileConstruct(testDir);
+    td.readOLDFileConstruct(testDir); //prints error then crashes if file missing.
     std::cout << "STATUS BEFORE: \n";
     td.serializeThisOutput();
     td.sizeCheck();
