@@ -7,6 +7,7 @@
 void SaveCubetoFileMonolithic();
 void SaveCubetoFile();
 void RestoreCubeFromFile();
+void RestoreCubeFromTEST(std::string testDir);
 void RestoreOldCubeFromFile(std::string testdir);
 void MakeShadowCubeClone();
 
