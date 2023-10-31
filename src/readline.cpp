@@ -73,6 +73,10 @@ void readlineShell() {
             printf("Running Test: %s\n", line);
             std::string testDir(line+9);
             RestoreCubeFromTEST(testDir);
+        } else if (!strncmp(line,"/testconvert",12)) {
+            printf("Converting Test: %s\n", line);
+            std::string testDir(line+13);
+            RestoreOldCubeFromFile(testDir);
         } else if ((!strncmp(line,"/exit",5))
                 || (!strncmp(line,"/quit",5))) {
             printf("Exiting shell, returning to GUI\n");

@@ -48,35 +48,45 @@ struct megaminxPieceData {
         std::cout << "CornerPiecesPosition30: " << serializeVectorIntToString(this->CornerPiecesPosition) << std::endl;
         std::cout << "CornerPiecesColorFlip20: " << serializeVectorIntToString(this->CornerPiecesColors) << std::endl;
     }
-    void SaveCubetoFile() const {
+    void SaveMegaminxtoFile() const {
+        sizeCheck(); //TODO: Size check? DONE.
         serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), outfiledir+EDGEFILE);
         serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), outfiledir+EDGEFILECOLORS);
         serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), outfiledir+CORNERFILE);
         serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), outfiledir+CORNERFILECOLORS);
     }
-    void SaveThistoFile() const {
+    void SaveThistoFile() const {     //TODO: Size check?
+        sizeCheck(); //TODO: Size check? DONE.
         serializeVectorInt5ToFile(this->EdgePiecesPosition, outfiledir+EDGEFILE);
         serializeVectorInt5ToFile(this->EdgePiecesColors, outfiledir+EDGEFILECOLORS);
         serializeVectorInt5ToFile(this->CornerPiecesPosition, outfiledir+CORNERFILE);
         serializeVectorInt5ToFile(this->CornerPiecesColors, outfiledir+CORNERFILECOLORS);
     }
-    void loadMegaMinx() const { //TODO: check int status
-        megaminx->LoadNewEdgesFromVector(EdgePiecesPosition, EdgePiecesColors);
-        megaminx->LoadNewCornersFromVector(CornerPiecesPosition, CornerPiecesColors);
-    }
-    void SaveCubetoFileMonolithic() {
+    void SaveMegaminxtoFileMonolithic() const { //TODO: filename
         std::ofstream file(MEGAMINXBLOB); // E + C + E + C
         file << "EdgePiecesPosition: " << serializeVectorIntToString(megaminx->getAllEdgePiecesPosition()) << std::endl;
         file << "CornerPiecesPosition: " << serializeVectorIntToString(megaminx->getAllCornerPiecesPosition()) << std::endl;
         file << "EdgePiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllEdgePiecesColorFlipStatus()) << std::endl;
         file << "CornerPiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllCornerPiecesColorFlipStatus()) << std::endl;
     }
-    void SaveThistoFileMonolithic() {
+    void SaveThistoFileMonolithic() const { //TODO: filename
         std::ofstream file(MEGAMINXBLOB); // E + C + E + C
         file << "EdgePiecesPosition: " << serializeVectorIntToString(this->EdgePiecesPosition) << std::endl;
         file << "CornerPiecesPosition: " << serializeVectorIntToString(this->CornerPiecesPosition) << std::endl;
         file << "EdgePiecesColorFlip: " << serializeVectorIntToString(this->EdgePiecesColors) << std::endl;
         file << "CornerPiecesColorFlip: " << serializeVectorIntToString(this->CornerPiecesColors) << std::endl;
+    }
+    void loadMegaMinx() const { //TODO: check int status
+        megaminx->LoadNewEdgesFromVector(EdgePiecesPosition, EdgePiecesColors);
+        megaminx->LoadNewCornersFromVector(CornerPiecesPosition, CornerPiecesColors);
+    }
+    void sizeCheck() const {
+        if ((EdgePiecesPosition.size() != 60 && CornerPiecesPosition.size() != 60 ) &&
+            (EdgePiecesColors.size() != 60 && CornerPiecesColors.size() != 60)) {
+            std::cerr << "There was an error reading the input file - "
+                         "(internal contents corrupt or size mismatch) !!!!!!" << std::endl;
+            return;
+        }
     }
 };
 static megaminxPieceData mainData;
@@ -84,6 +94,7 @@ static megaminxPieceData mainData;
 /**
  * @brief Save/Store Cube - (Write 4 Vector Files)
  */
+//Duplicated above. (called from main-menu twice) //TODO: Convert over.
 void SaveCubetoFile() {
     serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), EDGEFILE);
     serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), CORNERFILE);
@@ -92,38 +103,32 @@ void SaveCubetoFile() {
 }
 
 
-[[deprecated]]  // - old cube loader (for old tests/saves)
-void RestoreOldCubeFromFile(std::string testDir) {
-
-           //MakeShadowCubeClone();
-           //TODO: Crashes w/ segfault if the files dont exist. check for them first.
-    std::cout << "STATUS BEFORE: \n";
+[[deprecated]]  //old cube loader (for converting old tests/saves) + and testing the new struct
+void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp with /testconvert
+     //TODO: Crashes w/ segfault if the files dont exist. check for them first.
     megaminxPieceData td;
-    td.readFileConstruct(testDir);
     //Read New Piece Data
+    td.readFileConstruct(testDir);
+    std::cout << "STATUS BEFORE: \n";
     td.serializeThisOutput();
-    if ((td.EdgePiecesPosition.size() != 60 && td.CornerPiecesPosition.size() != 60 ) &&
-        (td.EdgePiecesColors.size() != 60 && td.CornerPiecesColors.size() != 60)) {
-        std::cerr << "There was an error reading the input file - "
-                     "(internal contents corrupt or size mismatch) !!!!!!" << std::endl;
-        return;
-    }
-    //read 12 lines * 5 faces = 60 piecs
+    td.sizeCheck();
+    //read 12 lines * 5 faces = 60 pieces
+    //populate main minx
     td.loadMegaMinx();
-    //Absorbed New piece Data:
+    //Absorbed New pieceData
     std::cout << "STATUS AFTER: \n";
     td.serializeMegaminxOutput();
     //Reoutput as file:
     //UNIT TESTS, reoutputs as another file converted type:
     td.outfiledir = "tests/6060to3020/"+td.infilepath;
-    SaveCubetoFile();
+    td.SaveThistoFile();
 }
 
 /**
  * @brief Restore/Load Cube from Tests- (Read 4 Vector Files)
  * \param string testDir - READ FROM TESTS DIRECTORY
  */
-void RestoreCubeFromTEST(std::string testDir) {
+void RestoreCubeFromTEST(std::string testDir) {   //called from readline.cpp with /testdir
     //TODO: Crashes w/ segfault if the files dont exist. check for them.
     if (shadowDom)
         delete shadowDom;
@@ -155,7 +160,7 @@ void MakeShadowCubeClone() {
 }
 
 /**
- * @brief serializeVectorInt5ToFile - write vectors to file
+ * @brief serializeVectorInt5ToFile - Write vectors to file
  * @param vec - Input: a vector of any length
  * @param filename - Output: name of file to write ofstream to
  * @return void - wrote vector to file, 5 elements per line
@@ -172,7 +177,7 @@ void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename) {
 }
 
 /**
- * @brief serializeVectorIntToString - convert vectors to string
+ * @brief serializeVectorIntToString - Convert vectors to string
  * @param vec - Input: a vector of any length
  * @return string - Output: 5 elements per line in a string
  */
