@@ -139,7 +139,7 @@ void myglutRenderScene() {
 
         // Print out Text (Help display)
         if (g_help)
-            utPrintHelpMenu(WIDTH - 245.f, HEIGHT - 265.f);
+            utPrintHelpMenu(WIDTH - 220.f, HEIGHT - 295.f);
         else {
             utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f,      "[H]elp");
 			if (megaminx->isFullySolved() && g_help)

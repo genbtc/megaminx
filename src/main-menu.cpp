@@ -20,10 +20,10 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
             megaminx->undo();
             break;
         case 's': // CTRL+S //Save Game State
-        case 19: // CTRL+S //Save Game State
+        case 19: // CTRL+S //Save Game State  //(load.cpp)
             SaveCubetoFile();
             break;
-        case 'r': // CTRL+R //Restore Game State
+        case 'r': // CTRL+R //Restore Game State  //(load.cpp)
         case 18: // CTRL+R //Restore Game State
             RestoreCubeFromFile();
             break;
@@ -43,7 +43,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     case 'H':	// help
         g_help = !g_help;
         break;
-    case 8:		// backspace
+    case 8:     // backspace
         resetCameraViewport();
         break;
     case 13:	// enter
@@ -174,29 +174,31 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
 //Help menu with Glut commands and line by line iteration built in.
 void utPrintHelpMenu(float w, float h)
 {
-    constexpr char helpStrings[18][32] = { "[H]elp Menu:",
-                                           "[Right Click]  Actions Menu",
-                                           "[Dbl Click]  Rotate Current CW>",
-                                           "  +Shift  CounterClockwise <<",
-                                           "1,2,3,4,5 Flip Edge Color #",
-                                           "!,@,#,$,% Flip Corner Color #",
-                                           "[W/w]  Rotate Upper Face </>",
-                                           "[S/s]  Rotate Front Face </>",
-                                           "[A/a]  Rotate Left  Face </>",
-                                           "[D/d]  Rotate Right Face </>",
-                                           "[Z/z]  Rotate DownLeft   </>",
-                                           "[C/c]  Rotate DownRight  </>",
-                                           "[X/x]  Rotate Bottom Face </>",
-                                           "[BackSpace] Default Camera Pos",
-                                           "[Space]  Toggle Auto-Spinning",
-                                           "[Delete]  Scramble Puzzle",
-                                           "[Enter]  Default Current Face",
+    constexpr char helpStrings[20][32] = { "[H]elp Menu:",
+                                           "[Right Click] ---> Actions Menu",
+                                           "[Dbl Click] Rotate Current CW>>",
+                                           " \"+Shift  Counter Clockwise <<",
+                                           "1,2,3,4,5  Flip Edge Color #",
+                                           "!,@,#,$,%  Flip Corner Color #",
+                                           "[W/w] << >>  Rotate Upper Face",
+                                           "[S/s] << >>  Rotate Front Face",
+                                           "[A/a] << >>  Rotate Left  Face",
+                                           "[D/d] << >>  Rotate Right Face",
+                                           "[Z/z] << >>  Rotate DownLeft  ",
+                                           "[C/c] << >>  Rotate DownRight ",
+                                           "[X/x] << >>  Rotate Bottom    ",
+                                           "[BackSpace]  Default Camera Pos",
+                                           "[Space]      Toggle Spinning",
+                                           "[Delete]     Scramble All",
+                                           "[Ctrl^Enter] Reset Current Face",
+                                           "[Ctrl^BkSpc] New Megaminx Fresh",
+                                           "[Enter]   Readline CLI SHELL :>",
                                            "[F1-F8=F9] Layer'# Human Solver",
     };
     glColor3f(1, 1, 1); //White
     float incrementHeight = h;
-    for (int i = 0; i < 18; i++) {
-        utDrawText2DFont(w, incrementHeight, GLUT_BITMAP_HELVETICA_18, helpStrings[i]);
+    for (int i = 0; i < 20; i++) {
+        utDrawText2DFont(w, incrementHeight, GLUT_BITMAP_HELVETICA_12, helpStrings[i]);
         incrementHeight += 15;
     }
 }
@@ -215,9 +217,9 @@ void createMenu()
     glutAddMenuEntry("Edit.Undo*4", 95);
     glutAddMenuEntry("Edit.Undo-Seq", 96);
     glutAddMenuEntry("Scramble! [Del]", 100);
-    glutAddMenuEntry("New Cube...", 92);
-    glutAddMenuEntry("Save Cube...", 98);
-    glutAddMenuEntry("Restore Cube...", 99);
+    glutAddMenuEntry("New Megaminx!", 92);
+    glutAddMenuEntry("Save ...", 98);
+    glutAddMenuEntry("Restore ...", 99);
     glutAddMenuEntry("Readline Shell:>", 101);
     glutAddMenuEntry("Exit!", 102);
 
@@ -325,10 +327,10 @@ void menuHandler(int num)
     case 102:
         glutDestroyWindow(1);
         exit(0); break;
-    case 98: //Save Cube State to File
+    case 98: //   Save Cube State to File //(load.cpp)
         SaveCubetoFile();
         break;
-    case 99: //Restore Cube State to File
+    case 99: //Restore Cube State to File //(load.cpp)
         RestoreCubeFromFile();
         break;
 
