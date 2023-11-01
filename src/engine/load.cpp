@@ -7,13 +7,6 @@ constexpr const char* EDGEFILECOLORS("EdgeColors30.dat");
 constexpr const char* CORNERFILE("CornerPositions20.dat");
 constexpr const char* CORNERFILECOLORS("CornerColors20.dat");
 constexpr const char* MEGAMINXBLOB("MegaminxSAVEFILE.txt");
-//OLD Cube SaveState filenames - never gonna work, format incompatible now.
-// Redo save/load algorithm and make load.hpp @ 9b85ebddf10cfe30fd1db5947d5d8a65b8f5912a 2023/03/05
-constexpr const char* OLDEDGEFILE("EdgeCurPos.dat");  //not needed really anymore.
-constexpr const char* OLDEDGEFILECOLORS("EdgeColorPos.dat");
-constexpr const char* OLDCORNERFILE("CornerCurPos.dat");
-constexpr const char* OLDCORNERFILECOLORS("CornerColorPos.dat");
-constexpr const char* OLDMEGAMINXBLOB("MegaminxSAVEFILE.txt");
 
 struct megaminxPieceData {
     std::vector<int>  EdgePiecesPosition = {};
@@ -29,13 +22,6 @@ struct megaminxPieceData {
         EdgePiecesColors = ReadPiecesFileVector(testDir+EDGEFILECOLORS);
         CornerPiecesPosition = ReadPiecesFileVector(testDir+CORNERFILE);
         CornerPiecesColors = ReadPiecesFileVector(testDir+CORNERFILECOLORS);
-    }
-    void readOLDFileConstruct(std::string testDir) {
-        infilepath = testDir;
-        EdgePiecesPosition = ReadPiecesFileVector(testDir+OLDEDGEFILE);
-        EdgePiecesColors = ReadPiecesFileVector(testDir+OLDEDGEFILECOLORS);
-        CornerPiecesPosition = ReadPiecesFileVector(testDir+OLDCORNERFILE);
-        CornerPiecesColors = ReadPiecesFileVector(testDir+OLDCORNERFILECOLORS);
     }
     void cloneConstruct() {
         EdgePiecesPosition = megaminx->getAllEdgePiecesPosition();
@@ -87,13 +73,14 @@ struct megaminxPieceData {
         megaminx->LoadNewEdgesFromVector(EdgePiecesPosition, EdgePiecesColors);
         megaminx->LoadNewCornersFromVector(CornerPiecesPosition, CornerPiecesColors);
     }
-    void sizeCheck() const {
+    bool sizeCheck() const {
         if ((EdgePiecesPosition.size() != 60 && CornerPiecesPosition.size() != 60 ) &&
             (EdgePiecesColors.size() != 60 && CornerPiecesColors.size() != 60)) {
             std::cerr << "There was an error reading the input file - "
                          "(internal contents corrupt or size mismatch) !!!!!!" << std::endl;
-            return;
+            return false;
         }
+        return true;
     }
 };
 static megaminxPieceData mainData;
@@ -109,16 +96,15 @@ void SaveCubetoFile() {
     serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
 
-
 [[deprecated]]  //old cube loader (for converting old tests/saves) + and testing the new struct
 void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp with /testconvert
      //TODO: Crashes w/ segfault if the files dont exist. check for them first.
     megaminxPieceData td;
     //Read New Piece Data
-    td.readOLDFileConstruct(testDir); //prints error then crashes if file missing.
+    td.readFileConstruct(testDir); //prints error then crashes if file missing.
+    if (!td.sizeCheck()) return;
     std::cout << "STATUS BEFORE: \n";
     td.serializeThisOutput();
-    td.sizeCheck();
     //read 12 lines * 5 faces = 60 pieces
     //populate main minx
     td.loadMegaMinx();
@@ -127,7 +113,7 @@ void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp w
     td.serializeMegaminxOutput();
     //Reoutput as file:
     //UNIT TESTS, reoutputs as another file converted type:
-    td.outfiledir = "tests/6060to3020/"+td.infilepath;
+    td.outfiledir = "tests/"+td.infilepath;
     td.SaveThistoFile();
 }
 
