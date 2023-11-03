@@ -85,12 +85,12 @@ struct numdir {
 };
 
 //Named Flip Direction lists:
-constexpr int FlipInwards[4] = { 0, 1, 1, 0 };
-constexpr int FlipOutwards[4] = { 1, 0, 0, 1 };
-constexpr int FlipBackwards[4] = { 0, 0, 1, 1 };
-constexpr int FlipForwards[4] = { 1, 1, 0, 0 };
+constexpr int FlipInwards[4] =     { 0, 1, 1, 0 };
+constexpr int FlipOutwards[4] =    { 1, 0, 0, 1 };
+constexpr int FlipBackwards[4] =   { 0, 0, 1, 1 };
+constexpr int FlipForwards[4]   =  { 1, 1, 0, 0 };
 constexpr int FlipBackwardAlt[4] = { 0, 1, 0, 1 };
-constexpr int FlipForwardAlt[4] = { 1, 0, 1, 0 };
+constexpr int FlipForwardAlt[4]  = { 1, 0, 1, 0 };
 
 //These are invoked when Face::placeParts() is ran, when it's rotating.
 //Called from Face::render(), only when something is moved, NEVER on startup.
@@ -135,7 +135,7 @@ constexpr int  CCW7E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
 constexpr int  CCW8E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
 constexpr int  CCW9E[8] = { 0, 1, 1, 2, 2, 4, 3, 4 };
 constexpr int CCW10E[8] = { 0, 2, 0, 4, 0, 3, 0, 1 };
-constexpr int CCW11E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };    // = 12403
+constexpr int CCW11E[8] = { 0, 3, 0, 4, 0, 2, 0, 1 };
 //Flip direction lists for PlaceParts: //Clockwise Edges
 //CW Edges
 constexpr int  CW0E[8] = { 0, 1, 4, 0, 3, 4, 2, 3 };

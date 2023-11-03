@@ -83,8 +83,8 @@ public:
         dirToWhiteA = DirToWhiteFace[edgeFaceNeighbors.a][edgeFaceLocA];
         dirToWhiteB = DirToWhiteFace[edgeFaceNeighbors.b][edgeFaceLocB];
         //Use reference table to check edge internal color data struct-order.
-        whichcolorEdgeA = BlackEdgesNumber2[edgeFaceNeighbors.a][edgeFaceLocA];
-        whichcolorEdgeB = BlackEdgesNumber2[edgeFaceNeighbors.b][edgeFaceLocB];
+        whichcolorEdgeA = edgeSolveFaceBitmap[edgeFaceNeighbors.a][edgeFaceLocA];
+        whichcolorEdgeB = edgeSolveFaceBitmap[edgeFaceNeighbors.b][edgeFaceLocB];
         assert(whichcolorEdgeA + whichcolorEdgeB == 1); //just makes sure the reference table is accurate, it is.
         //Determine which color half-edge is on each face
         edgeHalfColorA = EdgeItselfA->data._colorNum[whichcolorEdgeA];

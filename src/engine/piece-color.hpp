@@ -172,9 +172,11 @@ constexpr int DirToWhiteFace[MAX_COLOR_STATES][5] =
     { -1, 1, 1, -1, -1 }
 };
 
+//edge self-solve bitmap (introspection)
 //Edges that have their solved-Face-Color in the color[1] index. (marked by 1's),
 //                                instead of the color[0] index. (marked by 0's)
-constexpr int BlackEdgesNumber2[MAX_COLOR_STATES][5] =
+//these bits must be set on the color data, to consider as solved
+constexpr int edgeSolveFaceBitmap[MAX_COLOR_STATES][5] =
 {
     { 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0 },
