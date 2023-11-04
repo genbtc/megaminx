@@ -4,7 +4,10 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.4";
  * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
  * Now Modified by Gen
  * genBTC 2017-2020+2023 / genbtc@gmx.com / @genr8_ / github.com/genbtc/
- * MegaMinx2 - v1.3 Oct24-Dec12, 2017 - genBTC mod. ChangeLog
+ * MegaMinx2 - v1.4.5 - Nov 2, 2023
+*/
+/*Changelog:
+			 - v1.3 Oct24-Dec12, 2017 - genBTC mod. ChangeLog
              - v1.3.2 Nov 22, 2018
              - v1.3.3 Dec 19, 2018
              - v1.3.7 Mar 13, 2020
@@ -15,6 +18,7 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.4";
              - v1.4.2 Oct 22, 2023 (still bugged.)
              - v1.4.3 Oct 25, 2023 (symbol errors fixed, piece number tooltips)
              - v1.4.4 Oct 26, 2023 Create algorithms.hpp and refactor algostring menus
+             - v1.4.5 Nov 2, 2023
 */
 // Headers
 #ifdef _WINDOWS

@@ -1,6 +1,6 @@
 #pragma once
 
-//define color names in order
+//Megaminx standard color names defined in numerical order
 typedef enum {
     BLACK = 0,
     WHITE,
@@ -18,16 +18,17 @@ typedef enum {
     MAX_COLOR_STATES
 } megaminxColor;
 
+//scaffolding Struct, a shell for a color, for g_colorRGBs
 struct colorpack {
     int i;
     double r,g,b;
     const char* name;
 };
 
-//list of the 12 colors in R,G,B from 0.0-1.0(0-255)
+//Main list of the 12 colors in R,G,B form (0-255) = 0.0 - 1.0, enum to Name string
 constexpr colorpack g_colorRGBs[MAX_COLOR_STATES] = {
     { 0, 0.0, 0.0, 0.0, "BLACK" },
-    { 1, 1.0, 1.0, 1.0, "WHITE" },
+    { WHITE, 1.0, 1.0, 1.0, "WHITE" },
     { 2, 0.0, 0.0, 1.0, "DARK_BLUE" },
     { 3, 1.0, 0.0, 0.0, "RED" },
     { 4, 0.0, 0.4, 0.0, "DARK_GREEN" },
@@ -38,10 +39,10 @@ constexpr colorpack g_colorRGBs[MAX_COLOR_STATES] = {
     { 9, 1.0, 0.4, 0.1, "ORANGE" },
     { 10, 0.4, 1.0, 0.4, "LIGHT_GREEN" },
     { 11, 0.9, 0.4, 1.0, "PINK" },
-    { 12, 1.0, 0.9, 0.65, "BEIGE" }
+    { BEIGE, 1.0, 0.9, 0.65, "BEIGE" }
 };
 
-//Struct that can hold up to 3 Colors for Center/Edge/Corner
+//scaffolding Struct, a shell for a piece, holds 1-3 Colors for a Center/Edge/Corner definition
 struct colorpiece {
     megaminxColor a = BLACK;
     megaminxColor b = BLACK;
@@ -52,7 +53,7 @@ static const int numFaces = 12;
 static const int numCorners = 20;
 static const int numEdges = 30;
 
-//Defines the 30 edge pieces.
+//Defines the 30 edge pieces. (0-29)
 constexpr colorpiece g_edgePiecesColors[numEdges] = {
     // 0 - 4
     { WHITE, DARK_BLUE },
@@ -92,7 +93,7 @@ constexpr colorpiece g_edgePiecesColors[numEdges] = {
     { GRAY, BEIGE }
 };
 
-//Defines the 20 corner Pieces.
+//Defines the 20 corner Pieces. (0-19)
 constexpr colorpiece g_cornerPiecesColors[numCorners] = {
     // 0 - 4
     { WHITE, RED, DARK_BLUE },
@@ -120,11 +121,10 @@ constexpr colorpiece g_cornerPiecesColors[numCorners] = {
     { GRAY, PINK, BEIGE }
 };
 
-//struct that holds the relative position & direction for colors in g_faceNeighbors below
-//Initialized to BLACK (0)
+//scaffolding struct that holds relative position/direction color info, for g_faceNeighbors below
 struct colordirs {
     //order: Start from front face, then 9-oclock and going CW right around and down
-    megaminxColor front = BLACK;
+    megaminxColor front = BLACK;  //All (0) Initialized to BLACK
     megaminxColor left  = BLACK;
     megaminxColor up    = BLACK;
     megaminxColor right = BLACK;
@@ -133,7 +133,8 @@ struct colordirs {
     megaminxColor bottom = BLACK;
 };
 
-//Defines which faces are touching each other. For Human Algo Rotate.
+//Defines which faces are touching each other. Entire relational color map.
+// For Human Algo Rotate., used by RotateAlgo, ParseAlgorithmID and param to ParseAlgorithmString
 constexpr colordirs g_faceNeighbors[MAX_COLOR_STATES] = {
     //Initialize the 0 slot to BLACK invalid
     { BLACK, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK },
@@ -155,6 +156,7 @@ constexpr colordirs g_faceNeighbors[MAX_COLOR_STATES] = {
 
 //Determine which direction those faces need to rotate to land the Edge on the white
 //Decides which direction, up or down, for the pieces to passively float to their original home
+//Spatial awareness vision introspection
 constexpr int DirToWhiteFace[MAX_COLOR_STATES][5] =
 {
     { 0, 0, 0, 0, 0 },
@@ -175,7 +177,8 @@ constexpr int DirToWhiteFace[MAX_COLOR_STATES][5] =
 //edge self-solve bitmap (introspection)
 //Edges that have their solved-Face-Color in the color[1] index. (marked by 1's),
 //                                instead of the color[0] index. (marked by 0's)
-//these bits must be set on the color data, to consider as solved
+//(Which half of the edge would the solved face be on)
+//these bits must be set, equal to the color data index, to consider as solved
 constexpr int edgeSolveFaceBitmap[MAX_COLOR_STATES][5] =
 {
     { 0, 0, 0, 0, 0 },
