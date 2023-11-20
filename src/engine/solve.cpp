@@ -345,12 +345,12 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 offby -= 5;
             int aoffby = l.sourceCornerIndex + RED;
             MMMg(aoffby,YELLOW);
-            assert(offby == aoffby);
+            assert(offby == aoffby);    //DEV: temporary testing for confidence
             if (offby >= 2) {
                 bulkAlgo = shadowDom->ParseAlgorithmID(50, offby);      //    .algo = "R' DR' r dr"
                 shadowDom->shadowBulkRotate(bulkAlgo);
             }
-            assert(offby >= 2);   //temporary testing for confidence
+            assert(offby >= 2);   //DEV: temporary testing for confidence
             std::cout << "Debug-121-L1WC: Row1 " << i << " sourcecornerindex: "  << l.sourceCornerIndex << " offby: " << offby << "\n";
         }
         //Move correct corners straight up and in from 5-9 to 0-4 ( 5 - 5 = 0)
@@ -360,7 +360,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
                 offby -= 5;
             int aoffby = i + RED;
             MMMg(aoffby,YELLOW);
-            assert(offby == aoffby);
+            assert(offby == aoffby);    //DEV: temporary testing for confidence
             if (offby >= 2) {
                 if (l.CornerItselfA->data.flipStatus == 2)
                     bulkAlgo = shadowDom->ParseAlgorithmID(51, offby);  //    .algo = "f dr F' "
@@ -495,32 +495,19 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
             }
         }
         //Layer 6 pieces are moved down to gray layer 7
-        else if (l.isOnRow5) {
-            if (l.dirToWhiteA != 0) {
-                shadowDom->shadowRotate(l.edgeFaceNeighbors.a, -1 * l.dirToWhiteA);
-                std::cout << "Debug-224-L2E: Row5 to A " << std::endl;
-            }
-//            else if (l.dirToWhiteB != 0) {                              //UNUSED
-//                shadowDom->shadowRotate(l.edgeFaceNeighbors.b, -1 * l.dirToWhiteB);
-//                std::cout << "Debug-225-L2E: Row5 to B " << std::endl;  //UNUSED
-//            }
+        else if (l.isOnRow5 && l.dirToWhiteA != 0) {
+            shadowDom->shadowRotate(l.edgeFaceNeighbors.a, -1 * l.dirToWhiteA);
+            std::cout << "Debug-224-L2E: Row5 to A " << std::endl;
         }
         //gray Layer 7 acts as a temporary storage for pieces
         else if (l.isOnRow6) {
             int row7 = l.sourceEdgeIndex - 28 - i;
             const bool moved = shadowDom->shadowMultiRotate(GRAY, row7);
             //Align the GRAY layer 7 to be directly underneath the intended solve area
-            if (!moved) {
-/*                if (l.dirToWhiteA != 0) {                                   //UNUSED
-                    shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-                    shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
-                    std::cout << "Debug-226-L2E: Row6 to A " << std::endl;  //UNUSED
-                } else */
-                if (l.dirToWhiteB != 0) {
-                    shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
-                    shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
-                    std::cout << "Debug-227-L2E: Row6 to B " << std::endl;
-                }
+            if (!moved && l.dirToWhiteB != 0) {
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
+                shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
+                std::cout << "Debug-227-L2E: Row6 to B " << std::endl;
             }
         }
         else //unknown error occured, canary in the coalmine that somethings wrong.
@@ -605,11 +592,15 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         }
         //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved (4 -> 2)
         else if (l.isOnRow4) {   //15->10, 16-14>, 17->13, 18->12, 19->11 (0,1,2,3,4 * -2)
-            //locate our source piece
-            int offby = l.sourceCornerIndex - endingPiece - startingPiece - i - 3;
+            //locate our source piece                       //always 5 
+            int offby = l.sourceCornerIndex - i - (endingPiece - startingPiece) - 3;
             //Orient Gray Top layer (index goes in reverse)
             int offby2 = (l.sourceCornerIndex - i + 2) % 5;
-            //assert(offby == offby2);
+            
+            //DEV:
+            rM3Mr(offby); rM3Mr(offby2); assert(offby == offby2);
+            //std::cout << "Debug-333-offbys " << offby << " " << offby2 << std::endl;
+            
             //get it out of row4 by orienting top.
             shadowDom->shadowMultiRotate(GRAY, offby);
             //locate where it went
@@ -720,12 +711,6 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
                 shadowDom->shadowRotate(l.edgeFaceNeighbors.a, l.dirToWhiteA);
                 std::cout << "Debug-445-L4E: edge Row5 to dir A " << std::endl;
             }
-//            else if (l.dirToWhiteB != 0) {                          //UNUSED
-//                shadowDom->shadowRotate(l.edgeFaceNeighbors.b, -1 * l.dirToWhiteB);
-//                shadowDom->shadowRotate(GRAY, l.dirToWhiteB);       //UNUSED
-//                shadowDom->shadowRotate(l.edgeFaceNeighbors.b, l.dirToWhiteB);
-//                std::cout << "Debug-446-L4E: edge Row5 to dir B " << std::endl;
-//            }                                                       //UNUSED
             else
                 unknownloop++;
         }
@@ -797,8 +782,8 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
         //Get the Pieces off Row 4 (gray layer) and onto row 2 Solved
         else if (l.isOnRow4) {
             //Orient Gray Top layer (index goes in reverse)
-            int obffby = (l.sourceCornerIndex - i * -1) % 5;
-            shadowDom->shadowMultiRotate(GRAY, obffby);
+            int offby = (l.sourceCornerIndex - i * -1) % 5;
+            shadowDom->shadowMultiRotate(GRAY, offby);
             //quick shortcut to know which face we're working on.
             const int front = BEIGE - (i - startingPiece);
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[1].algo, g_faceNeighbors[front], 1); // "r u R' U' "
@@ -1242,7 +1227,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if (offby >= 3 && solvedCount == 2 && twoOppositePieces)
         {
             colordirs loc;
-            for (int i = 0, j = 2; i < 5 ; MM4(j), i++, j++) {
+            for (int i = 0, j = 2; i < 5 ; i++, j++, MM5(j)) {
                 if (twoSolvedPieces(i, j))
                     loc = g_faceNeighbors[LIGHT_BLUE + i];
             }
@@ -1271,7 +1256,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if ((offby == 1 || offby == 2) && solvedCount == 2 && twoOppositePieces && (allEdgeColorsSolved || twoGraysUnsolved(1, 2))) //TT39-2 //TT41-2 //TT74-2
         {                                                    //testCube3-p2 ->(blue/green)=PASS  + //TT24-2
             colordirs loc;
-            for (int i = 0, j = 2; i < 5 ; MM4(j), i++, j++) {
+            for (int i = 0, j = 2; i < 5 ; i++, j++, MM5(j)) {
                 if (twoSolvedPieces(i, j))
                     loc = g_faceNeighbors[LIGHT_BLUE + i];
             }

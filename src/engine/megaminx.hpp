@@ -231,6 +231,7 @@ public:
         return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
     }
 
+    //match 7th layer edge pieces to modby stat for algorithms, and rotate by startingFace
     bool faceToModBy(const std::vector<int> &pieces, const int modby[5], int startingFace = 0);
 
   private:
@@ -247,9 +248,7 @@ extern Megaminx* shadowDom;
 
 //lambdas for over-rotation
 static auto MM5 = [](int &over) { while (over >= 5) over -= 5; };
-static auto MM4 = [](int &over) { while (over >= 4) over -= 5; };
 static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
-static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
 static auto MMmin = [](megaminxColor x, megaminxColor y) {
   if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))  return BEIGE;
