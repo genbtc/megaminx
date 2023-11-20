@@ -9,6 +9,7 @@ struct AlgoString {
     int repeatX=0;
     int modby[5]{};
 };
+//.modby is calculated by foundEdges[k] - defaultEdges[k], so the calc must be * -1 to check for solved
 
 constexpr int ALL_ALGORITHMS = 53;
 constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
@@ -29,13 +30,12 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .len = 4
     },
 
-    //2nd Layer edges (simple) moved to algoLayer[]
+    //MOVED: 2nd Layer edges (simple) moved to algoLayer[] section
     { 3, "" },
     { 4, "" },
-
-    //LL S4 Corners simple RDRD flip moved to #50
+    //MOVED: LL Step 4 Corners simple RDRD flip moved to #50
     { 5, "" },
-    //Step 3 moved 6 to 25 and 7 to 26
+    //MOVED: LL Step 3 moved #6 to 25 and #7 to 26
     { 6, "" },
     { 7, "" },
 
@@ -140,11 +140,14 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .len = 16,
         .modby = { -2, 0, 0, 1, 1 }
     },
+    //MOVED:{
     //#32=#7Last-Layer: Step 2: Edge Permutation 3d- //"LL Edge 3d- CCW Both+Backs=Safe"
-    //#33= 3e
+    //#33= 7LL ::                               3e //opposite
+    //}
 
     // #7Last-Layer: Step 2: Edge Position, 5-way star cycle CW+ , Opposite Faces CW
     //10 moves * 6 = 60 moves total. copied from cube manual (turned upside down).
+    //shorter version = 40, opposite = 38
     {
         .num = 17,
         .algo = "L' u2 r U2' l u2 R' ",
@@ -191,13 +194,14 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .len = 57,
     },
 
-    //moved to g_AlgoStringsLayer[] at the bottom:
+    //MOVED{: to g_AlgoStringsLayer[] at the bottom:
     //2nd Layer Edges
     //4nd Layer Edges
     { 22, "" },
     //6th Layer Edges
     { 23, "" },
     { 24, "" },
+    //}
 
     // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions.
     //ONLY affects Corners. //3rd Repetition = Undo
@@ -333,7 +337,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { 1, -1, -1, -2, -2 }
     },
 
-    //(5-way edge Cycle -2) (48 vs 60 moves) (repeats algo #14+#14+#14)
+    //(5-way edge Cycle -2 all) (48 vs 60 moves) (repeats algo #14+#14+#14)
     //TODO: organize: (opposite is #41 below)
     //TODO: organize: Shorter version of #17
     //TODO: organize: 40 = 17 = 14+14+14, opposite = 41 ( = 38 )
@@ -344,7 +348,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { 2, 2, 2, 2, 2 }
     },
 
-    //(5-way edge Cycle +2) (48 vs 60 moves) (repeats algo #33+#33+#33)
+    //(5-way edge Cycle +2 all) (48 vs 60 moves) (repeats algo #33+#33+#33)
     //TODO: organize: (opposite of #40 above)
     //TODO: organize: shorter version of #38
     //TODO: organize: 41 = 38 = 33+33+33, opposite = 40 ( = 17 )
@@ -367,7 +371,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { -1, 1, -1, 1, 0 }
     },
 
-    //Bunny Adjacent Edge Swap - Opposite of 42 above (32 moves)
+    //Bunny Adjacent Edge Swap - Opposite of 42 above (32 moves)  Algo43 5way star Reverse (-1,-2,+1,-2,-1)
     //TODO: organize: shorter opposite version of #39 #18
     //TODO: organize: 43 = 39=/=18 , opposite = 42=/=19
     {
@@ -502,14 +506,15 @@ constexpr AlgoString g_AlgoStringsLayer[11] = {
         .algo = "u r U' R' , U' F' u f",
         .len = 8
     },
-    //simple L#2-Edges - (opposite is case#2)
+    //simple L#2-Edges half-  (opposite is case#2)
     //https://youtu.be/PWTISbs0AAs?t=493 og video., Insert to Left = This First, then next.
     {
         .num = 9,
         .algo = "U' L' u l",
         .len = 4
     },
-    //simple L#2-Edges - (opposite is case#1)
+    // <> These two combine to form each others cases <>
+    //simple L#2-Edges half+  (opposite is case#1)
     //same as ^ video: Insert to Right = This first, then previous.
     {
         .num = 10,

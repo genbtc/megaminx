@@ -14,6 +14,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <array>
 
 class Megaminx {
 public:
@@ -225,12 +226,14 @@ public:
     } //where T = Corner or Edge
     void DetectSolvedCorners(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Corner>(startI, piecesSolved); }
     void DetectSolvedEdges(int startI, bool piecesSolved[5]) { DetectSolvedPieces<Edge>(startI, piecesSolved); }
-    
-    bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) const {
+
+    static bool checkPieceMatches(const std::vector<int> &pieces, int a, int b, int c, int d, int e) {
         return (pieces[0] == a && pieces[1] == b && pieces[2] == c && pieces[3] == d && pieces[4] == e);
     }
 
-private:
+    bool faceToModBy(const std::vector<int> &pieces, const int modby[5], int startingFace = 0);
+
+  private:
     std::queue<numdir> rotateQueue;
     std::stack<numdir> undoStack;
     std::queue<numdir> shadowRotateQueue;
@@ -245,13 +248,9 @@ extern Megaminx* shadowDom;
 //lambdas for over-rotation
 static auto MM5 = [](int &over) { while (over >= 5) over -= 5; };
 static auto MM4 = [](int &over) { while (over >= 4) over -= 5; };
-//static auto r5MM = [](int &over) { while (over <= -5) over += 5; };
 static auto rM3Mr = [](int &over) { while (over <= -3) over += 5; while (over >= 3) over -= 5; };
-//static auto MMs5 = [](int &over, int stop) { while (over >= stop) over -= 5; };
-//static auto MMsg = [](int &over, int stop) { while (over > stop) over -= 5; };
 static auto MMM5 = [](int &over, megaminxColor stop) { while (over >= (int)stop) over -= 5; };
 static auto MMMg = [](int &over, megaminxColor stop) { while (over > (int)stop) over -= 5; };
-//static auto MMMu = [](int &under, megaminxColor stop) { while (under < (int)stop) under += 5; };
 static auto MMmin = [](megaminxColor x, megaminxColor y) {
   if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))  return BEIGE;
   else  return std::min(x,y);

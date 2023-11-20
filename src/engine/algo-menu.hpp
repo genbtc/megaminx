@@ -143,10 +143,10 @@ constexpr StringAlgo humanbulk_algorithms[MAX_HUMANBULK_ALGORITHMS] = {
     { "37. 7LL-Edge 2+2swap BUNNY BEST 2&5,3&4", 87 },
     { "19. 7LL-Edge 2+2swap BUNNY Adj. 2&3,4&5", 69 },
     { "29. 7LL-Edge 2+2swap BUNNY Colors ONLY 2,3,4,5", 79 },
-    { "38. 7LL-Edge 5-way CCW cycle by +2 all", 88 },
-    { "17. 7LL-Edge 5-way  CW cycle by -2 all", 67 },
-    { "39. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 189 },
-    { "43. 7LL-Edge 5-way  CW cycle by -1,-2,1,-2,-1", 193 },
+    { "38. 7LL-Edge 5-way CCW cycle by +2 all", 88 },         //40
+    { "17. 7LL-Edge 5-way  CW cycle by -2 all", 67 },         //41
+    { "39. 7LL-Edge 5-way CCW star by 1,2,-1,2,1", 189 },    //39
+    { "43. 7LL-Edge 5-way  CW star by -1,-2,1,-2,-1", 193 }, //43
     { "11. 7LL-E+C #1/3 CCW HORSEdge- Fr./R.Back=Safe", 61 },
     { "10. 7LL-E+C #2 CCW MUSHEdge- Fr./L.=Safe", 60 },
     { "08. 7LL-E+C #3  CW MUSHEdge+ Fr.Line/L.Edge=Safe", 58 },

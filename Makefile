@@ -1,18 +1,18 @@
 #Simplest makefile possible. Works on Linux and Windows. And MSYS/MingW.
-#works with megaminx v1.40 where linenoise & readline are present
+#works with megaminx v1.40+ where linenoise & readline are present
 
 UNAME = $(shell uname -o)
 ifeq ($(OS),Windows_NT)
 	EXEEXT = .exe
-	COMPILE_OPT = -lfreeglut -lglu32 -lopengl32
+	LINKER_OPTS = -lfreeglut -lglu32 -lopengl32
 else
-	COMPILE_OPT = -lGL -lGLU -lglut -ggdb
+	LINKER_OPTS = -lGL -lGLU -lglut -ggdb3
 endif
 
 all: megaminx
 
-megaminx: main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o linenoise.o readline.o
-	g++ main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o linenoise.o readline.o $(COMPILE_OPT) -o megaminx
+megaminx: main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o linenoise.o readline.o Res.rc.o
+		g++ main.o main-menu.o center.o edge.o corner.o face.o megaminx.o camera.o opengl.o load.o shadow.o solve.o linenoise.o readline.o  $(LINKER_OPTS) -o megaminx
 
 main.o: src/main.cpp
 	g++ -c src/main.cpp
@@ -42,11 +42,14 @@ linenoise.o: src/ui/linenoise.c
 	gcc -c src/ui/linenoise.c
 readline.o: src/readline.cpp
 	g++ -c src/readline.cpp
+
 #Res.rc.o is a Resource file for an Icon, and windres.exe needs to be used with arguments, it needs this stuff
 # (customized to use the 32-bit windres on a MingW64 setup)
 # This is broken for linux, cant use properly
+# Res.rc.o:(.rsrc$01+0xb8): dangerous relocation: R_AMD64_IMAGEBASE with __ImageBase undefined
 Res.rc.o:
-	windres.exe --preprocessor=x86_64-w64-mingw32-g++.exe --preprocessor-arg=-E --preprocessor-arg=-xc-header --preprocessor-arg=-DRC_INVOKED -i src/Res.rc -o Res.rc.o
+	#MSVC# windres.exe --preprocessor=x86_64-w64-mingw32-g++.exe --preprocessor-arg=-E --preprocessor-arg=-xc-header --preprocessor-arg=-DRC_INVOKED -i src/Res.rc -o Res.rc.o
+	windres src/Res.rc -O coff -o Res.rc.o --target=x86_64-pc-linux-gnu
 
 clean:
 	rm -rf *.o megaminx$(EXEEXT)
