@@ -1032,8 +1032,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[40].algo, g_faceNeighbors[LIGHT_BLUE], 40);    //algo17@Blue (60 moves to 48)
             std::cout << "Debug-712-L7E: Algo40 5way cycle (-2,-2,-2,-2,-2)  @ 0  = 28, 29, 25, 26, 27 " << std::endl;
             bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[40].modby, 0); //This would be -3 all around (3 right) (which reverses to +2) (2 left)
-            if (isNowSolved)
-                std::cout << "Debug-712 7E IsNowSolved" << std::endl;
+            assert(isNowSolved);
         }
 //5-way cycle CW (+2,+2,+2,+2,+2) #Algo#41
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 28, 29, 25, 26)) //TT53-2
@@ -1041,8 +1040,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[41].algo, g_faceNeighbors[LIGHT_BLUE], 41);    //algo38@Blue (60 moves to 48)
             std::cout << "Debug-713-L7E: Algo41 5way cycle (+2,+2,+2,+2,+2)  @ 0  = 27, 28, 29, 25, 26 " << std::endl;
             bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[41].modby, 0);
-            if (isNowSolved)
-                std::cout << "Debug-713 7E IsNowSolved" << std::endl;
+            assert(isNowSolved);
         }
 
 //TODO: Combine these 5 better #Algo#39
@@ -1052,8 +1050,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_BLUE], 39);   //algo18@Green (60 moves to 32)
             std::cout << "Debug-714-L7E: Algo39 5way cycle star (+1,+2,-1,+2,+1)  @ 0" << std::endl;
             bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 0);
-            if (isNowSolved)
-                std::cout << "Debug-714 7E IsNowSolved" << std::endl;
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 25, 28, 29, 26)) //TT58-2
         {
@@ -1061,27 +1058,28 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[ORANGE], 39);    //algo18@Pink (60 moves to 32)
             std::cout << "Debug-715-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ 1" << std::endl;
             bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 1);
-            if (isNowSolved)
-                std::cout << "Debug-715 7E IsNowSolved" << std::endl;
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 28, 26, 29, 25)) //TT59-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_GREEN], 39);  //algo18@Beige (60 moves to 32)
             std::cout << "Debug-716-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ 2" << std::endl;
+            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 2);
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 28, 29, 27, 25)) //TT56-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[PINK], 39);  //algo18@Blue (60 moves to 32)
             std::cout << "Debug-717-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ 3" << std::endl;
+            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 3);
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 27, 29, 25, 28)) //TT57-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[BEIGE], 39); //algo18@Orange (60 moves to 32)
             std::cout << "Debug-718-L7E: Algo39 5way star (+1,+2,-1,+2,+1) @  4" << std::endl;
-        }
-        else if (0)
-        {
-            auto theAlgo = g_AlgoStrings[39];
+            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 4);
+            assert(isNowSolved);
         }
 
 //TODO: Combine these 5 also #Algo#43
@@ -1091,33 +1089,35 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_BLUE], 43);
             std::cout << "Debug-719-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 0" << std::endl;
             bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 0);
-            if (isNowSolved)
-                std::cout << "Debug-719 7E IsNowSolved" << std::endl;
-
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 29, 25, 27, 28))
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[ORANGE], 43);
             std::cout << "Debug-720-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 1" << std::endl;
             bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 1);
-            if (isNowSolved)
-                std::cout << "Debug-720 7E IsNowSolved" << std::endl;
-
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 27, 25, 26, 28))
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_GREEN], 43);
             std::cout << "Debug-721-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 2" << std::endl;
+            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 2);
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 25, 28, 26, 27))
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[PINK], 43);
             std::cout << "Debug-722-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 3" << std::endl;
+            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 3);
+            assert(isNowSolved);
         }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 25, 26, 29, 27))
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[BEIGE], 43);
             std::cout << "Debug-723-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 4" << std::endl;
+            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 4);
+            assert(isNowSolved);
         }
 //End solvedCount=0:
 
@@ -1180,11 +1180,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + firstOffColorPiece], 14);  //algo #14 3a-  (F/L Safe)
             std::cout << "Debug-728-L7E: Algo14 Mushroom-  @ " << firstOffColorPiece << std::endl;
         }
-        else if (offby == 0 && solvedCount == 3 && twoAdjacentPieces && twoSolvedPieces(0,1) && piecesSolved[2] && twoGraysUnsolved(3,4))
-        {                                                                                 //TestCube15-2-Edgesstuck
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[ORANGE], 14);
-/*unused*/  std::cout << "Debug-729-L7E: Algo14 Mushroom-  @ 1 " << std::endl;
-        }
         //first and second piece solved for sure, attached
         else if (
               (offby == 2 && solvedCount == 1 && allEdgeColorsSolved)
@@ -1210,51 +1205,11 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
             std::cout << "Debug-731-L7E: Algo14 Mushroom-  @  0 " << std::endl;
         }
-        else if (offby == 2 && solvedCount == 1 && allCornersAllSolved && piecesSolved[1] && twoGraysUnsolved(2,3)) //TT43-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
-/*unused*/  std::cout << "Debug-732-L7E: Algo14 Mushroom-  @  4 " << std::endl;
-        }
-        else if (offby == 3 && solvedCount == 1 && piecesSolved[1] && allCornersAllSolved && twoGraysUnsolved(3,4) && pieceOrder[0] == 28) //TT51-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK], 14);
-/*unused*/  std::cout << "Debug-733-L7E: Algo14 Mushroom-  @  3 " << std::endl;
-        }
-        else if (offby == 0 && !currentpieceFlipStatusOK && twoGraysUnsolved(0,1))
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
-/*unused*/  std::cout << "Debug-734-L7E: Algo14 Mushroom-  @  0 " << std::endl;
-        }
         //still havent solved anything
-        else if (offby == 3 && solvedCount == 0 && allCornersAllSolved && !piecesSolved[0] && twoGraysUnsolved(1,2)) //TT35-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE + offby], 14);
-/*unused*/  std::cout << "Debug-735-L7E: Algo14 Mushroom-  @  " << offby << std::endl;
-        }
-        else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && !currentpieceFlipStatusOK && twoGraysUnsolved(4,0)) //TT45-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
-/*unused*/  std::cout << "Debug-736-L7E: Algo14 Mushroom-  @  4 " << std::endl;
-        }
-        else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(2,3)) //TT48-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[BEIGE], 14);
-/*unused*/  std::cout << "Debug-737-L7E: Algo14 Mushroom-  @  4 " << std::endl;
-        }
         else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && pieceOrder[0] == 26) //TT50-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[PINK], 14);
             std::cout << "Debug-738-L7E: Algo14 Mushroom-  @  3 " << std::endl;
-        }
-        else if (offby == 2 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(4,0) && pieceOrder[0] == 26) //TT52-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_GREEN], 14);
-/*unused*/  std::cout << "Debug-739-L7E: Algo14 Mushroom-  @  2 " << std::endl;
-        }
-        else if (offby == 1 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(3,4) && pieceOrder[0] == 28) //TT60-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[14].algo, g_faceNeighbors[LIGHT_BLUE], 14);
-/*unused*/  std::cout << "Debug-740-L7E: Algo14 Mushroom-  @  0 " << std::endl;
         }
         else if (offby == 2 && solvedCount == 0 && allCornersAllSolved && allEdgeColorsSolved)  //TT38-2
         {
@@ -1279,11 +1234,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }   //becomes "25] 27 28 26 [29"
 
 //MUSHROOM+ #Algo#33 (all)
-        else if (offby == 3 && solvedCount == 1 && piecesSolved[0] && twoGraysUnsolved(2,3))
-        {                                                                                    //TestCube14-2
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[ORANGE], 33); //3e+ #33 same. (F/L safe tho)
-/*unused*/  std::cout << "Debug-745-L7E: Algo33 Mushroom+  @  1" << std::endl;
-        }
         else if (
               (offby == 1 && solvedCount == 2 && twoAdjacentPieces && twoSolvedPieces(0,1) && (allEdgeColorsSolved || twoGraysUnsolved(2, 3)))  //test4-p2 ->(blue/orange)=PASS //TestCube6-2
             ||(offby == 1 && solvedCount == 2 && twoAdjacentPieces && allEdgeColorsSolved)
@@ -1301,33 +1251,13 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE + lastSolvedPiece], 33); //3e+ #33 same. (F/L safe tho)
             std::cout << "Debug-7459-L7E: Algo33 Mushroom+  @  " << lastSolvedPiece << std::endl;
         }
-        else if (offby == 3 && solvedCount == 1 && piecesSolved[4] && allCornersAllSolved && twoGraysUnsolved(1,2)) //TT36-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE], 33); //3e+ #33 same. (F/L safe tho)
-/*unused*/  std::cout << "Debug-746-L7E: Algo33 Mushroom+  @  0" << std::endl;
-        }
-        else if (offby == 3 && solvedCount == 1 && allCornersAllSolved && twoGraysUnsolved(2, 3)) //TT80-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_GREEN], 33); //3e+ #33 same. (F/L safe tho)
-/*unused*/  std::cout << "Debug-747-L7E: Algo33 Mushroom+  @  2" << std::endl;
-        }
         //still havent solved anything:
-        else if (offby == 4 && solvedCount == 0 && allCornersAllSolved && twoGraysUnsolved(3,4)) //TT47-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK], 33); //3e+ #33 same. (F/L safe tho)
-/*unused*/  std::cout << "Debug-748-L7E: Algo33 Mushroom+  @  3" << std::endl;
-        }
         else if (offby == 1 && solvedCount == 0 && allCornersAllSolved && allEdgeColorsSolved && pieceOrder[0] == 29) //TT44-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[PINK], 33); //3e+ #33 same. (F/L safe tho)
             std::cout << "Debug-749-L7E: Algo33 Mushroom+  @  3" << std::endl;
         }
         //we really havent solved anything but everythings solved
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved&& checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25)) //TT75-2
-        {   //(needs another mushroom- after this one to solve it)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[LIGHT_BLUE], 33); //3e+ #33 same. (F/L safe tho)
-/*unused*/  std::cout << "Debug-750-L7E: Algo33 Mushroom+  @  0" << std::endl;
-        }   //becomes "28 [26 27] 29 25 "
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved&& checkPieceMatches(pieceOrder, 27, 25, 29, 26, 28)) //TT82-2
         {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[33].algo, g_faceNeighbors[ORANGE], 33); //3e+ #33 same. (F/L safe tho)
@@ -1374,23 +1304,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         else if (offby == 3 && piecesSolved[0] && !piecesSolved[1])
         {
             //5 iterations goes "+" and preserves corners, 1 iteration goes "-" and does not.
-            if (allCornersAllSolved) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE], 12);    //algo #12 (3.1- CCW)
-                for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
-                    shadowDom->shadowBulkRotate(bulkAlgo);
-/*unused*/      std::cout << "Debug-757-L7E: Algo12 HorseFace- 5x+ +/-  " << offby << std::endl;
-            }
-            else {
+            if (!allCornersAllSolved) {
                 bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE], 13);    //algo #13 (3.2+ CW) (opposite #12, w/ 1 rep)
                 std::cout << "Debug-758-L7E: Algo13 HorseFace- +/- " << offby << std::endl;
             }
-        }
-        else if (offby == 3 && solvedCount == 2 && twoSolvedPieces(2, 4) && allCornersAllSolved) //TT-40-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_GREEN], 12);    //algo #12 (3.1- CCW)
-            for (int i = 0; i < g_AlgoStrings[12].repeatX; ++i)
-                shadowDom->shadowBulkRotate(bulkAlgo);
-/*unused*/  std::cout << "Debug-759-L9E: Algo12 HorseFace- 5x+ +/-  " << offby << std::endl;
         }
 
 //HORSEFACE+ #Algo12# and Algo#13#
@@ -1411,21 +1328,6 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             else {
                 bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, loc, 12);    //algo #12 (3.1- CCW)
                 std::cout << "Debug-761-L7E: Algo12 HorseFace+  @  " << loc.front << std::endl;
-            }
-        }
-        else if ((offby == 3 && solvedCount == 1 && piecesSolved[0] && twoGraysUnsolved(1, 2) && grayFaceColorSolved[3] && grayFaceColorSolved[4])
-              || (offby == 2 && solvedCount == 2 && twoSolvedPieces(0, 2) && twoGraysUnsolved(3, 4))    //TT10
-        ) {
-            //5 iterations goes "+" and preserves corners, 1 iteration goes "-" and does not.
-            if (allCornersAllSolved) {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[13].algo, g_faceNeighbors[LIGHT_BLUE], 13);    //algo #13 (3.2+ CW)
-                for (int i = 0; i < g_AlgoStrings[13].repeatX; ++i)
-                    shadowDom->shadowBulkRotate(bulkAlgo);
-/*unused*/      std::cout << "Debug-762-L7E: Algo13 HorseFace+ 5x+ +/-  " << offby << std::endl;
-            }
-            else {
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[12].algo, g_faceNeighbors[LIGHT_BLUE], 12);    //algo #12 (3.1- CCW)
-/*unused*/      std::cout << "Debug-763-L7E: Algo12 HorseFace+  +/-  " << offby<< std::endl;
             }
         }
 
