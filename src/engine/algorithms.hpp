@@ -87,8 +87,8 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
 
     // #7Last-Layer: Step 2: Edge Permutation 1+: HORSEFACE- //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
     //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others Counter-Clockwise
-    // 13 moves * Repeated 5 times = Total 65 moves! (similar to 11 but preserves Corners)
-    //HORSEFACE- #Algo12# and Algo#13#
+    // Total 65 moves! = 13 moves * Repeated 5 times (similar to 11 but preserves Corners)
+    //HORSEFACE- #Algo12# (and opposite Algo#13#)
     {
         .num = 12,
         .algo = "r2 U2' R2' U' , r2 U2' R2' ",
@@ -99,8 +99,8 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
 
     // #7Last-Layer: Step 2: Edge Permutation 2-: HORSEFACE+ (opposite of previous; all the "up"s get reversed)
     //6 o'clock and 1'o clock STAY the same. Right Star Arrow -> rotate others ClockWise
-    // 13 moves * Repeated 5 times = Total 65 moves!
-    //HORSEFACE+ #Algo12# and Algo#13#
+    // Total 65 moves! = 13 moves * Repeated 5 times
+    //HORSEFACE+ #Algo13# (and opposite Algo#12#)
     {
         .num = 13,
         .algo = "r2 u2 R2' u, r2 u2 R2' ",
@@ -109,31 +109,33 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { 0, 2, 0, 2, 1 }
     },
 
-    // #7Last-Layer: Step 2: Edge Permutation 3a-:  MUSHROOM- //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock (4 to 2, 2 to 3, 3 to 4)
-    //Unaffecteds(2) = stay safe on Front/Left sides  = 16 moves.
-    //edges cycle rotate = Counter-clockwise. corners aren't affected...
+    // #7Last-Layer: Step 2: Edge Permutation 3a-:  MUSHROOM-   corners are NOT affected...
     //MUSHROOM- #Algo#14 (all) 3a- (F/L Safe) / twoAdjacentOffColors
+    //11 o'clock to 4 o'clock, 4 o'clock to 1 o'clock, 1 o'clock to 11 o'clock (4 to 2, 2 to 3, 3 to 4)
+    //edges cycle rotate = Counter-clockwise.
+    //Unaffecteds(2) = stay safe on Front/Left sides (1 and 5).   16 moves.
     {
         .num = 14,
         .algo = "r u R' u, R' U' r2 U' , R' u R' u, r U2' ",
         .len = 16,
         .modby = { 0, -1, -1, 2, 0 }
     },
-    // #7Last-Layer: Step 2: Edge Permutation 3b+: MUSHROOM
+    // #7Last-Layer: Step 2: Edge Permutation 3b+: MUSHROOM+  corners are NOT affected...
     //Opposite of EdgePermutation 3a-(if cube is rotated 2 turns CW, Y++).
-    //DUPLICATE: manually reverse engineered from 3c+, to be equal to 3a-.
-    //edges cycle rotate = clockwise . corners aren't affected...  (Rotates the right face instead of front)
-    //Unaffecteds(2) = stay safe on Both+Back sides.  = 16 moves.
+    //HIDDEN DUPLICATE: manually reverse engineered from 3c+, to be equivalent to 3a-.
+    //edges cycle rotate = clockwise .  (Rotates the right face instead of front).
+    //Unaffecteds(2) = stay safe on Both+Back sides (3 and 4).   16 moves.
     {
         .num = 15,
         .algo = "R' U' r U' , r u R2' u, r U' r U' , R' u2",
         .len = 16,
         .modby = { 1, 1, 0, 0, -2 }
     },
-    // #7Last-Layer: Step 2: Edge Permutation 3c+: MUSHROOM
+    // #7Last-Layer: Step 2: Edge Permutation 3c+: MUSHROOM+  corners are NOT affected...
     //Opposite of EdgePermutation 3a- (if cube is rotated 2 turns CCW, Y--).
-    //POTENTIAL DUPLICATE: Identical Twin to 3b (but Rotates the front face instead of right).
-    //Unaffecteds(2) = stay safe on Right/R.Back sides. = 16 moves. edges cycle rotate = clockwise
+    //HIDDEN DUPLICATE: Identical Twin to 3b except for which face
+    //edges cycle rotate = clockwise . (Rotates the front face instead of right).
+    //Unaffecteds(2) = stay safe on Right/R.Back sides (2 and 3).  16 moves.
     {
         .num = 16,
         .algo = "F' U' f U' , f u F2' u, f U' f U' , F' u2",
@@ -147,7 +149,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
 
     // #7Last-Layer: Step 2: Edge Position, 5-way star cycle CW+ , Opposite Faces CW
     //10 moves * 6 = 60 moves total. copied from cube manual (turned upside down).
-    //shorter version = 40, opposite = 38
+    //REPLACED BY shorter version = 40, (and opposite = 38)
     {
         .num = 17,
         .algo = "L' u2 r U2' l u2 R' ",
@@ -304,11 +306,11 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
     },
 
     //#7LL-2- BEST Bunny from ELL, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe),
+    //          BUNNY             2+2SWAP   #Algo#37 -  2&5 + 3&4 (opposite horizontally)
     //from site https://sites.google.com/site/permuteramera/other-methods/ell
-    //one rep affects corners. 5 reps maintains corners. 13 moves * 5 = 65 moves total!
-    //BUNNY 2+2SWAP  #Algo#37
-    // 2&5 + 3&4 (opposite horizontally)
+    //one rep affects corners. 5 reps maintains corners.
     //TODO: organize: MOVE UP w/ related . 5 iterations.
+    // 13 moves * 5 = 65 moves total!
     {
         .num = 37,
         .algo = "r U2' R' U' , r U' R' u, r U2' R' ",
@@ -319,6 +321,8 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
 
     // 5-way edge cycle CCW
     //TODO: organize: Opposite direction of #17 . 6 iterations.
+    // 10 moves * 6 = 60 moves total!
+    //DUPLICATE: full 38 is longer version of 41
     {
         .num = 38,
         .algo = "r U2' L' u2 R' U2' l",
@@ -327,8 +331,8 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { -2, -2, -2, -2, -2 }
     },
 
-    //(5-way edge cycle  (32 vs 60 moves) (combines algo #14+#33)
-    //TODO: organize: Shorter version of #18
+    //(5-way edge cycle  (combines algo #14+#33)
+    //TODO: organize: Shorter version of #18   (32 vs 60 moves)
     //TODO: organize: 39 = 14+33 = 18
     {
         .num = 39,
@@ -337,9 +341,9 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { 1, -1, -1, -2, -2 }
     },
 
-    //(5-way edge Cycle -2 all) (48 vs 60 moves) (repeats algo #14+#14+#14)
+    //(5-way edge Cycle -2 all) (repeats algo #14+#14+#14)
     //TODO: organize: (opposite is #41 below)
-    //TODO: organize: Shorter version of #17
+    //TODO: organize: Shorter version of #17  (48 vs 60 moves)
     //TODO: organize: 40 = 17 = 14+14+14, opposite = 41 ( = 38 )
     {
         .num = 40,
@@ -348,9 +352,9 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { 2, 2, 2, 2, 2 }
     },
 
-    //(5-way edge Cycle +2 all) (48 vs 60 moves) (repeats algo #33+#33+#33)
+    //(5-way edge Cycle +2 all)  (repeats algo #33+#33+#33)
     //TODO: organize: (opposite of #40 above)
-    //TODO: organize: shorter version of #38
+    //TODO: organize: shorter version of #38  (48 vs 60 moves)
     //TODO: organize: 41 = 38 = 33+33+33, opposite = 40 ( = 17 )
     {
         .num = 41,
@@ -359,10 +363,10 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { -2, -2, -2, -2, -2 }
     },
 
-    //Bunny Adjacent Edge Swap 2&3/4&5 (#33+#33) (32 moves)
+    //Bunny Adjacent Edge Swap 2&3/4&5 (#33+#33)
     //BUNNY 2+2SWAP  #Algo#42=/=Algo#19
     // 2&3 + 4&5 (adjacent vertically)
-    //TODO: organize: shorter version of #19
+    //TODO: organize: shorter version of #19   (32 vs 44 moves)
     //TODO: organize: 42 = 19 = 33+33 , opposite = 43 ( = 39=/=18 )
     {
         .num = 42,
@@ -371,8 +375,9 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { -1, 1, -1, 1, 0 }
     },
 
-    //Bunny Adjacent Edge Swap - Opposite of 42 above (32 moves)  Algo43 5way star Reverse (-1,-2,+1,-2,-1)
-    //TODO: organize: shorter opposite version of #39 #18
+    //Bunny Adjacent Edge Swap - Opposite of 42 above
+    // Algo43 5way star Reverse (-1,-2,+1,-2,-1)
+    //TODO: organize: shorter opposite version of #39 #18    (32 vs 44 moves)
     //TODO: organize: 43 = 39=/=18 , opposite = 42=/=19
     {
         .num = 43,

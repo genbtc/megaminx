@@ -1023,7 +1023,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         }
 
 //Begin solvedCount=0:
-        //2, 2, 2, 2, 2,      = modby, Algo # 40  //Modbys are seemingly reversed diff = (solved - unsolved)
+        //2, 2, 2, 2, 2,      = modby, Algo # 40  //Modbys are seemingly reversed. difference = (solved - unsolved)
         //-2, -2, -2, -2, -2, = modby, Algo # 41
 //(seemingly rare)
 //5-way cycle CCW (-2,-2,-2,-2,-2) #Algo#40
@@ -1043,81 +1043,38 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             assert(isNowSolved);
         }
 
-//TODO: Combine these 5 better #Algo#39
+//DONE: : Combine these 5 better #Algo#39
 //5-way star (+1,+2,-1,+2,+1) #Algo#39 .modby = { 1, -1, -1, -2, -2 }new,updated / difference = { -1, 1, 1, 2, 2 }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 27, 28, 25, 26)) //TT54-2
+        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved &&
+                 (checkPieceMatches(pieceOrder, 29, 27, 28, 25, 26) || //TT54-2 (25)
+                  checkPieceMatches(pieceOrder, 27, 25, 28, 29, 26) || //TT58-2 (26)
+                  checkPieceMatches(pieceOrder, 27, 28, 26, 29, 25) || //TT59-2 (27)
+                  checkPieceMatches(pieceOrder, 26, 28, 29, 27, 25) || //TT56-2 (28)
+                  checkPieceMatches(pieceOrder, 26, 27, 29, 25, 28) ) ) //TT57-2 (29)
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_BLUE], 39);   //algo18@Green (60 moves to 32)
-            std::cout << "Debug-714-L7E: Algo39 5way cycle star (+1,+2,-1,+2,+1)  @ 0" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 0);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 25, 28, 29, 26)) //TT58-2
-        {
-            //difference = (2, -1, 1, 1, 2) rotated right by 1 and *-1
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[ORANGE], 39);    //algo18@Pink (60 moves to 32)
-            std::cout << "Debug-715-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ 1" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 1);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 27, 28, 26, 29, 25)) //TT59-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_GREEN], 39);  //algo18@Beige (60 moves to 32)
-            std::cout << "Debug-716-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ 2" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 2);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 28, 29, 27, 25)) //TT56-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[PINK], 39);  //algo18@Blue (60 moves to 32)
-            std::cout << "Debug-717-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ 3" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 3);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 27, 29, 25, 28)) //TT57-2
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[BEIGE], 39); //algo18@Orange (60 moves to 32)
-            std::cout << "Debug-718-L7E: Algo39 5way star (+1,+2,-1,+2,+1) @  4" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[39].modby, 4);
-            assert(isNowSolved);
+            int k = 0;
+            for (k = 0; k < 5; ++k)
+                if (faceToModBy(pieceOrder, g_AlgoStrings[39].modby, k))
+                    break;
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[39].algo, g_faceNeighbors[LIGHT_BLUE + k], 39);   //algo18@Green (60 moves to 32)
+            std::cout << "Debug-714-715-716-717-718-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ " << k << std::endl;
         }
 
-//TODO: Combine these 5 also #Algo#43
-//5-way Reverse star (-1,-2,+1,-2,-1)  (.modby=2,2,1,1,-1 new,updated) #Algo#43
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25)) //TT86-2
+//DONE: : Combine these 5 also #Algo#43
+//5-way Reverse star (-1,-2,+1,-2,-1)  (.modby=2,2,1,1,-1 new,updated) #Algo#43 / difference = { -2, -2, -1, -1, 1 }
+        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved &&
+                 (checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25) || //TT86-2 (25)
+                  checkPieceMatches(pieceOrder, 26, 29, 25, 27, 28) || //       (26)
+                  checkPieceMatches(pieceOrder, 29, 27, 25, 26, 28) || //       (27)
+                  checkPieceMatches(pieceOrder, 29, 25, 28, 26, 27) || //       (28)
+                  checkPieceMatches(pieceOrder, 28, 25, 26, 29, 27) ) ) //      (29)
         {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_BLUE], 43);
-            std::cout << "Debug-719-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 0" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 0);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 26, 29, 25, 27, 28))
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[ORANGE], 43);
-            std::cout << "Debug-720-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 1" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 1);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 27, 25, 26, 28))
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_GREEN], 43);
-            std::cout << "Debug-721-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 2" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 2);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 29, 25, 28, 26, 27))
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[PINK], 43);
-            std::cout << "Debug-722-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 3" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 3);
-            assert(isNowSolved);
-        }
-        else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved && checkPieceMatches(pieceOrder, 28, 25, 26, 29, 27))
-        {
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[BEIGE], 43);
-            std::cout << "Debug-723-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ 4" << std::endl;
-            bool isNowSolved = faceToModBy(pieceOrder, g_AlgoStrings[43].modby, 4);
-            assert(isNowSolved);
+            int k = 0;
+            for (k = 0; k < 5; ++k)
+                if (faceToModBy(pieceOrder, g_AlgoStrings[43].modby, k))
+                    break;
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_BLUE + k], 43);
+            std::cout << "Debug-719-720-721-722-723-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ " << k << std::endl;
         }
 //End solvedCount=0:
 
