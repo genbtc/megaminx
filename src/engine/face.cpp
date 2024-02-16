@@ -1,4 +1,6 @@
 #include "megaminx.hpp"
+#include <cstring>  //memcpy
+
 constexpr int turnspeed = 32; //144 is max, 1 is min (for render() @ end of file)
 
 Face::Face()
@@ -339,20 +341,21 @@ bool Face::render()
         angle = 0;
 
     //Render parts:
-    for (int i = 0; i < 5; ++i) {
-        corner[i]->render();
-        edge[i]->render();
-    }
+    for (const auto c : corner)
+        c->render();
+    for (const auto e : edge)
+        e->render();
     center->render();
+
     if (angle) {
         glPopMatrix();
         //Color Black
         glColor3d(0, 0, 0);
         //Draw a black pentagon to block out view from see-thru hollow insides
-        makeGLpentagon(_vertex, 1.0 , GL_POLYGON);
+        makeGLpolygon(_vertex, 1.0 , 5);
     }
     //Done animating, clean up and commit
-    //TODO: constantify 72 as one fifth of 360 circle
+    // 72 is one fifth of 360 circle
     if (angle >= 72 || angle <= -72) {
         angle = 0;
         rotating = false;

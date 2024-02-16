@@ -21,7 +21,7 @@ Megaminx* shadowDom;
 Megaminx::Megaminx()
 {
     g_currentFace = NULL;
-    _rotatingFaceIndex = -1;
+    _rotatingFaceIndex = 0;
     isRotating = false;
     invisible = false;
     initEdgePieces();
@@ -103,40 +103,35 @@ void Megaminx::render()
         isRotating = true;
         faces[_rotatingFaceIndex].rotate(op.dir);
     }
-    // Full Re-render all if non-rotating or early startup
-    // (starts up with _rotatingFaceIndex is -1)
-    //} else
-        //renderAllPieces();
-        //return;
-    //rest of function can be skipped to avoid array[-1] error
-//    if (_rotatingFaceIndex != -1) {
-        //Conditionally Process all pieces that are NOT part of a rotating face.
-        for (int i = 0; i < numFaces; ++i) {
-            if (&centers[i] != faces[_rotatingFaceIndex].center)
-                centers[i].render();
-        }
-        for (int i = 0, k = 0; i < numEdges; ++i) {
-            if (&edges[i] != faces[_rotatingFaceIndex].edge[k])
-                edges[i].render();
-            else
-                k++;
-        }
-        for (int i = 0, k = 0; i < numCorners; ++i) {
-            if (&corners[i] != faces[_rotatingFaceIndex].corner[k])
-                corners[i].render();
-            else
-                k++;
-        }
-//    } else
-//        return;
 
+           // Full Re-render all if non-rotating or early startup
+    //Conditionally Process all pieces that are NOT part of a rotating face.
+    for (int i = 0; i < numFaces; ++i) {
+        if (&centers[i] != faces[_rotatingFaceIndex].center)
+            centers[i].render();
+    }
+    for (int i = 0, k = 0; i < numEdges; ++i) {
+        if (&edges[i] != faces[_rotatingFaceIndex].edge[k])
+            edges[i].render();
+        else
+            k++;
+    }
+    for (int i = 0, k = 0; i < numCorners; ++i) {
+        if (&corners[i] != faces[_rotatingFaceIndex].corner[k])
+            corners[i].render();
+        else
+            k++;
+    }
+
+    // (starts up with _rotatingFaceIndex is -1)
+    //rest of function can be skipped to avoid array[-1] error
     if (_rotatingFaceIndex == -1)
         return;
+
     //call .RENDER() and find out if successful
     if (faces[_rotatingFaceIndex].render() && isRotating) {
         //If yes, then Finish the Rotation & advance the Queue
         rotateQueue.pop();
-//        isRotating = false;
     }
 }
 
@@ -165,10 +160,9 @@ void Megaminx::rotateAlgo(int algoID, int face)
         face = g_currentFace->getNum()+1;
     assert(face > 0 && face <= numFaces);
     //Either rotate 1 time, or however many repeatX says, if it exists.
-    int repeat = g_AlgoStrings[algoID].repeatX ? g_AlgoStrings[algoID].repeatX : 1;
-    for (int n = 0; n < repeat; ++n) {
+    const int repeat = g_AlgoStrings[algoID].repeatX ? g_AlgoStrings[algoID].repeatX : 1;
+    for (int n = 0; n < repeat; ++n)
         rotateBulkAlgoString(g_AlgoStrings[algoID].algo, g_faceNeighbors[face], algoID);
-    }
 }
 /**
  * \brief rotateAlgorithm by String - Takes an Algo String and parses it, vectorizes it, then rotates it.
@@ -191,6 +185,7 @@ void Megaminx::rotateBulkAlgoVector(const std::vector<numdir> &bulk)
     }
     undoStack.push({ 999, 999 });   //end sentinel value flag
 }
+
 //Undo-Functions-------------------------------------------------------//
 /**
  * \brief Undo a bulk, whole Chunk of moves at once
@@ -272,12 +267,12 @@ void Megaminx::scramble()
         for (int i = 0; i < numFaces; i++) {
             const int r = rand() % 2 * 2 - 1; //generates -1 or 1
             faces[i].placeParts(r);
-//            if (t == 0) {
-//                faces[i].placeParts(r); //FIXED: do a second rotation.
-//                t++;
-//            }
-//            else
-//                t = 0;  //alternate or not
+           if (t == 0) {
+               faces[i].placeParts(r);  //do a second rotation.
+               t++;
+           }
+           else
+               t = 0;  //alternate or not
         }
     }
 }
@@ -301,8 +296,8 @@ void Megaminx::setCurrentFaceActive(int i)
 void Megaminx::resetFace(int n)
 {
     assert(n > 0 && n <= numFaces);
-    resetFacesEdges(n);
-    resetFacesCorners(n);
+    resetFaceEdges(n);
+    resetFaceCorners(n);
     setCurrentFaceActive(n);
 }
 
@@ -331,10 +326,8 @@ std::vector<int> Megaminx::getAllPiecesPosition()
 {
     const int maxpcs = getMaxNumberOfPieces<T>();
     std::vector<int> allPiecesPos(maxpcs);
-    for (int r = 0; r < maxpcs; ++r) {
+    for (int r = 0; r < maxpcs; ++r)
         allPiecesPos[r] = getPieceArray<T>(0)[r].data.pieceNum;
-    }
-    //std::for_each();
     return allPiecesPos;
 } //where T = Corner or Edge
 std::vector<int> Megaminx::getAllCornerPiecesPosition()  { return getAllPiecesPosition<Corner>(); }
@@ -349,9 +342,8 @@ std::vector<int> Megaminx::getAllPiecesColorFlipStatus()
 {
     const int maxpcs = getMaxNumberOfPieces<T>();
     std::vector<int> allPiecesPos(maxpcs);
-    for (int r = 0; r < maxpcs; ++r) {
+    for (int r = 0; r < maxpcs; ++r)
         allPiecesPos[r] = getPieceArray<T>(0)[r].data.flipStatus;
-    }
     return allPiecesPos;
 } //where T = Corner or Edge
 std::vector<int> Megaminx::getAllCornerPiecesColorFlipStatus()  { return getAllPiecesColorFlipStatus<Corner>(); }
@@ -425,8 +417,7 @@ template <typename T>
 std::vector<int> Megaminx::findFivePieces(const std::vector<int> &v)
 {
     assert(v.size() == 5);
-    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    return findFivePieces<T>(vecPieceNums);
+    return findFivePieces<T>({ v[0], v[1], v[2], v[3], v[4] });
 } //where T = Corner or Edge
 std::vector<int> Megaminx::findEdgePieces(const int pieceNums[5]) { return findFivePieces<Edge>(pieceNums); }
 std::vector<int> Megaminx::findCornerPieces(const int pieceNums[5]) { return findFivePieces<Corner>(pieceNums); }
@@ -455,19 +446,34 @@ void Megaminx::resetFivePieces(const int indexes[5]) {
 } //where T = Corner or Edge
 void Megaminx::resetFiveEdges(const int indexes[5]) { resetFivePieces<Edge>(indexes); }
 void Megaminx::resetFiveCorners(const int indexes[5]) { resetFivePieces<Corner>(indexes); }
-
 /**
  * \brief Reset any five-piece chunk to defaults (by VECTOR)
  */
 template <typename T>
-void Megaminx::resetFivePiecesV(std::vector<int> &v) {
+void Megaminx::resetFivePieces(const std::vector<int> &v) {
     assert(v.size() == 5);
-    const int vecPieceNums[5] = { v[0], v[1], v[2], v[3], v[4] };
-    resetFivePieces<T>(vecPieceNums);
+    resetFivePieces<T>({ v[0], v[1], v[2], v[3], v[4] });
 } //where T = Corner or Edge
-void Megaminx::resetFiveEdgesV(std::vector<int> &v) { resetFivePiecesV<Edge>(v); }  //unused
-void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>(v); }  //unused
+void Megaminx::resetFiveEdges(const std::vector<int> &v) { resetFivePieces<Edge>(v); }  //unused
+void Megaminx::resetFiveCorners(const std::vector<int> &v) { resetFivePieces<Corner>(v); }  //unused
 
+
+//Face Resets--------------------------------------------------------------------------------------------------------------//
+/**
+ * \brief Generic <template> to Reset all the Face pieces to their default value.
+ * \param color_n N'th Face/Color Number (1-12)
+ * \return 1 if anything moved, 0 if not
+ * \deprecated Not Currently Used But Has Good Template is_same Machinery
+ */
+template <typename T>
+int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
+{
+    if (std::is_same<T, Edge>::value)
+        return resetFacesEdges(color_n, defaultPieces, solve);
+    else if (std::is_same<T, Corner>::value)
+        return resetFacesCorners(color_n, defaultPieces, solve);
+    return 0;
+} //where T = Corner or Edge (templated in header)
 
 /**
  * \brief Revert all the edge pieces on the Nth colored face back to normal.
@@ -475,7 +481,7 @@ void Megaminx::resetFiveCornersV(std::vector<int> &v) { resetFivePiecesV<Corner>
  * \param color_n N'th Face/Color Number (1-12)
  * \return success (1)
  */
-int Megaminx::resetFacesEdges(int color_n) {
+int Megaminx::resetFaceEdges(int color_n) {
     assert(color_n > 0 && color_n <= numFaces);
     const auto &defaultEdges = faces[(color_n - 1)].defaultEdges;
     return resetFacesEdges(color_n, defaultEdges);
@@ -523,7 +529,7 @@ int Megaminx::resetFacesEdges(int color_n, const std::vector<int> &defaultEdges,
  * \param color_n N'th Face/Color Number (1-12)
  * \return success (1)
  */
-int Megaminx::resetFacesCorners(int color_n) {
+int Megaminx::resetFaceCorners(int color_n) {
     assert(color_n > 0 && color_n <= numFaces);
     const auto &defaultCorners = faces[(color_n - 1)].defaultCorners;
     return resetFacesCorners(color_n, defaultCorners);
@@ -619,12 +625,6 @@ const std::vector<numdir> Megaminx::ParseAlgorithmString(std::string algorithmSt
             }
         }
     }
-    //NOTE: repeatX not needed anymore after we explicitly defined every algorithm verbosely
-    //if (algorithmString.repeatX) {
-    //    const auto &old_count = readVector.size();
-    //    readVector.resize(algorithmString.repeatX * old_count);
-    //    std::copy_n(readVector.begin(), old_count, (readVector.begin() + old_count));
-    //}
     return readVector;
 }
 
@@ -635,7 +635,5 @@ const std::vector<numdir> Megaminx::ParseAlgorithmID(int algoID, int startLoc)
 {
     const std::string algorithmString = g_AlgoStrings[algoID].algo;
     const colordirs loc = g_faceNeighbors[startLoc];
-    //if (debugAlgorithmString)
-    //std::cout << "ParseAlgorithmString2: # " << algo << " : " << algorithmString << std::endl;
     return ParseAlgorithmString(algorithmString, loc, algoID);
 }

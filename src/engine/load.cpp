@@ -1,5 +1,6 @@
 #include "megaminx.hpp"
 #include "load.hpp"
+#include <filesystem>
 
 //Cube SaveState filenames
 constexpr const char* EDGEFILE("EdgePositions30.dat");
@@ -42,14 +43,14 @@ struct megaminxPieceData {
         std::cout << "CornerPiecesColorFlip20: " << serializeVectorIntToString(this->CornerPiecesColors) << std::endl;
     }
     void SaveMegaminxtoFile() const {
-        sizeCheck(); //TODO: Size check? DONE.
+        sizeCheck();
         serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), outfiledir+EDGEFILE);
         serializeVectorInt5ToFile(megaminx->getAllEdgePiecesColorFlipStatus(), outfiledir+EDGEFILECOLORS);
         serializeVectorInt5ToFile(megaminx->getAllCornerPiecesPosition(), outfiledir+CORNERFILE);
         serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), outfiledir+CORNERFILECOLORS);
     }
-    void SaveThistoFile() const {     //TODO: Size check?
-        sizeCheck(); //TODO: Size check? DONE.
+    void SaveThistoFile() const {
+        sizeCheck();
         serializeVectorInt5ToFile(this->EdgePiecesPosition, outfiledir+EDGEFILE);
         serializeVectorInt5ToFile(this->EdgePiecesColors, outfiledir+EDGEFILECOLORS);
         serializeVectorInt5ToFile(this->CornerPiecesPosition, outfiledir+CORNERFILE);
@@ -76,14 +77,13 @@ struct megaminxPieceData {
     bool sizeCheck() const {
         if ((EdgePiecesPosition.size() != 60 && CornerPiecesPosition.size() != 60 ) &&
             (EdgePiecesColors.size() != 60 && CornerPiecesColors.size() != 60)) {
-            std::cerr << "There was an error reading the input file - "
+            std::cerr << "ERROR: There was an error in the input file - "
                          "(internal contents corrupt or size mismatch) !!!!!!" << std::endl;
             return false;
         }
         return true;
     }
 };
-static megaminxPieceData mainData;
 
 /**
  * @brief Save/Store Cube - (Write 4 Vector Files)
@@ -122,7 +122,6 @@ void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp w
  * \param string testDir - READ FROM TESTS DIRECTORY
  */
 void RestoreCubeFromTEST(std::string testDir) {   //called from readline.cpp with /testdir
-    //TODO: Crashes w/ segfault if the files dont exist. check for them.
     if (shadowDom)
         delete shadowDom;
     shadowDom = new Megaminx();
@@ -193,6 +192,11 @@ std::string serializeVectorIntToString(std::vector<int> vec) {
  */
 const std::vector<int> ReadPiecesFileVector(std::string filename)
 {
+  //DONE: TODO: Crashes w/ segfault if the files dont exist. check for them.
+  if (!std::filesystem::exists(filename)) {
+    std::cout << "ERROR: File was not found!: " << filename << std::endl;
+    return {};
+  }
     std::ifstream input(filename);
     std::vector<int> readvector;
     std::string line;                          // iterate each line
@@ -216,19 +220,23 @@ const std::vector<int> ReadPiecesFileVector(std::string filename)
     return readvector;
 }
 
-
-//[[deprecated]]  - old cube loader (for old tests/saves)
+//not yet [[deprecated]]  - old cube loader (for old tests/saves)
 template <typename T>
 int Megaminx::LoadNewPiecesFromVector(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors)
 {
     assert(readPieces.size() == 60);
     assert(readPieceColors.size() == 60);
-    for (int face = 1; face <= 12; ++face) {
+    for (int face = 1; face <= numFaces; ++face) {
         int f = ((face - 1) * 5);
         const std::vector<int> loadPieces = { readPieces[f + 0],readPieces[f + 1],readPieces[f + 2],readPieces[f + 3],readPieces[f + 4] };
-        resetFacesPieces<T>(face, loadPieces, false); //false = no-defaults/color
+        //resetFacesPieces<T>(face, loadPieces, false); //false = no-defaults/color
+        //                ^^^ Overcome LD missing symbol due to template function from alternate TU:
+        if (std::is_same<T, Edge>::value)
+          resetFacesEdges(face, loadPieces, false);
+        else if (std::is_same<T, Corner>::value)
+          resetFacesCorners(face, loadPieces, false);
     }
-    for (int face = 0; face < 12; ++face) {
+    for (int face = 0; face < numFaces; ++face) {
         int f = face * 5;
         //Pieces can be in the right place but maybe in wrong orientation, so flip the colors:
         for (int i = 0; i < 5; ++i) {
@@ -245,21 +253,3 @@ int Megaminx::LoadNewCornersFromVector(const std::vector<int> &readCorners, cons
 int Megaminx::LoadNewEdgesFromVector(const std::vector<int> &readEdges, const std::vector<int> &readEdgeColors) {
     return LoadNewPiecesFromVector<Edge>(readEdges, readEdgeColors);
 }
-
-//Resets--------------------------------------------------------------------------------------------------------------//
-/**
- * \brief Generic <template> to Reset all the Face pieces to their default value.
- * \param color_n N'th Face/Color Number (1-12)
- * \return 1 if anything moved, 0 if not
- * \deprecated Not Currently Used But Has Good Template is_same Machinery
- */
-template <typename T>
-int Megaminx::resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve)
-{
-    if (std::is_same<T, Edge>::value)
-        return resetFacesEdges(color_n, defaultPieces, solve);
-    else if (std::is_same<T, Corner>::value)
-        return resetFacesCorners(color_n, defaultPieces, solve);
-    return 0;
-} //where T = Corner or Edge (templated in header)
-//had to be moved here because it was called for in the old algo.

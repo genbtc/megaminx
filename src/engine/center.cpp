@@ -46,13 +46,13 @@ void Center::render() const
 {
     //Make a solid color pentagon
     glColor3dv(data._color[0]);
-    makeGLpentagon(_vertex, 1.0, GL_POLYGON);
+    makeGLpolygon(_vertex, 1.0, 5);
     //Make a black line border around pentagon
-    glLineWidth(3);     //border thickness
     glColor3d(0, 0, 0); //RGB(0,0,0) == Black
-    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);   //1 + 0.005 to account for the border)
+//    glLineWidth(3);     //border thickness
+//    makeGLpentagon(_vertex, 1.005, 3);   //1 + 0.005 (to account for the border)
     //label the piece with a number(string), as a floating tag on piece
-    if (textGLCenterLabels)
+    if (openGLGlobalState.textGLCenterLabels)
         utDrawText3DFont(_vertex[4][0]*1.1,_vertex[4][1]*1.1,_vertex[4][2]*1.1, GLUT_BITMAP_HELVETICA_18, data._colorName[0]);
                                                     // 1.1x spaces it out
     //TODO: Crude coords, aesthetics of text numbers is suboptimal... Option: configure Disable text shown

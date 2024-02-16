@@ -1,13 +1,11 @@
 /** @file opengl.cpp
  *  @brief implementation of useful utilities for opengl based apps
- *  @author Bartlomiej Filipek = March 2011
- *  @author genBTC = 2017
- *  @date 2023
+ *  @author originally Bartlomiej Filipek = March 2011
+ *  @author edited by genBTC = 2017-2023,2024
  */
 #include <cstdio>
 #include "opengl.h"
 
-///////////////////////////////////////////////////////////////////////////////
 void utSetOrthographicProjection(float scrW, float scrH)
 {
     // switch to projection mode
@@ -29,7 +27,6 @@ void utSetOrthographicProjection(float scrW, float scrH)
     glLoadIdentity();
 }
 
-///////////////////////////////////////////////////////////////////////////////
 void utResetPerspectiveProjection()
 {
     // set the current matrix to GL_PROJECTION
@@ -41,7 +38,6 @@ void utResetPerspectiveProjection()
     glPopMatrix();
 }
 
-///////////////////////////////////////////////////////////////////////////////
 void utDrawText2DFont(float x, float y, void *font, const char *theString)
 {
     // set position to start drawing fonts 2D
@@ -55,7 +51,7 @@ void utDrawText2D(float x, float y, const char *theString)
 {
     utDrawText2DFont(x, y + 13, GLUT_BITMAP_8_BY_13, theString);
 }
-///////////////////////////////////////////////////////////////////////////////
+
 void utDrawText3DFont(float x, float y, float z, void *font, const char *theString)
 {
     // set position to start drawing fonts 3D
@@ -70,39 +66,32 @@ void utDrawText3D(float x, float y, float z, const char *theString)
     utDrawText3DFont(x, y, z, GLUT_BITMAP_8_BY_13, theString);
 }
 
-///////////////////////////////////////////////////////////////////////////////
 void utCalculateAndPrintAngles(float x, float y, double x1, double y1)
 {
-    static char theString[16];
-    snprintf(theString, 16, "X: %5.0f", x1);
-    utDrawText2D(x, y, theString);
-    snprintf(theString, 16, "Y: %5.0f", y1);
-    utDrawText2D(x, y + 13, theString);
+    snprintf(g_angleXstring, 16, "X,%5.0f,", x1);
+    utDrawText2D(x, y, g_angleXstring);
+    snprintf(g_angleYstring, 16, "Y:  %5.0f", y1);
+    utDrawText2D(x + 16, y, g_angleYstring);
 }
 
-///////////////////////////////////////////////////////////////////////////////
 void utCalculateAndPrintFps(float x, float y)
 {
-    static char fpsStr[16];
-    static unsigned int frame = 0;
-    static int timeBase = 0;
-    frame++;
-    const int t = glutGet(GLUT_ELAPSED_TIME);
-    if (t - timeBase > 1000) {
-        snprintf(fpsStr, 16, "FPS: %4.2f", frame * 1000.0 / (t - timeBase));
-        timeBase = t;
-        frame = 0;
+    g_elapsed = glutGet(GLUT_ELAPSED_TIME);
+    g_framecounter++;
+    if (g_elapsed - g_timeBase > 1000) {
+        snprintf(g_FPS, 16, "FPS: %4.2f", g_framecounter * 1000.0 / (g_elapsed - g_timeBase));
+        g_timeBase = g_elapsed;
+        g_framecounter = 0;
     }
-    utDrawText2D(x, y, fpsStr);
+    utDrawText2D(x, y, g_FPS);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-void makeGLpentagon(const double _vertex[][3], double scale, int shape)
+void makeGLpolygon(const double _vertex[][3], double scaleFactor, int nsided)
 {
-    glBegin(shape);
+    glBegin(GL_POLYGON);
     {
-        for (int i = 0; i < 5; ++i)
-            glVertex3d(_vertex[i][0] * scale, _vertex[i][1] * scale, _vertex[i][2] * scale);
+        for (int i = 0; i < nsided; ++i)
+            glVertex3d(_vertex[i][0] * scaleFactor, _vertex[i][1] * scaleFactor, _vertex[i][2] * scaleFactor);
     }
     glEnd();
 }

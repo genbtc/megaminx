@@ -342,9 +342,9 @@ void menuHandler(int num)
     case 21:
         megaminx->resetFace(currentFace); break;
     case 22:  //place/solve all 5 edges
-        megaminx->resetFacesEdges(currentFace); break;
+      megaminx->resetFaceEdges(currentFace); break;
     case 23:  //place/solve all 5 corners
-        megaminx->resetFacesCorners(currentFace); break;
+      megaminx->resetFaceCorners(currentFace); break;
     case 24 ... 28:  //color flip edge piece 1-5
         megaminx->flipEdgeColor(currentFace, num - 23); break;
     case 29 ... 33:  //color flip corner piece 1-5
@@ -377,9 +377,9 @@ void menuHandler(int num)
 
     //menu SubLevel3: Teleport Reset by Layer
     case 40:  //1st Layer = WHITE Edges
-        megaminx->resetFacesEdges(WHITE); break;
+      megaminx->resetFaceEdges(WHITE); break;
     case 41:  //1st Layer = WHITE Corners
-        megaminx->resetFacesCorners(WHITE); break;
+      megaminx->resetFaceCorners(WHITE); break;
     case 42: //2nd Layer edges
         megaminx->resetSecondLayerEdges(); break;
     case 43: //3rd Layer corners
@@ -391,9 +391,9 @@ void menuHandler(int num)
     case 46: //6th Layer edges
         megaminx->resetSixthLayerEdges(); break;
     case 47:  //Last Layer GRAY Edges
-        megaminx->resetFacesEdges(GRAY); break;
+      megaminx->resetFaceEdges(GRAY); break;
     case 48:  //Last Layer GRAY Corners
-        megaminx->resetFacesCorners(GRAY); break;
+      megaminx->resetFaceCorners(GRAY); break;
 
     //menu submenu4_id: Algorithms by Number
     case 51 ... 88:     //1-38

@@ -1,4 +1,4 @@
-static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.4";
+static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.5";
 ///////////////////////////////////////////////////////////////////////////////
 /* Uses some code originally from:
  * Taras Khalymon (tkhalymon) / @cybervisiontech / taras.khalymon@gmail.com
@@ -19,6 +19,7 @@ static const char *myglutTitle = "GenBTC's Megaminx Solver v1.4.4";
              - v1.4.3 Oct 25, 2023 (symbol errors fixed, piece number tooltips)
              - v1.4.4 Oct 26, 2023 Create algorithms.hpp and refactor algostring menus
              - v1.4.5 Nov 2, 2023
+             - v1.4.6 Feb 10, 2024
 */
 // Headers
 #ifdef _WINDOWS
@@ -33,9 +34,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include "ui/camera.hpp"
 #include "engine/megaminx.hpp"
 
-// global vars main
+// Global State, main vars
 int g_window;
-char lastface[32] = {};
+char g_lastface[32] = {};
 int currentFace;
 bool g_help = false;
 Camera g_camera;
@@ -137,32 +138,31 @@ void myglutRenderScene() {
         glColor3f(0, 1, 0); // ...in green. TODO: colorconfig
         utCalculateAndPrintFps(10.f, 20.f);
         utCalculateAndPrintAngles(10.f, HEIGHT - 20.f,
-								  g_camera.m_angleX, g_camera.m_angleY);
+                        g_camera.m_angleX, g_camera.m_angleY);
         GetCurrentFace();
-        utDrawText2D(10.f, HEIGHT - 40.f, lastface);
+        utDrawText2D(10.f, HEIGHT - 40.f, g_lastface);
 
         // Print out Text (Help display)
         if (g_help)
             utPrintHelpMenu(WIDTH - 220.f, HEIGHT - 295.f);
         else {
-            utDrawText2D(WIDTH - 130.f, HEIGHT - 14.f,      "[H]elp");
-			if (megaminx->isFullySolved() && g_help)
+            utDrawText2D(WIDTH - 130.f, HEIGHT - 16.f,      "[H]elp");
+            if (megaminx->isFullySolved())
                 utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f,  "SOLVED!");
-			else
+            else
                 utDrawText2D(WIDTH - 130.f, HEIGHT - 28.f,  "[F9] = SOLVER");
-		}
+        }
         // Footer
         int shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
             static char rotquestr[32];
             snprintf(rotquestr, 32, "Rotate Queue: %5d", shadowQueueLength);
-            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, rotquestr);
+            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 16.f, rotquestr);
         }
-        if (g_solveravg > 0) {
+        else if (g_solveravg > 0) {
             static char solvquestr[32];
             snprintf(solvquestr, 32, "Solver Avg: %5g", g_solveravg);
-            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 12.f, solvquestr);
-            //TODO: fix this from lingering.
+            utDrawText2D((WIDTH / 2) - 80, HEIGHT - 16.f, solvquestr);
         }
     } //end ortho scope
     //Reset text overlay projections
@@ -180,7 +180,7 @@ void GetCurrentFace() {
                                                   (int)g_camera.m_angleY);
     if (currentFace != tempFace) {
         currentFace = tempFace;
-		sprintf(lastface, "%s", g_colorRGBs[currentFace].name);
+      sprintf(g_lastface, "%s", g_colorRGBs[currentFace].name);
         // Save it into the viewmodel (sync view)
         megaminx->setCurrentFaceActive(currentFace);
     }
@@ -216,7 +216,7 @@ void resetCameraViewport() {
     g_camera.m_zoom = -ZDIST;
     g_camera.m_angleY = START_ANGLE;
     g_camera.m_forced_aspect_ratio = 1;
-    g_camera.g_areWeDraggingPoint = false;
+    g_camera.m_areWeDraggingPoint = false;
     myglutChangeWindowSize(WIDTH, HEIGHT); //GLUT resize window to default
 }
 

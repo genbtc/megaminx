@@ -5,7 +5,6 @@
 #include "edge.hpp"
 #include "corner.hpp"
 #include <vector>
-#include <variant>
 #include <type_traits>
 
 class Megaminx; //forward declare for Attach
@@ -14,8 +13,7 @@ class Face : public Piece {
 public:
     Face();
     virtual ~Face() = default;
-
-//TODO: maybe hold a pointer back to the parent megaminx.
+\
     Center *center = {};
     Corner *corner[5] = {};
     Edge   *edge[5] = {};
@@ -73,15 +71,11 @@ private:
     bool rotating;
     double angle;
     double axis[3];
+    //hold a pointer back to the parent megaminx.
+    Megaminx *megaminx;
 public:
     enum TurnDir { Clockwise = -1, None = 0, CounterClockwise = 1 };
     enum TurnDir2 { CW = -1, CCW = 1 };
-};
-
-struct numdir {
-    int num;
-    int dir;
-    int algo;
 };
 
 //Named Flip Direction lists:

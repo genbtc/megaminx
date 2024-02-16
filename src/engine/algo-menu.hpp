@@ -120,16 +120,6 @@ constexpr StringAlgo compusolve_algorithms[MAX_COMPUSOLVE_ALGORITHMS] = {
 
 //SubLevel4 Menu - Human Bulk Rotate Algos - Algorithms.hpp
 //submenu4_id = glutCreateMenu(menuHandler);
-//NOTE:I consider these 3 below redundant
-//  glutAddMenuEntry("32. 7LL-Edge3d- CCW MUSHROOM- Both+Backs=Safe", 82);
-//  glutAddMenuEntry("15. 7LL-Edge3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
-//  glutAddMenuEntry("16. 7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
-// -glutAddMenuEntry("18. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
-//NOTE:I consider these 2 below redundant:
-//  glutAddMenuEntry("25. LL Corners: Cycle- CCW L.Back=Safe", 75);
-//  glutAddMenuEntry("28. LL Corners: Cycle- CCW Left=Safe", 78);
-//glutAddMenuEntry("03. U' L' u l", 53);
-//glutAddMenuEntry("04. u r U' R'", 54);
 constexpr int MAX_HUMANBULK_ALGORITHMS = 25;
 constexpr StringAlgo humanbulk_algorithms[MAX_HUMANBULK_ALGORITHMS] = {
     { "", 0},   // Initialize 0 with empty blank
@@ -158,6 +148,16 @@ constexpr StringAlgo humanbulk_algorithms[MAX_HUMANBULK_ALGORITHMS] = {
     { "26. 7LL Corners: Cycle- CCW FrontLine=Safe", 76 },
     { "27. 7LL Corners: Cycle+  CW RightLine=Safe", 77 },
 };
+//COMMENTED OUT:
+//NOTE:I consider these 3 below redundant
+//  glutAddMenuEntry("32. 7LL-Edge3d- CCW MUSHROOM- Both+Backs=Safe", 82);
+//  glutAddMenuEntry("15. 7LL-Edge3b+  CW MUSHROOM+ Both+Backs=Safe", 65);
+//  glutAddMenuEntry("16. 7LL-Edge3c+  CW MUSHROOM+ Right/Back=Safe", 66);
+// -glutAddMenuEntry("18. 7LL-Edge 5-way CCW cycle by 1,2,-1,2,1", 68);
+//NOTE:I consider these 2 below redundant:
+//  glutAddMenuEntry("25. LL Corners: Cycle- CCW L.Back=Safe", 75);
+//  glutAddMenuEntry("28. LL Corners: Cycle- CCW Left=Safe", 78);
+//glutAddMenuEntry("03. U' L' u l", 53);
+//glutAddMenuEntry("04. u r U' R'", 54);
 
-
-#endif // ALGOMENU_HPP
+#endif // __ALGOMENU_HPP__

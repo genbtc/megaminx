@@ -1,6 +1,3 @@
-//#ifndef __MEGAMINX_H__
-//#define __MEGAMINX_H__
-
 #include "face.hpp"
 #include "algorithms.hpp"
 #include <vector>
@@ -56,14 +53,12 @@ public:
     void resetFace(int n);
     template <typename T> //used by deprecated save loader
     int resetFacesPieces(int color_n, const std::vector<int> &defaultPieces, bool solve = false);
-    int resetFacesPiecesEdges(int color_n, const std::vector<int> &defaultPieces, bool solve = false) {
-      return resetFacesPieces<Edge>(color_n, defaultPieces, solve); }       //used by old loader
-    int resetFacesPiecesCorners(int color_n, const std::vector<int> &defaultPieces, bool solve = false) {
-      return resetFacesPieces<Corner>(color_n, defaultPieces, solve); }   //used by old loader
+    int resetFacesPiecesEdge(int color_n, const std::vector<int> &defaultPieces, bool solve = false);
+    int resetFacesPiecesCorner(int color_n, const std::vector<int> &defaultPieces, bool solve = false);
     int resetFacesCorners(int color_n, const std::vector<int> &loadNewCorners, bool solve = true);
     int resetFacesEdges(int color_n, const std::vector<int> &loadNewEdges, bool solve = true);
-    int resetFacesCorners(int color_n);
-    int resetFacesEdges(int color_n);
+    int resetFaceCorners(int color_n);
+    int resetFaceEdges(int color_n);
     //Flip
     template <typename T>
     void flipPieceColor(int face, int num);
@@ -110,9 +105,9 @@ public:
     void resetFiveEdges(const int indexes[5]);
     void resetFiveCorners(const int indexes[5]);
    template <typename T>
-    void resetFivePiecesV(std::vector<int> &v);
-    void resetFiveEdgesV(std::vector<int> &v);
-    void resetFiveCornersV(std::vector<int> &v);
+    void resetFivePieces(const std::vector<int> &v);
+    void resetFiveEdges(const std::vector<int> &v);
+    void resetFiveCorners(const std::vector<int> &v);
     //Well-defined piece lists - Edge layers
     constexpr static int m_firstLayerEdges[5]   = {  0, 1, 2, 3, 4 };
     constexpr static int m_secondLayerEdges[5]  = {  5, 6, 7, 8, 9 };
@@ -135,6 +130,7 @@ public:
 
     //In Solve.cpp
     void DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5]);
+    void DetectSolvedEdgesTwisted(int startI, bool piecesSolved[5]);
     void rotateSolveWhiteEdges(Megaminx* shadowDom);
     void rotateSolveWhiteCorners(Megaminx* shadowDom);
     void rotateSolveLayer2Edges(Megaminx* shadowDom);
@@ -152,7 +148,7 @@ public:
     void updateRotateQueueWithShadow(Megaminx* shadowDom);
     void shadowBulkRotate(std::vector<numdir> bulk);
     void shadowRotate(int num, int dir);
-    void shadowRotate(numdir op);
+    void shadowRotateND(numdir op);
     bool shadowMultiRotate(int face, int &offby);
     int getRotateQueueNum() const { return (int)rotateQueue.size(); }
     //current savefile algo
@@ -254,5 +250,3 @@ static auto MMmin = [](megaminxColor x, megaminxColor y) {
   if ((x == BEIGE && y == LIGHT_BLUE) || (y == BEIGE && x == LIGHT_BLUE))  return BEIGE;
   else  return std::min(x,y);
 };
-
-//#endif

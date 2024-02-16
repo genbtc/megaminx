@@ -1,4 +1,6 @@
 #include "corner.hpp"
+#include <cstring>  //memcpy
+#include <string>   //std::string
 
 /**
  * \brief Inits the piece with a pre-existing Vertex Array
@@ -81,10 +83,7 @@ void Corner::render() const
     glEnd();
 
     glLineWidth(3);
-    if (data.hotPieceMoving)
-        glColor3d(.4, 1, 0);
-    else
-        glColor3d(0, 0, 0);
+    (data.hotPieceMoving) ?  glColor3d(.4, 1, 0) : glColor3d(0, 0, 0);
 
 //    makeGLpentagon(_vertex, 1.005, GL_LINE_LOOP);
     //Pentagon can be made manually in three chunks
@@ -104,11 +103,11 @@ void Corner::render() const
     glEnd();
 
     //Piece Numbering Test:
-    std::string c = std::to_string(data.pieceNum);
-    int x = 2;
-    int z = (data.pieceNum < 10) ? -8 : 8;   //positional offset
-    if (textGLCenterLabels)
+    if (openGLGlobalState.textGLCenterLabels) {
+        std::string c = std::to_string(data.pieceNum);
+        int z = (data.pieceNum < 10) ? -8 : 8;   //positional offset
         utDrawText3DFont(_vertex[2][0] + z, _vertex[2][1], _vertex[2][2] + z, GLUT_BITMAP_HELVETICA_18, c.c_str());
+    }
 
     //Vertex Draw Test:
     //for (int i = 0; i < 7; ++i) {

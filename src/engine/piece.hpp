@@ -8,10 +8,12 @@ public:
     //virtual destructor
     virtual ~Piece() = default;
 
-    //Coords for GL vertex (up to 7, not all used)
-    double _vertex[7][3] = {};
+    //Coords for GL vertex (up to 7, not all used).
+    double _vertex[7][3] = {0};
     //Keeps the default number in the piece. do not swap.
     int _defaultPieceNum;
+    //Center has 1, Edge has 2, Corner has 3
+    int numSides;
 
     //data-members we can swap out
     struct _data {
@@ -24,9 +26,6 @@ public:
         bool hotPieceMoving = false;
     } data = {};
 
-    //Center has 1, Edge has 2, Corner has 3
-    int numSides;
-
     //Swaps current data with the &out_param
     void swapdata(_data &out) {
         if (&(this->data) == &out)
@@ -35,9 +34,15 @@ public:
         data = out;
         out = temp;
     }
-    //getter
+
+    //getter for vertices
+    double* getVertexData() {
+        return &_vertex[0][0];
+    }
+
+    //getter for colors
     [[deprecated]]
-    double* getcolor() {
+    double* getColorData() {
         return &data._color[0][0];
     }
     //setter
@@ -64,8 +69,8 @@ public:
     void initColor(int a, int b) {
         initColorIndex(0, a);
         initColorIndex(1, b);
-        //set non-existant 3rd side of edge to
-        // 0==black aka not undefined so we can re-use corner.
+        //set non-existant 3rd side of edge to 0=Black
+        // aka not undefined so we can re-use corner.
         initColorIndex(2, 0);
         numSides = 2;
     }
@@ -77,8 +82,8 @@ public:
         initColorIndex(2, c);
         numSides = 3;
     }
-    //Use the two arrays g_cornerPiecesColors and g_edgePiecesColors to populate.
-    void initColor(colorpiece color,bool corner=false) {
+    //Uses the two arrays g_cornerPiecesColors and g_edgePiecesColors to populate.
+    void initColor(colorpiece color, bool corner=false) {
         initColorIndex(0, color.a);
         initColorIndex(1, color.b);
         if (corner) {
@@ -90,7 +95,7 @@ public:
             numSides = 2;
         }
     }
-    
+
     //check if color-num (int) matches any colors
     // currently stored in struct data (3 sided)
     bool matchesColor(int color) const {
@@ -234,15 +239,11 @@ public:
             _vertex[i][2] = -INS_SPHERE_RAD;
         }
         return &_vertex[0][0];
-    }
+    }    
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
         numSides = 0;
         for (int i = 0; i < 5; ++i) {
-            //This puts it on the front face. (same as center but larger since not * 2 / 5)
-            //_vertex[i][0] = INS_CIRCLE_RAD * cos(pim(2) * i + pim(1.5));
-            //_vertex[i][1] = INS_CIRCLE_RAD * sin(pim(2) * i + pim(1.5));
-            //_vertex[i][2] = -INS_SPHERE_RAD;
             //This puts it on the back face
             _vertex[i][0] = COSPIM35 + EDGEFIFTH * TWOFIFTHS;
             _vertex[i][1] = -SINPIM35;

@@ -1,6 +1,6 @@
 #include "megaminx.hpp"
 
-//the most flexible
+//query edges
 void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
 {
     std::vector<int> piecesSeenOnTop;
@@ -22,8 +22,21 @@ void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
                 piecesSeenOnTop.push_back(p - startI);
         }
     }
-/*
-    if (piecesSeenOnTop.size() > 1) {
+
+    //Fallback to at least get first piece solved
+    if ((numSolved == 0 && piecesSeenOnTop.size() > 1) || piecesSeenOnTop.size() == 1) {
+        std::sort(piecesSeenOnTop.begin(), piecesSeenOnTop.end());
+        piecesSolved[piecesSeenOnTop[0]] = true;
+        numSolved++;
+    }
+}
+
+//unused, kept for when edges are off by X
+void Megaminx::DetectSolvedEdgesTwisted(int startI, bool piecesSolved[5])
+{
+    //if (piecesSeenOnTop.size() > 1) {
+    int endI = 0;
+    int numSolved = 0;
         //Check if the ordering blue->red,red->green is correct,etc... even if the top is twisted vs the sides
         for (int p = startI; p < endI; ++p) {
             const int pNext = (p != (endI - 1)) ? p + 1 : startI; //handle the loop numbering boundary overrun
@@ -37,14 +50,7 @@ void Megaminx::DetectSolvedEdgesUnOrdered(int startI, bool piecesSolved[5])
                 numSolved++;
             }
         }
-    }
-*/
-    //Fallback to at least get first piece solved
-    if ((numSolved == 0 && piecesSeenOnTop.size() > 1) || piecesSeenOnTop.size() == 1) {
-        std::sort(piecesSeenOnTop.begin(), piecesSeenOnTop.end());
-        piecesSolved[piecesSeenOnTop[0]] = true;
-        numSolved++;
-    }
+    //}
 }
 
 class EdgeLayerAssist {
@@ -596,11 +602,9 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
             int offby = l.sourceCornerIndex - i - (endingPiece - startingPiece) - 3;
             //Orient Gray Top layer (index goes in reverse)
             int offby2 = (l.sourceCornerIndex - i + 2) % 5;
-            
-            //DEV:
+
             rM3Mr(offby); rM3Mr(offby2); assert(offby == offby2);
-            //std::cout << "Debug-333-offbys " << offby << " " << offby2 << std::endl;
-            
+
             //get it out of row4 by orienting top.
             shadowDom->shadowMultiRotate(GRAY, offby);
             //locate where it went
@@ -1028,14 +1032,13 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             assert(isNowSolved);
         }
 
-//DONE: : Combine these 5 better #Algo#39
 //5-way star (+1,+2,-1,+2,+1) #Algo#39 .modby = { 1, -1, -1, -2, -2 }new,updated / difference = { -1, 1, 1, 2, 2 }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved &&
                  (checkPieceMatches(pieceOrder, 29, 27, 28, 25, 26) || //TT54-2 (25)
                   checkPieceMatches(pieceOrder, 27, 25, 28, 29, 26) || //TT58-2 (26)
                   checkPieceMatches(pieceOrder, 27, 28, 26, 29, 25) || //TT59-2 (27)
                   checkPieceMatches(pieceOrder, 26, 28, 29, 27, 25) || //TT56-2 (28)
-                  checkPieceMatches(pieceOrder, 26, 27, 29, 25, 28) ) ) //TT57-2 (29)
+                  checkPieceMatches(pieceOrder, 26, 27, 29, 25, 28) )) //TT57-2 (29)
         {
             int k = 0;
             for (k = 0; k < 5; ++k)
@@ -1045,14 +1048,13 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             std::cout << "Debug-714-715-716-717-718-L7E: Algo39 5way star (+1,+2,-1,+2,+1)  @ " << k << std::endl;
         }
 
-//DONE: : Combine these 5 also #Algo#43
 //5-way Reverse star (-1,-2,+1,-2,-1)  (.modby=2,2,1,1,-1 new,updated) #Algo#43 / difference = { -2, -2, -1, -1, 1 }
         else if (solvedCount == 0 && allEdgeColorsSolved && allCornersAllSolved &&
                  (checkPieceMatches(pieceOrder, 28, 29, 26, 27, 25) || //TT86-2 (25)
                   checkPieceMatches(pieceOrder, 26, 29, 25, 27, 28) || //       (26)
                   checkPieceMatches(pieceOrder, 29, 27, 25, 26, 28) || //       (27)
                   checkPieceMatches(pieceOrder, 29, 25, 28, 26, 27) || //       (28)
-                  checkPieceMatches(pieceOrder, 28, 25, 26, 29, 27) ) ) //      (29)
+                  checkPieceMatches(pieceOrder, 28, 25, 26, 29, 27) )) //       (29)
         {
             int k = 0;
             for (k = 0; k < 5; ++k)
@@ -1061,8 +1063,9 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[43].algo, g_faceNeighbors[LIGHT_BLUE + k], 43);
             std::cout << "Debug-719-720-721-722-723-L7E: Algo43 5way star Reverse (-1,-2,+1,-2,-1)  @ " << k << std::endl;
         }
+//
 //End solvedCount=0:
-
+//
 //BUNNY 4-COLOR-only (with 1 solved, covers all possibilities) #Algo#21
 //#7LL: Step 1, Edge Orientation, 2&3 and 4&5, Flip Colors only (Invert 4 in place)
         else if (solvedCount == 1 && !allEdgeColorsSolved && allCornersAllSolved
@@ -1086,10 +1089,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 //BUNNY 2+2SWAP  #Algo#37
 // 2&5 + 3&4 (opposite horizontally)    //did not fire?
         else if (solvedCount == 1 && allEdgeColorsSolved && allCornersAllSolved &&
-              (checkPieceMatches(pieceOrder, 25, 29, 28, 27, 26) //TT79-2 (25)
-            || checkPieceMatches(pieceOrder, 27, 26, 25, 29, 28) //TT78-2 (26)
-            || checkPieceMatches(pieceOrder, 29, 28, 27, 26, 25) //TT77-2 (27)
-            || checkPieceMatches(pieceOrder, 26, 25, 29, 28, 27) //TT61-2 (28)
+              (checkPieceMatches(pieceOrder, 25, 29, 28, 27, 26)  //TT79-2 (25)
+            || checkPieceMatches(pieceOrder, 27, 26, 25, 29, 28)  //TT78-2 (26)
+            || checkPieceMatches(pieceOrder, 29, 28, 27, 26, 25)  //TT77-2 (27)
+            || checkPieceMatches(pieceOrder, 26, 25, 29, 28, 27)  //TT61-2 (28)
             || checkPieceMatches(pieceOrder, 28, 27, 26, 25, 29)) //TT46-2 (29)
         ) {
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[37].algo, g_faceNeighbors[LIGHT_BLUE + firstSolvedPiece], 37); //algo #37, 13*5=65 moves
@@ -1102,10 +1105,10 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
 // 2&3 + 4&5 (adjacent vertically)
         else if (solvedCount == 1 &&
             // allCornersAllSolved && (//TT-69-2 TODO: when Corners arent solved we can skip more moves w/ E+C Algo.// OK?
-              (checkPieceMatches(pieceOrder, 25, 27, 26, 29, 28) //TT65-2 (25)
-            || checkPieceMatches(pieceOrder, 29, 26, 28, 27, 25) //TT66-2 (26)
-            || checkPieceMatches(pieceOrder, 26, 25, 27, 29, 28) //TT67-2 (27)
-            || checkPieceMatches(pieceOrder, 29, 27, 26, 28, 25) //TT64-2 (28)
+              (checkPieceMatches(pieceOrder, 25, 27, 26, 29, 28)  //TT65-2 (25)
+            || checkPieceMatches(pieceOrder, 29, 26, 28, 27, 25)  //TT66-2 (26)
+            || checkPieceMatches(pieceOrder, 26, 25, 27, 29, 28)  //TT67-2 (27)
+            || checkPieceMatches(pieceOrder, 29, 27, 26, 28, 25)  //TT64-2 (28)
             || checkPieceMatches(pieceOrder, 26, 25, 28, 27, 29)) //TT68-2 (29)
         ) {
             //Streamlined previous algo19 from 44 moves to 32 : (in doing that, did we go backwards with something)
@@ -1309,7 +1312,6 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //basic overflow protection:
         if (loopcount > 120)
             break;
-        //bool grayFaceColorSolved[5] = { false };
         bool piecesSolved[5] = { false };
         //check solved-ness
         shadowDom->DetectSolvedCorners(startingPiece, piecesSolved);
@@ -1371,21 +1373,13 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //skip to the end if positioned correctly
         if (fullySolvedOrder)
             goto startColorFlippingCorners;
-        //skip to the middle if we can, starting with pairs
+//TODO: skip to the middle if we can, starting with pairs ?
 //        else if (twoAdjacentPieces)
 //            goto haveTwoAdjacentSolved;
 
 //49 Testcases Total:
-// Everything is #Algo#26 and #Algo#27#
-//10 "no visible pairs progress" cases
-        //(15 18 19 16 17)
-        else if (checkPieceMatches(pieceOrder, 15, 18, 19, 16, 17))
-        {
-            const int startFace = LIGHT_BLUE + 4;
-            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
-            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
-        } //continues with  --> "[15 16] 18 19 17" below (no pairs yet)
-
+// Everything is #Algo#26 (front line safe) and #Algo#27# (right line safe)
+//9 "no visible pairs progress" cases (3x 26 + 6x 27)
         //(16 15 19 18 17)
         else if (checkPieceMatches(pieceOrder, 16, 15, 19, 18, 17))
         {
@@ -1458,7 +1452,15 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
         } //continues with --> "15 18 19 16 17" below (no pairs yet)
 
-//39 cases to make pairs:
+//40 cases to make pairs:
+        //(15 18 19 16 17)
+        else if (checkPieceMatches(pieceOrder, 15, 18, 19, 16, 17))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with  --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
+
         //(18 15 19 17 16) - TestCube25-1
         else if (checkPieceMatches(pieceOrder, 18, 15, 19, 17, 16))
         {
@@ -1887,6 +1889,7 @@ startColorFlippingCorners:
     std::cout << "Solved rotateSolveLayer7Corners 7 2 in " << loopcount << " loops" << std::endl;
 }
 
+//This implements a check similar to the test below
 bool Megaminx::faceToModBy(const std::vector<int> &pieces, const int modby[5], int startingFace) {
     std::array<int,5> newModby = { modby[0], modby[1], modby[2], modby[3], modby[4] }; //was const.
     std::rotate(newModby.rbegin(), newModby.rbegin() + startingFace, newModby.rend());
@@ -1906,7 +1909,6 @@ bool Megaminx::faceToModBy(const std::vector<int> &pieces, const int modby[5], i
     std::cout << std::endl;
     return (newUnit.size() == 5);
 }
-//This implements a check similar to the test below
 
 //This is the result of a solved cube + algorithm and then testing the gray faces' EDGES
 void Megaminx::testingAlgostrings(Megaminx* shadowDom)
@@ -1955,5 +1957,4 @@ void Megaminx::testingAlgostrings(Megaminx* shadowDom)
         //also, not all results are valid conceptually. do not trust, verify.
         delete shadowDom;
     }
-//DEV    updateRotateQueueWithShadow(shadowDom); //actually output the algo's changes to main cube's GUI
 }

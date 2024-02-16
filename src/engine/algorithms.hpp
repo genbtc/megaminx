@@ -1,7 +1,13 @@
-//Algorithms.hpp - Megaminx Version 1.4.4 - @gen 2023
+//Algorithms.hpp - Megaminx Version 1.4.5 - @gen 2024
 #ifndef __ALGORITHMS_H__
 #define __ALGORITHMS_H__
 
+struct numdir {
+  int num;
+  int dir;
+  int algo;
+};
+//used in megaminx & shadow solve.cpp
 struct AlgoString {
     int num{};
     const char* algo{};
@@ -9,7 +15,7 @@ struct AlgoString {
     int repeatX=0;
     int modby[5]{};
 };
-//.modby is calculated by foundEdges[k] - defaultEdges[k], so the calc must be * -1 to check for solved
+//INFO: .modby is calculated by foundEdges[k] - defaultEdges[k], so the calc must be * -1 to check for solved
 
 constexpr int ALL_ALGORITHMS = 53;
 constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
@@ -236,8 +242,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .len = 12,
     },
     // #7LL: Step 3, Corners Cycle CCW  - ( Safe Area = Left )
-    //TODO: organize: (already described as Algo #6/#7)
-    //TODO: organize: dupe: Dupes Should be removed. already Commented out in menu
+    //HIDDEN DUPLICATE: (already described as Algo #25/#26)
     {
         .num = 28,
         .algo = "R U2' L' u2, R' U2' L u2",

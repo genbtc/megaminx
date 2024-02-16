@@ -1,5 +1,5 @@
-#ifndef ___CENTER_H_
-#define ___CENTER_H_
+#ifndef __CENTER_H__
+#define __CENTER_H__
 #include "piece.hpp"
 
 class Center : public Piece {

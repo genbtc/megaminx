@@ -1,8 +1,5 @@
 #pragma once
 #include <cmath>
-#include <iostream>
-#include <string>
-#include <cstring>
 
 using std::acos;
 using std::atan;

@@ -19,25 +19,25 @@ void readlineShell() {
     char *line;
     linenoiseSetCompletionCallback(readlineCompletion);
     linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
-    printf("Megaminx Command Line Internals - \n");
-    printf("Readline Shell, starting...\n");
+    std::cout << "Megaminx Command Line Internals - \n";
+    std::cout << "Readline Shell, starting...\n";
     /* Interactive Prompt: megaminx> */
     while((line = linenoise("megaminx> ")) != NULL) {
         linenoiseHistoryAdd(line);  /* Add input line to the history file. */
         linenoiseHistorySave("history.txt"); /* Save the history on disk. */
         if (line[0] == '\0') {
-            printf("No Input, returning to GUI.\n");
+            std::cout << "No Input, returning to GUI.\n";
             free(line);
             return;
         } else if ((!strncmp(line,"exit",4))
                 || (!strncmp(line,"quit",4))) {
-            printf("Exiting shell, returning to GUI\n");
+            std::cout << "Exiting shell, returning to GUI\n";
             free(line);
             return;
         } else if (line[0] != '/') {
-            printf("not a command: '%s'\n", line);
+            printf("Error, not a command: %s\n", line);
         } else if (!strncmp(line,"/hello",6)) {
-            printf("Hello World!\n");
+            std::cout << "Hello World!\n";
         } else if (!strncmp(line,"/historylen",11)) {
             int len = atoi(line+11);
             linenoiseHistorySetMaxLen(len);
@@ -77,6 +77,24 @@ void readlineShell() {
             printf("Converting Test: %s\n", line);
             std::string testDir(line+13);
             RestoreOldCubeFromFile(testDir);
+        } else if (!strncmp(line,"/edgevertex",11)) {
+            printf("Edge Vertexes: \n");
+            const int maxpcs = megaminx->getMaxNumberOfPieces<Edge>();
+            for (int r = 0; r < maxpcs; ++r) {
+                double vertexArray[7][3] = { 0 };
+                memcpy(vertexArray, megaminx->getPieceArray<Edge>(0)[r].getVertexData(), sizeof(vertexArray));
+                for (int i = 0; i < 7; ++i)
+                    printf("[ %f %f %f ]\n", vertexArray[i][0], vertexArray[i][1], vertexArray[i][2]);
+            }
+        } else if (!strncmp(line,"/cornervertex",13)) {
+            printf("Corner Vertexes: \n");
+            const int maxpcs = megaminx->getMaxNumberOfPieces<Corner>();
+            for (int r = 0; r < maxpcs; ++r) {
+                double vertexArray[7][3] = { 0 };
+                memcpy(vertexArray, megaminx->getPieceArray<Corner>(0)[r].getVertexData(), sizeof(vertexArray));
+                for (int i = 0; i < 7; ++i)
+                    printf("[ %f %f %f ]\n", vertexArray[i][0], vertexArray[i][1], vertexArray[i][2]);
+            }
         } else if ((!strncmp(line,"/exit",5))
                 || (!strncmp(line,"/quit",5))) {
             printf("Exiting shell, returning to GUI\n");

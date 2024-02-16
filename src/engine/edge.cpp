@@ -1,4 +1,6 @@
 #include "edge.hpp"
+#include <cstring>  //memcpy
+#include <string>   //std::string
 
 /**
  * \brief Inits the piece with a pre-existing Vertex Array
@@ -79,12 +81,9 @@ void Edge::render() const
     }
     glEnd();
 
-    if (data.hotPieceMoving)
-        glColor3d(.4, 1, 0);
-    else
-        glColor3d(0, 0, 0);
+    glColor3d(0, 0, 0); //Black
 
-    //Edge Side One - Border 0-4
+    //Edge Side One - Black Border Line 0-4
     glLineWidth(3);
     glBegin(GL_LINE_LOOP);
     for (int i = 0; i < 4; ++i) {
@@ -92,7 +91,7 @@ void Edge::render() const
     }
     glEnd();
     //(Intersection Line is at 2/3)
-    //Edge Side Two - Border 2-6
+    //Edge Side Two - Black Border Line 2-6
     glBegin(GL_LINE_LOOP);
     for (int i = 2; i < 6; ++i) {
         glVertex3d(_vertex[i][0] * 1.005, _vertex[i][1] *1.005 , _vertex[i][2] *1.005);
@@ -100,22 +99,19 @@ void Edge::render() const
     glEnd();
 
     //Piece Numbering Test:
-    std::string c = std::to_string(data.pieceNum);
-    int x = (data.pieceNum < 15) ? -10 : 10;   //positional offset
-    int z = (data.pieceNum > 9 && data.pieceNum < 20) ? -10 : 10;   //positional offset
-    if (textGLCenterLabels) {
-        glColor3f(0.9, 0.2, 0.2);
+    if (openGLGlobalState.textGLCenterLabels) {
+        std::string c = std::to_string(data.pieceNum);
+        int x = (data.pieceNum < 15) ? -10 : 10;   //positional offset
+        int z = (data.pieceNum > 9 && data.pieceNum < 20) ? -10 : 10;   //positional offset
+        glColor3f(0.9, 0.2, 0.2); //red numbers
         utDrawText3DFont(_vertex[2][0], _vertex[2][1], _vertex[2][2], GLUT_BITMAP_HELVETICA_18, c.c_str());
     }
-/*
-    if (textGLCenterLabels) {
-        for (int i = 2; i < 6; ++i) {
-            //Vertex Numbering Test:
-            int x = 2;
-            int z = (data.pieceNum < 10) ? -5 : 5;   //positional offset
-            std::string c = std::to_string((int)i);
-            utDrawText3D(_vertex[i][0] + z, _vertex[i][1], _vertex[i][2] + z, GLUT_BITMAP_HELVETICA_12, c.c_str());
+    //Vertex Numbering Test:
+    if (openGLGlobalState.textGLVertexLabels) {
+        for (int i = 2; i < 4; ++i) {
+            std::string c = std::to_string(i);
+            int z = (data.pieceNum > 9 && data.pieceNum < 20) ? -10 : 10;   //positional offset.  tiny font
+            utDrawText3DFont(_vertex[i][0] + z, _vertex[i][1], _vertex[i][2] + z, GLUT_BITMAP_HELVETICA_12, c.c_str());
         }
     }
-*/
 }

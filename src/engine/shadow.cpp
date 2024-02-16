@@ -1,49 +1,65 @@
 #include "megaminx.hpp"
-//Shadow.cpp - A virtual verison of the cube that only exists in theory.
+//Shadow.cpp - A virtual verison of the cube that only exists in theory. - Megaminx - @gen 2024
 //Can be created and destroyed at whim without affecting the main one,
 // and State can be cloned back and forth.
 //Useful for iterating moves into the future, then throwing them away
 
-//Load a new shadow cube up with the old ones edges
+/**
+ * \brief Load a new shadow cube up with the old ones Edges
+ */
 void Megaminx::LoadNewEdgesFromOtherCube(Megaminx* source)
 {
     for (int i = 0; i < numEdges; ++i)
         this->edges[i].data = source->edges[i].data;
 }
-//Load a new shadow cube up with the old ones corners
+
+/**
+ * \brief Load a new shadow cube up with the old ones Corners
+ */
 void Megaminx::LoadNewCornersFromOtherCube(Megaminx* source)
 {
     for (int i = 0; i < numCorners; ++i)
         this->corners[i].data = source->corners[i].data;
 }
 
-//Rotate a face on the shadowcube as if it was normal. but
-// skips call to .render() and calls .placeParts() directly.
-//Place one item on the shadowRotateQueue
+/**
+ * \brief Rotate a face on the shadowcube
+ * \note  Push/Place one item on the shadowRotateQueue
+ *        skips call to .render(), and calls .placeParts() directly.
+ */
 void Megaminx::shadowRotate(int num, int dir)
 {
     assert(num > 0 && num <= numFaces);
     assert(dir == Face::Clockwise || dir == Face::CCW);
-    //std::cout << "Rotate Face: # " << num << " : "  << g_colorRGBs[num].name  << "  Dir: " << dir << std::endl;
+    //if (DEBUGPRINT) std::cout << "Rotate Face: # " << num << " : "  << g_colorRGBs[num].name  << "  Dir: " << dir << std::endl;
     num -= 1; //Convert 1-12 Faces into array [0-11]
     shadowRotateQueue.push({ num, dir });
     faces[num].placeParts(dir);
 }
 
-//Same as above, take struct as parameter, no need to subtract 1. // unused.
-void Megaminx::shadowRotate(numdir op)
+/**
+ * \brief Shadow Rotate same as above, take numdir struct as parameter directly
+ * \note  Essentially does this shadowRotate(op.num + 1, op.dir); (no need to add one)
+ */
+void Megaminx::shadowRotateND(numdir op)
 {
-//    shadowRotate(op.num, op.dir);
-    //TODO: FIX (+1?)
     assert(op.num > 0 && op.num <= numFaces);
     assert(op.dir == Face::Clockwise || op.dir == Face::CCW);
-    shadowRotateQueue.push({ op.num, op.dir });
+    shadowRotateQueue.push(op);
     faces[op.num].placeParts(op.dir);
-    //same as above, but prints out the action to the console.
-    std::cout << "Rotate Face: # " << op.num << " : "  << g_colorRGBs[op.num].name  << "  Dir: " << op.dir << "  Algo: # " << op.algo  << std::endl;
+    //if (DEBUGPRINT) std::cout << "Rotate Face: # " << op.num << " : "  << g_colorRGBs[op.num].name  << "  Dir: " << op.dir << "  Algo: # " << op.algo  << std::endl;
+}
+/**
+ * \brief Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
+ */
+void Megaminx::shadowBulkRotate(std::vector<numdir> bulk) {
+    for (auto op : bulk)
+        shadowRotateND(op);
 }
 
-//Rotate one face by multiple rotations. Converts any out of bound numbers to the most efficient.
+/**
+ * \brief Rotate one face by multiple rotations. Converts any out of bound numbers to the most efficient.
+ */
 bool Megaminx::shadowMultiRotate(int face, int &offby)
 {
     int defaultDir = Face::CW;
@@ -65,13 +81,9 @@ bool Megaminx::shadowMultiRotate(int face, int &offby)
     return (offby > 0);
 }
 
-//Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
-void Megaminx::shadowBulkRotate(std::vector<numdir> bulk) {
-    for (auto op : bulk)    //+1 the 0-11 faces
-        shadowRotate(op.num + 1, op.dir);
-}
-
-//Apply our shadow cube changes we put in the queue <- back to our main cube, one by one
+/**
+ * \brief Apply all shadow cube changes put in the queue <- back to the main cube, one by one
+ */
 void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 {
     const size_t numsize = shadowDom->shadowRotateQueue.size();
@@ -86,7 +98,9 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
     undoStack.push({ 999, 999 });
 }
 
-//Create megaminx array, from pieces read from a file, and put into shadow array.
+/**
+ * \brief Create megaminx array, from pieces read from a file, and put into shadow array.
+ */
 template <typename T>
 int Megaminx::createMegaMinxFromShadowVec(const std::vector<int> &readPieces, const std::vector<int> &readPieceColors, Megaminx* shadowDom)
 {

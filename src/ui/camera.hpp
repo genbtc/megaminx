@@ -1,8 +1,8 @@
 /** @file camera.h
  *  @brief camera and input functions and getCurrentFaceFromAngles()
- *  @author Bartlomiej Filipek
+ *  @author originally Bartlomiej Filipek
  *  @date April 2011
- *  @author edited by genBTC November 2017
+ *  @author edited by genBTC November 2017-2023
  */
 #ifndef __CAMERA_H__
 #define __CAMERA_H__
@@ -12,9 +12,7 @@ private:
     double m_deltaAngX, m_deltaAngY, m_deltaZoom;
     int m_lastX, m_lastY;
     //from main.h
-    unsigned int g_lastHitPointID;
-    unsigned int g_draggedPointID;
-    int bnstate[16]; //mousebutton
+    unsigned int m_lastHitPointID, m_draggedPointID;
     unsigned int DOUBLE_CLICK_INTERVAL = 400;
     unsigned int prev_left_click;
     int prev_left_x, prev_left_y;
@@ -27,7 +25,7 @@ public:
     int m_screenWidth, m_screenHeight;
     //from main.h
     int menuVisibleState = 0;
-    bool g_areWeDraggingPoint;
+    bool m_areWeDraggingPoint;
     bool isSpinning = false;
 
     Camera();
