@@ -1,7 +1,3 @@
-algo
-algo 21
-history
-/hello
 /menu
 algo 21
 history
@@ -98,3 +94,7 @@ quit
 /testconvert tests/TestCube14-2/
 /testconvert tests/TestCube3-2/
 /testconvert tests/TestCube6-2/
+/centervertex
+/edgevertex
+/cornervertex
+/edgevertex

@@ -1,0 +1,7 @@
+/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: megaminx.p/src_ui_opengl.cpp.o: in function `utSetOrthographicProjection':
+/home/genr8eofl/src/megaminx/build/../src/ui/opengl.cpp:21:(.text+0x55): undefined reference to `gluOrtho2D'
+/usr/lib/gcc/x86_64-pc-linux-gnu/13/../../../../x86_64-pc-linux-gnu/bin/ld: megaminx.p/src_main.cpp.o: in function `main':
+/home/genr8eofl/src/megaminx/build/../src/main.cpp:75:(.text+0x74b): undefined reference to `gluPerspective'
+collect2: error: ld returned 1 exit status
+
+#Solved by linking with -lGLU
