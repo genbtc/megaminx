@@ -239,7 +239,7 @@ public:
             _vertex[i][2] = -INS_SPHERE_RAD;
         }
         return &_vertex[0][0];
-    }    
+    }
     //Creates the common starting vertexes for all pieces that are FACES
     double* faceInit() {
         numSides = 0;

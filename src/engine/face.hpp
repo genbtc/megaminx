@@ -6,6 +6,7 @@
 #include "corner.hpp"
 #include <vector>
 #include <type_traits>
+#include <cassert>
 
 class Megaminx; //forward declare for Attach
 
@@ -18,7 +19,7 @@ public:
     Corner *corner[5] = {};
     Edge   *edge[5] = {};
 
-    int getNum() const { return thisNum; }
+    [[nodiscard]] int getNum() const { return thisNum; }
     void initAxis(int n);
     bool render();
     void rotate(int direction);
@@ -31,7 +32,8 @@ public:
     void attachEdgePieces(const Megaminx* megaminx, Edge& edgesPTR);
 
    template <typename T>
-    Piece* getFacePiece(int i) const {
+    [[nodiscard]] Piece* getFacePiece(int i) const {
+        assert(i >= 0 && i < 5);
         if (std::is_same<T, Edge>::value)
             return edge[i];
         else if (std::is_same<T, Corner>::value)
@@ -39,18 +41,18 @@ public:
         return center;
     }
    template<typename T>
-    std::vector<int> findPiecesOrder() const;
-    std::vector<int> findCornersOrder() const;
-    std::vector<int> findEdgesOrder() const;
+    [[nodiscard]] std::vector<int> findPiecesOrder() const;
+    [[nodiscard]] std::vector<int> findCornersOrder() const;
+    [[nodiscard]] std::vector<int> findEdgesOrder() const;
    template<typename T>
-    std::vector<int> findPiecesColorFlipStatus() const;
-    std::vector<int> findCornersColorFlipStatus() const;
-    std::vector<int> findEdgesColorFlipStatus() const;
+    [[nodiscard]] std::vector<int> findPiecesColorFlipStatus() const;
+    [[nodiscard]] std::vector<int> findCornersColorFlipStatus() const;
+    [[nodiscard]] std::vector<int> findEdgesColorFlipStatus() const;
 
    template<typename T>
-    int find5PiecePresent(int pieceNum) const;
-    int find5EdgePresent(int pieceNum) const;
-    int find5CornerPresent(int pieceNum) const;
+    [[nodiscard]] int find5PiecePresent(int pieceNum) const;
+    [[nodiscard]] int find5EdgePresent(int pieceNum) const;
+    [[nodiscard]] int find5CornerPresent(int pieceNum) const;
 
    template <typename T>
     void swapPieces(int a, int b);
