@@ -34,15 +34,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) { main(0, 0); }
 #include "ui/camera.hpp"
 #include "engine/megaminx.hpp"
 
-// Global State, main vars
+// Main.cpp vars
 int g_window;
 char g_lastface[32] = {};
 int currentFace;
 bool g_help = false;
+char rotquestr[32];
+char solvquestr[32];
 Camera g_camera;
 double g_appRenderTimeTotal = 0.0;
 double g_appIdleTime = 0.0;
 double g_solveravg = 0.0;
+int OldmenuVisibleState = 0;
+int oldmenux = 0, oldmenuy = 0;
 
 /**
  * \brief Megaminx Dodecahedron. Creates object class and resets camera.
@@ -59,6 +63,7 @@ void createMegaMinx() {
  */
 int main(int argc, char *argv[]) {
     srand((int)time(nullptr)); // seed rand()
+    // start FreeGLUT
     glutInit(&argc, argv);
     // set OpenGL render modes
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE | GLUT_DEPTH);
@@ -66,14 +71,15 @@ int main(int argc, char *argv[]) {
 
     // create window + title
     g_window = glutCreateWindow(myglutTitle);
-    // new *megaminx dodecahedron
-    createMegaMinx(); //also handles /calls\ to glViewport(0,0,w,h);
+    // *new *megaminx = dodecahedron
+    createMegaMinx();
+    //also handles/calls to glViewport(0,0,w,h);
 
     // Setup of OpenGL Params
-    glClearColor(0.22f, 0.2f, 0.2f, 1.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 0.2f);
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
-    gluPerspective(view_distance_view_angle, 1.0, 1.0, 10000.0);
+    gluPerspective(fovy, aspectRatio, ZNEAR, ZFAR);
     glMatrixMode(GL_MODELVIEW);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // Enable each GL Params
@@ -89,7 +95,7 @@ int main(int argc, char *argv[]) {
     glutReshapeFunc(myglutChangeWindowSize);
 
     // Glut Mouse Handler Callbacks
-    glutMouseFunc(myglutMousePressed);
+    glutMouseFunc(myglutMouseFunc);
     glutMotionFunc(myglutMousePressedMove);
 
     // Glut Keyboard Handler Callbacks (main-menu.cpp controls)
@@ -155,12 +161,10 @@ void myglutRenderScene() {
         // Footer
         int shadowQueueLength = megaminx->getRotateQueueNum();
         if (shadowQueueLength > 0) {
-            static char rotquestr[32];
             snprintf(rotquestr, 32, "Rotate Queue: %5d", shadowQueueLength);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 16.f, rotquestr);
         }
         else if (g_solveravg > 0) {
-            static char solvquestr[32];
             snprintf(solvquestr, 32, "Solver Avg: %5g", g_solveravg);
             utDrawText2D((WIDTH / 2) - 80, HEIGHT - 16.f, solvquestr);
         }
@@ -180,7 +184,7 @@ void GetCurrentFace() {
                                                   (int)g_camera.m_angleY);
     if (currentFace != tempFace) {
         currentFace = tempFace;
-      sprintf(g_lastface, "%s", g_colorRGBs[currentFace].name);
+        sprintf(g_lastface, "%s", g_colorRGBs[currentFace].name);
         // Save it into the viewmodel (sync view)
         megaminx->setCurrentFaceActive(currentFace);
     }
@@ -209,13 +213,20 @@ void doDoubleClickRotate(int, int) {
 }
 
 /**
+ * \brief Camera, Window - Resize Window function passthrough to the camera class (GLUT callback)
+ */
+void myglutChangeWindowSize(int x, int y) {
+    g_camera.ChangeViewportSize(x, y);
+}
+
+/**
  * \brief Camera - init/reset Camera+vars to default, set view angles, etc. (and spin)
  */
 void resetCameraViewport() {
     g_camera = Camera();
     g_camera.m_zoom = -ZDIST;
-    g_camera.m_angleY = START_ANGLE;
-    g_camera.m_forced_aspect_ratio = 1;
+    g_camera.m_angleY = START_ANGLE;  //TODO: save a copy of this var to g_camera member
+    g_camera.m_forced_aspect_ratio = aspectRatio;
     g_camera.m_areWeDraggingPoint = false;
     myglutChangeWindowSize(WIDTH, HEIGHT); //GLUT resize window to default
 }
@@ -230,18 +241,16 @@ void doCameraMotionSpecial(int key, int x, int y) {
 /**
  * \brief Controls,Camera - Handle mouse/rotation/camera movement (GLUT callback)
  */
-void myglutMousePressed(int button, int state, int x, int y) {
+void myglutMouseFunc(int button, int state, int x, int y) {
     g_camera.ProcessMouse(button, state, x, y);
 }
 
 /**
  * \brief Controls, Mouse, Camera, Menu - special Right click handling for menu
+ * \note diplay right-click menu (GLUT callback)
  */
-int OldmenuVisibleState = 0;
-int oldmenux = 0, oldmenuy = 0;
-// diplay right-click menu (GLUT callback)
 void myglutMenuVisible(int status, int x, int y) {
-	//check for Menu first, otherwise bug from click/drag through past it
+    //check for Menu first, otherwise bug from click/drag through past it
     g_camera.menuVisibleState = (status == GLUT_MENU_IN_USE);
     if (g_camera.menuVisibleState) {
         OldmenuVisibleState = 1;
@@ -253,24 +262,17 @@ void myglutMenuVisible(int status, int x, int y) {
  * \brief mouse Pressed Move = Drag, stops cube from rotating after right click menu visible (GLUT callback)
  */
 void myglutMousePressedMove(int x, int y) {
-	//if the menu is visible, do nothing
-	if (g_camera.menuVisibleState)
-		return;
-	//if the menu is not visible and it was never visible, we can drag.
+    //if the menu is visible, do nothing
+    if (g_camera.menuVisibleState)
+        return;
+    //if the menu is not visible and it was never visible, we can drag.
     if (!OldmenuVisibleState)
         g_camera.ProcessMouseMotion(x, y, true);
-	//if the menu is not visible but it just _WAS_, disable drag temporarly
+    //if the menu is not visible but it just _WAS_, disable drag temporarly
     else {
         OldmenuVisibleState = 0;
         g_camera.ProcessMouseMotion(oldmenux, oldmenuy, false);
     }
-}
-
-/**
- * \brief Camera, Window - Resize Window function passthrough to the camera class (GLUT callback)
- */
-void myglutChangeWindowSize(int x, int y) {
-    g_camera.ChangeViewportSize(x, y);
 }
 
 //see main-menu.cpp for rest of main GUI program

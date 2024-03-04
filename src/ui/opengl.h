@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 // 3D to 2D Orthographic Projection Matrix for Perspective & Zoom
-void utSetOrthographicProjection(float scrW, float scrH);
+void utSetOrthographicProjection(float screenWidth, float screenHeight);
 void utResetPerspectiveProjection();
 
 // Text Fonts

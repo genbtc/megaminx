@@ -6,7 +6,7 @@
 #include <cstdio>
 #include "opengl.h"
 
-void utSetOrthographicProjection(float scrW, float scrH)
+void utSetOrthographicProjection(float screenWidth, float screenHeight)
 {
     // switch to projection mode
     glMatrixMode(GL_PROJECTION);
@@ -16,12 +16,13 @@ void utSetOrthographicProjection(float scrW, float scrH)
     // reset matrix
     glLoadIdentity();
     // set a 2D orthographic projection
-    gluOrtho2D(0, scrW, 0, scrH);
+    gluOrtho2D(0, screenWidth, 0, screenHeight);
     // invert the y axis, down is positive
     glScalef(1, -1, 1);
-    // mover the origin from the bottom left corner
+    // also need to move the origin
+    // from the bottom left corner
     // to the upper left corner
-    glTranslatef(0, -(float)scrH, 0);
+    glTranslatef(0, -screenHeight, 0);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
@@ -40,11 +41,14 @@ void utResetPerspectiveProjection()
 
 void utDrawText2DFont(float x, float y, void *font, const char *theString)
 {
-    // set position to start drawing fonts 2D
-    glRasterPos2f(x, y);
-    // loop all the characters in the string
-    for (char *c=(char*)theString; *c != '\0'; c++)
-        glutBitmapCharacter(font, *c);
+    //set position to start drawing fonts 2D
+    //glRasterPos2f(x, y);
+    //Set 3D Depth Position = Z = to 1 (or 0) to draw in 2D
+    // glRasterPos3f(x, y, 1);
+    // // loop all the characters in the string
+    // for (char *c=(char*)theString; *c != '\0'; c++)
+    //     glutBitmapCharacter(font, *c);
+    utDrawText3DFont(x, y, 1, font, theString);
 }
 //choose default automatic 8x13 font
 void utDrawText2D(float x, float y, const char *theString)

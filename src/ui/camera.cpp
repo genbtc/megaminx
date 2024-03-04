@@ -10,16 +10,17 @@
 #include <GL/glut.h>
 #include <algorithm>
 
-Camera::Camera() : m_angleX(0), m_angleY(0), m_zoom(0),
-                   m_mouseX(0), m_mouseY(0), m_lastX(0), m_lastY(0),
-                   m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0),
-                   prev_left_x(0), prev_left_y(0), prev_left_click(0),
-    m_screenWidth(0), m_screenHeight(0), m_screenRatio(0), m_forced_aspect_ratio(0),
+Camera::Camera() :
+    m_angleX(0), m_angleY(0), m_zoom(0),
+    m_mouseX(0), m_mouseY(0), m_lastX(0), m_lastY(0),
+    m_deltaAngX(0), m_deltaAngY(0), m_deltaZoom(0),
+    prev_left_x(0), prev_left_y(0), prev_left_click(0),
+    m_screenWidth(0), m_screenHeight(0),
+    m_screenRatio(0), m_forced_aspect_ratio(0),
     m_isLeftPressed(false), m_isMiddlePressed(false)
-{
-}
+{ /* Self Initializing Constructor */ }
 
-void doDoubleClickRotate(int x, int y); //main.cpp
+void doDoubleClickRotate(int x, int y); //prototype. @main.cpp
 
 void Camera::ChangeViewportSize(int w, int h)
 {
@@ -29,7 +30,7 @@ void Camera::ChangeViewportSize(int w, int h)
         h = 1;
 
     //Turn on forced aspect ratio of 1.0
-    if (m_forced_aspect_ratio == 1) {
+    if ((int)m_forced_aspect_ratio == 1) {
         const auto minx = std::min(w, h*(int)m_forced_aspect_ratio);
         h = w = minx;
     }
@@ -163,7 +164,6 @@ void Camera::RotateGLCameraView()
         glRotated(m_angleX, 0, 0, 1);
 }
 
-
 /**
  * \brief Free function. MEGAMINX. Takes camera position angles and tells what face
  *    is most showing. Shortcut way of angle detection. external linkage.
@@ -196,7 +196,7 @@ int getCurrentFaceFromAngles(int x, int y)
         face = 8;   //LIGHT_BLUE
     else if (y2 && x < d)
         face = 2;   //DARK_BLUE
-    if (face)
+    if (face) //found early, easy
         return face;
     for (int i = 0; i < 5; ++i) {
         if (x >= d + r * i && x < d + r * (i + 1)) {

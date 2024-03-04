@@ -7,28 +7,30 @@ const double REFRESH_IN_MS = (1000.0 / REFRESH_RATE);
 const unsigned int REFRESH_WAIT_TIME = (const unsigned int)REFRESH_IN_MS;
 // initial window screen size
 const int WIDTH = 640;
-const int HEIGHT = 640;
-const double ZDIST = (WIDTH / HEIGHT) * 1.25 * HEIGHT;
-const double START_ANGLE = 60.0f;
-const double view_distance_view_angle = 20;
+const int HEIGHT = WIDTH; //uncomment if not 1:1
+const double aspectRatio = 1.0; //(WIDTH / HEIGHT)
+const double ZDIST = /* aspectRatio* */ 1.25 * HEIGHT;
+const double START_ANGLE = 60.0f;   //must replicate to camera.cpp@getCurrentFaceFromAngles().s
+const double fovy = 20.;    //gluPerspective - fovy (view_distance_view_angle)
+const double ZNEAR = 1.0;   //gluPerspective - zNear
+const double ZFAR = 10000.; //gluPerspective - zFar
 ////////////////////////////////////////////////////////////////////////
+// main / main.cpp
+int main(int argc, char *argv[]);
 
-//global refs - megaminx.cpp
+// global refs - megaminx.cpp
 void createMegaMinx();
 void GetCurrentFace();
 
-// global camera main / camera.cpp
+// global camera main.cpp -> camera.cpp
 void doCameraMotionSpecial(int key, int x, int y);
 void resetCameraViewport();
 void toggleSpinning();
 
-// main / main.cpp
-int main(int argc, char *argv[]);
-
-// glut callbacks:
+// glut callbacks
 void myglutIdle(int);
 void myglutRenderScene();
-void myglutMousePressed(int button, int state, int x, int y);
+void myglutMouseFunc(int button, int state, int x, int y);
 void myglutMousePressedMove(int x, int y);
 void myglutChangeWindowSize(int x, int y);
 
