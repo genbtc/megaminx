@@ -52,12 +52,10 @@ void readlineShell() {
             free(line);
             return;
         } else if (!strncmp(line,"/algodiff",9)) {
-            int num = atoi(line+9);
             for (int i=1; i<ALL_ALGORITHMS; i++) {
                 auto algo = megaminx->ParseAlgorithmID(i, LIGHT_BLUE);
-                printf("Number of Moves: #%ld\n", algo.size() );
-                printf("Executing Algo #%d\n", i);
-                megaminx->rotateAlgo(i);
+                printf("Algo #%d - Number of Moves: #%ld\n", i, algo.size() );
+                //megaminx->rotateAlgo(i);
             }
             printf("Exiting shell, returning to GUI\n");
             free(line);
@@ -65,7 +63,8 @@ void readlineShell() {
         } else if (!strncmp(line,"/algo",5)) {
             int num = atoi(line+5);
             printf("Executing Algo #%d\n", num);
-            megaminx->rotateAlgo(num);
+            //megaminx->rotateAlgo(num);
+            megaminx->rotateBulkAlgoString(g_edgeOrientation[num].algo, g_faceNeighbors[LIGHT_BLUE], num);
             printf("Exiting shell, returning to GUI\n");
             free(line);
             return;

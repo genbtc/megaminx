@@ -390,43 +390,43 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .len = 32,
         .modby = { 2, 2, 1, 1, -1 }
     },
-
+//IMPORTANT NAMES
     //Top star Yellow Cross First case (flips F and R edges):
     {
         .num = 44,
-        .algo = "F U R , U' R' F' ",
+        .algo = "f u r , U' R' F' ",
         .len = 6
     },
     //Top star Yellow Cross Second case (flips F and B edges):
     {
         .num = 45,
-        .algo = "F R U , R' U' F' ",
+        .algo = "f r u , R' U' F' ",
         .len = 6
     },
 
     //LL cycle edges+, Clockwise (affects corners):
     {
         .num = 46,
-        .algo = "R U R' U , R U U U R' U",
+        .algo = "r u R' u , r u2 u R' u",
         .len = 10
     },
     //LL cycle edges-, AntiClockwise (affects corners):
     {
         .num = 47,
-        .algo = "U' R U2 R' , U' R U' R' ",
+        .algo = "U' r u2 R' , U' r U' R' ",
         .len = 9
     },
 
     //LL Cycle corners+, Clockwise (F,L,UL):
     {
         .num = 48,
-        .algo = "L' U2 R U'2 , L U2 R' U'2",
+        .algo = "L' u2 r U2' , l u2 R' U2' ",
         .len = 12
     },
     //LL Cycle corners-, Anticlockwise (F,R,UR):
     {
         .num = 49,
-        .algo = "R U'2 L' U2 , R' U'2 L U2",
+        .algo = "r U2' L' u2 , R' U2' l u2",
         .len = 12
     },
     //Last Layer Step 4: Orienting Corners (color-flipping in-place)
@@ -547,6 +547,7 @@ constexpr AlgoString g_edgeOrientation[4]= {
         .algo = "f, u r U' R', F' ",
         .len = 6
     },
+    //Printed out paper third algo.
     {
         .num = 3,
         .algo = "f r u2, R2' f r F', U2' F' ",
@@ -554,8 +555,121 @@ constexpr AlgoString g_edgeOrientation[4]= {
     }
 };
 
-constexpr AlgoString g_cornerOrientation[4]= {
+constexpr AlgoString g_cornerOrientation[44]= {
     { 0 },
+    //Two Adjacent
+    {
+        .num = 1,
+        .algo = "r u R' u, r u R' U2', r U' R' ",
+        .len = 12
+    },
+    {
+        .num = 2,
+        .algo = "f, r u2 R' U' r U' R', F' ",
+        .len = 10
+    },
+    //Two Opposite
+    {
+        .num = 3,
+        .algo = "r u2 R', u, r U2 R' ",
+        .len = 9
+    },
+    {
+        .num = 4,
+        .algo = "r u R' U', R' f r u, r U' R' F' ",
+        .len = 12
+    },
+    //three (close to #10, corner+Edge implicated)
+    {
+        .num = 5,
+        .algo = "r u R' u r U2' R' ",
+        .len = 8
+    },
+    {
+        .num = 6,
+        .algo = "R' U' r U' R' u2 r",
+        .len = 8
+    },
+    {
+        .num = 7,
+        .algo = "r u2 R' U' r U' R' ",
+        .len = 8
+    },
+    {
+        .num = 8,
+        .algo = "r u R' u2 r u2 R' ",
+        .len = 9
+    },
+    //four
+    {
+        .num = 9,
+        .algo = "r u2 R' U', r u R' U', r U' R' ",
+        .len = 12
+    },
+    {
+        .num = 10,
+        .algo = "r u R' u, r U' R' u, r U2' R' ",
+        .len = 12
+    },
+    {
+        .num = 11,
+        .algo = "r u R' u, r u R' U', r U2' R' ",
+        .len = 12
+    },
+    {
+        .num = 12,
+        .algo = "r u2 R' U' r U' R2', U' r U' R' u2 r",
+        .len = 16
+    },
+    {
+        .num = 13,
+        .algo = "r u2 R2' U' r2 U' R2' u2 r",
+        .len = 14
+    },
+    {
+        .num = 14,
+        .algo = "R' U2' r2 u R2' u r2 U2' R' ",
+        .len = 14
+    },
+    //Five
+    {
+        .num = 15,
+        .algo = "r u R' u2, r U2' R', u r U2' R' ",
+        .len = 14
+    },
+    {
+        .num = 16,
+        .algo = "r u2 R' U', r u2 R' U2', r U' R' ",
+        .len = 14
+    },
 };
 
+constexpr AlgoString g_edgePermutation[6]= {
+    { 0 },
+    {
+        .num = 1,
+        .algo = "r2 U2' R2' U' r2 U2' R2' ",
+        .len = 13
+    },
+    {
+        .num = 2,
+        .algo = "r2 u2 R2' u r2 u2 R2' ",
+        .len = 13
+    },
+    {
+        .num = 3,
+        .algo = "r u R' F', r u R' U', R' f r2 U' R' ",
+        .len = 14
+    },
+    {
+        .num = 4,
+        .algo = "r u R' u, R' U' r2 U', R' u R' u, r U2' ",
+        .len = 16
+    },
+    {
+        .num = 5,
+        .algo = "l r u2, L' u R', l U' r u2, L' u2 R' ",
+        .len = 16
+    },
+};
 #endif  // __ALGORITHMS_H__
