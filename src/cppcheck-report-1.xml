@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+    <cppcheck version="2.9"/>
+    <errors>
+        <error id="assertWithSideEffect" severity="warning" msg="Assert statement calls a function which may have desired side effects: &amp;#039;isFullySolved&amp;#039;." verbose="Non-pure function: &amp;#039;isFullySolved&amp;#039; is called inside assert statement. Assert statements are removed from release builds so the code inside assert statement is not executed. If the code is needed also in release builds, this is a bug." cwe="398" file0="main-menu.cpp">
+            <location file="main-menu.cpp" line="471"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;la&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;la&amp;#039; is assigned a value that is never used." cwe="563" file0="main-menu.cpp">
+            <location file="main-menu.cpp" line="211"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;startTimeA&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;startTimeA&amp;#039; is assigned a value that is never used." cwe="563" file0="main-menu.cpp">
+            <location file="main-menu.cpp" line="459"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="main-menu.cpp">
+            <location file="engine/center.hpp" line="7"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="main-menu.cpp">
+            <location file="engine/center.hpp" line="7"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="main-menu.cpp">
+            <location file="engine/edge.hpp" line="7"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="main-menu.cpp">
+            <location file="engine/edge.hpp" line="7"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="main-menu.cpp">
+            <location file="engine/corner.hpp" line="7"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="main-menu.cpp">
+            <location file="engine/corner.hpp" line="7"/>
+        </error>
+        <error id="selfAssignment" severity="warning" msg="Redundant assignment of &amp;#039;i&amp;#039; to itself." verbose="Redundant assignment of &amp;#039;i&amp;#039; to itself." cwe="398" file0="main-menu.cpp">
+            <location file="engine/piece.hpp" line="110"/>
+        </error>
+        <error id="legacyUninitvar" severity="error" msg="Uninitialized variable: i" verbose="Uninitialized variable: i" cwe="457" file0="main-menu.cpp">
+            <location file="engine/piece.hpp" line="110"/>
+        </error>
+        <error id="constParameter" severity="style" msg="Parameter &amp;#039;pack&amp;#039; can be declared as reference to const" verbose="Parameter &amp;#039;pack&amp;#039; can be declared as reference to const" cwe="398" file0="main-menu.cpp">
+            <location file="engine/piece-static.hpp" line="60"/>
+        </error>
+        <error id="constParameter" severity="style" msg="Parameter &amp;#039;pack&amp;#039; can be declared as reference to const" verbose="Parameter &amp;#039;pack&amp;#039; can be declared as reference to const" cwe="398" file0="main-menu.cpp">
+            <location file="engine/piece-static.hpp" line="68"/>
+        </error>
+        <error id="invalidPrintfArgType_sint" severity="portability" msg="%ld in format string (no. 2) requires &amp;#039;long&amp;#039; but the argument type is &amp;#039;std::size_t {aka unsigned long}&amp;#039;." verbose="%ld in format string (no. 2) requires &amp;#039;long&amp;#039; but the argument type is &amp;#039;std::size_t {aka unsigned long}&amp;#039;." cwe="686" file0="readline.cpp">
+            <location file="readline.cpp" line="57"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;x&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;x&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/edge.cpp">
+            <location file="engine/edge.cpp" line="104"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;z&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;z&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/edge.cpp">
+            <location file="engine/edge.cpp" line="105"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;Face::megaminx&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;Face::megaminx&amp;#039; is not initialized in the constructor." cwe="398" file0="engine/face.cpp">
+            <location file="engine/face.cpp" line="6"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::_defaultPieceNum&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="engine/face.cpp">
+            <location file="engine/face.cpp" line="6"/>
+        </error>
+        <error id="uninitDerivedMemberVar" severity="warning" msg="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" verbose="Member variable &amp;#039;Piece::numSides&amp;#039; is not initialized in the constructor. Maybe it should be initialized directly in the class Piece?" cwe="398" file0="engine/face.cpp">
+            <location file="engine/face.cpp" line="6"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;testDir&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;testDir&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="20"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;testDir&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;testDir&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="100"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;testDir&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;testDir&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="124"/>
+        </error>
+        <error id="constVariable" severity="style" msg="Variable &amp;#039;v&amp;#039; can be declared as reference to const" verbose="Variable &amp;#039;v&amp;#039; can be declared as reference to const" cwe="398" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="163"/>
+        </error>
+        <error id="constVariable" severity="style" msg="Variable &amp;#039;v&amp;#039; can be declared as reference to const" verbose="Variable &amp;#039;v&amp;#039; can be declared as reference to const" cwe="398" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="180"/>
+        </error>
+        <error id="stlIfStrFind" severity="performance" msg="Inefficient usage of string::find() in condition; string::starts_with() could be faster." verbose="Either inefficient or wrong usage of string::find(). string::starts_with() will be faster if string::find&amp;#039;s result is compared with 0, because it will not scan the whole string. If your intention is to check that there are no findings in the string, you should compare with std::string::npos." cwe="597" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="209"/>
+        </error>
+        <error id="stlIfStrFind" severity="performance" msg="Inefficient usage of string::find() in condition; string::starts_with() could be faster." verbose="Either inefficient or wrong usage of string::find(). string::starts_with() will be faster if string::find&amp;#039;s result is compared with 0, because it will not scan the whole string. If your intention is to check that there are no findings in the string, you should compare with std::string::npos." cwe="597" file0="engine/load.cpp">
+            <location file="engine/load.cpp" line="211"/>
+        </error>
+        <error id="passedByValue" severity="performance" msg="Function parameter &amp;#039;algoString&amp;#039; should be passed by const reference." verbose="Parameter &amp;#039;algoString&amp;#039; is passed by value. It could be passed as a const reference which is usually faster and recommended in C++." cwe="398" file0="engine/megaminx.cpp">
+            <location file="engine/megaminx.cpp" line="171"/>
+        </error>
+        <error id="unsignedLessThanZero" severity="style" msg="Checking if unsigned expression &amp;#039;numsize&amp;#039; is less than zero." verbose="The unsigned expression &amp;#039;numsize&amp;#039; will never be negative so it is either pointless or an error to check if it is." cwe="570" file0="engine/shadow.cpp">
+            <location file="engine/shadow.cpp" line="90"/>
+        </error>
+        <error id="negativeIndex" severity="warning" msg="Either the condition &amp;#039;pIndex&amp;lt;endI&amp;#039; is redundant or the array &amp;#039;edges[30]&amp;#039; is accessed at index -1, which is out of bounds." verbose="Either the condition &amp;#039;pIndex&amp;lt;endI&amp;#039; is redundant or the array &amp;#039;edges[30]&amp;#039; is accessed at index -1, which is out of bounds." cwe="786" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="46" info="Negative array index"/>
+            <location file="engine/solve.cpp" line="45" info="Assuming that condition &amp;#039;pIndex&amp;lt;endI&amp;#039; is not redundant"/>
+            <location file="engine/solve.cpp" line="38" info="Assignment &amp;#039;endI=0&amp;#039;, assigned value is 0"/>
+        </error>
+        <error id="arrayIndexOutOfBounds" severity="error" msg="Array &amp;#039;g_faceNeighbors[13]&amp;#039; accessed at index 13, which is out of bounds." verbose="Array &amp;#039;g_faceNeighbors[13]&amp;#039; accessed at index 13, which is out of bounds." cwe="788" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1047" info="Array index out of bounds"/>
+            <location file="engine/solve.cpp" line="1044" info="Assuming that condition &amp;#039;k&amp;lt;5&amp;#039; is not redundant"/>
+        </error>
+        <error id="arrayIndexOutOfBounds" severity="error" msg="Array &amp;#039;g_faceNeighbors[13]&amp;#039; accessed at index 13, which is out of bounds." verbose="Array &amp;#039;g_faceNeighbors[13]&amp;#039; accessed at index 13, which is out of bounds." cwe="788" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1063" info="Array index out of bounds"/>
+            <location file="engine/solve.cpp" line="1060" info="Assuming that condition &amp;#039;k&amp;lt;5&amp;#039; is not redundant"/>
+        </error>
+        <error id="redundantCondition" severity="style" msg="Redundant condition: i==l.sourceCornerIndex. &amp;#039;A || (!A &amp;amp;&amp;amp; B)&amp;#039; is equivalent to &amp;#039;A || B&amp;#039;" verbose="The condition &amp;#039;i!=l.sourceCornerIndex || i==l.sourceCornerIndex &amp;amp;&amp;amp; l.CornerItselfA-&amp;gt;data.flipStatus!=0&amp;#039; is equivalent to &amp;#039;i!=l.sourceCornerIndex || l.CornerItselfA-&amp;gt;data.flipStatus!=0&amp;#039;." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="342"/>
+        </error>
+        <error id="redundantCondition" severity="style" msg="Redundant condition: l.sourceEdgeIndex==i. &amp;#039;A || (!A &amp;amp;&amp;amp; B)&amp;#039; is equivalent to &amp;#039;A || B&amp;#039;" verbose="The condition &amp;#039;l.sourceEdgeIndex!=i || l.sourceEdgeIndex==i &amp;amp;&amp;amp; l.EdgeItselfA-&amp;gt;data.flipStatus!=0&amp;#039; is equivalent to &amp;#039;l.sourceEdgeIndex!=i || l.EdgeItselfA-&amp;gt;data.flipStatus!=0&amp;#039;." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="474"/>
+        </error>
+        <error id="redundantCondition" severity="style" msg="Redundant condition: l.sourceEdgeIndex==i. &amp;#039;A || (!A &amp;amp;&amp;amp; B)&amp;#039; is equivalent to &amp;#039;A || B&amp;#039;" verbose="The condition &amp;#039;l.sourceEdgeIndex!=i || l.sourceEdgeIndex==i &amp;amp;&amp;amp; l.EdgeItselfA-&amp;gt;data.flipStatus!=0&amp;#039; is equivalent to &amp;#039;l.sourceEdgeIndex!=i || l.EdgeItselfA-&amp;gt;data.flipStatus!=0&amp;#039;." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="666"/>
+        </error>
+        <error id="knownConditionTrueFalse" severity="style" msg="Condition &amp;#039;p!=(endI-1)&amp;#039; is always true" verbose="Condition &amp;#039;p!=(endI-1)&amp;#039; is always true" cwe="571" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="42" info="Condition &amp;#039;p!=(endI-1)&amp;#039; is always true"/>
+            <location file="engine/solve.cpp" line="41" info="Assuming that condition &amp;#039;p&amp;lt;endI&amp;#039; is not redundant"/>
+            <location file="engine/solve.cpp" line="38" info="Assignment &amp;#039;endI=0&amp;#039;, assigned value is 0"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &amp;#039;bulkAlgo&amp;#039; can be reduced." verbose="The scope of the variable &amp;#039;bulkAlgo&amp;#039; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &amp;#039;i&amp;#039; can be reduced:&#10;void f(int x)&#10;{&#10;    int i = 0;&#10;    if (x) {&#10;        // it&amp;#039;s safe to move &amp;#039;int i = 0;&amp;#039; here&#10;        for (int n = 0; n &amp;lt; 10; ++n) {&#10;            // it is possible but not safe to move &amp;#039;int i = 0;&amp;#039; here&#10;            do_something(&amp;amp;i);&#10;        }&#10;    }&#10;}&#10;When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="663"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &amp;#039;bulkAlgo&amp;#039; can be reduced." verbose="The scope of the variable &amp;#039;bulkAlgo&amp;#039; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &amp;#039;i&amp;#039; can be reduced:&#10;void f(int x)&#10;{&#10;    int i = 0;&#10;    if (x) {&#10;        // it&amp;#039;s safe to move &amp;#039;int i = 0;&amp;#039; here&#10;        for (int n = 0; n &amp;lt; 10; ++n) {&#10;            // it is possible but not safe to move &amp;#039;int i = 0;&amp;#039; here&#10;            do_something(&amp;amp;i);&#10;        }&#10;    }&#10;}&#10;When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="837"/>
+        </error>
+        <error id="unusedLabel" severity="style" msg="Label &amp;#039;haveTwoAdjacentSolved&amp;#039; is not used." verbose="Label &amp;#039;haveTwoAdjacentSolved&amp;#039; is not used." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1775"/>
+        </error>
+        <error id="unusedLabel" severity="style" msg="Label &amp;#039;finalizePosition&amp;#039; is not used." verbose="Label &amp;#039;finalizePosition&amp;#039; is not used." cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1848"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;offby&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;offby&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="343" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="332" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;offby&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;offby&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="364" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="332" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;offby&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;offby&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="419" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="332" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;offby&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;offby&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="996" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="982" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;offby&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;offby&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1006" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="982" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;i&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;i&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1099" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="911" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;i&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;i&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1233" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="911" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;i&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;i&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1240" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="911" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;i&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;i&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1262" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="911" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;i&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;i&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1269" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="911" info="Shadowed declaration"/>
+        </error>
+        <error id="shadowVariable" severity="style" msg="Local variable &amp;#039;offby&amp;#039; shadows outer variable" verbose="Local variable &amp;#039;offby&amp;#039; shadows outer variable" cwe="398" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="1368" info="Shadow variable"/>
+            <location file="engine/solve.cpp" line="1332" info="Shadowed declaration"/>
+        </error>
+        <error id="legacyUninitvar" severity="error" msg="Uninitialized variable: x" verbose="Uninitialized variable: x" cwe="457" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="411"/>
+        </error>
+        <error id="legacyUninitvar" severity="error" msg="Uninitialized variable: x" verbose="Uninitialized variable: x" cwe="457" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="594"/>
+        </error>
+        <error id="legacyUninitvar" severity="error" msg="Uninitialized variable: x" verbose="Uninitialized variable: x" cwe="457" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="779"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;numSolved&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;numSolved&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="30"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;offby&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;offby&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="332"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="465"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="554"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;front&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;front&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="614"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="658"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="756"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;allSolved&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="832"/>
+        </error>
+        <error id="unreadVariable" severity="style" msg="Variable &amp;#039;result&amp;#039; is assigned a value that is never used." verbose="Variable &amp;#039;result&amp;#039; is assigned a value that is never used." cwe="563" file0="engine/solve.cpp">
+            <location file="engine/solve.cpp" line="853"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;Camera::m_areWeDraggingPoint&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;Camera::m_areWeDraggingPoint&amp;#039; is not initialized in the constructor." cwe="398" file0="ui/camera.cpp">
+            <location file="ui/camera.cpp" line="13"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;Camera::m_lastHitPointID&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;Camera::m_lastHitPointID&amp;#039; is not initialized in the constructor." cwe="398" file0="ui/camera.cpp">
+            <location file="ui/camera.cpp" line="13"/>
+        </error>
+        <error id="uninitMemberVar" severity="warning" msg="Member variable &amp;#039;Camera::m_draggedPointID&amp;#039; is not initialized in the constructor." verbose="Member variable &amp;#039;Camera::m_draggedPointID&amp;#039; is not initialized in the constructor." cwe="398" file0="ui/camera.cpp">
+            <location file="ui/camera.cpp" line="13"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &amp;#039;nread&amp;#039; can be reduced." verbose="The scope of the variable &amp;#039;nread&amp;#039; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &amp;#039;i&amp;#039; can be reduced:&#10;void f(int x)&#10;{&#10;    int i = 0;&#10;    if (x) {&#10;        // it&amp;#039;s safe to move &amp;#039;int i = 0;&amp;#039; here&#10;        for (int n = 0; n &amp;lt; 10; ++n) {&#10;            // it is possible but not safe to move &amp;#039;int i = 0;&amp;#039; here&#10;            do_something(&amp;amp;i);&#10;        }&#10;    }&#10;}&#10;When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="ui/linenoise.c">
+            <location file="ui/linenoise.c" line="372"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &amp;#039;nwritten&amp;#039; can be reduced." verbose="The scope of the variable &amp;#039;nwritten&amp;#039; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &amp;#039;i&amp;#039; can be reduced:&#10;void f(int x)&#10;{&#10;    int i = 0;&#10;    if (x) {&#10;        // it&amp;#039;s safe to move &amp;#039;int i = 0;&amp;#039; here&#10;        for (int n = 0; n &amp;lt; 10; ++n) {&#10;            // it is possible but not safe to move &amp;#039;int i = 0;&amp;#039; here&#10;            do_something(&amp;amp;i);&#10;        }&#10;    }&#10;}&#10;When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="ui/linenoise.c">
+            <location file="ui/linenoise.c" line="372"/>
+        </error>
+        <error id="variableScope" severity="style" msg="The scope of the variable &amp;#039;seq&amp;#039; can be reduced." verbose="The scope of the variable &amp;#039;seq&amp;#039; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &amp;#039;i&amp;#039; can be reduced:&#10;void f(int x)&#10;{&#10;    int i = 0;&#10;    if (x) {&#10;        // it&amp;#039;s safe to move &amp;#039;int i = 0;&amp;#039; here&#10;        for (int n = 0; n &amp;lt; 10; ++n) {&#10;            // it is possible but not safe to move &amp;#039;int i = 0;&amp;#039; here&#10;            do_something(&amp;amp;i);&#10;        }&#10;    }&#10;}&#10;When you see this message it is always safe to reduce the variable scope 1 level." cwe="398" file0="ui/linenoise.c">
+            <location file="ui/linenoise.c" line="497"/>
+        </error>
+        <error id="cstyleCast" severity="style" msg="C-style pointer casting" verbose="C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts." cwe="398" file0="ui/opengl.cpp">
+            <location file="ui/opengl.cpp" line="64"/>
+        </error>
+        <error id="noExplicitConstructor" severity="style" msg="Class &amp;#039;TVector3 &amp;lt; double &amp;gt;&amp;#039; has a constructor with 1 argument that is not explicit." verbose="Class &amp;#039;TVector3 &amp;lt; double &amp;gt;&amp;#039; has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided." cwe="398" file0="unused/mouse-ray.cpp">
+            <location file="unused/utils_math.h" line="30"/>
+        </error>
+        <error id="noExplicitConstructor" severity="style" msg="Class &amp;#039;TVector3 &amp;lt; double &amp;gt;&amp;#039; has a constructor with 1 argument that is not explicit." verbose="Class &amp;#039;TVector3 &amp;lt; double &amp;gt;&amp;#039; has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided." cwe="398" file0="unused/mouse-ray.cpp">
+            <location file="unused/utils_math.h" line="31"/>
+        </error>
+    </errors>
+</results>

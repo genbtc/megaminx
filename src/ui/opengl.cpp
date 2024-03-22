@@ -41,21 +41,14 @@ void utResetPerspectiveProjection()
 
 void utDrawText2DFont(float x, float y, void *font, const char *theString)
 {
-    //set position to start drawing fonts 2D
-    //glRasterPos2f(x, y);
-    //Set 3D Depth Position = Z = to 1 (or 0) to draw in 2D
-    // glRasterPos3f(x, y, 1);
-    // // loop all the characters in the string
-    // for (char *c=(char*)theString; *c != '\0'; c++)
-    //     glutBitmapCharacter(font, *c);
+    //Set 3D Depth Position = Clamp Z value for 2D draw
     utDrawText3DFont(x, y, 1, font, theString);
 }
 //choose default automatic 8x13 font
 void utDrawText2D(float x, float y, const char *theString)
 {
-    utDrawText2DFont(x, y + 13, GLUT_BITMAP_8_BY_13, theString);
+    utDrawText3DFont(x, y + 13, 1, GLUT_BITMAP_8_BY_13, theString);
 }
-
 void utDrawText3DFont(float x, float y, float z, void *font, const char *theString)
 {
     // set position to start drawing fonts 3D

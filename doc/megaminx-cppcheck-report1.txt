@@ -1,0 +1,152 @@
+[/home/genr8eofl/src/megaminx/src/main-menu.cpp:471] (warning) Non-pure function: 'isFullySolved' is called inside assert statement. Assert statements are removed from release builds so the code inside assert statement is not executed. If the code is needed also in release builds, this is a bug. [assertWithSideEffect]
+[/home/genr8eofl/src/megaminx/src/main-menu.cpp:211] (style) Variable 'la' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/main-menu.cpp:459] (style) Variable 'startTimeA' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/center.hpp:7] (warning) Member variable 'Piece::_defaultPieceNum' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/center.hpp:7] (warning) Member variable 'Piece::numSides' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/edge.hpp:7] (warning) Member variable 'Piece::_defaultPieceNum' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/edge.hpp:7] (warning) Member variable 'Piece::numSides' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/corner.hpp:7] (warning) Member variable 'Piece::_defaultPieceNum' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/corner.hpp:7] (warning) Member variable 'Piece::numSides' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/piece.hpp:110] (warning) Redundant assignment of 'i' to itself. [selfAssignment]
+[/home/genr8eofl/src/megaminx/src/engine/piece.hpp:110] (error) Uninitialized variable: i [legacyUninitvar]
+[/home/genr8eofl/src/megaminx/src/engine/piece-static.hpp:60] (style) Parameter 'pack' can be declared as reference to const [constParameter]
+[/home/genr8eofl/src/megaminx/src/engine/piece-static.hpp:68] (style) Parameter 'pack' can be declared as reference to const [constParameter]
+[/home/genr8eofl/src/megaminx/src/readline.cpp:57] (portability) %ld in format string (no. 2) requires 'long' but the argument type is 'std::size_t {aka unsigned long}'. [invalidPrintfArgType_sint]
+[/home/genr8eofl/src/megaminx/src/engine/edge.cpp:104] (style) Variable 'x' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/edge.cpp:105] (style) Variable 'z' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/face.cpp:6] (warning) Member variable 'Face::megaminx' is not initialized in the constructor. [uninitMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/face.cpp:6] (warning) Member variable 'Piece::_defaultPieceNum' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/face.cpp:6] (warning) Member variable 'Piece::numSides' is not initialized in the constructor. Maybe it should be initialized directly in the class Piece? [uninitDerivedMemberVar]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:20] (performance) Parameter 'testDir' is passed by value. It could be passed as a const reference which is usually faster and recommended in C++. [passedByValue]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:100] (performance) Parameter 'testDir' is passed by value. It could be passed as a const reference which is usually faster and recommended in C++. [passedByValue]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:124] (performance) Parameter 'testDir' is passed by value. It could be passed as a const reference which is usually faster and recommended in C++. [passedByValue]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:163] (style) Variable 'v' can be declared as reference to const [constVariable]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:180] (style) Variable 'v' can be declared as reference to const [constVariable]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:209] (performance) Either inefficient or wrong usage of string::find(). string::starts_with() will be faster if string::find's result is compared with 0, because it will not scan the whole string. If your intention is to check that there are no findings in the string, you should compare with std::string::npos. [stlIfStrFind]
+[/home/genr8eofl/src/megaminx/src/engine/load.cpp:211] (performance) Either inefficient or wrong usage of string::find(). string::starts_with() will be faster if string::find's result is compared with 0, because it will not scan the whole string. If your intention is to check that there are no findings in the string, you should compare with std::string::npos. [stlIfStrFind]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:46] (warning) Either the condition 'pIndex<endI' is redundant or the array 'edges[30]' is accessed at index -1, which is out of bounds. [negativeIndex]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:46] (warning) Either the condition 'pIndex<endI' is redundant or the array 'edges[30]' is accessed at index -1, which is out of bounds. [negativeIndex]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:46] (warning) Either the condition 'pIndex<endI' is redundant or the array 'edges[30]' is accessed at index -1, which is out of bounds. [negativeIndex]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1047] (error) Array 'g_faceNeighbors[13]' accessed at index 13, which is out of bounds. [arrayIndexOutOfBounds]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1047] (error) Array 'g_faceNeighbors[13]' accessed at index 13, which is out of bounds. [arrayIndexOutOfBounds]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:46] (warning) Either the condition 'pIndex<endI' is redundant or the array 'edges[30]' is accessed at index -1, which is out of bounds. [negativeIndex]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1047] (error) Array 'g_faceNeighbors[13]' accessed at index 13, which is out of bounds. [arrayIndexOutOfBounds]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1063] (error) Array 'g_faceNeighbors[13]' accessed at index 13, which is out of bounds. [arrayIndexOutOfBounds]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:342] (style) The condition 'i!=l.sourceCornerIndex || i==l.sourceCornerIndex && l.CornerItselfA->data.flipStatus!=0' is equivalent to 'i!=l.sourceCornerIndex || l.CornerItselfA->data.flipStatus!=0'. [redundantCondition]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:474] (style) The condition 'l.sourceEdgeIndex!=i || l.sourceEdgeIndex==i && l.EdgeItselfA->data.flipStatus!=0' is equivalent to 'l.sourceEdgeIndex!=i || l.EdgeItselfA->data.flipStatus!=0'. [redundantCondition]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:666] (style) The condition 'l.sourceEdgeIndex!=i || l.sourceEdgeIndex==i && l.EdgeItselfA->data.flipStatus!=0' is equivalent to 'l.sourceEdgeIndex!=i || l.EdgeItselfA->data.flipStatus!=0'. [redundantCondition]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:42] (style) Condition 'p!=(endI-1)' is always true [knownConditionTrueFalse]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:663] (style) The scope of the variable 'bulkAlgo' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+void f(int x)
+{
+    int i = 0;
+    if (x) {
+        // it's safe to move 'int i = 0;' here
+        for (int n = 0; n < 10; ++n) {
+            // it is possible but not safe to move 'int i = 0;' here
+            do_something(&i);
+        }
+    }
+}
+When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:837] (style) The scope of the variable 'bulkAlgo' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+void f(int x)
+{
+    int i = 0;
+    if (x) {
+        // it's safe to move 'int i = 0;' here
+        for (int n = 0; n < 10; ++n) {
+            // it is possible but not safe to move 'int i = 0;' here
+            do_something(&i);
+        }
+    }
+}
+When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1775] (style) Label 'haveTwoAdjacentSolved' is not used. [unusedLabel]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1848] (style) Label 'finalizePosition' is not used. [unusedLabel]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:343] (style) Local variable 'offby' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:364] (style) Local variable 'offby' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:419] (style) Local variable 'offby' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:996] (style) Local variable 'offby' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1006] (style) Local variable 'offby' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1099] (style) Local variable 'i' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1233] (style) Local variable 'i' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1240] (style) Local variable 'i' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1262] (style) Local variable 'i' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1269] (style) Local variable 'i' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:1368] (style) Local variable 'offby' shadows outer variable [shadowVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:411] (error) Uninitialized variable: x [legacyUninitvar]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:594] (error) Uninitialized variable: x [legacyUninitvar]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:779] (error) Uninitialized variable: x [legacyUninitvar]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:30] (style) Variable 'numSolved' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:332] (style) Variable 'offby' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:465] (style) Variable 'allSolved' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:554] (style) Variable 'allSolved' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:614] (style) Variable 'front' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:658] (style) Variable 'allSolved' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:756] (style) Variable 'allSolved' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:832] (style) Variable 'allSolved' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/engine/solve.cpp:853] (style) Variable 'result' is assigned a value that is never used. [unreadVariable]
+[/home/genr8eofl/src/megaminx/src/ui/camera.cpp:13] (warning) Member variable 'Camera::m_areWeDraggingPoint' is not initialized in the constructor. [uninitMemberVar]
+[/home/genr8eofl/src/megaminx/src/ui/camera.cpp:13] (warning) Member variable 'Camera::m_lastHitPointID' is not initialized in the constructor. [uninitMemberVar]
+[/home/genr8eofl/src/megaminx/src/ui/camera.cpp:13] (warning) Member variable 'Camera::m_draggedPointID' is not initialized in the constructor. [uninitMemberVar]
+[/home/genr8eofl/src/megaminx/src/ui/linenoise.c:372] (style) The scope of the variable 'nread' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+void f(int x)
+{
+    int i = 0;
+    if (x) {
+        // it's safe to move 'int i = 0;' here
+        for (int n = 0; n < 10; ++n) {
+            // it is possible but not safe to move 'int i = 0;' here
+            do_something(&i);
+        }
+    }
+}
+When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+[/home/genr8eofl/src/megaminx/src/ui/linenoise.c:372] (style) The scope of the variable 'nwritten' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+void f(int x)
+{
+    int i = 0;
+    if (x) {
+        // it's safe to move 'int i = 0;' here
+        for (int n = 0; n < 10; ++n) {
+            // it is possible but not safe to move 'int i = 0;' here
+            do_something(&i);
+        }
+    }
+}
+When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+[/home/genr8eofl/src/megaminx/src/ui/linenoise.c:497] (style) The scope of the variable 'seq' can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for 'i' can be reduced:
+void f(int x)
+{
+    int i = 0;
+    if (x) {
+        // it's safe to move 'int i = 0;' here
+        for (int n = 0; n < 10; ++n) {
+            // it is possible but not safe to move 'int i = 0;' here
+            do_something(&i);
+        }
+    }
+}
+When you see this message it is always safe to reduce the variable scope 1 level. [variableScope]
+[/home/genr8eofl/src/megaminx/src/ui/opengl.cpp:64] (style) C-style pointer casting detected. C++ offers four different kinds of casts as replacements: static_cast, const_cast, dynamic_cast and reinterpret_cast. A C-style cast could evaluate to any of those automatically, thus it is considered safer if the programmer explicitly states which kind of cast is expected. See also: https://www.securecoding.cert.org/confluence/display/cplusplus/EXP05-CPP.+Do+not+use+C-style+casts. [cstyleCast]
+[/home/genr8eofl/src/megaminx/src/unused/utils_math.h:30] (style) Class 'TVector3 < double >' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+[/home/genr8eofl/src/megaminx/src/unused/utils_math.h:31] (style) Class 'TVector3 < double >' has a constructor with 1 argument that is not explicit. Such constructors should in general be explicit for type safety reasons. Using the explicit keyword in the constructor means some mistakes when using the class can be avoided. [noExplicitConstructor]
+main-menu.cpp
+engine/center.hpp
+engine/edge.hpp
+engine/corner.hpp
+engine/piece.hpp
+engine/piece-static.hpp
+readline.cpp
+engine/edge.cpp
+engine/face.cpp
+engine/load.cpp
+engine/megaminx.cpp
+engine/shadow.cpp
+engine/solve.cpp
+ui/camera.cpp
+ui/linenoise.c
+ui/opengl.cpp
+unused/utils_math.h
+

@@ -28,10 +28,9 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=2
-FILE_NAME_0=0;Perl;0;EUTF-8;1;1;0;%2Frun%2Fuser%2F1000%2Fgvfs%2Fsmb-share%3Aserver%3D10.1.1.1%2Cshare%3Draidz-4tbx4%2FDocu-EOFL%2Fsourcecode%2Fufed%2FPortage.pm;0;4
-FILE_NAME_1=0;Diff;0;EUTF-8;1;1;0;%2Fhome%2Fgenr8eofl%2FDownloads%2F0001-Correctly-flush-at-the-end-of-OBUs.patch;0;4
-FILE_NAME_2=0;Diff;0;EUTF-8;1;1;0;%2Fhome%2Fgenr8eofl%2FDownloads%2F0001-Make-sure-parent-exists-before-usage.patch;0;4
+current_page=1
+FILE_NAME_0=30885;Perl;0;EUTF-8;1;1;0;%2Frun%2Fuser%2F1000%2Fgvfs%2Fsmb-share%3Aserver%3D10.1.1.1%2Cshare%3Draidz-4tbx4%2FDocu-EOFL%2Fsourcecode%2Fufed%2FPortage.pm;0;4
+FILE_NAME_1=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fgenr8eofl%2Fsrc%2Fmegaminx%2Fsrc%2Fengine%2Fsolve.cpp;0;4
 
 [VTE]
 last_dir=/home/genr8eofl/src/megaminx
@@ -44,7 +43,7 @@ ignored_file_patterns=*.o;*.obj;*.a;*.lib;*.so;*.dll;*.lo;*.la;*.class;*.jar;*.p
 generate_tag_prefs=0
 show_empty_dirs=true
 external_dirs=
-expanded_paths=/home/genr8eofl/src/megaminx/;
+expanded_paths=/home/genr8eofl/src/megaminx/src/engine;
 
 [build-menu]
 CMakeFT_00_LB=CMake Generate
