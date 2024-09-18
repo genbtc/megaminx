@@ -1,6 +1,3 @@
-algo 21
-history
-/hello
 /menu
 algo 21
 history
@@ -97,3 +94,7 @@ quit
 /algo2
 /algo1
 /algo3
+exit
+/algo7
+/algostring U' F' u f
+/algotest "U' F' u f"

@@ -24,6 +24,7 @@ struct megaminxPieceData {
         CornerPiecesPosition = ReadPiecesFileVector(testDir+CORNERFILE);
         CornerPiecesColors = ReadPiecesFileVector(testDir+CORNERFILECOLORS);
     }
+    [[maybe_unused]]
     void cloneConstruct() {
         EdgePiecesPosition = megaminx->getAllEdgePiecesPosition();
         EdgePiecesColors = megaminx->getAllEdgePiecesColorFlipStatus();
@@ -42,6 +43,7 @@ struct megaminxPieceData {
         std::cout << "CornerPiecesPosition30: " << serializeVectorIntToString(this->CornerPiecesPosition) << std::endl;
         std::cout << "CornerPiecesColorFlip20: " << serializeVectorIntToString(this->CornerPiecesColors) << std::endl;
     }
+    [[maybe_unused]]
     void SaveMegaminxtoFile() const {
         sizeCheck();
         serializeVectorInt5ToFile(megaminx->getAllEdgePiecesPosition(), outfiledir+EDGEFILE);
@@ -56,6 +58,7 @@ struct megaminxPieceData {
         serializeVectorInt5ToFile(this->CornerPiecesPosition, outfiledir+CORNERFILE);
         serializeVectorInt5ToFile(this->CornerPiecesColors, outfiledir+CORNERFILECOLORS);
     }
+    [[maybe_unused]]
     void SaveMegaminxtoFileMonolithic() const { //TODO: filename
         std::ofstream file(MEGAMINXBLOB); // E + C + E + C
         file << "EdgePiecesPosition: " << serializeVectorIntToString(megaminx->getAllEdgePiecesPosition()) << std::endl;
@@ -63,6 +66,7 @@ struct megaminxPieceData {
         file << "EdgePiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllEdgePiecesColorFlipStatus()) << std::endl;
         file << "CornerPiecesColorFlip: " << serializeVectorIntToString(megaminx->getAllCornerPiecesColorFlipStatus()) << std::endl;
     }
+    [[maybe_unused]]
     void SaveThistoFileMonolithic() const { //TODO: filename
         std::ofstream file(MEGAMINXBLOB); // E + C + E + C
         file << "EdgePiecesPosition: " << serializeVectorIntToString(this->EdgePiecesPosition) << std::endl;
@@ -96,7 +100,7 @@ void SaveCubetoFile() {
     serializeVectorInt5ToFile(megaminx->getAllCornerPiecesColorFlipStatus(), CORNERFILECOLORS);
 }
 
-[[deprecated]]  //old cube loader (for converting old tests/saves) + and testing the new struct
+[[deprecated]] [[maybe_unused]] //old cube loader (for converting old tests/saves) + and testing the new struct
 void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp with /testconvert
      //TODO: Crashes w/ segfault if the files dont exist. check for them first.
     megaminxPieceData td;

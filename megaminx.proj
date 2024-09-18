@@ -19,7 +19,7 @@ indent_mode=2
 
 [project]
 name=megaminx
-base_path=/home/genr8eofl/src/megaminx/
+base_path=/usr/src/linux-dev/src/megaminx/
 description=
 file_patterns=
 
@@ -28,9 +28,15 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=1
-FILE_NAME_0=30885;Perl;0;EUTF-8;1;1;0;%2Frun%2Fuser%2F1000%2Fgvfs%2Fsmb-share%3Aserver%3D10.1.1.1%2Cshare%3Draidz-4tbx4%2FDocu-EOFL%2Fsourcecode%2Fufed%2FPortage.pm;0;4
-FILE_NAME_1=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fgenr8eofl%2Fsrc%2Fmegaminx%2Fsrc%2Fengine%2Fsolve.cpp;0;4
+current_page=7
+FILE_NAME_0=89;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fselinux.c;0;4
+FILE_NAME_1=117;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fselinux.h;0;4
+FILE_NAME_2=13430;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fprocess-tree-view.c;0;4
+FILE_NAME_3=8462;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Ftask-manager-linux.c;0;4
+FILE_NAME_4=12999;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Ftask-manager.c;0;4
+FILE_NAME_5=0;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Ftask-manager.h;0;4
+FILE_NAME_6=19568;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fprocess-tree-model.c;0;4
+FILE_NAME_7=421;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fprocess-window.h;0;4
 
 [VTE]
 last_dir=/home/genr8eofl/src/megaminx
@@ -43,7 +49,7 @@ ignored_file_patterns=*.o;*.obj;*.a;*.lib;*.so;*.dll;*.lo;*.la;*.class;*.jar;*.p
 generate_tag_prefs=0
 show_empty_dirs=true
 external_dirs=
-expanded_paths=/home/genr8eofl/src/megaminx/src/engine;
+expanded_paths=
 
 [build-menu]
 CMakeFT_00_LB=CMake Generate

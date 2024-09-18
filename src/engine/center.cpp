@@ -1,4 +1,5 @@
 #include "center.hpp"
+#include "../ui/opengl.h"
 
 /**
  * \brief Inits a Center piece

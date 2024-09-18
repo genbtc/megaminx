@@ -3,6 +3,7 @@
 #include "engine/megaminx.hpp"
 #include "engine/load.hpp"
 #include "main.h"
+#include "ui/opengl.h"
 
 // Main Keyboard Handler
 void myglutOnKeyboard(unsigned char key, int x, int y) {

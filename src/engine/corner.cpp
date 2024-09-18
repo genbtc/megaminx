@@ -1,4 +1,5 @@
 #include "corner.hpp"
+#include "../ui/opengl.h"
 #include <cstring>  //memcpy
 #include <string>   //std::string
 

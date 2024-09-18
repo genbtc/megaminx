@@ -1,4 +1,5 @@
 #include "megaminx.hpp"
+#include "../ui/opengl.h"
 #include <cstring>  //memcpy
 
 constexpr int turnspeed = 32; //144 is max, 1 is min (for render() @ end of file)

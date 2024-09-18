@@ -1,7 +1,6 @@
 #pragma once
 #include "piece-static.hpp"
 #include "piece-color.hpp"
-#include "../ui/opengl.h"
 
 class Piece {
 public:
@@ -34,14 +33,14 @@ public:
         data = out;
         out = temp;
     }
-
-    //getter for vertices
+    //Vertices:
+    //getter
     double* getVertexData() {
         return &_vertex[0][0];
     }
-
-    //getter for colors
-    [[deprecated]]
+    //Colors:
+    //getter
+    [[deprecated]] [[maybe_unused]]
     double* getColorData() {
         return &data._color[0][0];
     }
@@ -65,7 +64,7 @@ public:
         numSides = 1;
     }
     //store Edge colors
-    [[deprecated]]
+    [[deprecated]] [[maybe_unused]]
     void initColor(int a, int b) {
         initColorIndex(0, a);
         initColorIndex(1, b);
@@ -75,14 +74,14 @@ public:
         numSides = 2;
     }
     //store Corner colors
-    [[deprecated]]
+    [[deprecated]] [[maybe_unused]]
     void initColor(int a, int b, int c) {
         initColorIndex(0, a);
         initColorIndex(1, b);
         initColorIndex(2, c);
         numSides = 3;
     }
-    //Uses the two arrays g_cornerPiecesColors and g_edgePiecesColors to populate.
+    //Uses the two arrays g_cornerPiecesColors and g_edgePiecesColors to populate piece.
     void initColor(colorpiece color, bool corner=false) {
         initColorIndex(0, color.a);
         initColorIndex(1, color.b);
@@ -151,10 +150,10 @@ public:
         leftRotate<int>(data._colorNum, 1, numSides);
         leftRotate<const char*>(data._colorName, 1, numSides);
         const bool isCorner = (numSides == 3);
-        if ((isCorner && data.flipStatus < 2) || (!isCorner && data.flipStatus == 0))
-            data.flipStatus++;
-        else
-            data.flipStatus = 0;
+        (( isCorner && data.flipStatus < 2) ||
+         (!isCorner && data.flipStatus == 0))
+            ? data.flipStatus++
+            : data.flipStatus = 0;
     }
     //Does two flips. Thats it.
     void flipTwice() {
