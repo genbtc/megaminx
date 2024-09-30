@@ -47,12 +47,15 @@ jobs:
     - name: Install FreeGLUT
       if: matrix.os == 'ubuntu-latest'
       run: |
+        sudo apt update
+        sudo apt-get -y install gcc g++
         sudo apt-get -y install freeglut3 freeglut3-dev
 
     - name: Install Libc++ (only for clang)
       if: matrix.os == 'ubuntu-latest' && matrix.c_compiler == 'clang'
       run: |
-        sudo apt-get -y install libc++-dev and libc++abi-dev
+        sudo apt-get -y install clang lldb
+        sudo apt-get -y install libc++-dev libc++abi-dev
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
@@ -73,7 +76,7 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --verbose
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
