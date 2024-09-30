@@ -12,6 +12,7 @@ jobs:
   apt-install:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - name: Install FreeGLUT
       run: |
         sudo apt-get -y install freeglut3 freeglut3-dev
@@ -53,7 +54,7 @@ jobs:
             c_compiler: cl
 
     steps:
-    - uses: actions/checkout@v4    
+    - uses: actions/checkout@v4
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
