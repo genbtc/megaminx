@@ -12,7 +12,6 @@ jobs:
   apt-install:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
     - name: Install FreeGLUT
       run: |
         sudo apt-get -y install freeglut3 freeglut3-dev
@@ -22,6 +21,7 @@ jobs:
         sudo apt-get -y install libc++-dev and libc++abi-dev
 
   configure-build:
+    needs: apt-install
     runs-on: ${{ matrix.os }}
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
