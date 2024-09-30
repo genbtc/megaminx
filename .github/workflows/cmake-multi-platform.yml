@@ -9,19 +9,7 @@ on:
     branches: [ "master" ]
 
 jobs:    
-  apt-install:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Install FreeGLUT
-      run: |
-        sudo apt-get -y install freeglut3 freeglut3-dev
-    - name: Install Libc++ (only for clang)
-      if: matrix.c_compiler == 'clang'
-      run: |
-        sudo apt-get -y install libc++-dev and libc++abi-dev
-
-  configure-build:
-    needs: apt-install
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
@@ -55,6 +43,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install FreeGLUT
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get -y install freeglut3 freeglut3-dev
+
+    - name: Install Libc++ (only for clang)
+      if: matrix.os == 'ubuntu-latest' && matrix.c_compiler == 'clang'
+      run: |
+        sudo apt-get -y install libc++-dev and libc++abi-dev
+
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
