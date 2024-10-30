@@ -37,3 +37,11 @@ void MouseRayTestData::CalculateRay(const Camera &cam)
     m_dir = m_end - m_start;
     m_dir.Normalize();
 }
+
+Vec3d MouseRayTestData::get_normal(Vec3d x0, Vec3d x1, Vec3d x2) {
+  Vec3d v0 = x0 - x2;
+  Vec3d v1 = x1 - x2;
+  Vec3d n = Vec3d::CrossProduct(v0,v1);
+  n.Normalize();
+  return n;
+}

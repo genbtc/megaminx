@@ -106,10 +106,3 @@ static void EdgeGrp6(double* target, piecepack &pack) {
     rotateVertex(target, pack.axis2, PI);
     axis1multi(target, pack);
 }
-/*
-vector3 get_normal(vector3 x0, vector3 x1, vector3 x2) {
-  vector3 v0 = x0 - x2;
-  vector3 v1 = x1 - x2;
-  vector3 n = cross(v0, v1);
-  return normalize(n);
-} */

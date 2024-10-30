@@ -45,9 +45,9 @@ public:
 
     friend TVector3<T> operator/ (const TVector3<T> & a, const T &v) { return TVector3<T>(a.x/v, a.y/v, a.z/v); }
 
-    friend T Distance(const TVector3<T> & a, const TVector3<T> & b) { TVector3<T> d = a-b; return d.Length(); }
-    friend T DotProduct(const TVector3<T> & a, const TVector3<T> & b) { return a.x*b.x + a.y*b.y + a.z*b.z; }
-    friend TVector3<T> CrossProduct(const TVector3<T> &a, const TVector3<T> &b) { return TVector3<T>(a.y*b.z - a.z*b.y, -(a.x*b.z - a.z*b.x), a.x*b.y - a.y*b.x); }
+    static T Distance(const TVector3<T> & a, const TVector3<T> & b) { TVector3<T> d = a-b; return d.Length(); }
+    static T DotProduct(const TVector3<T> & a, const TVector3<T> & b) { return a.x*b.x + a.y*b.y + a.z*b.z; }
+    static TVector3<T> CrossProduct(const TVector3<T> &a, const TVector3<T> &b) { return TVector3<T>(a.y*b.z - a.z*b.y, -(a.x*b.z - a.z*b.x), a.x*b.y - a.y*b.x); }
 
     T Length() const { return sqrt(x*x + y*y + z*z); }
     void Normalize() { T f = 1.0/Length(); x *= f; y *= f; z *=f; }
