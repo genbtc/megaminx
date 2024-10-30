@@ -130,7 +130,6 @@ void myglutOnSpecialKeyPress(int key, int x, int y) {
         break;
     //DEV: THESE GLUT FUNC KEYS _HAVE_ TO BE HANDLED IN HERE, but dont encode too much logic in the menu
     case GLUT_KEY_F1:
-        //DEV: manually call these (the double clone cube call was messed up)
         MakeShadowCubeClone();	// init
         megaminx->rotateSolveWhiteEdges(shadowDom);
         megaminx->rotateSolveWhiteCorners(shadowDom);

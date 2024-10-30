@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
     // create window + title
     g_window = glutCreateWindow(myglutTitle);
-    // *new *megaminx = dodecahedron
+    // new *megaminx = dodecahedron
     createMegaMinx();
     //also handles/calls to glViewport(0,0,w,h);
 
@@ -178,7 +178,7 @@ void myglutRenderScene() {
 /**
  * \brief Query Megaminx - what face we are looking at? (helper)
 */
-//TODO: NOTE: This executes a lot. TODO: How to Skip when not moving ?
+//TODO: NOTE: This executes a lot. Try to Skip when not moving
 void GetCurrentFace() {
     const int tempFace = getCurrentFaceFromAngles((int)g_camera.m_angleX,
                                                   (int)g_camera.m_angleY);
@@ -191,7 +191,7 @@ void GetCurrentFace() {
 }
 
 /**
- * \brief  camera spin movement - convenience toggle function (helper)
+ * \brief  Camera Spin Movement - convenience toggle function (helper)
  */
 void toggleSpinning() {
     g_camera.isSpinning = !g_camera.isSpinning;
@@ -206,14 +206,14 @@ int GetDirFromSpecialKey() {
 }
 
 /**
- * \brief Controls,Camera - Double click Rotates Current Face with Shift Modifier too.
+ * \brief (Controls,Camera) Double click - Rotates Current Face (w/ Shift Modifier ^^ too)
  */
 void doDoubleClickRotate(int, int) {
     megaminx->rotate(currentFace, GetDirFromSpecialKey());
 }
 
 /**
- * \brief Camera, Window - Resize Window function passthrough to the camera class (GLUT callback)
+ * \brief (Camera) Window - Resize function passthrough to the camera class (GLUT callback)
  */
 void myglutChangeWindowSize(int x, int y) {
     g_camera.ChangeViewportSize(x, y);
@@ -246,8 +246,8 @@ void myglutMouseFunc(int button, int state, int x, int y) {
 }
 
 /**
- * \brief Controls, Mouse, Camera, Menu - special Right click handling for menu
- * \note diplay right-click menu (GLUT callback)
+ * \brief (Controls, Mouse, Camera, Menu) - special Right click handling for menu
+ * \note Diplay Right-Click Menu (GLUT callback)
  */
 void myglutMenuVisible(int status, int x, int y) {
     //check for Menu first, otherwise bug from click/drag through past it
