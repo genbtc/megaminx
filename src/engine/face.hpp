@@ -19,7 +19,7 @@ public:
     Corner *corner[5] = {};
     Edge   *edge[5] = {};
 
-    [[nodiscard]] int getNum() const { return thisNum; }
+    [[nodiscard]] int getNum() const { return thisFaceNum; }
     void initAxis(int n);
     bool render();
     void rotate(int direction);
@@ -68,7 +68,8 @@ private:
     void QuadSwapCorners(const int pack[8]);
     void QuadSwapEdges(const int pack[8]);
 
-    int thisNum;
+    //state
+    int thisFaceNum;
     int turnDir;
     bool rotating;
     double angle;

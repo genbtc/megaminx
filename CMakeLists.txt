@@ -56,6 +56,7 @@ add_executable(${PACKAGE_NAME} WIN32
     src/readline.cpp
     src/ui/camera.cpp
     src/ui/opengl.cpp
+    src/ui/mouse-ray.cpp
     src/engine/center.cpp
     src/engine/corner.cpp
     src/engine/edge.cpp
@@ -75,6 +76,7 @@ target_sources(${PACKAGE_NAME} PRIVATE
     src/ui/linenoise.h
     src/ui/camera.hpp
     src/ui/opengl.h
+    src/ui/mouse-ray.hpp
     src/engine/algorithms.hpp
     src/engine/piece.hpp
     src/engine/piece-color.hpp

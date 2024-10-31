@@ -1,6 +1,7 @@
 #include "megaminx.hpp"
 #include "../ui/opengl.h"
 #include <cstring>  //memcpy
+#include "../ui/mouse-ray.hpp" //normal
 
 constexpr int turnspeed = 32; //144 is max, 1 is min (for render() @ end of file)
 
@@ -9,7 +10,7 @@ Face::Face()
     center = nullptr;
     rotating = false;
     angle = 0;
-    thisNum = 0;
+    thisFaceNum = 0;
     turnDir = 0;
     axis[0] = 0;
     axis[1] = 1e-8;
@@ -25,6 +26,8 @@ void Face::attachCenter(Center *c, double* centerVertexBase)
 {
     center = c;
     memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
+    MouseRayTestData normalF;
+    normalF.get_normal(Vec3d(_vertex[0]),Vec3d(_vertex[1]),Vec3d(_vertex[2]));
 }
 
 /**
@@ -34,7 +37,7 @@ void Face::attachCenter(Center *c, double* centerVertexBase)
 void Face::initAxis(int n)
 {
     assert(n >= 0 && n <= 11);
-    thisNum = n;    //0-11
+    thisFaceNum = n;    //0-11
     center->createAxis(n, axis);
     for (int i = 0; i < 5; ++i)
         center->createAxis(n, _vertex[i]);
@@ -43,7 +46,7 @@ void Face::initAxis(int n)
 /** \brief connect matching Edge pieces to the face. and store the list. */
 void Face::attachEdgePieces(const Megaminx* megaminx, Edge &edgesPTR)
 {
-    defaultEdges = megaminx->findPiecesOfFace(thisNum+1, edgesPTR, Megaminx::numEdges);
+    defaultEdges = megaminx->findPiecesOfFace(thisFaceNum+1, edgesPTR, Megaminx::numEdges);
     for (int i = 0; i < 5; ++i) {
         edge[i] = &edgesPTR + defaultEdges[i];
         assert(edge[i]->data.pieceNum == defaultEdges[i]);
@@ -53,7 +56,7 @@ void Face::attachEdgePieces(const Megaminx* megaminx, Edge &edgesPTR)
 /** \brief connect matching Corner pieces to the face. and store the list. */
 void Face::attachCornerPieces(const Megaminx* megaminx, Corner &cornersPTR)
 {
-    defaultCorners = megaminx->findPiecesOfFace(thisNum+1, cornersPTR, Megaminx::numCorners);
+    defaultCorners = megaminx->findPiecesOfFace(thisFaceNum+1, cornersPTR, Megaminx::numCorners);
     for (int i = 0; i < 5; ++i) {
         corner[i] = &cornersPTR + defaultCorners[i];
         assert(corner[i]->data.pieceNum == defaultCorners[i]);
@@ -91,9 +94,10 @@ std::vector<int> Face::findPiecesColorFlipStatus() const
 std::vector<int> Face::findCornersColorFlipStatus() const { return findPiecesColorFlipStatus<Corner>(); }
 std::vector<int> Face::findEdgesColorFlipStatus() const { return findPiecesColorFlipStatus<Edge>(); }
 
-//General usage: Is this piecenum on this face anywhere 1-5?
-//Is this 1-30 piecenum on this face anywhere 1-5 edges?
-//Is this 1-20 piecenum on this face anywhere 1-5 corners?
+/** \brief General usage: Is this piecenum on this face anywhere 1-5?
+   Is this 1-30 piecenum on this face anywhere 1-5 edges?
+   Is this 1-20 piecenum on this face anywhere 1-5 corners?
+*/
 template <typename T>
 int Face::find5PiecePresent(int pieceNum) const
 {
@@ -127,7 +131,7 @@ void Face::FlipCorners(int a, int b, int c, int d, const int* pack)
     pack[3] ? corner[d]->flip() : corner[d]->flipTwice();
 }
 
-/* Public. Given two pieces on the face with local indexes 0-5, swap them. */
+/** \brief (Public) Given two pieces on the face with local indexes 0-5, swap them. */
 template <typename T>
 void Face::swapPieces(int a, int b)
 {
@@ -151,8 +155,8 @@ void Face::QuadSwapCorners(const int pack[8]) { QuadSwapPieces<Corner>(pack); }
 void Face::QuadSwapEdges(const int pack[8]) { QuadSwapPieces<Edge>(pack); }
 
 /**
- * \brief Public. Calling this sets off a chain of events in the render loops to rotate.
- * \param direction turn direction: -1 for Right, +1 for left (seems/is backwards).
+ * \brief (Public) Calling this sets a flag for a chain of events in the render loops to rotate.
+ * \param direction Turn direction: -1 for Right, +1 for left (seems/is backwards).
  */
 void Face::rotate(int direction)
 {
@@ -162,16 +166,15 @@ void Face::rotate(int direction)
 }
 
 /**
- * \brief Colorizing function. Intricate series of flips/swaps.
- * \param dir Each case is for each of the 12 faces,
- * / in order to get it to switch colors after it rotates.
- * / called from render()
+ * \brief Colorizing function. Orientation is an Intricate series of flips/swaps.
+ * \param dir Turn Direction, for each of the 12 faces,
+ * NOTE: called from render() in order to get it to switch colors after it rotates.
  */
 bool Face::placeParts(int dir)
 {
     assert(dir == Face::CCW || dir == Face::CW);
     if (dir == Face::CounterClockwise) { // 1 = CCW = Left Turn = Counter-ClockWise
-        switch (thisNum) {
+        switch (thisFaceNum) {
         case 0: //WHITE
             QuadSwapEdges(CCW0E);
             QuadSwapCorners(CCW0C);
@@ -245,7 +248,7 @@ bool Face::placeParts(int dir)
         }
     }
     else {  // -1 = CW = Right Turn = ClockWise
-        switch (thisNum) {
+        switch (thisFaceNum) {
         case 0: //WHITE
             QuadSwapEdges(CW0E);
             QuadSwapCorners(CW0C);
