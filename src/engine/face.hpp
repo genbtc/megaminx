@@ -7,6 +7,7 @@
 #include <vector>
 #include <type_traits>
 #include <cassert>
+#include "../ui/mouse-ray.hpp" //normal
 
 class Megaminx; //forward declare for Attach
 
@@ -14,7 +15,7 @@ class Face : public Piece {
 public:
     Face();
     virtual ~Face() = default;
-\
+
     Center *center = {};
     Corner *corner[5] = {};
     Edge   *edge[5] = {};
@@ -67,6 +68,9 @@ private:
     void QuadSwapPieces(const int pack[8]);
     void QuadSwapCorners(const int pack[8]);
     void QuadSwapEdges(const int pack[8]);
+
+    MouseRayTestData normalF;
+    Vec3d normalFvec;
 
     //state
     int thisFaceNum;

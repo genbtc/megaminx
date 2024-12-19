@@ -1,7 +1,6 @@
 #include "megaminx.hpp"
 #include "../ui/opengl.h"
 #include <cstring>  //memcpy
-#include "../ui/mouse-ray.hpp" //normal
 
 constexpr int turnspeed = 32; //144 is max, 1 is min (for render() @ end of file)
 
@@ -26,8 +25,7 @@ void Face::attachCenter(Center *c, double* centerVertexBase)
 {
     center = c;
     memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
-    MouseRayTestData normalF;
-    normalF.get_normal(Vec3d(_vertex[0]),Vec3d(_vertex[1]),Vec3d(_vertex[2]));
+    normalFvec = normalF.get_normal(Vec3d(_vertex[0]),Vec3d(_vertex[1]),Vec3d(_vertex[2]));
 }
 
 /**
@@ -350,6 +348,12 @@ bool Face::render()
     for (const auto e : edge)
         e->render();
     center->render();
+    
+    //Render normal:
+    glColor3dv(data._color[0]);
+    glBegin(GL_LINE_LOOP);
+    glVertex3d(normalFvec.x,normalFvec.y,normalFvec.z);
+    glEnd();
 
     if (angle) {
         glPopMatrix();

@@ -999,8 +999,8 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
             std::cout << "Debug-711-L7E: orient first piece if exists " << std::endl;
             continue;
         }
-        //TODO: Remove. never fires. firstSolvedPiece redundant to above replacement using default
-        //Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
+        /* TODO: Remove. never fires. firstSolvedPiece redundant to above replacement using default
+        // Rotates the GRAY face to any solved position, first out of order but solved EDGE rotates to match up to its face.
         else if (!piecesSolved[0] && !twoAdjacentPieces && !allCornersAllSolved && solvedCount >= (i - startingPiece) && piecesSolvedMaybe[i - startingPiece]) {
             const int findIfPieceSolved = shadowDom->findEdge(i + firstSolvedPiece);
             assert(0);  //entire clause is redundant.
@@ -1010,7 +1010,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
                 std::cout << "Debug-711-L7E: Rotates the GRAY face to solved position" << std::endl;
                 continue;
             }
-        }
+        } */
 
 //Begin solvedCount=0:
         //2, 2, 2, 2, 2,      = modby, Algo # 40  //Modbys are seemingly reversed. difference = (solved - unsolved)
@@ -1383,15 +1383,15 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             //9 "no visible pairs progress" cases (3x 26 + 6x 27)
             { 16, 15, 19, 18, 17, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "17 16 19 18 15" below (no pairs yet)
             { 17, 16, 15, 19, 18, LIGHT_BLUE + 1, Face::CCW },    //continues with --> "18 16 15 17 19" below (no pairs yet)
-            { 19, 18, 17, 16, 15, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "15 19 17 16 18" belo (no pairs yet)
+            { 19, 18, 17, 16, 15, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "15 19 17 16 18" below (no pairs yet)
             { 18, 17, 15, 19, 16, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "17 15 18 19 16" below (no pairs yet)
-            { 18, 19, 15, 16, 17, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "18 15 16 19 17" below. (no pairs yet)
+            { 18, 19, 15, 16, 17, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "18 15 16 19 17" below (no pairs yet)
             { 18, 17, 16, 15, 19, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "15 17 16 19 18" below (no pairs yet)
             { 15, 19, 18, 17, 16, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "19 18 15 17 16" below (no pairs yet)
             { 19, 18, 15, 17, 16, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "18 15 19 17 16" below (no pairs yet)
             { 17, 18, 19, 15, 16, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "15 18 19 16 17" below (no pairs yet)
             //40 cases to make pairs:
-            { 15, 18, 19, 16, 17, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
+            { 15, 18, 19, 16, 17, LIGHT_BLUE + 4, Face::CCW },     //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
             { 18, 15, 19, 17, 16, LIGHT_BLUE + 2, Face::CW  },    //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
             { 17, 16, 19, 18, 15, LIGHT_BLUE + 1, Face::CCW },    //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
             { 15, 19, 17, 16, 18, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
