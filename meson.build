@@ -1,7 +1,7 @@
 project(
   'Megaminx',
   ['c', 'cpp'],
-  version: '1.4.5',
+  version: '1.4.6',
   default_options: ['warning_level=3', 'cpp_std=c++20'],
   license: 'AGPL3',
 )

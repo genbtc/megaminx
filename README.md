@@ -1,4 +1,4 @@
-GenBTC's Megaminx Solver v1.4.5 (last updated February 4, 2024)
+GenBTC's Megaminx Solver v1.4.6 (last updated February 4, 2024)
 ========
 ![LatestScreenshot](megaminx.png)
 <p>It's a working simulator of a <b>Megaminx</b>, a Rubik's ~~cube~~ Dodecahedron puzzle!

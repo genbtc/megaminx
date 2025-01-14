@@ -1,4 +1,4 @@
-//Algorithms.hpp - Megaminx Version 1.4.5 - @gen 2024
+//Algorithms.hpp - Megaminx Version 1.4.6 - @gen 2024
 #ifndef __ALGORITHMS_H__
 #define __ALGORITHMS_H__
 

@@ -10,13 +10,13 @@ BEGIN
     BLOCK "040904B0"
     BEGIN
       VALUE "CompanyName", "genBTC"
-      VALUE "FileDescription", "Megaminx v1.4.5 - genBTC mod"
-      VALUE "FileVersion", "1.4.5.0"
+      VALUE "FileDescription", "Megaminx v1.4.6 - genBTC mod"
+      VALUE "FileVersion", "1.4.6.0"
       VALUE "InternalName", "Megaminx"
       VALUE "LegalCopyright", "©2023 genBTC, based on TarasKhalymon"
       VALUE "OriginalFilename", "Megaminx.exe"
       VALUE "ProductName", "Megaminx"
-      VALUE "ProductVersion", "1.4.5.0"
+      VALUE "ProductVersion", "1.4.6.0"
     END
   END
 END
