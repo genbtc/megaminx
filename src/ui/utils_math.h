@@ -26,11 +26,15 @@ public:
         };
     };
 public:
-    TVector3() { }
+    TVector3() = default;
     TVector3(const T& a): x(a), y(a), z(a) { }
     TVector3(const double* a) : x(a[0]), y(a[1]), z(a[2]) {}
     TVector3(const T& a, const T& b, const T& c): x(a), y(b), z(c) { }
     TVector3(const TVector3<T> & a) { x = a.x; y = a.y; z = a.z; }
+
+    //TVector3& operator=(TVector3 &a) { return a; };
+    //const TVector3& operator=(const TVector3 &a) { return a; };
+    void operator = (const TVector3<T> & a) { x += a.x; y += a.y; z += a.z; }
 
     void operator += (const TVector3<T> & a) { x += a.x; y += a.y; z += a.z; }
     void operator -= (const TVector3<T> & a) { x -= a.x; y -= a.y; z -= a.z; }

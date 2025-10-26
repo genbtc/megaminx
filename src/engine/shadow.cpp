@@ -87,10 +87,9 @@ bool Megaminx::shadowMultiRotate(int face, int &offby)
 void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
 {
     const size_t numsize = shadowDom->shadowRotateQueue.size();
-    if (numsize <= 0) return;
     undoStack.push({ -999, -999 });
-    for (int q = 0; q < numsize; ++q) {
-        auto &op = shadowDom->shadowRotateQueue.front();
+    for (unsigned int q = 0; q < numsize; ++q) {
+        const auto &op = shadowDom->shadowRotateQueue.front();
         rotateQueue.push(op);
         undoStack.push(op);
         shadowDom->shadowRotateQueue.pop();

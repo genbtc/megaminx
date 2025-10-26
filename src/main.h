@@ -4,7 +4,7 @@
 //framerate cap for monitor with 60 Hz:
 const double REFRESH_RATE = 60.0;
 const double REFRESH_IN_MS = (1000.0 / REFRESH_RATE);
-const unsigned int REFRESH_WAIT_TIME = (const unsigned int)REFRESH_IN_MS;
+const unsigned int REFRESH_WAIT_TIME = (unsigned int)REFRESH_IN_MS;
 // initial window screen size
 const int WIDTH = 640;
 const int HEIGHT = WIDTH; //uncomment if not 1:1

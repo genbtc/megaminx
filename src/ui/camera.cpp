@@ -49,7 +49,13 @@ void Camera::ChangeViewportSize(int w, int h)
     glViewport(0, 0, w, h);
 }
 
-void Camera::PressSpecialKey(int key, int x, int y)
+#if defined(__GNUC__)
+    # define MAYBE_UNUSED                __attribute__((unused))
+#else
+    # define MAYBE_UNUSED
+#endif
+
+void Camera::PressSpecialKey(int key, MAYBE_UNUSED int x, MAYBE_UNUSED int y)
 {
     switch (key) {
     case GLUT_KEY_LEFT  :
