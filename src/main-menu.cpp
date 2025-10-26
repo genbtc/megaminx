@@ -208,7 +208,7 @@ void utPrintHelpMenu(float w, float h)
 // Picks up StringAlgo definitions from algo-menu.hpp
 void createMenu()
 {
-    StringAlgo la={};
+    StringAlgo la;
     //SubLevel 0 menu - Main Menu
     submenu0_id = glutCreateMenu(menuHandler);
     glutAddMenuEntry("Camera go Home", 93);
@@ -302,8 +302,9 @@ void menuHandler(int num)
 {
     auto face = megaminx->g_currentFace->getNum()+1;
     double sum = 0;
-    MAYBE_UNUSED time_t startTimeA = time(0);
+    time_t startTimeA = time(0);
     time_t endTimeB = time(0);
+    time_t totaltime;
     switch (num) {
     case 1:
         toggleSpinning(); break;
@@ -470,11 +471,12 @@ void menuHandler(int num)
             //produce a debug error immediately, and Save. then hit Abort to close, and Restore.
                 assert(shadowDom->isFullySolved()); //check
         }
-        endTimeB = time(0) - endTimeB;
+        endTimeB = time(0);
+        totaltime = endTimeB - startTimeA;
         //solver avg global is processed in main.cpp render func
         g_solveravg = sum / 50000.;
         std::cout << "Brute Force Checker Complete! - Solver Average: " << g_solveravg << std::endl;
-        std::cout << " Average Time per iteration = " << endTimeB / 50000. << std::endl;
+        std::cout << " Average Time per iteration = " << totaltime / 50000. << std::endl;
         //Solver average was 588.627
         // Average Time per iteration = 0.00208 (480.769 Megaminx/s). With Save. On Debug.
         // Average Time per iteration = 0.00102 (980.392 Megaminx/s). With Save. On Release.

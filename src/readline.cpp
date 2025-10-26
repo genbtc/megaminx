@@ -45,7 +45,7 @@ void readlineShell() {
         } else if (!strncmp(line,"/algodiff",9)) {
             for (int i=1; i<ALL_ALGORITHMS; i++) {
                 auto algo = megaminx->ParseAlgorithmID(i, LIGHT_BLUE);
-                printf("Algo #%d - Number of Moves: #%ld\n", i, algo.size() );
+                printf("Algo #%d - Number of Moves: #%zu\n", i, algo.size() );
                 //megaminx->rotateAlgo(i);
             }
         } else if (!strncmp(line,"/algo",5)) {
@@ -64,7 +64,7 @@ void readlineShell() {
             printf("Edge Vertexes: \n");
             const int maxpcs = megaminx->getMaxNumberOfPieces<Edge>();
             for (int r = 0; r < maxpcs; ++r) {
-                double vertexArray[7][3] = { 0 };
+                double vertexArray[7][3] = { {0} };
                 memcpy(vertexArray, megaminx->getPieceArray<Edge>(0)[r].getVertexData(), sizeof(vertexArray));
                 for (int i = 0; i < 7; ++i)
                     printf("[ %f %f %f ]\n", vertexArray[i][0], vertexArray[i][1], vertexArray[i][2]);
@@ -73,7 +73,7 @@ void readlineShell() {
             printf("Corner Vertexes: \n");
             const int maxpcs = megaminx->getMaxNumberOfPieces<Corner>();
             for (int r = 0; r < maxpcs; ++r) {
-                double vertexArray[7][3] = { 0 };
+                double vertexArray[7][3] = { {0} };
                 memcpy(vertexArray, megaminx->getPieceArray<Corner>(0)[r].getVertexData(), sizeof(vertexArray));
                 for (int i = 0; i < 7; ++i)
                     printf("[ %f %f %f ]\n", vertexArray[i][0], vertexArray[i][1], vertexArray[i][2]);
@@ -82,7 +82,8 @@ void readlineShell() {
                 || (!strncmp(line,"quit",4))) {
         } else if ((!strncmp(line,"/exit",5))
                 || (!strncmp(line,"/quit",5))) {
-        } else if (line[0] == '/') {
+        //Expression is always true because 'else if' condition is opposite to previous condition at line 30.
+        } else /* if (line[0] == '/') */ {
             printf("Unrecognized command: %s\n", line);
         }
     }

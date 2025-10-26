@@ -37,7 +37,7 @@ void Megaminx::DetectSolvedEdgesTwisted(int startI, bool piecesSolved[5])
 {
     //if (piecesSeenOnTop.size() > 1) {
     int endI = 0;
-    int numSolved = 0;
+    [[maybe_unused]] int numSolved = 0;
         //Check if the ordering blue->red,red->green is correct,etc... even if the top is twisted vs the sides
         for (int p = startI; p < endI; ++p) {
             const int pNext = (p != (endI - 1)) ? p + 1 : startI; //handle the loop numbering boundary overrun
@@ -330,7 +330,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         //Rotates the white face to its solved position, first solved EDGE matches up to its face.
         //Edges should already be solved, if not, get top white face spun oriented back to normal
         int edgesOffBy = shadowDom->findEdge(startingPiece); //always piece 0
-        int offby = edgesOffBy - startingPiece;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
+        //int offby = edgesOffBy - startingPiece;    //example: piece 0, 5 - 5 - 0 = 0, so no correction.
         if (edgesOffBy != 0) {
             edgesOffBy *= -1;
             shadowDom->shadowMultiRotate(WHITE, edgesOffBy);
@@ -612,7 +612,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
             int facex = PINK + i;
             MMMg(facex, BEIGE);
             //quick shortcut to know which face we're working on.
-            const int front = BEIGE - (i - startingPiece);
+            //const int front = BEIGE - (i - startingPiece);
             //get it onto row2 solved   // (5,6,7,8,9)
             int defaultDir = Face::CW * 2;
             shadowDom->shadowMultiRotate(facex, defaultDir);
@@ -773,7 +773,8 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.c;
             }
-            else if (l.ontopHalfC) {
+            //fixed: Variable 'x' is used uninitialized whenever 'if' condition is false
+            else /* if (l.ontopHalfC) */ {
                 x = l.cornerFaceNeighbors.a;
                 y = l.cornerFaceNeighbors.b;
             }
@@ -922,7 +923,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
         bool piecesSolvedMaybe[5] = { false };
         shadowDom->DetectSolvedEdgesUnOrdered(i, piecesSolvedMaybe);
         //Populate the current order state:
-        int nPiecesPresent = shadowDom->faces[GRAY-1].find5EdgePresent(i);
+        [[maybe_unused]] int nPiecesPresent = shadowDom->faces[GRAY-1].find5EdgePresent(i);
         bool grayFaceColorSolved[5] = { false };
         std::vector<int> grayFaceEdgesOrder= shadowDom->faces[GRAY - 1].findEdgesOrder();
         std::vector<int> grayFaceEdgesColor = shadowDom->faces[GRAY - 1].findEdgesColorFlipStatus();
@@ -1350,10 +1351,10 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         shadowDom->DetectSolvedCorners(startingPiece, grayCornerColorSolvedB);
         //iterate through the piece/color lists and make some easy compound conditional aliases
         const bool fullySolvedOrder = checkPieceMatches(pieceOrder, 15, 16, 17, 18, 19);
-        const auto twoGraysUnsolved = [grayFaceColorSolved](int a, int b) { MM5(a); MM5(b); return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); }; //MM=overrotation support
+        [[maybe_unused]] const auto twoGraysUnsolved = [grayFaceColorSolved](int a, int b) { MM5(a); MM5(b); return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); }; //MM=overrotation support
 
         const auto twoPiecesSolved = [piecesSolved](int a, int b) { return (piecesSolved[a] && piecesSolved[b]); };
-        const bool twoAdjacentPieces =
+        [[maybe_unused]] const bool twoAdjacentPieces =
             (twoPiecesSolved(0, 1)) || (twoPiecesSolved(1, 2)) || (twoPiecesSolved(2, 3)) || (twoPiecesSolved(3, 4)) || (twoPiecesSolved(4, 0));
 //        const bool twoAdjacentOffColors =
 //            (twoGraysUnsolved(0, 1)) || (twoGraysUnsolved(1, 2)) || (twoGraysUnsolved(2, 3)) || (twoGraysUnsolved(3, 4)) || (twoGraysUnsolved(4, 0));
@@ -1459,6 +1460,7 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         //            goto haveTwoAdjacentSolved;
 
 //DO IT:
+[[maybe_unused]]
 finalizePosition:
         shadowDom->shadowBulkRotate(bulkAlgo);
 
