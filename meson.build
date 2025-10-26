@@ -28,6 +28,7 @@ MEGAMINX_sources = files(
   'src/ui/camera.cpp',
   'src/ui/linenoise.c',
   'src/ui/opengl.cpp',
+  'src/ui/mouse-ray.cpp',
 )
 
 MEGAMINX_headers = files(
@@ -47,6 +48,7 @@ MEGAMINX_headers = files(
   'src/ui/camera.hpp',
   'src/ui/linenoise.h',
   'src/ui/opengl.h',
+  'src/ui/mouse-ray.hpp',
 )
 
 executable(
