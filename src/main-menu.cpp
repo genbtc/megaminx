@@ -44,7 +44,7 @@ void myglutOnKeyboard(unsigned char key, int x, int y) {
     case 'H':	// help
         g_help = !g_help;
         break;
-    case 8:     // backspace
+    case  8:	// backspace
         resetCameraViewport();
         break;
     case 13:	// enter

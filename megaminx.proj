@@ -27,17 +27,6 @@ file_patterns=
 long_line_behaviour=1
 long_line_column=72
 
-[files]
-current_page=7
-FILE_NAME_0=89;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fselinux.c;0;4
-FILE_NAME_1=117;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fselinux.h;0;4
-FILE_NAME_2=13430;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fprocess-tree-view.c;0;4
-FILE_NAME_3=8462;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Ftask-manager-linux.c;0;4
-FILE_NAME_4=12999;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Ftask-manager.c;0;4
-FILE_NAME_5=0;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Ftask-manager.h;0;4
-FILE_NAME_6=19568;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fprocess-tree-model.c;0;4
-FILE_NAME_7=421;C;0;EUTF-8;1;1;0;%2Fusr%2Flocal%2Fsrc%2Fxfce4-taskmanager-1.5.7%2Fsrc%2Fprocess-window.h;0;4
-
 [VTE]
 last_dir=/home/genr8eofl/src/megaminx
 

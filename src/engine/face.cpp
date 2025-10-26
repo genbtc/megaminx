@@ -1,5 +1,6 @@
 #include "megaminx.hpp"
 #include "../ui/opengl.h"
+#include "piece-color.hpp"
 #include <cstring>  //memcpy
 
 constexpr int turnspeed = 32; //144 is max, 1 is min (for render() @ end of file)
@@ -25,7 +26,9 @@ void Face::attachCenter(Center *c, double* centerVertexBase)
 {
     center = c;
     memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
-    normalFvec = normalF.get_normal(Vec3d(_vertex[0]),Vec3d(_vertex[1]),Vec3d(_vertex[2]));
+    normalFvec = normalF.get_normal(Vec3d(_vertex[0][0]),Vec3d(_vertex[0][1]),Vec3d(_vertex[0][2]));
+    //std::cout << "x y z" << normalFvec.x << normalFvec.y << normalFvec.z << std::endl; //NaN NaN NaN
+    //"0,-0,1"
 }
 
 /**
@@ -348,12 +351,16 @@ bool Face::render()
     for (const auto e : edge)
         e->render();
     center->render();
-    
+
     //Render normal:
-    glColor3dv(data._color[0]);
+     /*
+    glColor3d(0, 0, 0);
     glBegin(GL_LINE_LOOP);
     glVertex3d(normalFvec.x,normalFvec.y,normalFvec.z);
-    glEnd();
+    glVertex3d(normalFvec.x*2,normalFvec.y*2,normalFvec.z*2);
+    glEnd();*/
+    //std::cout << "x y z" << normalFvec.x << normalFvec.y << normalFvec.z << std::endl;
+    //"0,-0,1"
 
     if (angle) {
         glPopMatrix();

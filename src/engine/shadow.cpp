@@ -90,7 +90,7 @@ void Megaminx::updateRotateQueueWithShadow(Megaminx* shadowDom)
     if (numsize <= 0) return;
     undoStack.push({ -999, -999 });
     for (int q = 0; q < numsize; ++q) {
-        auto& op = shadowDom->shadowRotateQueue.front();
+        auto &op = shadowDom->shadowRotateQueue.front();
         rotateQueue.push(op);
         undoStack.push(op);
         shadowDom->shadowRotateQueue.pop();
