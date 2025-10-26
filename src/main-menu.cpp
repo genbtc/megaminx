@@ -6,7 +6,7 @@
 #include "ui/opengl.h"
 
 // Main Keyboard Handler
-void myglutOnKeyboard(unsigned char key, int x, int y) {
+void myglutOnKeyboard(unsigned char key, MAYBE_UNUSED int x, MAYBE_UNUSED int y) {
 	//Ctrl + keys first
     const auto specialKey = glutGetModifiers();
     if (specialKey & GLUT_ACTIVE_CTRL) {
@@ -302,7 +302,7 @@ void menuHandler(int num)
 {
     auto face = megaminx->g_currentFace->getNum()+1;
     double sum = 0;
-    time_t startTimeA = time(0);
+    MAYBE_UNUSED time_t startTimeA = time(0);
     time_t endTimeB = time(0);
     switch (num) {
     case 1:

@@ -11,8 +11,8 @@ void RestoreCubeFromTEST(std::string testDir);
 void RestoreOldCubeFromFile(std::string testdir);
 void MakeShadowCubeClone();
 
-void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename);
-std::string serializeVectorIntToString(std::vector<int> vec);
+void serializeVectorInt5ToFile(const std::vector<int> &vec, std::string filename);
+std::string serializeVectorIntToString(const std::vector<int> &vec);
 const std::vector<int> ReadPiecesFileVector(std::string filename);
 
 #endif //__LOAD_H__

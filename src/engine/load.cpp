@@ -161,10 +161,10 @@ void MakeShadowCubeClone() {
  * @param filename - Output: name of file to write ofstream to
  * @return void - wrote vector to file, 5 elements per line
  */
-void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename) {
+void serializeVectorInt5ToFile(const std::vector<int> &vec, std::string filename) {
     std::ofstream file(filename);
     int count = 0;
-    for (auto &v : vec) {
+    for (const auto &v : vec) {
         file << " " << v << " ";
         count++;
         if (count % 5 == 0)
@@ -178,10 +178,10 @@ void serializeVectorInt5ToFile(std::vector<int> vec, std::string filename) {
  * @return string - Output: 5 elements per line in a string
  */
 [[deprecated]]
-std::string serializeVectorIntToString(std::vector<int> vec) {
+std::string serializeVectorIntToString(const std::vector<int> &vec) {
     std::ostringstream vectorString;
-    int count = 0;
-    for (auto &v : vec) {
+    unsigned int count = 0;
+    for (const auto &v : vec) {
         vectorString << " " << v << " ";
         count++;
     }

@@ -49,4 +49,10 @@ int GetDirFromSpecialKey();
 #define utLOG_ERROR(msg, ...) { printf("ERR in %s, %d: ", __FUNCTION__, __LINE__); printf(msg, __VA_ARGS__); printf("\n"); }
 #endif
 
+#if defined(__GNUC__)
+# define MAYBE_UNUSED                __attribute__((unused))
+#else
+# define MAYBE_UNUSED
+#endif
+
 #endif // __MAIN_H__
