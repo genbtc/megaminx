@@ -22,7 +22,7 @@ Face::Face()
  * \param c The center to attach
  * \param centerVertexBase array of geometric vertexes
  */
-void Face::attachCenter(Center *c, double* centerVertexBase)
+void Face::attachCenter(Center *c, const double* centerVertexBase)
 {
     center = c;
     memcpy(&_vertex, centerVertexBase, sizeof(_vertex));
@@ -103,7 +103,7 @@ template <typename T>
 int Face::find5PiecePresent(int pieceNum) const
 {
     for (int i = 0; i < 5; ++i) {
-        const auto piece = getFacePiece<T>(i);
+        const auto *piece = getFacePiece<T>(i);
         if (piece->data.pieceNum == pieceNum)
             return i;
     }
@@ -346,9 +346,9 @@ bool Face::render()
         angle = 0;
 
     //Render parts:
-    for (const auto c : corner)
+    for (const auto *c : corner)
         c->render();
-    for (const auto e : edge)
+    for (const auto *e : edge)
         e->render();
     center->render();
 

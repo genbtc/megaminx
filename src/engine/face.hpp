@@ -28,7 +28,7 @@ public:
 
     std::vector<int> defaultCorners, defaultEdges;
 
-    void attachCenter(Center* c, double* centerVertexBase);
+    void attachCenter(Center* c, const double* centerVertexBase);
     void attachCornerPieces(const Megaminx* megaminx, Corner& cornersPTR);
     void attachEdgePieces(const Megaminx* megaminx, Edge& edgesPTR);
 
