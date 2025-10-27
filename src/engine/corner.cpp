@@ -8,7 +8,7 @@
  * \param n the number of the Corner piece
  * \param cornerVertexBase the starting points to be memcpy'ed in
  */
-void Corner::init(int n, double* cornerVertexBase)
+void Corner::init(int n, const double *cornerVertexBase)
 {
     memcpy(&_vertex, cornerVertexBase, sizeof(_vertex));
     init(n);

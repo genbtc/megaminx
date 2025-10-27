@@ -8,7 +8,7 @@
  * \param n the number of the Edge piece
  * \param edgeVertexBase the starting points to be memcpy'ed in
  */
-void Edge::init(int n, double* edgeVertexBase)
+void Edge::init(int n, const double *edgeVertexBase)
 {
     memcpy(&_vertex, edgeVertexBase, sizeof(_vertex));
     init(n); //doAxes = true
@@ -102,8 +102,8 @@ void Edge::render() const
     //Piece Numbering Test:
     if (openGLGlobalState.textGLCenterLabels) {
         std::string c = std::to_string(data.pieceNum);
-        int x = (data.pieceNum < 15) ? -10 : 10;   //positional offset
-        int z = (data.pieceNum > 9 && data.pieceNum < 20) ? -10 : 10;   //positional offset
+        //int x = (data.pieceNum < 15) ? -10 : 10;   //positional offset
+        //int z = (data.pieceNum > 9 && data.pieceNum < 20) ? -10 : 10;   //positional offset
         glColor3f(0.9, 0.2, 0.2); //red numbers
         utDrawText3DFont(_vertex[2][0], _vertex[2][1], _vertex[2][2], GLUT_BITMAP_HELVETICA_18, c.c_str());
     }

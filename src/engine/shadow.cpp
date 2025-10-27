@@ -52,7 +52,7 @@ void Megaminx::shadowRotateND(numdir op)
 /**
  * \brief Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
  */
-void Megaminx::shadowBulkRotate(std::vector<numdir> bulk) {
+void Megaminx::shadowBulkRotate(const std::vector<numdir> &bulk) {
     for (auto op : bulk)
         shadowRotateND(op);
 }
@@ -112,7 +112,7 @@ int Megaminx::createMegaMinxFromShadowVec(const std::vector<int> &readPieces, co
         megaminxArray[each].data = shadowArray[pv].data;
     }   //Two Loops to avoid clobbering state midway through
     //Re-Flip Colors last
-    for (int each = 0; each < readPieceColors.size(); ++each) {
+    for (unsigned int each = 0; each < readPieceColors.size(); ++each) {
         const auto &cv = readPieceColors[each];
         //Pieces are in the right place but maybe wrong orientation, so Flip the colors:
         while (megaminxArray[each].data.flipStatus != cv)

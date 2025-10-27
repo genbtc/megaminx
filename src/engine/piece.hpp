@@ -8,7 +8,7 @@ public:
     virtual ~Piece() = default;
 
     //Coords for GL vertex (up to 7, not all used).
-    double _vertex[7][3] = {0};
+    double _vertex[7][3] = {{0}};
     //Keeps the default number in the piece. do not swap.
     int _defaultPieceNum;
     //Center has 1, Edge has 2, Corner has 3
@@ -105,7 +105,7 @@ public:
 
     //Function to Reverse the c-Array.
     template <typename T>
-    void arrayReverse(T arr[], int r, int n) {
+    void arrayReverse(T arr[], int n) {
         for(int i = i; i<n/2; ++i) {
             int temp = arr[i];
             arr[i] = arr[n-i-1];

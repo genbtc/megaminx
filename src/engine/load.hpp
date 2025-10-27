@@ -7,8 +7,8 @@
 void SaveCubetoFileMonolithic();
 void SaveCubetoFile();
 void RestoreCubeFromFile();
-void RestoreCubeFromTEST(std::string testDir);
-void RestoreOldCubeFromFile(std::string testdir);
+void RestoreCubeFromTEST(const std::string &testDir);
+void RestoreOldCubeFromFile(const std::string &testdir);
 void MakeShadowCubeClone();
 
 void serializeVectorInt5ToFile(const std::vector<int> &vec, std::string filename);

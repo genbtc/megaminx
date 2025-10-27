@@ -62,7 +62,7 @@ void Megaminx::initCornerPieces()
  */
 void Megaminx::initFacePieces()
 {
-    double* centerVertexList = faces[0].faceInit();
+    const double *centerVertexList = faces[0].faceInit();
     for (int i = 0; i < numFaces; ++i) {
         centers[i].init(i);
         faces[i].attachCenter(centers + i, centerVertexList);
@@ -546,7 +546,7 @@ int Megaminx::resetFacesCorners(int color_n, const std::vector<int> &defaultCorn
         std::vector<int> nextDefault;
         std::set_difference(defaultCorners.begin(), defaultCorners.end(), foundCorners.begin(), foundCorners.end(),
             std::inserter(nextDefault, nextDefault.begin()));
-        for (int k = 0; k < wrongCorners.size() && k < nextDefault.size(); ++k) {
+        for (unsigned int k = 0; k < wrongCorners.size() && k < nextDefault.size(); ++k) {
             corners[wrongCorners[k]].swapdata(corners[nextDefault[k]].data);
         }
     }

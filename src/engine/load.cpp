@@ -17,7 +17,7 @@ struct megaminxPieceData {
     std::string       infilepath = "";
     std::string       outfiledir = "";
 
-    void readFileConstruct(std::string testDir) {
+    void readFileConstruct(const std::string &testDir) {
         infilepath = testDir;
         EdgePiecesPosition = ReadPiecesFileVector(testDir+EDGEFILE);
         EdgePiecesColors = ReadPiecesFileVector(testDir+EDGEFILECOLORS);
@@ -101,7 +101,7 @@ void SaveCubetoFile() {
 }
 
 [[deprecated]] [[maybe_unused]] //old cube loader (for converting old tests/saves) + and testing the new struct
-void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp with /testconvert
+void RestoreOldCubeFromFile(const std::string &testDir) {  //called from readline.cpp with /testconvert
      //TODO: Crashes w/ segfault if the files dont exist. check for them first.
     megaminxPieceData td;
     //Read New Piece Data
@@ -125,7 +125,7 @@ void RestoreOldCubeFromFile(std::string testDir) {  //called from readline.cpp w
  * @brief Restore/Load Cube from Tests- (Read 4 Vector Files)
  * \param string testDir - READ FROM TESTS DIRECTORY
  */
-void RestoreCubeFromTEST(std::string testDir) {   //called from readline.cpp with /testdir
+void RestoreCubeFromTEST(const std::string &testDir) {   //called from readline.cpp with /testdir
     if (shadowDom)
         delete shadowDom;
     shadowDom = new Megaminx();
@@ -210,9 +210,9 @@ const std::vector<int> ReadPiecesFileVector(std::string filename)
         while (ss) {                           // while the stream is good
             std::string word;                  // get first word
             if (ss >> word) {
-                if ((word.find("{") == 0) || (word.find("}") == 0))
+                if (word.starts_with("{") || word.starts_with("}"))
                     continue;
-                if ((word.find("---") == 0) || (word[0] == '-'))
+                if (word.starts_with("---") || word[0] == '-')
                     break;
                 readint = std::stoi(word); //convert to int
                 if (readint < 0)

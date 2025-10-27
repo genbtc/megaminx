@@ -302,9 +302,7 @@ void menuHandler(int num)
 {
     auto face = megaminx->g_currentFace->getNum()+1;
     double sum = 0;
-    time_t startTimeA = time(0);
-    time_t endTimeB = time(0);
-    time_t totaltime;
+    time_t startTimeA, endTimeB, totaltime;
     switch (num) {
     case 1:
         toggleSpinning(); break;

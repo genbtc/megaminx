@@ -396,7 +396,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
         //Row 3 pieces go to gray face as temporary holding (1 CW turn) (ends up on row4)
         else if (l.isOnRow3) {
             const int defaultDir = Face::CW;
-            megaminxColor x, y = BLACK;
+            megaminxColor x = BLACK, y = BLACK;
             if (l.ontopHalfA) {
                 x = l.cornerFaceNeighbors.b;
                 y = l.cornerFaceNeighbors.c;
@@ -438,6 +438,7 @@ void Megaminx::rotateSolveWhiteCorners(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolveWhiteCorners 1 2/2 in " << loopcount << " loops" << std::endl;
 }
 
@@ -527,6 +528,7 @@ void Megaminx::rotateSolveLayer2Edges(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolveLayer2Edges 2 in " << loopcount << " loops" << std::endl;
 }
 
@@ -579,7 +581,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
         //Row 3 pieces go to gray face as temporary holding (1 CCW turn) (ends up on row4) (3->4)
         else if (l.isOnRow3) {
             const int defaultDir = Face::CCW;
-            megaminxColor x, y = BLACK;
+            megaminxColor x = BLACK, y = BLACK;
             if (l.ontopHalfA) {
                 x = l.cornerFaceNeighbors.b;
                 y = l.cornerFaceNeighbors.c;
@@ -628,6 +630,7 @@ void Megaminx::rotateSolve3rdLayerCorners(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolve3rdLayerCorners 3 in " << loopcount << " loops" << std::endl;
 }
 
@@ -664,7 +667,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
         std::vector<numdir> bulkAlgo;
 
         //Get ready for algorithms - 6/3/4
-        if ((l.isOnRow34 && (l.sourceEdgeIndex != i || (l.sourceEdgeIndex == i && l.EdgeItselfA->data.flipStatus != 0)))
+        if ((l.isOnRow34 && (l.sourceEdgeIndex != i || l.EdgeItselfA->data.flipStatus != 0))
             || (l.isOnRow6)) {
             colordirs loc;
             if (l.isOnRow6) {
@@ -729,6 +732,7 @@ void Megaminx::rotateSolveLayer4Edges(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolveLayer4Edges 4 in " << loopcount << " loops" << std::endl;
 }
 
@@ -806,6 +810,7 @@ void Megaminx::rotateSolve5thLayerCorners(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolve5thLayerCorners 5 in " << loopcount << " loops" << std::endl;
 }
 
@@ -888,6 +893,7 @@ void Megaminx::rotateSolveLayer6Edges(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolveLayer6Edges 6 in " << loopcount << " loops" << std::endl;
 }
 
@@ -1293,6 +1299,7 @@ void Megaminx::rotateSolveLayer7Edges(Megaminx* shadowDom)
     //DEV: Error Checking, make sure we don't progress past any ambiguous states
     assert(unknownloop == 0);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolveLayer7Edges 7 1 in " << loopcount << " loops" << std::endl;
 }
 
@@ -1351,17 +1358,17 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
         shadowDom->DetectSolvedCorners(startingPiece, grayCornerColorSolvedB);
         //iterate through the piece/color lists and make some easy compound conditional aliases
         const bool fullySolvedOrder = checkPieceMatches(pieceOrder, 15, 16, 17, 18, 19);
-        [[maybe_unused]] const auto twoGraysUnsolved = [grayFaceColorSolved](int a, int b) { MM5(a); MM5(b); return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); }; //MM=overrotation support
-
+        [[maybe_unused]] const auto twoGraysUnsolved =
+			[grayFaceColorSolved](int a, int b) { MM5(a); MM5(b); return (!grayFaceColorSolved[a] && !grayFaceColorSolved[b]); }; //MM=overrotation support
+        //        const bool twoAdjacentOffColors =
+        //            (twoGraysUnsolved(0, 1)) || (twoGraysUnsolved(1, 2)) || (twoGraysUnsolved(2, 3)) || (twoGraysUnsolved(3, 4)) || (twoGraysUnsolved(4, 0));
         const auto twoPiecesSolved = [piecesSolved](int a, int b) { return (piecesSolved[a] && piecesSolved[b]); };
         [[maybe_unused]] const bool twoAdjacentPieces =
             (twoPiecesSolved(0, 1)) || (twoPiecesSolved(1, 2)) || (twoPiecesSolved(2, 3)) || (twoPiecesSolved(3, 4)) || (twoPiecesSolved(4, 0));
-//        const bool twoAdjacentOffColors =
-//            (twoGraysUnsolved(0, 1)) || (twoGraysUnsolved(1, 2)) || (twoGraysUnsolved(2, 3)) || (twoGraysUnsolved(3, 4)) || (twoGraysUnsolved(4, 0));
-//        const bool twoOppositePieces =
-//            (twoPiecesSolved(0, 2)) || (twoPiecesSolved(1, 3)) || (twoPiecesSolved(2, 4)) || (twoPiecesSolved(3, 0)) || (twoPiecesSolved(4, 1));
+        //        const bool twoOppositePieces =
+        //            (twoPiecesSolved(0, 2)) || (twoPiecesSolved(1, 3)) || (twoPiecesSolved(2, 4)) || (twoPiecesSolved(3, 0)) || (twoPiecesSolved(4, 1));
 
-//START MAIN
+        //START MAIN
         //SoNot Needed. L7-Edges is mandatorily run as a pre-requisite.
         //DEVTODO: turn this into a unit test
         // firstly rotate solved Edge 0 (e#25) gray top back to default, by checking the first EDGE and setting that rotation.
@@ -1372,99 +1379,486 @@ void Megaminx::rotateSolve7thLayerCorners(Megaminx* shadowDom)
             shadowDom->shadowMultiRotate(GRAY, offby);
             continue;
         }
-
-//49 Testcases Total:
-// Everything is #Algo#26 (front line safe) and #Algo#27# (right line safe)
-        struct pieceCheck1{
-            int a,b,c,d,e;
-            int startface;
-            Face::TurnDir2 dir;
-        };
-        pieceCheck1 checklist[59] = {
-            //9 "no visible pairs progress" cases (3x 26 + 6x 27)
-            { 16, 15, 19, 18, 17, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "17 16 19 18 15" below (no pairs yet)
-            { 17, 16, 15, 19, 18, LIGHT_BLUE + 1, Face::CCW },    //continues with --> "18 16 15 17 19" below (no pairs yet)
-            { 19, 18, 17, 16, 15, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "15 19 17 16 18" below (no pairs yet)
-            { 18, 17, 15, 19, 16, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "17 15 18 19 16" below (no pairs yet)
-            { 18, 19, 15, 16, 17, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "18 15 16 19 17" below (no pairs yet)
-            { 18, 17, 16, 15, 19, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "15 17 16 19 18" below (no pairs yet)
-            { 15, 19, 18, 17, 16, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "19 18 15 17 16" below (no pairs yet)
-            { 19, 18, 15, 17, 16, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "18 15 19 17 16" below (no pairs yet)
-            { 17, 18, 19, 15, 16, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "15 18 19 16 17" below (no pairs yet)
-            //40 cases to make pairs:
-            { 15, 18, 19, 16, 17, LIGHT_BLUE + 4, Face::CCW },     //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
-            { 18, 15, 19, 17, 16, LIGHT_BLUE + 2, Face::CW  },    //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
-            { 17, 16, 19, 18, 15, LIGHT_BLUE + 1, Face::CCW },    //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
-            { 15, 19, 17, 16, 18, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
-            { 18, 15, 16, 19, 17, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
-            { 16, 18, 15, 19, 17, LIGHT_BLUE + 3, Face::CCW },    //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
-            { 15, 19, 16, 18, 17, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
-            { 17, 18, 16, 19, 15, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
-            { 15, 18, 17, 19, 16, LIGHT_BLUE + 2, Face::CW  },    //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
-            { 18, 19, 17, 15, 16, LIGHT_BLUE + 2, Face::CW  },    //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
-            { 17, 19, 16, 15, 18, LIGHT_BLUE + 3, Face::CW  },    //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
-            { 18, 16, 15, 17, 19, LIGHT_BLUE + 5, Face::CW  },    //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
-            { 19, 16, 18, 17, 15, LIGHT_BLUE + 5, Face::CW  },    //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
-            { 18, 17, 19, 16, 15, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
-            { 18, 16, 19, 15, 17, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
-            { 19, 16, 15, 18, 17, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
-            { 19, 17, 15, 16, 18, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
-            { 18, 19, 16, 17, 15, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
-            { 19, 17, 18, 15, 16, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
-            { 16, 19, 18, 15, 17, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
-            { 16, 18, 19, 17, 15, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
-            { 16, 15, 17, 19, 18, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
-            { 19, 17, 16, 18, 15, LIGHT_BLUE + 3, Face::CCW },    //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
-            { 19, 15, 18, 16, 17, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
-            { 18, 15, 17, 16, 19, LIGHT_BLUE + 1, Face::CCW },    //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
-            { 16, 19, 15, 17, 18, LIGHT_BLUE + 5, Face::CW  },    //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
-            { 17, 15, 19, 16, 18, LIGHT_BLUE + 5, Face::CW  },    //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 19, 15, 16, 17, 18, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 16, 17, 18, 19, 15, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 16, 17, 19, 15, 18, LIGHT_BLUE + 5, Face::CW  },    //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 17, 19, 15, 18, 16, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 17, 16, 18, 15, 19, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 17, 15, 18, 19, 16, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 16, 18, 17, 15, 19, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 17, 18, 15, 16, 19, LIGHT_BLUE + 4, Face::CW  },    //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 16, 15, 18, 17, 19, LIGHT_BLUE + 4, Face::CCW },    //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
-            { 19, 18, 16, 15, 17, LIGHT_BLUE + 1, Face::CW  },    //continues with --> "15] 18 16 17 [19" below && hasTwoAdjacentSolved now - 19/15
-            { 15, 17, 19, 18, 16, LIGHT_BLUE + 5, Face::CW  },    //continues with --> "15] 17 18 16 [19" below && hasTwoAdjacentSolved now - 19/15
-            { 15, 17, 16, 19, 18, LIGHT_BLUE + 0, Face::CCW },    //continues with --> "15] 17 18 16 [19" below && hasTwoAdjacentSolved now - 19/15
-            { 17, 19, 18, 16, 15, LIGHT_BLUE + 2, Face::CCW },    //continues with --> "15] 17 18 16 [19" below && hasTwoAdjacentSolved now - 19/15
-            //FINAL STAGE: Two adjacent pieces. One bulk move left till solved. (10 cases) (haveTwoAdjacentSolved)
-            { 15, 16, 18, 19, 17, LIGHT_BLUE + 0, Face::CCW },
-            { 15, 16, 19, 17, 18, LIGHT_BLUE + 5, Face::CW  },
-            { 18, 16, 17, 19, 15, LIGHT_BLUE + 1, Face::CCW },
-            { 19, 16, 17, 15, 18, LIGHT_BLUE + 1, Face::CW  },
-            { 16, 19, 17, 18, 15, LIGHT_BLUE + 2, Face::CCW },
-            { 19, 15, 17, 18, 16, LIGHT_BLUE + 2, Face::CW  },
-            { 16, 17, 15, 18, 19, LIGHT_BLUE + 3, Face::CCW },
-            { 17, 15, 16, 18, 19, LIGHT_BLUE + 3, Face::CW  },
-            { 15, 17, 18, 16, 19, LIGHT_BLUE + 4, Face::CCW },
-            { 15, 18, 16, 17, 19, LIGHT_BLUE + 4, Face::CW  },
-        };
-        for (pieceCheck1 query: checklist) {
-            if (checkPieceMatches(pieceOrder, query.a, query.b, query.c, query.d, query.e)) {
-                colordirs loc = g_faceNeighbors[query.startface];
-                int algoNum = (query.dir ==  Face::CW) ? 27 : 26;
-                bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[algoNum].algo, loc, algoNum);
-                break;
-            }
-        }
+ 
         //skip to the end if positioned correctly
         if (fullySolvedOrder)
             goto startColorFlippingCorners;
         //TODO: skip to the middle if we can, starting with pairs ?
         //        else if (twoAdjacentPieces)
         //            goto haveTwoAdjacentSolved;
+        
+        //49 Testcases Total:
+        // Everything is #Algo#26 (front line safe) and #Algo#27# (right line safe)
+        //9 "no visible pairs progress" cases (3x 26 + 6x 27)
+        //(16 15 19 18 17)
+        else if (checkPieceMatches(pieceOrder, 16, 15, 19, 18, 17))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "17 16 19 18 15" below (no pairs yet)
 
-//DO IT:
-[[maybe_unused]]
-finalizePosition:
+        //(17 16 15 19 18) (swap 1&3+4/5)
+        else if (checkPieceMatches(pieceOrder, 17, 16, 15, 19, 18))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "18 16 15 17 19" below (no pairs yet)
+
+        //(19 18 17 16 15) - TT21-2
+        else if (checkPieceMatches(pieceOrder, 19, 18, 17, 16, 15))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "15 19 17 16 18" belo (no pairs yet)
+
+        //(18 17 15 19 16)
+        else if (checkPieceMatches(pieceOrder, 18, 17, 15, 19, 16))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "17 15 18 19 16" below (no pairs yet)
+
+        //(18 19 15 16 17)
+        else if (checkPieceMatches(pieceOrder, 18, 19, 15, 16, 17))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "18 15 16 19 17" below. (no pairs yet)
+
+        //(18 17 16 15 19)
+        else if (checkPieceMatches(pieceOrder, 18, 17, 16, 15, 19))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "15 17 16 19 18" below (no pairs yet)
+
+        //(15 19 18 17 16) - TestCube28-1
+        else if (checkPieceMatches(pieceOrder, 15, 19, 18, 17, 16))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "19 18 15 17 16" below (no pairs yet)
+
+        //(19 18 15 17 16) - TestCube27-1
+        else if (checkPieceMatches(pieceOrder, 19, 18, 15, 17, 16))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "18 15 19 17 16" below (no pairs yet)
+
+        //(17 18 19 15 16) - TestCube18-1
+        else if (checkPieceMatches(pieceOrder, 17, 18, 19, 15, 16))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "15 18 19 16 17" below (no pairs yet)
+
+        //40 cases to make pairs:
+        //(15 18 19 16 17)
+        else if (checkPieceMatches(pieceOrder, 15, 18, 19, 16, 17))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with  --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
+
+        //(18 15 19 17 16) - TestCube25-1
+        else if (checkPieceMatches(pieceOrder, 18, 15, 19, 17, 16))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
+
+        //(17 16 19 18 15) - TestCube26-2
+        else if (checkPieceMatches(pieceOrder, 17, 16, 19, 18, 15))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
+
+        //(15 19 17 16 18) - TestCube20-2
+        else if (checkPieceMatches(pieceOrder, 15, 19, 17, 16, 18))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "[15 16] 19 17 18" below && hasTwoAdjacentSolved now - 15/16
+
+        //(18 15 16 19 17)
+        else if (checkPieceMatches(pieceOrder, 18, 15, 16, 19, 17))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
+
+        //(16 18 15 19 17)
+        else if (checkPieceMatches(pieceOrder, 16, 18, 15, 19, 17))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
+
+        //(15 19 16 18 17)
+        else if (checkPieceMatches(pieceOrder, 15, 19, 16, 18, 17))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "[15 16] 18 19 17" below && hasTwoAdjacentSolved now - 15/16
+
+        //TestCube25-2 (17 18 16 19 15)
+        else if (checkPieceMatches(pieceOrder, 17, 18, 16, 19, 15))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
+
+        //(15 18 17 19 16) - TestCube22-3
+        else if (checkPieceMatches(pieceOrder, 15, 18, 17, 19, 16))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
+
+        //(18 19 17 15 16)
+        else if (checkPieceMatches(pieceOrder, 18, 19, 17, 15, 16))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
+
+        //(17 19 16 15 18)
+        else if (checkPieceMatches(pieceOrder, 17, 19, 16, 15, 18))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
+
+        //(18 16 15 17 19)
+        else if (checkPieceMatches(pieceOrder, 18, 16, 15, 17, 19))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
+
+        //(19 16 18 17 15)
+        else if (checkPieceMatches(pieceOrder, 19, 16, 18, 17, 15))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
+
+        //(18 17 19 16 15)
+        else if (checkPieceMatches(pieceOrder, 18, 17, 19, 16, 15))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
+        //(18 16 19 15 17)
+        else if (checkPieceMatches(pieceOrder, 18, 16, 19, 15, 17))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
+
+        //(19 16 15 18 17)
+        else if (checkPieceMatches(pieceOrder, 19, 16, 15, 18, 17))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
+
+        //(19 17 15 16 18)
+        else if (checkPieceMatches(pieceOrder, 19, 17, 15, 16, 18))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "19 [16 17] 15 18" below && hasTwoAdjacentSolved now - 16/17
+
+        //(18 19 16 17 15) - TT16-2
+        else if (checkPieceMatches(pieceOrder, 18, 19, 16, 17, 15))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "18 [16 17] 19 15" below && hasTwoAdjacentSolved now - 16/17
+
+        //(19 17 18 15 16)
+        else if (checkPieceMatches(pieceOrder, 19, 17, 18, 15, 16))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with  --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
+
+        //(16 19 18 15 17)
+        else if (checkPieceMatches(pieceOrder, 16, 19, 18, 15, 17))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with  --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
+
+        //(16 18 19 17 15)
+        else if (checkPieceMatches(pieceOrder, 16, 18, 19, 17, 15))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
+
+        //(16 15 17 19 18)
+        else if (checkPieceMatches(pieceOrder, 16, 15, 17, 19, 18))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
+
+        //(19 17 16 18 15)
+        else if (checkPieceMatches(pieceOrder, 19, 17, 16, 18, 15))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
+
+        //(19 15 18 16 17)
+        else if (checkPieceMatches(pieceOrder, 19, 15, 18, 16, 17))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
+
+        //(18 15 17 16 19)
+        else if (checkPieceMatches(pieceOrder, 18, 15, 17, 16, 19))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "19 15 [17 18] 16" below && hasTwoAdjacentSolved now - 17/18
+
+        //(16 19 15 17 18)
+        else if (checkPieceMatches(pieceOrder, 16, 19, 15, 17, 18))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "16 19 [17 18] 15" below && hasTwoAdjacentSolved now - 17/18
+
+        //(17 15 19 16 18)
+        else if (checkPieceMatches(pieceOrder, 17, 15, 19, 16, 18))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(19 15 16 17 18) (all off by 1)
+        else if (checkPieceMatches(pieceOrder, 19, 15, 16, 17, 18))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(16 17 18 19 15) (all off by 1 in other direction)
+        else if (checkPieceMatches(pieceOrder, 16, 17, 18, 19, 15))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(16 17 19 15 18)
+        else if (checkPieceMatches(pieceOrder, 16, 17, 19, 15, 18))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(17 19 15 18 16)
+        else if (checkPieceMatches(pieceOrder, 17, 19, 15, 18, 16))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(17 16 18 15 19)
+        else if (checkPieceMatches(pieceOrder, 17, 16, 18, 15, 19))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(17 15 18 19 16)
+        else if (checkPieceMatches(pieceOrder, 17, 15, 18, 19, 16))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(16 18 17 15 19)
+        else if (checkPieceMatches(pieceOrder, 16, 18, 17, 15, 19))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(17 18 15 16 19) swap 1&3+2&4
+        else if (checkPieceMatches(pieceOrder, 17, 18, 15, 16, 19))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "17 15 16 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(16 15 18 17 19)
+        else if (checkPieceMatches(pieceOrder, 16, 15, 18, 17, 19))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "16 17 15 [18 19]" below && hasTwoAdjacentSolved now - 18/19
+
+        //(19 18 16 15 17)
+        else if (checkPieceMatches(pieceOrder, 19, 18, 16, 15, 17))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "15] 18 16 17 [19" below && hasTwoAdjacentSolved now - 19/15
+
+        //(15 17 19 18 16)
+        else if (checkPieceMatches(pieceOrder, 15, 17, 19, 18, 16))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        } //continues with --> "15] 17 18 16 [19" below && hasTwoAdjacentSolved now - 19/15
+
+        //(15 17 16 19 18)
+        else if (checkPieceMatches(pieceOrder, 15, 17, 16, 19, 18))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "15] 17 18 16 [19" below && hasTwoAdjacentSolved now - 19/15
+
+        //(17 19 18 16 15)
+        else if (checkPieceMatches(pieceOrder, 17, 19, 18, 16, 15))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        } //continues with --> "15] 17 18 16 [19" below && hasTwoAdjacentSolved now - 19/15
+
+    haveTwoAdjacentSolved:
+        //FINAL STAGE: Two adjacent pieces. One bulk move left till solved. (10 cases)
+        //([15 16] 18 19 17) - 15/16 ok
+        if (checkPieceMatches(pieceOrder, 15, 16, 18, 19, 17))
+        {
+            const int startFace = LIGHT_BLUE + 0;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        }
+        //([15 16] 19 17 18) - 15/16 ok
+        else if (checkPieceMatches(pieceOrder, 15, 16, 19, 17, 18))
+        {
+            const int startFace = LIGHT_BLUE + 5;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        }
+        //(18 [16 17] 19 15) - 16/17 ok
+        else if (checkPieceMatches(pieceOrder, 18, 16, 17, 19, 15))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        }
+        //(19 [16 17] 15 18) - 16/17 ok
+        else if (checkPieceMatches(pieceOrder, 19, 16, 17, 15, 18))
+        {
+            const int startFace = LIGHT_BLUE + 1;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        }
+        //(16 19 [17 18] 15) - 17/18 ok
+        else if (checkPieceMatches(pieceOrder, 16, 19, 17, 18, 15))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        }
+        //(19 15 [17 18] 16) - 17/18 ok
+        else if (checkPieceMatches(pieceOrder, 19, 15, 17, 18, 16))
+        {
+            const int startFace = LIGHT_BLUE + 2;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        }
+        //(16 17 15 [18 19]) - 18/19 ok
+        else if (checkPieceMatches(pieceOrder, 16, 17, 15, 18, 19))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace];    //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        }
+        //(17 15 16 [18 19]) - 18/19 ok
+        else if (checkPieceMatches(pieceOrder, 17, 15, 16, 18, 19))
+        {
+            const int startFace = LIGHT_BLUE + 3;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        }
+        //(15] 17 18 16 [19) - 19/15 ok
+        else if (checkPieceMatches(pieceOrder, 15, 17, 18, 16, 19))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace];        //Algo#26(was7) Cycle- (CCW)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[26].algo, loc, 26);
+        }
+        //(15] 18 16 17 [19) - 19/15 ok
+        else if (checkPieceMatches(pieceOrder, 15, 18, 16, 17, 19))
+        {
+            const int startFace = LIGHT_BLUE + 4;
+            colordirs loc = g_faceNeighbors[startFace - 1];    //Algo#27 Cycle+ (Clockwise)
+            bulkAlgo = shadowDom->ParseAlgorithmString(g_AlgoStrings[27].algo, loc, 27);
+        }
+    //DO IT:
+    finalizePosition:
         shadowDom->shadowBulkRotate(bulkAlgo);
 
-startColorFlippingCorners:
+    startColorFlippingCorners:
         const auto currentPiece = shadowDom->getPieceArray<Corner>(sourceCornerIndex);
         const bool currentpieceFlipStatusOK = currentPiece->data.flipStatus == 0;
 
@@ -1502,6 +1896,7 @@ startColorFlippingCorners:
     //Commit solved state.
     updateRotateQueueWithShadow(shadowDom);
     assert(loopcount < 101);
+	assert(allSolved);
     std::cout << "Solved rotateSolveLayer7Corners 7 2 in " << loopcount << " loops" << std::endl;
 }
 
