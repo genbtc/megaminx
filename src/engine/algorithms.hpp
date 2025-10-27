@@ -9,8 +9,8 @@ struct numdir {
 };
 //used in megaminx & shadow solve.cpp
 struct AlgoString {
-    const char* algo{};
     int num{};
+    const char* algo{};
     int len{};
     int repeatX=0;
     int modby[5]{};
@@ -20,7 +20,7 @@ struct AlgoString {
 constexpr int ALL_ALGORITHMS = 53;
 constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
     // Initialize 0 with empty blank
-    { "", 0 },
+    {0, ""},
 
     // most common one, suitable for white corners or any.
     //IMPORTANT
@@ -37,13 +37,13 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
     },
 
     //MOVED: 2nd Layer edges (simple) moved to algoLayer[] section
-    { "", 3 },
-    { "", 4 },
+    { 3, "" },
+    { 4, "" },
     //MOVED: LL Step 4 Corners simple RDRD flip moved to #50
-    { "", 5 },
+    { 5, "" },
     //MOVED: LL Step 3 moved #6 to 25 and #7 to 26
-    { "", 6 },
-    { "", 7 },
+    { 6, "" },
+    { 7, "" },
 
     // #7Last-Layer: Step 2/3 - Corner+Edge Permutation 3: // Entire Front Line = Safe. untouched is C1,C2,E1,E5
     // (5 to 1, 1 to 2, 2 to 5) = (front 2 corners, front/left 2 edges) Rotates chunks of 2 clockwise
@@ -205,10 +205,10 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
     //MOVED{: to g_AlgoStringsLayer[] at the bottom:
     //2nd Layer Edges
     //4nd Layer Edges
-    { "", 22 },
+    { 22, "" },
     //6th Layer Edges
-    { "", 23 },
-    { "", 24 },
+    { 23, "" },
+    { 24, "" },
     //}
 
     // #7Last Layer: Step 3 - Orient bottom Corners #1, 2, 3 CCW (DUPE) // Put the corners into their correct positions.
@@ -249,7 +249,7 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .len = 12,
     },
 
-    { "", 29 },
+    { 29, "" },
     // #7LL: Step 2, Edge Permutation 1: HORSEDGE+ CW //8 o clock to 4 o clock, 11 o clock to 8 o clock, 4 o clock to 11 o clock.
     //6 o'clock and 1 o'clock STAY the same. Left Star Arrow -> rotate others CCW Counter-Clockwise
     // 13 moves in 1 rep, CORNERS ARE AFFECTED (gray stays)
@@ -295,8 +295,8 @@ constexpr AlgoString g_AlgoStrings[ALL_ALGORITHMS] = {
         .modby = { 0, -2, 1, 1, 0 }
     },
 
-    { "", 34 },
-    { "", 35 },
+    { 34, "" },
+    { 35, "" },
 
     //#7LL-2/3- Edge Permute #6, 2+2 swap, swaps Edges 2&5 + 3&4, (Color Safe) BUT AFFECTS CORNERS!
     //Swap an adjacent pair, and a non - adjacent pair of edges (U/R <-> U/L and U/BR <-> U/BL) (13 moves)
