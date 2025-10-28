@@ -47,7 +47,8 @@ void Megaminx::shadowRotateND(numdir op)
     assert(op.dir == Face::Clockwise || op.dir == Face::CCW);
     shadowRotateQueue.push(op);
     faces[op.num].placeParts(op.dir);
-    //if (DEBUGPRINT) std::cout << "Rotate Face: # " << op.num << " : "  << g_colorRGBs[op.num].name  << "  Dir: " << op.dir << "  Algo: # " << op.algo  << std::endl;
+    //if (DEBUGPRINT)
+       // std::cout << "Rotate Face: # " << op.num << " : "  << g_colorRGBs[op.num].name  << "  Dir: " << op.dir << "  Algo: # " << op.algo  << std::endl;
 }
 /**
  * \brief Populate the shadowRotateQueue with a whole bulk sequence of numdir vectors
