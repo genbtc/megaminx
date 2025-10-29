@@ -1,9 +1,13 @@
 # Free Open Source Software by genBTC 2017/2018/2019/2020/2023 requires CMake>=3.8 for C++ 17, 
-cmake_minimum_required(VERSION 3.8)
-# project setup on CMake on Windows 64 using MSYS2/MingW64/G++ compilers. Change stuff as needed.
+cmake_minimum_required(VERSION 3.8...3.10)
+#CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):Compatibility with CMake < 3.10 will be removed from a future version of CMake.
+# Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax to tell CMake that the project requires at least <min> but has been updated
+#  to work with policies introduced by <max> or earlier.CMake (cmake_minimum_required)
+#
+# This CMake script is compatible with a) Native Linux / b) Native Windows MSVC / and c) MINGW64/MSYS2 Windows x64 using GNU compilers. Change stuff as needed.
 # Also compiles natively on Windows with MSVC as long as you MSVC build freeglut and set the GLUT_ROOT_PATH on Line 33.
 # Works on VCPKG using CMake in Visual Studio 2017 natively, with: "vcpkg install freeglut:x64-windows" ; "vcpkg integrate install"
-# Confirmed to work on Linux 2023
+# Confirmed to work on Linux 2023/2024/2025
 set(PACKAGE_NAME "Megaminx")
 set(PACKAGE_VERSION "1.4.6")
 project(${PACKAGE_NAME})
@@ -50,7 +54,12 @@ ProcessorCount(NumCPUS)
 message("detected number of CPU threads: " ${NumCPUS})
 set(MAKEFLAGS "-j${NumCPUS}") #This should be default by now
 
-#// Prepare EXE - by listing all source files (explicitly is safer), and the Res.rc (icon resource)
+#CMake C/C++ Settings:  Turn on C++ 20 flag.
+message("C++ 20 Standard required, Enabling -> C++ 20 Mode ON")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#Prepare EXE - by listing all source files (explicitly is safer), and the Res.rc (icon resource)
 add_executable(${PACKAGE_NAME} WIN32
     src/ui/linenoise.c
     src/readline.cpp
@@ -70,8 +79,14 @@ add_executable(${PACKAGE_NAME} WIN32
     src/Res.rc
     src/engine/algo-menu.hpp
 )
+#// Use C++20 on all linkages (is this needed if we have ^^ ?)
+#//target_compile_features(${PACKAGE_NAME} INTERFACE cxx_std_20)
+#// /usr/src/linux-dev/src/megaminx/src/engine/load.cpp:215:26: error: 
+#   'std::string' {aka 'class std::__cxx11::basic_string<char>'} has no member named 'starts_with'
+#// starts_with( const CharT* s ) const;	(3) 	(since C++20)
+#and GNU Case Range extension 2..6 is a GNU extension
 
-#Sources - Add .H Files
+#Sources - Add .H header Files
 target_sources(${PACKAGE_NAME} PRIVATE
     src/ui/linenoise.h
     src/ui/camera.hpp
@@ -90,14 +105,6 @@ target_sources(${PACKAGE_NAME} PRIVATE
     src/main-menu.hpp
     src/main.h
 )
-
-#CMake C/C++ Settings:
-message("C++ 17 Standard required, Enabling")
-# Turn on C++ 17 flag.
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#// Use C++17 on all linkages (is this needed if we have ^^ ?)
-target_compile_features(${PACKAGE_NAME} INTERFACE cxx_std_17)
 
 # Debugging features
 if (Debug)
@@ -129,3 +136,4 @@ if(UNIX OR LINUX OR MINGW)
 	# Link Exe w/ GL / GLU
     target_link_libraries(${PACKAGE_NAME} PRIVATE OpenGL::GL OpenGL::GLU)
 endif()
+
